@@ -92,13 +92,13 @@ public class GameScreen implements Screen {
         float newX = pos.x;
         float newY = pos.y;
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            newY += 1;
+            if (pos.y + 1 < MAP_WIDTH) newY += 1;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            newY -= 1;
+            if (pos.y - 1 >= 0) newY -= 1;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            newX -= 1;
+            if (pos.x - 1 >= 0) newX -= 1;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            newX += 1;
+            if (pos.x + 1 < MAP_WIDTH) newX += 1;
         }
         player.setPos(newX, newY);
     }
