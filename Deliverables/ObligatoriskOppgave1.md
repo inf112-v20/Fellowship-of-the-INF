@@ -3,11 +3,18 @@
 ## Organisering av team ##
 
 Kundekontakt: Martin Kydland
+
 Leder: Johanna Jøsang
+
 Kompetansen er nokså jevnt fordelt over gruppen.Martin er people-person og flinkest til å kommunisere. Han blir da kundekontakt, slik at han har ansvar for korrespondanse med Siv. Johanna blir leder og har da hovedansvaret for at prosjektet når sine mål.
 
+Språket brukt i koding; variabelnavn, kommentarer, vil være på engelsk.
 
-Målet for prosjektet: Digital versjon av roborally, med alle regler og mekanikker som er med i brettspillet slik som
+
+## Målet for prosjektet ##
+
+Digital versjon av roborally, med alle regler og mekanikker som er med i brettspillet som f.eks:
+
 * Noen options kort
 * Sette sammen brett
 * Mulighet for opp til 8 spillere
@@ -52,3 +59,33 @@ Videre vil vi ha mulighet for AI, og evt videreutvikle spillet med andre brett-m
   * Mulighet for å annonsere powerdown
   * Være i powerdown
   * Komme tilbake igjen fra powerdown
+
+## Prioritert liste over krav til første iterasjon ##
+
+* Vise 2D grid laget med libGDX og Tiled
+* Vise et objekt på brettet
+* Kunne flytte et objekt på brettet
+
+## Prosjekt prosess og fremgangsmåte ##
+
+### Møter ###
+
+Hvert møte skal begynne med at hvert teammedlem forteller om hvilket arbeid de har gjort på prosjektet siden forrige møte. Dersom de har ferdigskrevet og testet en implementasjon på sin branch, skal den pushes til main dersom den er godkjent av gruppen. Dersom det er uenigheter om godkjenningen, er det leder som har den avgjørende stemmen.
+
+Utenom lab kl14 på Torsdager, så blir det møte kl16 hver mandag etter INF112 forelesning. Dersom det ikke er mandagsforelesning, flyttes møte til kl14. Møtetiden passer bra for alle på mandager, i tillegg til at tidspunktet gir noen dagers mellomrom fra torsdagsmøte til egenjobbing.
+
+### Prosjektmetodikk ### 
+
+I denne iterasjonen så skal vi prøve å ta i bruk XP, samtidig som vi er åpen til endring ettersom ingen på gruppen har brukt denne prosjektmetodikken før. Vi vil prøve å vektlegge god kommunikasjon, som vi skal oppnå ved å bevisst bruke møtene der alle er tilstede som hovedkommunikasjonsmiddel.
+
+### Arbeidsfordeling ###
+
+Generell fordeling av arbeid har vi som mål å få ferdig ila første møte i en iterasjon etter at krav for den iterasjonen er satt. På dette første møte vil TODO’s legges til i project board, slik at teammedlemmer kan velge ut TODO’s i lista når de går tom for ting å gjøre.
+
+### Kommunikasjon ###
+
+Utenom møter vil kommunikasjon foregå på en egen Discord server for gruppen. Her er det mulighet for både kommunikasjon til hele gruppen, i tillegg til private chatter mellom medlemmer. Project board på GitHub skal brukes for å holde oversikt over framgangen i prosjektet.
+
+## Oppsummering ## 
+
+Vi har brukt en god del tid til å sette oss inn i libGDX og ser at vi fremdeles har mye å lære før vi kan vise spillet på optimal måte. Dermed er måten brett og spiller er satt opp på nå bare en veldig grov skisse som vi håper å lære mer fra, i det endelige målet om å lage et velfungerende og oversiktlige spill.
