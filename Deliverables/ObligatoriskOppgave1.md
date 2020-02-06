@@ -6,7 +6,7 @@ Kundekontakt: Martin Kydland
 
 Leder: Johanna Jøsang
 
-Kompetansen er nokså jevnt fordelt over gruppen.Martin er people-person og flinkest til å kommunisere. Han blir da kundekontakt, slik at han har ansvar for korrespondanse med Siv. Johanna blir leder og har da hovedansvaret for at prosjektet når sine mål.
+Kompetansen er nokså jevnt fordelt over gruppen.Martin er people-person og flinkest til å kommunisere. Han blir da kundekontakt, slik at han har ansvar for korrespondanse med Siv. Johanna blir leder og har da hovedansvaret for at prosjektet når sine mål. Dette er fordi Johanna har mest erfaring med bl.a. git og java.
 
 Språket brukt i koding; variabelnavn, kommentarer, vil være på engelsk.
 
@@ -84,8 +84,16 @@ Generell fordeling av arbeid har vi som mål å få ferdig ila første møte i e
 
 ### Kommunikasjon ###
 
-Utenom møter vil kommunikasjon foregå på en egen Discord server for gruppen. Her er det mulighet for både kommunikasjon til hele gruppen, i tillegg til private chatter mellom medlemmer. Project board på GitHub skal brukes for å holde oversikt over framgangen i prosjektet.
+Utenom møter vil kommunikasjon foregå på en egen Discord server for gruppen. Her er det mulighet for både kommunikasjon til hele gruppen, i tillegg til private chatter mellom medlemmer. Om nødvendig er voice chat også en mulighet på discord. Project board på GitHub skal brukes for å holde oversikt over framgangen i prosjektet.
 
 ## Oppsummering ## 
 
 Vi har brukt en god del tid til å sette oss inn i libGDX og ser at vi fremdeles har mye å lære før vi kan vise spillet på optimal måte. Dermed er måten brett og spiller er satt opp på nå bare en veldig grov skisse som vi håper å lære mer fra, i det endelige målet om å lage et velfungerende og oversiktlige spill.
+
+I første iterasjon var det ikke mye arbeid å gjøre når det kom til koding, derfor ble det en ubalansert fordeling i gruppen. Dette er noe vi kommer til å prøve å forbedre til neste iterasjon. 
+
+Møtene virker som om de fungerer bra så langt. Vi får se om flere møter trengs etterhvert. 
+
+Flere i gruppen har hatt store problemer med git. Ettersom dette er et verktøy som skal brukes, så må dette fikses snarest mulig. 
+
+Ellers er vi fornøyd med prosjektet så langt.
