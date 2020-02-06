@@ -15,7 +15,11 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-
+/**
+ * This class is now obsolete, but can be used for reference.
+ * All the layers have been added to this class. Perhaps move this code to an appropriate class
+ * later in the project
+ */
 public class HelloWorld implements ApplicationListener {
     private SpriteBatch batch;
     private BitmapFont font;
@@ -61,13 +65,13 @@ public class HelloWorld implements ApplicationListener {
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WITDTH_DPI, MAP_WITDTH_DPI, camera);
         camera.setToOrtho(false, MAP_WIDTH/2, MAP_WIDTH/2);
-        // TODO or error in camera position
+        //  or error in camera position
         //camera.position.x = (float) MAP_WIDTH/2;
         //camera.translate(MAP_WITDTH_DPI, MAP_WITDTH_DPI);
         //camera.position.set(6, 6, 0);
         camera.update();
 
-        //TODO possibly generalize 300 to be able to apply other resolutions
+        // possibly generalize 300 to be able to apply other resolutions
         mapRenderer = new OrthogonalTiledMapRenderer(map);
 
     }

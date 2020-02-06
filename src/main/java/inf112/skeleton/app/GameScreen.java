@@ -14,44 +14,42 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+/**
+ * Game screen at the moment only shows a board with a playerLayer, and a player
+ */
 public class GameScreen implements Screen {
-    private TiledMap map;
+    private TiledMap map; //roborally board
     private TiledMapTileSet tiles;
     private OrthogonalTiledMapRenderer mapRenderer;
     private OrthographicCamera camera;
     private Viewport gridPort;
-    private final int MAP_WIDTH = 12;
-    private final int TILE_WIDTH_DPI = 300;
-    private final int MAP_WITDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI;
-
+    private final int MAP_WIDTH = 12; //dimentions of board
+    private final int TILE_WIDTH_DPI = 300; //pixel width per cell
+    private final int MAP_WITDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI; //total width of map in pixels
     private Player player;
     private TiledMapTileLayer playerLayer;
-
     private TmxMapLoader mapLoader;
 
     public GameScreen() {
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("assets\\RoborallyBoard.tmx");
         tiles = map.getTileSets().getTileSet("tileset.png");
-
-
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WITDTH_DPI, MAP_WITDTH_DPI, camera);
         camera.setToOrtho(false, MAP_WIDTH, MAP_WIDTH);
-        // TODO or error in camera position
-        //camera.position.x = (float) MAP_WIDTH/2;
-        //camera.translate(MAP_WITDTH_DPI, MAP_WITDTH_DPI);
-        //camera.position.set(6, 6, 0);
         camera.update();
+        mapRenderer = new OrthogonalTiledMapRenderer(map, (float) 1 / TILE_WIDTH_DPI);
 
-        //TODO possibly generalize 300 to be able to apply other resolutions
-        mapRenderer = new OrthogonalTiledMapRenderer(map, (float) 1 / 300);
-        // Layers
+        // Layers, add more later
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
 
         initializePlayer();
     }
 
+    /**
+     * Create a simple player with the ability to move around the board
+     * Add it to the playerLayer
+     */
     public void initializePlayer() {
         player = new Player(0);
         TiledMapTileLayer.Cell playerCell = player.getPlayerCell();
@@ -63,17 +61,22 @@ public class GameScreen implements Screen {
 
     }
 
+    /**
+     *This method is called continuously
+     * @param v deltaTime
+     */
     @Override
     public void render(float v) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         mapRenderer.setView(camera);
-        update();
+        update(); //make changes to board, if there are any
         mapRenderer.render();
     }
 
     /**
-     * Update coordinate of player
+     * Update all changes to board
+     * For now they are only movements of player
      */
     public void update() {
         playerLayer.setCell((int) player.getPos().x, (int) player.getPos().y, null);
@@ -81,10 +84,13 @@ public class GameScreen implements Screen {
         playerLayer.setCell((int) player.getPos().x, (int) player.getPos().y, player.getPlayerCell());
     }
 
+    /**
+     * Changes the coordinates of the player based on user input
+     */
     public void handleInput() {
-        Vector2 dir = player.getPos();
-        float newX = dir.x;
-        float newY = dir.y;
+        Vector2 pos = player.getPos();
+        float newX = pos.x;
+        float newY = pos.y;
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             newY += 1;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -94,7 +100,7 @@ public class GameScreen implements Screen {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             newX += 1;
         }
-        player.setDir(newX, newY);
+        player.setPos(newX, newY);
     }
 
     @Override
@@ -117,6 +123,7 @@ public class GameScreen implements Screen {
 
     }
 
+    //TODO understand and implement dispose
     @Override
     public void dispose() {
 
