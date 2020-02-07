@@ -6,7 +6,7 @@ Kundekontakt: Martin Kydland
 
 Leder: Johanna Jøsang
 
-Kompetansen er nokså jevnt fordelt over gruppen.Martin er people-person og flinkest til å kommunisere. Han blir da kundekontakt, slik at han har ansvar for korrespondanse med Siv. Johanna blir leder og har da hovedansvaret for at prosjektet når sine mål. Dette er fordi Johanna har mest erfaring med bl.a. git og java.
+Kompetansen er nokså jevnt fordelt over gruppen. Martin er people-person og flinkest til å kommunisere. Han blir da kundekontakt, slik at han har ansvar for korrespondanse med Siv. Johanna blir leder og har da hovedansvaret for at prosjektet når sine mål. Dette er fordi Johanna har mest erfaring med bl.a. git og java.
 
 Språket brukt i koding; variabelnavn, kommentarer, vil være på engelsk.
 
@@ -19,7 +19,7 @@ Digital versjon av roborally, med alle regler og mekanikker som er med i brettsp
 * Sette sammen brett
 * Mulighet for opp til 8 spillere
 * Funksjonelle brett mekanismer av alle typer
-* osv
+
 Videre vil vi ha mulighet for AI, og evt videreutvikle spillet med andre brett-mekanismer, options kort og genererte brett.
 
 ## MVP ##
@@ -70,7 +70,7 @@ Videre vil vi ha mulighet for AI, og evt videreutvikle spillet med andre brett-m
 
 ### Møter ###
 
-Hvert møte skal begynne med at hvert teammedlem forteller om hvilket arbeid de har gjort på prosjektet siden forrige møte. Dersom de har ferdigskrevet og testet en implementasjon på sin branch, skal den pushes til main dersom den er godkjent av gruppen. Dersom det er uenigheter om godkjenningen, er det leder som har den avgjørende stemmen.
+Hvert møte skal begynne med at hvert teammedlem forteller om hvilket arbeid de har gjort på prosjektet siden forrige møte. Dersom de har ferdigskrevet og testet en implementasjon på sin branch, skal den pushes til develop branchen dersom den er godkjent av gruppen. Dersom det er uenigheter om godkjenningen, er det leder som har den avgjørende stemmen.
 
 Utenom lab kl14 på Torsdager, så blir det møte kl16 hver mandag etter INF112 forelesning. Dersom det ikke er mandagsforelesning, flyttes møte til kl14. Møtetiden passer bra for alle på mandager, i tillegg til at tidspunktet gir noen dagers mellomrom fra torsdagsmøte til egenjobbing.
 
@@ -78,22 +78,32 @@ Utenom lab kl14 på Torsdager, så blir det møte kl16 hver mandag etter INF112 
 
 I denne iterasjonen så skal vi prøve å ta i bruk XP, samtidig som vi er åpen til endring ettersom ingen på gruppen har brukt denne prosjektmetodikken før. Vi vil prøve å vektlegge god kommunikasjon, som vi skal oppnå ved å bevisst bruke møtene der alle er tilstede som hovedkommunikasjonsmiddel.
 
+Angående bruk av branches har vi blitt enige om å kun pushe til master hver gang vi leverer en oblig. Mens vi er i en iterasjon vil godkjente endringer kun pushes til develop branchen. Mens vi koder jobber alle selvfølgelig  på en branch dedikert til det de holder på å implementere.
+
+I project board er har vi lagt til en egen kolonne for testing, slik at vi passer på at alle implementasjoner blir testet før vi markerer dem som ferdigimplementert.
+
+På slutten av hver iterasjon skal vi ta en oppsumering med evaluering, og begynne å planlegge neste iterasjon.
+
+
+
 ### Arbeidsfordeling ###
 
 Generell fordeling av arbeid har vi som mål å få ferdig ila første møte i en iterasjon etter at krav for den iterasjonen er satt. På dette første møte vil TODO’s legges til i project board, slik at teammedlemmer kan velge ut TODO’s i lista når de går tom for ting å gjøre.
 
 ### Kommunikasjon ###
 
-Utenom møter vil kommunikasjon foregå på en egen Discord server for gruppen. Her er det mulighet for både kommunikasjon til hele gruppen, i tillegg til private chatter mellom medlemmer. Om nødvendig er voice chat også en mulighet på discord. Project board på GitHub skal brukes for å holde oversikt over framgangen i prosjektet.
+Utenom møter vil kommunikasjon foregå på en egen Discord server for gruppen. Her er det mulighet for både kommunikasjon til hele gruppen, i tillegg til private chatter mellom medlemmer. Om nødvendig er voice chat også en mulighet på discord. Kodebasen er seøvfølgelig på Github, og project board på GitHub skal brukes for å holde oversikt over framgangen i prosjektet.
 
 ## Oppsummering ## 
 
 Vi har brukt en god del tid til å sette oss inn i libGDX og ser at vi fremdeles har mye å lære før vi kan vise spillet på optimal måte. Dermed er måten brett og spiller er satt opp på nå bare en veldig grov skisse som vi håper å lære mer fra, i det endelige målet om å lage et velfungerende og oversiktlige spill.
 
-I første iterasjon var det ikke mye arbeid å gjøre når det kom til koding, derfor ble det en ubalansert fordeling i gruppen. Dette er noe vi kommer til å prøve å forbedre til neste iterasjon. 
+Vi har ikke begynnt å skrive tester enda, hovedsakelig fordi mye av kodingen i denne iterasjonen var GUI relatert, men dette er noe som vi planlegger å fokusere på i neste iterasjon.
+
+I første iterasjon var det ikke mye arbeid å gjøre når det kom til koding, derfor ble det en ubalansert fordeling i gruppen. Dette er noe vi kommer til å prøve å forbedre til neste iterasjon. Vi fikk testet ut parrprogrammering, og dette mente vi funket veldig bra.
 
 Møtene virker som om de fungerer bra så langt. Vi får se om flere møter trengs etterhvert. 
 
 Flere i gruppen har hatt store problemer med git. Ettersom dette er et verktøy som skal brukes, så må dette fikses snarest mulig. 
 
-Ellers er vi fornøyd med prosjektet så langt.
+Ellers er vi fornøyd med prosjektet så langt, ettersom vi har nådd kravene til første iterasjon og samarbeidet har vært bra.
