@@ -98,7 +98,7 @@ Utenom møter vil kommunikasjon foregå på en egen Discord server for gruppen. 
 
 Vi har brukt en god del tid til å sette oss inn i libGDX og ser at vi fremdeles har mye å lære før vi kan vise spillet på optimal måte. Dermed er måten brett og spiller er satt opp på nå bare en veldig grov skisse som vi håper å lære mer fra, i det endelige målet om å lage et velfungerende og oversiktlige spill.
 
-Vi har ikke begynnt å skrive tester enda, hovedsakelig fordi mye av kodingen i denne iterasjonen var GUI relatert, men dette er noe som vi planlegger å fokusere på i neste iterasjon.
+Vi har ikke begynnt å skrive tester enda, hovedsakelig fordi mye av kodingen i denne iterasjonen var GUI relatert, men dette er noe som vi planlegger å fokusere på i neste iterasjon. I neste iterasjon vil vi også lage klassediagram, ettersom vi da sannsynligvis vil ha en bedre ide om hvordan programmet skal strukturerers.
 
 I første iterasjon var det ikke mye arbeid å gjøre når det kom til koding, derfor ble det en ubalansert fordeling i gruppen. Dette er noe vi kommer til å prøve å forbedre til neste iterasjon. Vi fikk testet ut parrprogrammering, og dette mente vi funket veldig bra.
 
