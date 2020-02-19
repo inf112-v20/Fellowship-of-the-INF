@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import inf112.skeleton.app.Grid.PieceGrid;
 
 /**
  * Game screen at the moment only shows a board with a playerLayer, and a player
@@ -54,6 +55,10 @@ public class GameScreen implements Screen {
         player = new Player(0);
         TiledMapTileLayer.Cell playerCell = player.getPlayerCell();
         playerLayer.setCell((int) player.getPos().x, (int) player.getPos().y, playerCell);
+
+        //TESTING delete below
+        PieceGrid grid = new PieceGrid(12, 12, map);
+        grid.readTiledMapToPieceGrid();
     }
 
     @Override

@@ -8,7 +8,7 @@ package inf112.skeleton.app.GridObjects;
  */
 
 
-public abstract class BoardPiece {
+public class BoardPiece {
 
     private Position pos;
     private Direction dir;
