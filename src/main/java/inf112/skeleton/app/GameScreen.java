@@ -55,10 +55,6 @@ public class GameScreen implements Screen {
         player = new Player(0);
         TiledMapTileLayer.Cell playerCell = player.getPlayerCell();
         playerLayer.setCell((int) player.getPos().x, (int) player.getPos().y, playerCell);
-
-        //TESTING delete below
-        PieceGrid grid = new PieceGrid(12, 12, map);
-        grid.readTiledMapToPieceGrid();
     }
 
     @Override

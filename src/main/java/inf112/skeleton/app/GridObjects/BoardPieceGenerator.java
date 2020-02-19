@@ -12,6 +12,11 @@ public class BoardPieceGenerator {
         pos = new Position(x, y);
     }
 
+    /**
+     * Creates BoardPiece to put in PieceGrid
+     * @param id
+     * @return BoardPiece correspinging to the id
+     */
     public BoardPiece generate(int id) {
         switch (id) {
             case (0):
@@ -45,7 +50,6 @@ public class BoardPieceGenerator {
                 return new PusherPiece(pos, id);
             /**
              * TODO: resolve problem of having horizontal and vertical lazers
-             * Id 53 and 54
              */
             case (47):
                 return new LazerPiece(pos, id);
