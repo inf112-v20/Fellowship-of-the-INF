@@ -32,7 +32,7 @@ public class GameScreen implements Screen {
 
     public GameScreen() {
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("assets\\RoborallyBoard.tmx");
+        map = mapLoader.load("RoborallyBoard.tmx");
         tiles = map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WITDTH_DPI, MAP_WITDTH_DPI, camera);
