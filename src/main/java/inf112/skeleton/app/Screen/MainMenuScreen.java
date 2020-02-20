@@ -10,6 +10,12 @@ public class MainMenuScreen implements Screen {
 
     private RoboRallyDemo game;
 
+    // Button scales
+    private static final int BUTTON_WIDTH = 300;
+    private static final int BUTTON_HEIGHT = 150;
+    // Button position
+    private static final int EXIT_BUTTON_Y = 100;
+    private static final int PLAY_BUTTON_Y = 300;
     private Texture playButtonActive;
     private Texture playButtonInactive;
     private Texture exitButtonActive;
@@ -35,7 +41,17 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
 
-        game.batch.draw(exitButtonActive, 100, 100);
+        // TODO: fix positioning
+        int gameWidth = 3600;
+        int gameHeight = 3600;
+        int buttonX = gameWidth/2 - BUTTON_WIDTH/2;
+
+        if (Gdx.input.getX() < buttonX + BUTTON_WIDTH && Gdx.input.getX() > buttonX && gameHeight - Gdx.input.getY() < EXIT_BUTTON_Y + BUTTON_HEIGHT && gameHeight - Gdx.input.getY() > EXIT_BUTTON_Y) {
+            game.batch.draw(exitButtonActive, buttonX, EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+        }
+        else {
+            game.batch.draw(exitButtonInactive, buttonX, EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+        }
 
         game.batch.end();
     }

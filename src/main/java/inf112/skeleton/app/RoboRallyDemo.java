@@ -19,8 +19,7 @@ public class RoboRallyDemo extends Game {
         GameScreen gameScreen = new GameScreen();
 //        setScreen(gameScreen);
         // TEST: Main menu screen
-        MainMenuScreen menuScreen = new MainMenuScreen();
-        setScreen(menuScreen);
+        setScreen(new MainMenuScreen(this));
     }
 
     @Override
