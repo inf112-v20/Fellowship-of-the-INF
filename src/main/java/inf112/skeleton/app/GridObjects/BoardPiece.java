@@ -1,17 +1,11 @@
 package inf112.skeleton.app.GridObjects;
 
 /**
- * An abstract class that all objects on the board extend
- * Position (make class)
- * Direction (make enum class)
- * Tiled image (?? the visual representation of the object)
+ * Class representing an abstract board piece with position
  */
-
-
 public abstract class BoardPiece {
 
     private Position pos;
-    private Direction dir;
     //id number is retrieved from RoborallyBoard.tmx
     private int id;
 
