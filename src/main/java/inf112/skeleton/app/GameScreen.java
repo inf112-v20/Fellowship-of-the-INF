@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import inf112.skeleton.app.Grid.GameLogic;
 import inf112.skeleton.app.Grid.PieceGrid;
 
 /**
@@ -30,6 +31,7 @@ public class GameScreen implements Screen {
     private Player player;
     private TiledMapTileLayer playerLayer;
     private TmxMapLoader mapLoader;
+    private GameLogic gameLogic;
 
     public GameScreen() {
         mapLoader = new TmxMapLoader();
@@ -43,7 +45,7 @@ public class GameScreen implements Screen {
 
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
-
+        gameLogic = new GameLogic(MAP_WIDTH, MAP_WIDTH, map);
         initializePlayer();
     }
 
@@ -52,7 +54,7 @@ public class GameScreen implements Screen {
      * Add it to the playerLayer
      */
     public void initializePlayer() {
-        player = new Player(0);
+        player = new Player(0, gameLogic.getGrid());
         TiledMapTileLayer.Cell playerCell = player.getPlayerCell();
         playerLayer.setCell((int) player.getPos().x, (int) player.getPos().y, playerCell);
     }
