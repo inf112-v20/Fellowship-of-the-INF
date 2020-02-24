@@ -136,5 +136,13 @@ public class PieceGrid {
         //add a NullPiece if there is nothing to add
         grid[x][y].add(new NullPiece(new Position(x, y), -1));
     }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }
 
