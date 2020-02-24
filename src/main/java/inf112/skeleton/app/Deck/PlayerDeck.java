@@ -2,6 +2,12 @@ package inf112.skeleton.app.Deck;
 
 import inf112.skeleton.app.Cards.ProgramCard;
 
+/**
+ * Revision:
+ * Lettere å ha én kortstokk som alle trekker fra. Dette gjør at priority ikke kan kolidere.
+ * Game klassen har ansvar for spillerhendene og det de velger
+ */
+
 public class PlayerDeck {
 
     private Deck drawDeck;
@@ -19,6 +25,7 @@ public class PlayerDeck {
     }
 
     //Draw a new hand based on the damage you have taken. Will also handle if you are running out of cards.
+    //TODO explain the 10
     public void drawHand(int damageValue){
         int numberOfCards = 10-damageValue;
         discardDeck.moveAll(playerHand);
@@ -28,11 +35,13 @@ public class PlayerDeck {
             drawNumberOfCardsFromPile(numberOfCards);
         } else {
             //First draw the remaining cards from the draw deck, then reset discard and draw pile
+            //TODO Trekk resten av kortene
             drawNumberOfCardsFromPile(drawDeck.size()-1);
             resetDrawAndDiscard();
         }
     }
 
+    //TODO explain
     public void chooseCard(int index, ProgramCard card) {
         chosenDeck.addCard(playerHand.drawCard(index));
     }

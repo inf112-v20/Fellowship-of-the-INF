@@ -35,6 +35,7 @@ public class Deck {
         Collections.shuffle(deck);
     }
 
+    //TODO Explain
     public void moveAll(Deck otherDeck){
         for(int i=0; i<otherDeck.size(); i++)
             deck.add(otherDeck.drawCard(0));
