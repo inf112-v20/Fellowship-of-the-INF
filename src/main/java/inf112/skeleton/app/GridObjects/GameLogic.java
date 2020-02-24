@@ -6,9 +6,11 @@ public class GameLogic  {
 
     private PieceGrid grid;
     private GameDeck gameDeck;
+    private Player player;
 
     public GameLogic(PieceGrid grid) {
         this.grid = grid;
+        this.player = new Player(1, grid);
 
     }
 
