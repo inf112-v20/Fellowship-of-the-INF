@@ -29,4 +29,12 @@ public class GameLogic  {
     public void setGameDeck(GameDeck gameDeck) {
         this.gameDeck = gameDeck;
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 }
