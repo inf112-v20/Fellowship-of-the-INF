@@ -13,13 +13,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class CardButton {
     private ImageButton button;
-    private int movement;
-    private int rotation;
-    private int posX;
-    private int slotNumber;
+    private int movement; //0 = No movement, 1 = Move1, 2 = Move2, 3 = Move3, -1 = BackUp
+    private int rotation; //0 = No rotation, 1 = Rotateleft, -1 = Rotateright, 2 = Uturn
+    private int posX; //X position of the card, this is to remember its original position when unselecting a card
+    private int slotNumber = -1; //The position of a card in the list of selected cards, -1 by default
     private Player player;
     private TiledMapTileLayer playerLayer;
-    private static CardButton[] slots = {null, null, null, null, null};
+    private static CardButton[] slots = {null, null, null, null, null}; //Static list of the selected cards
     private static ImageButton lockInButton;
 
     public CardButton(Player player, TiledMapTileLayer playerLayer, int movement, int rotation, int pos) {
@@ -28,7 +28,7 @@ public class CardButton {
         this.player = player;
         this.playerLayer = playerLayer;
         this.posX = pos;
-        this.slotNumber = -1;
+        //Get correct texture/image depending on what card it is
         Texture myTexture = new Texture(Gdx.files.internal("cardtemplate.png"));
         if(movement == 1) {myTexture = new Texture(Gdx.files.internal("cardmove1.png"));}
         else if(movement == 2){myTexture = new Texture(Gdx.files.internal("cardmove2.png"));}
@@ -37,15 +37,17 @@ public class CardButton {
         else if(rotation == 1){myTexture = new Texture(Gdx.files.internal("cardlturn.png"));}
         else if(rotation == -1){myTexture = new Texture(Gdx.files.internal("cardrturn.png"));}
         else if(rotation == 2){myTexture = new Texture(Gdx.files.internal("carduturn.png"));}
+        //Make an ImageButton with that texture, scaling it and positioning it
         TextureRegion myTextureRegion = new TextureRegion(myTexture);
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
         button = new ImageButton(myTexRegionDrawable);
         button.getImage().setScale(0.4f,0.4f);
         button.setScale(0.4f);
         button.setPosition(posX, 300);
+        //Make clicklistener for the button (i.e. the card) for different mousepresses
         buttonLeftPressed(button);
         buttonRightPressed(button);
-
+        //Make lockInButton that is a static for the class. Maybe move this button to GameScreen??
         Texture lockInTexture = new Texture(Gdx.files.internal("lockinbutton.png"));
         TextureRegion lockInTextureRegion = new TextureRegion(lockInTexture);
         TextureRegionDrawable lockInTexRegionDrawable = new TextureRegionDrawable(lockInTextureRegion);
@@ -55,15 +57,11 @@ public class CardButton {
         lockInButton.setPosition(800, 100);
         lockInButtonPressed(lockInButton);
     }
-    public ImageButton getLockInButton(){
-        return lockInButton;
-    }
-    public void setPos(float x, float y){
-        button.setPosition(x, y);
-    }
-    public ImageButton getButton() {
-        return button;
-    }
+    public ImageButton getLockInButton(){return lockInButton;}
+    public void setPos(float x, float y){button.setPosition(x, y);}
+    public ImageButton getButton() {return button;}
+
+    //Methods for the buttonpresses
     public void lockInButtonPressed(ImageButton lockInButton){
         lockInButton.addListener(new ClickListener() {
             @Override
@@ -72,6 +70,8 @@ public class CardButton {
             }
         });
     }
+    //Left click to add the card to the list of selected cards
+    //Hold ctrl + left click a card to that cards action
     public void buttonLeftPressed(ImageButton button){
         button.addListener(new ClickListener(Input.Buttons.LEFT) {
             @Override
@@ -81,6 +81,7 @@ public class CardButton {
             }
         });
     }
+    //Right click to deselect a card
     public void buttonRightPressed(ImageButton button){
         button.addListener(new ClickListener(Input.Buttons.RIGHT) {
             @Override
@@ -90,21 +91,21 @@ public class CardButton {
         });
     }
     public void addCard() {
-        if(this.slotNumber != -1){return;}
-        for (int i = 0; i < 5; i++) {
-            if (slots[i] == null) {
-                slots[i]= this;
-                setPos(150 * i +5,80);
-                this.slotNumber = i;
+        if(this.slotNumber != -1){return;}//do nothing if the card is already selected
+        for (int slotPosition = 0; slotPosition < 5; slotPosition++) {
+            if (slots[slotPosition] == null) {
+                slots[slotPosition]= this;
+                setPos(150 * slotPosition +5,80);
+                this.slotNumber = slotPosition;
                 return;
             }
         }
     }
     public void removeCard(){
-        if(this.slotNumber == -1){return;}
+        if(this.slotNumber == -1){return;}//do nothing if the card is not already selected
         slots[this.slotNumber] = null;
         this.slotNumber = -1;
-        this.setPos(posX, 300);
+        this.setPos(posX, 300); //set the card back to its original position
     }
     public void runSlots(){
         for (int i = 0; i < 5 ; i++) {
@@ -121,10 +122,13 @@ public class CardButton {
         Vector2 pos = player.getPos();
         float newX = pos.x;
         float newY = pos.y;
+        //Directions: 0 = North, 1 = West, 2 = South, 3 = East
         int newDirection = direction + this.rotation;
         if (newDirection > 3) {newDirection -= 4;}
         if (newDirection < 0) {newDirection += 4;}
+        //Rotate player if this card a rotation card
         player.getPlayerCell().setRotation(newDirection);
+        //Move player depending on the direction of the player
         if (direction == 0) { newY += this.movement; }
         else if (direction == 1) {newX -= this.movement;}
         else if (direction == 2) {newY -= this.movement;}

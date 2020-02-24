@@ -51,19 +51,20 @@ public class GameScreen implements Screen {
         tiles = map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WITDTH_DPI, MAP_WITDTH_DPI, camera);
-        camera.setToOrtho(false, MAP_WIDTH, MAP_WIDTH*2);
-        camera.position.y = 0;
+        camera.setToOrtho(false, MAP_WIDTH, MAP_WIDTH*2); //Stretch width of map to the edge
+        camera.position.y = 0;        //Make map only take up the upper half of the screen
         camera.update();
         mapRenderer = new OrthogonalTiledMapRenderer(map, (float) 1 / TILE_WIDTH_DPI);
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
         initializePlayer();
         batch = new SpriteBatch();
-        texture = new Texture(Gdx.files.internal("cardslot.png"));
+        texture = new Texture(Gdx.files.internal("cardslot.png")); //the background image for where the a selected card goes
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
 
+        //create all 7 different cards as buttons
         cardButton1 = new CardButton(player, playerLayer,1,0,0);
         stage.addActor(cardButton1.getButton());//Add the button to the stage to perform rendering and take input.
 
@@ -84,7 +85,7 @@ public class GameScreen implements Screen {
 
         cardButtonU = new CardButton(player, playerLayer,0,2,900);
         stage.addActor(cardButtonU.getButton());
-        stage.addActor(cardButtonU.getLockInButton());
+        stage.addActor(cardButtonU.getLockInButton()); //add the lockInButton
     }
 
     /**
@@ -114,8 +115,8 @@ public class GameScreen implements Screen {
         mapRenderer.setView(camera);
         update(); //make changes to board, if there are any
         batch.begin();
-        for (int i = 0; i <5 ; i++) {
-            batch.draw(texture, 150*i, 75, texture.getWidth()*0.41f, texture.getHeight()*0.41f);
+        for (int xPosition = 0; xPosition <5 ; xPosition++) {
+            batch.draw(texture, 150*xPosition, 75, texture.getWidth()*0.41f, texture.getHeight()*0.41f);
         }
         batch.end();
         mapRenderer.render();
