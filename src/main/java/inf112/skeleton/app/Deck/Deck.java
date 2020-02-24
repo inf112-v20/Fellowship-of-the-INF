@@ -10,6 +10,7 @@ import inf112.skeleton.app.Cards.ProgramCard;
 import java.util.ArrayList;
 import java.util.Collections;
 
+//TODO add final NumberOfCardsOfType...
 public class Deck {
     private ArrayList<ProgramCard> deck;
 
@@ -32,6 +33,11 @@ public class Deck {
     //shuffle deck
     public void shuffle() {
         Collections.shuffle(deck);
+    }
+
+    public void moveAll(Deck otherDeck){
+        for(int i=0; i<otherDeck.size(); i++)
+            deck.add(otherDeck.drawCard(0));
     }
 
     public void addCard(ProgramCard card){
@@ -57,11 +63,6 @@ public class Deck {
         addRotateRight();
         addUturn();
         shuffle();
-    }
-
-    public void moveAll(Deck otherDeck){
-        for(int i=0; i<otherDeck.size(); i++)
-            deck.add(otherDeck.drawCard(0));
     }
 
     private void addMove1() {
