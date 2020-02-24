@@ -1,5 +1,8 @@
 package inf112.skeleton.app.GridObjects;
 
+import inf112.skeleton.app.Grid.Direction;
+import inf112.skeleton.app.Grid.Position;
+
 /**
  * Generates the appropriate BoardPiece based on input id
  * The id is retrieved from the cell in a layer.

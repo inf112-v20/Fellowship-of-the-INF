@@ -1,5 +1,7 @@
 package inf112.skeleton.app.GridObjects;
 
+import inf112.skeleton.app.Grid.Position;
+
 /**
  * BoardPiece that rotates the player either to the left or to the right
  */
