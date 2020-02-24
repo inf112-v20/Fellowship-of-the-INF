@@ -3,6 +3,7 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.Grid.PieceGrid;
 
 /**
  *
@@ -13,12 +14,14 @@ public class Player {
     private TiledMapTileLayer.Cell playerCell; //cell for normal player
     private TiledMapTileLayer.Cell deadPlayerCell; //cell for dead player looks
     private TiledMapTileLayer.Cell wonPlayerCell; //cell for player who has won looks
+    private PieceGrid grid;
 
-    public Player(int playerNumber) {
+    public Player(int playerNumber, PieceGrid grid) {
         pos = new Vector2();
         //place player at the bottom left corner
         pos.x = 0;
         pos.y = 0;
+        this.grid = grid;
 
         playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,0)));
         deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,1)));
