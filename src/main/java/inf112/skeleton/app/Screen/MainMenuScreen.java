@@ -16,6 +16,7 @@ public class MainMenuScreen implements Screen {
     // Button position
     private static final int EXIT_BUTTON_Y = 100;
     private static final int PLAY_BUTTON_Y = 300;
+
     private Texture playButtonActive;
     private Texture playButtonInactive;
     private Texture exitButtonActive;
@@ -42,15 +43,29 @@ public class MainMenuScreen implements Screen {
         game.batch.begin();
 
         // TODO: fix positioning
-        int gameWidth = 3600;
-        int gameHeight = 3600;
-        int buttonX = gameWidth/2 - BUTTON_WIDTH/2;
-
-        if (Gdx.input.getX() < buttonX + BUTTON_WIDTH && Gdx.input.getX() > buttonX && gameHeight - Gdx.input.getY() < EXIT_BUTTON_Y + BUTTON_HEIGHT && gameHeight - Gdx.input.getY() > EXIT_BUTTON_Y) {
+        int buttonX = game.mapSize/8 - BUTTON_WIDTH/8;
+        // Exit button
+//        if (Gdx.input.getX() < buttonX + BUTTON_WIDTH && Gdx.input.getX() > buttonX && gameHeight - Gdx.input.getY() < EXIT_BUTTON_Y + BUTTON_HEIGHT && gameHeight - Gdx.input.getY() > EXIT_BUTTON_Y) {
+//            game.batch.draw(exitButtonActive, buttonX, EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+//        }
+//        else {
+//            game.batch.draw(exitButtonInactive, buttonX, EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+//        }
+        // TEST TODO FJERN
+        if (Gdx.input.getX() < buttonX + BUTTON_WIDTH && Gdx.input.getX() > buttonX && game.mapSize - Gdx.input.getY() < EXIT_BUTTON_Y + BUTTON_HEIGHT && game.mapSize - Gdx.input.getY() > EXIT_BUTTON_Y) {
             game.batch.draw(exitButtonActive, buttonX, EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
         }
         else {
             game.batch.draw(exitButtonInactive, buttonX, EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+        }
+
+        // Play button
+        buttonX = game.mapSize/8 - BUTTON_WIDTH/8;
+        if (Gdx.input.getX() < buttonX + BUTTON_WIDTH && Gdx.input.getX() > buttonX && game.mapSize - Gdx.input.getY() < PLAY_BUTTON_Y + BUTTON_HEIGHT && game.mapSize - Gdx.input.getY() > PLAY_BUTTON_Y) {
+            game.batch.draw(playButtonActive, buttonX, PLAY_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
+        }
+        else {
+            game.batch.draw(playButtonInactive, buttonX, PLAY_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
         }
 
         game.batch.end();

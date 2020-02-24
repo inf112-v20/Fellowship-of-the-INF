@@ -11,12 +11,16 @@ import inf112.skeleton.app.Screen.MainMenuScreen;
 public class RoboRallyDemo extends Game {
 
     public SpriteBatch batch;
+    // TEST TODO fjern
+    public int mapSize;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
 
         GameScreen gameScreen = new GameScreen();
+        // TEST TODO fjern
+        mapSize = gameScreen.getMapSize();
 //        setScreen(gameScreen);
         // TEST: Main menu screen
         setScreen(new MainMenuScreen(this));

@@ -26,7 +26,7 @@ public class GameScreen implements Screen {
     private Viewport gridPort;
     private final int MAP_WIDTH = 12; //dimentions of board
     private final int TILE_WIDTH_DPI = 300; //pixel width per cell
-    private final int MAP_WITDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI; //total width of map in pixels
+    private final int MAP_WIDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI; //total width of map in pixels
     private Player player;
     private TiledMapTileLayer playerLayer;
     private TmxMapLoader mapLoader;
@@ -36,7 +36,7 @@ public class GameScreen implements Screen {
         map = mapLoader.load("RoborallyBoard.tmx");
         tiles = map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
-        gridPort = new StretchViewport(MAP_WITDTH_DPI, MAP_WITDTH_DPI, camera);
+        gridPort = new StretchViewport(MAP_WIDTH_DPI, MAP_WIDTH_DPI, camera);
         camera.setToOrtho(false, MAP_WIDTH, MAP_WIDTH);
         camera.update();
         mapRenderer = new OrthogonalTiledMapRenderer(map, (float) 1 / TILE_WIDTH_DPI);
@@ -128,5 +128,13 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    /**
+     * Test method for for MainMenuScreen.java
+     * @return size (height * width) of map
+     */
+    public int getMapSize() {
+        return MAP_WIDTH_DPI;
     }
 }
