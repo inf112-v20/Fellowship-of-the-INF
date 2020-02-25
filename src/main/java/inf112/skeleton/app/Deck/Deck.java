@@ -1,9 +1,5 @@
 package inf112.skeleton.app.Deck;
 
-/**
- * TODO Find a way to make priority. Atm are all cards set to priority 1
- */
-
 import inf112.skeleton.app.Cards.CardType;
 import inf112.skeleton.app.Cards.ProgramCard;
 
