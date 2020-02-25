@@ -19,8 +19,6 @@ public class RoboRallyDemo extends Game {
         batch = new SpriteBatch();
 
         GameScreen gameScreen = new GameScreen();
-        // TEST TODO fjern
-        mapSize = gameScreen.getMapSize();
 //        setScreen(gameScreen);
         // TEST: Main menu screen
         setScreen(new MainMenuScreen(this));
