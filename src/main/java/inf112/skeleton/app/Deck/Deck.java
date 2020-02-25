@@ -1,7 +1,7 @@
 package inf112.skeleton.app.Deck;
 
 /**
- * TODO Find a way to make priority. Atm are all cards set to priority 1
+ * I list of Cards, with some extra functionalities.
  */
 
 import inf112.skeleton.app.Cards.CardType;
@@ -99,11 +99,11 @@ public class Deck {
     }
 
     /**
-     * Creates a list with unique priority values. The value is a number between 200 and 200+(20* number of cards)
+     * Creates a list with unique priority values. The value is a number between 200 and 200+(10* number of cards)
      */
     private void createPriority() {
         for (int i=0; i<nrOfCards; i++)
-            priorities.add(200+(i*20));
+            priorities.add(200+(i*10));
         Collections.shuffle(priorities);
     }
 
