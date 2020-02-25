@@ -12,4 +12,8 @@ public class WallPiece extends DirectionedPiece {
     public boolean canGo(Direction dir) {
         return true;
     }
+
+    public boolean canLeave(Direction dir) {
+        return true;
+    }
 }
