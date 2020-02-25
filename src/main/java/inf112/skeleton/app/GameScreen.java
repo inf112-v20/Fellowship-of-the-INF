@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
@@ -44,8 +45,8 @@ public class GameScreen implements Screen {
     private Stage stage;
     private Texture texture;
     private SpriteBatch batch;
+    private BitmapFont font;
     private GameLogic gameLogic;
-
 
     public GameScreen() {
         mapLoader = new TmxMapLoader();
@@ -63,7 +64,6 @@ public class GameScreen implements Screen {
         initializePlayer();
         batch = new SpriteBatch();
         texture = new Texture(Gdx.files.internal("cardslot.png")); //the background image for where the a selected card goes
-
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
         cardButton = new CardButton();
@@ -74,12 +74,10 @@ public class GameScreen implements Screen {
             stage.addActor(cardButton.getListOfCardButtons().get(i).getButton());
         }
     }
-
     /**
      * Create a simple player with the ability to move around the board
      * Add it to the playerLayer
      */
-
     public void initializePlayer() {
         player = new Player(0, gameLogic.getGrid());
         TiledMapTileLayer.Cell playerCell = player.getPlayerCell();
@@ -101,14 +99,24 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         mapRenderer.setView(camera);
         update(); //make changes to board, if there are any
+        mapRenderer.render();
         batch.begin();
         for (int xPosition = 0; xPosition <5 ; xPosition++) {
             batch.draw(texture, 150*xPosition, 75, texture.getWidth()*0.41f, texture.getHeight()*0.41f);
         }
         batch.end();
-        mapRenderer.render();
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui
+        font = new BitmapFont();
+        batch.begin();
+        int numberOfCardButtons = cardButton.getListOfCardButtons().size();
+        for (int i = 0; i < numberOfCardButtons; i++) {
+            String priorityText = String.valueOf(cardButton.getListOfCardButtons().get(i).getCard().getPriority());
+            int textPosX = cardButton.getListOfCardButtons().get(i).getCurrentPosX()+75;
+            int textPosY = cardButton.getListOfCardButtons().get(i).getCurrentPosY()+178;
+            font.draw(batch, priorityText, textPosX, textPosY);
+        }
+        batch.end();
     }
     /**
      * Update all changes to board

@@ -3,6 +3,8 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -16,10 +18,14 @@ public class CardButton {
     private ImageButton button;
     private ProgramCard programCard;
     private int posX; //X position of the card, this is to remember its original position when unselecting a card
+    private int posY = 300;
+    private int currentPosX;
+    private int currentPosY = posY;
     private int slotNumber = -1; //The position of a card in the list of selected cards, -1 by default
     private static ArrayList<CardButton> listOfCardButtons = new ArrayList<CardButton>(); //Static list of the selected cards
     private static CardButton[] selectedCardButtons = {null, null, null, null, null};
     private static ImageButton lockInButton;
+
 
     public CardButton(){
         Texture lockInTexture = new Texture(Gdx.files.internal("lockinbutton.png"));
@@ -34,23 +40,27 @@ public class CardButton {
     public CardButton(ProgramCard card, int pos) {
         this.programCard = card;
         this.posX = pos*150;
-
+        currentPosX = posX;
         //Make an ImageButton with the cards texture, scaling it and positioning it
         TextureRegion myTextureRegion = new TextureRegion(card.getTexture());
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
         button = new ImageButton(myTexRegionDrawable);
         button.getImage().setScale(0.4f,0.4f);
         button.setScale(0.4f);
-        button.setPosition(posX, 300);
+        button.setPosition(posX, posY);
         //Make clicklistener for the button (i.e. the card) for different mousepresses
         buttonLeftPressed(button);
         buttonRightPressed(button);
+        //Add the CardButton to an list where all elements will be added as actors in Stage in GameScreen
         listOfCardButtons.add(this);
     }
+    public int getCurrentPosX(){return this.currentPosX;}
+    public int getCurrentPosY(){return this.currentPosY;}
     public ArrayList<CardButton> getListOfCardButtons() {return listOfCardButtons;}
     public ImageButton getLockInButton(){return lockInButton;}
     public void setPos(float x, float y){button.setPosition(x, y);}
     public ImageButton getButton() {return button;}
+    public ProgramCard getCard(){return this.programCard;}
 
     //Methods for the buttonpresses
     public void lockInButtonPressed(ImageButton lockInButton){
@@ -86,7 +96,9 @@ public class CardButton {
         for (int i = 0; i < 5; i++) {
             if (selectedCardButtons[i] == null) {
                 selectedCardButtons[i]= this;
-                setPos(150 * i +5,80);
+                currentPosX = 150 *i + 5;
+                currentPosY = 80;
+                setPos(currentPosX, currentPosY);
                 this.slotNumber = i;
                 return;
             }
@@ -96,7 +108,9 @@ public class CardButton {
         if(this.slotNumber == -1){return;}//do nothing if the card is not already selected
         selectedCardButtons[this.slotNumber] = null;
         this.slotNumber = -1;
-        this.setPos(posX, 300); //set the card back to its original position
+        this.setPos(posX, posY); //set the card back to its original position
+        currentPosX = posX;
+        currentPosY = posY;
     }
 
     public ArrayList<ProgramCard> getSelectedProgramCards(){

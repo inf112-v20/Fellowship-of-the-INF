@@ -1,10 +1,7 @@
 package inf112.skeleton.app.Cards;
 
-import java.awt.image.BufferedImage;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-
 
 public class ProgramCard implements IProgramCard{
 
@@ -43,7 +40,6 @@ public class ProgramCard implements IProgramCard{
                 texture = new Texture(Gdx.files.internal("carduturn.png"));
                 break;
         }
-        //Then maybe write priority
     }
 
     @Override
