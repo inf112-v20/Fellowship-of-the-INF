@@ -1,5 +1,8 @@
 package inf112.skeleton.app.GridObjects;
 
+import inf112.skeleton.app.Grid.Direction;
+import inf112.skeleton.app.Grid.Position;
+
 public class LazerPiece extends DirectionedPiece {
     //true if there are two paralell lasers on this cell
     boolean doubleLaser;

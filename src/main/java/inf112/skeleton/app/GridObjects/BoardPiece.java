@@ -1,5 +1,7 @@
 package inf112.skeleton.app.GridObjects;
 
+import inf112.skeleton.app.Grid.Position;
+
 /**
  * Class representing an abstract board piece with position
  */
