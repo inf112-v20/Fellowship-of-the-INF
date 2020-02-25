@@ -11,6 +11,7 @@ public class Main {
         cfg.title = "hello-world";
         cfg.width = 1200;
         cfg.height = 1200;
+        cfg.resizable = false;
 
         new LwjglApplication(new RoboRallyDemo(), cfg);
     }
