@@ -2,20 +2,24 @@ package inf112.skeleton.app.Grid;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import inf112.skeleton.app.Deck.GameDeck;
-import inf112.skeleton.app.Grid.PieceGrid;
 import inf112.skeleton.app.Player;
 
+/**
+ * This is the class representing the "bridge" between frontend and backend.
+ * All backend classes (ie Player) can get information about the PieceGrid from here,
+ * additionally all frontend classes (primarily GameScreen) can get info about the Tiled grid.
+ */
 public class GameLogic  {
 
     private PieceGrid grid;
     private GameDeck gameDeck;
     private Player player;
-    TiledMap map;
+    TiledMap tiledMap;
 
-    public GameLogic(int width, int height, TiledMap map) {
-        this.grid = new PieceGrid(width, height, map);
+    public GameLogic(int width, int height, TiledMap tiledMap) {
+        this.grid = new PieceGrid(width, height, tiledMap);
         this.player = new Player(1, grid);
-        this.map = map;
+        this.tiledMap = tiledMap;
     }
 
     public PieceGrid getGrid() {
@@ -43,11 +47,11 @@ public class GameLogic  {
     }
 
     public TiledMap getMap() {
-        return map;
+        return tiledMap;
     }
 
     public void setMap(TiledMap map) {
-        this.map = map;
+        this.tiledMap = map;
     }
 
     public int getBoardWidth() {
