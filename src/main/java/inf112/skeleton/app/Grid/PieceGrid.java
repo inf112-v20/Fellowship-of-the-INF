@@ -52,7 +52,7 @@ public class PieceGrid {
         this.height = grid.length;
         numberOfLayers = map.getLayers().getCount(); //not used right now
 
-        //extract each later from the tiled map
+        //extract each layer from the tiled map
         floorLayer = (TiledMapTileLayer) map.getLayers().get("Floor");
         repairLayer = (TiledMapTileLayer) map.getLayers().get("Repair");
         opCardLayer = (TiledMapTileLayer) map.getLayers().get("OpCard");
@@ -61,7 +61,7 @@ public class PieceGrid {
         expressBeltLayer = (TiledMapTileLayer) map.getLayers().get("Express belt");
         cogLayer = (TiledMapTileLayer) map.getLayers().get("Cog");
         pusherLayer = (TiledMapTileLayer) map.getLayers().get("Pusher");
-        laserLayer = (TiledMapTileLayer) map.getLayers().get("Lazer");
+        laserLayer = (TiledMapTileLayer) map.getLayers().get("Laser");
         laserSourceLayer = (TiledMapTileLayer) map.getLayers().get("Laser Source");
         wallLayer = (TiledMapTileLayer) map.getLayers().get("Wall");
         flagLayer = (TiledMapTileLayer) map.getLayers().get("Flag");
@@ -76,7 +76,7 @@ public class PieceGrid {
         expressBeltLayerIndex = map.getLayers().getIndex("Express belt");
         cogLayerIndex = map.getLayers().getIndex("Cog");
         pusherLayerIndex = map.getLayers().getIndex("Pusher");
-        laserLayerIndex = map.getLayers().getIndex("Lazer");
+        laserLayerIndex = map.getLayers().getIndex("Laser");
         laserSourceLayerIndex = map.getLayers().getIndex("Laser Source");
         wallLayerIndex = map.getLayers().getIndex("Wall");
         flagLayerIndex = map.getLayers().getIndex("Flag");
@@ -143,6 +143,10 @@ public class PieceGrid {
 
     public int getHeight() {
         return height;
+    }
+
+    public ArrayList<BoardPiece>[][] getGrid() {
+        return grid;
     }
 }
 

@@ -1,5 +1,8 @@
 package inf112.skeleton.app.GridObjects;
 
+import inf112.skeleton.app.Grid.Direction;
+import inf112.skeleton.app.Grid.Position;
+
 /**
  * Generates the appropriate BoardPiece based on input id
  * The id is retrieved from the cell in a layer.
@@ -96,33 +99,33 @@ public class BoardPieceGenerator {
             case (12):
                 return new PusherPiece(pos, id, Direction.EAST, true);
             case (47):
-                return new LazerPiece(pos, id, Direction.NORTH, false, false);
+                return new LaserPiece(pos, id, Direction.NORTH, false, false);
             case (39):
-                return new LazerPiece(pos, id, Direction.WEST, false, false);
+                return new LaserPiece(pos, id, Direction.WEST, false, false);
             case (40):
-                return new LazerPiece(pos, id, Direction.WEST, false, true);
+                return new LaserPiece(pos, id, Direction.WEST, false, true);
             case (103):
-                return new LazerPiece(pos, id, Direction.WEST, true, false);
+                return new LaserPiece(pos, id, Direction.WEST, true, false);
             case (102):
-                return new LazerPiece(pos, id, Direction.NORTH, true, false);
+                return new LaserPiece(pos, id, Direction.NORTH, true, false);
             case (101):
-                return new LazerPiece(pos, id, Direction.NORTH, true, true);
+                return new LaserPiece(pos, id, Direction.NORTH, true, true);
             case (37):
-                return new LazerSourcePiece(pos, id, Direction.NORTH, false);
+                return new LaserSourcePiece(pos, id, Direction.NORTH, false);
             case (38):
-                return new LazerSourcePiece(pos, id, Direction.EAST, false);
+                return new LaserSourcePiece(pos, id, Direction.EAST, false);
             case (45):
-                return new LazerSourcePiece(pos, id, Direction.SOUTH, false);
+                return new LaserSourcePiece(pos, id, Direction.SOUTH, false);
             case (46):
-                return new LazerSourcePiece(pos, id, Direction.WEST, false);
+                return new LaserSourcePiece(pos, id, Direction.WEST, false);
             case (88):
-                return new LazerSourcePiece(pos, id, Direction.NORTH, true);
+                return new LaserSourcePiece(pos, id, Direction.NORTH, true);
             case (93):
-                return new LazerSourcePiece(pos, id, Direction.EAST, true);
+                return new LaserSourcePiece(pos, id, Direction.EAST, true);
             case (94):
-                return new LazerSourcePiece(pos, id, Direction.SOUTH, true);
+                return new LaserSourcePiece(pos, id, Direction.SOUTH, true);
             case (95):
-                return new LazerSourcePiece(pos, id, Direction.WEST, true);
+                return new LaserSourcePiece(pos, id, Direction.WEST, true);
             case (31):
                 return new WallPiece(pos, id, Direction.NORTH);
             case (30):

@@ -24,7 +24,8 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer mapRenderer;
     private OrthographicCamera camera;
     private Viewport gridPort;
-    private final int MAP_WIDTH = 12; //dimentions of board
+    private final int MAP_WIDTH = 12; //dimensions of board
+    private final int MAP_HEIGHT = 12;
     private final int TILE_WIDTH_DPI = 300; //pixel width per cell
     private final int MAP_WITDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI; //total width of map in pixels
     private Player player;
@@ -32,6 +33,7 @@ public class GameScreen implements Screen {
     private TmxMapLoader mapLoader;
 
     public GameScreen() {
+        GameLogic game = new GameLogic();
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("RoborallyBoard.tmx");
         tiles = map.getTileSets().getTileSet("tileset.png");
@@ -43,6 +45,7 @@ public class GameScreen implements Screen {
 
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
+        PieceGrid grid = new PieceGrid(MAP_WIDTH, MAP_WIDTH, map);
 
         initializePlayer();
     }

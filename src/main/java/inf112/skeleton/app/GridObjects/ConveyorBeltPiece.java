@@ -1,5 +1,8 @@
 package inf112.skeleton.app.GridObjects;
 
+import inf112.skeleton.app.Grid.Direction;
+import inf112.skeleton.app.Grid.Position;
+
 public class ConveyorBeltPiece extends DirectionedPiece {
 
     private boolean turn; //true if converyBeltPiece is a corner
