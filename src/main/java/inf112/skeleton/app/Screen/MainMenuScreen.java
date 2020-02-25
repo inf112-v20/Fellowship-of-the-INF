@@ -52,7 +52,7 @@ public class MainMenuScreen implements Screen {
 //            game.batch.draw(exitButtonInactive, buttonX, EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
 //        }
         // TEST TODO FJERN
-        if (Gdx.input.getX() < buttonX + BUTTON_WIDTH && Gdx.input.getX() > buttonX && game.mapSize - Gdx.input.getY() < EXIT_BUTTON_Y + BUTTON_HEIGHT && game.mapSize - Gdx.input.getY() > EXIT_BUTTON_Y) {
+        if (Gdx.input.getX() < buttonX + BUTTON_WIDTH && Gdx.input.getX() > buttonX && game.mapSize + Gdx.input.getY() < EXIT_BUTTON_Y - BUTTON_HEIGHT && game.mapSize - Gdx.input.getY() > EXIT_BUTTON_Y) {
             game.batch.draw(exitButtonActive, buttonX, EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT);
         }
         else {
