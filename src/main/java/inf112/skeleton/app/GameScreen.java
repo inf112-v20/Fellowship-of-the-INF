@@ -1,5 +1,6 @@
 package inf112.skeleton.app;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -17,8 +18,11 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import inf112.skeleton.app.Deck.GameDeck;
 import inf112.skeleton.app.Grid.GameLogic;
 import inf112.skeleton.app.Grid.PieceGrid;
+
+import java.util.ArrayList;
 
 /**
  * Game screen at the moment only shows a board with a playerLayer, and a player
@@ -35,13 +39,8 @@ public class GameScreen implements Screen {
     private Player player;
     private TiledMapTileLayer playerLayer;
     private TmxMapLoader mapLoader;
-    private CardButton cardButton1;
-    private CardButton cardButton2;
-    private CardButton cardButton3;
-    private CardButton cardButton_1;
-    private CardButton cardButtonR;
-    private CardButton cardButtonL;
-    private CardButton cardButtonU;
+    private CardButton cardButton;
+    private GameDeck gameDeck;
     private Stage stage;
     private Texture texture;
     private SpriteBatch batch;
@@ -67,29 +66,13 @@ public class GameScreen implements Screen {
 
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
-
-        //create all 7 different cards as buttons
-        cardButton1 = new CardButton(player, playerLayer,1,0,0);
-        stage.addActor(cardButton1.getButton());//Add the button to the stage to perform rendering and take input.
-
-        cardButton2 = new CardButton(player, playerLayer,2,0,150);
-        stage.addActor(cardButton2.getButton());
-
-        cardButton3 = new CardButton(player, playerLayer,3,0,300);
-        stage.addActor(cardButton3.getButton());
-
-        cardButton_1 = new CardButton(player, playerLayer,-1,0,450);
-        stage.addActor(cardButton_1.getButton());
-
-        cardButtonR = new CardButton(player, playerLayer,0,-1,600);
-        stage.addActor(cardButtonR.getButton());
-
-        cardButtonL = new CardButton(player, playerLayer,0,1,750);
-        stage.addActor(cardButtonL.getButton());
-
-        cardButtonU = new CardButton(player, playerLayer,0,2,900);
-        stage.addActor(cardButtonU.getButton());
-        stage.addActor(cardButtonU.getLockInButton()); //add the lockInButton
+        cardButton = new CardButton();
+        stage.addActor(cardButton.getLockInButton());
+        gameDeck = new GameDeck();
+        gameDeck.drawHand(gameDeck.getDrawDeck(), 0);
+        for (int i = 0; i < cardButton.getListOfCardButtons().size(); i++) {
+            stage.addActor(cardButton.getListOfCardButtons().get(i).getButton());
+        }
     }
 
     /**

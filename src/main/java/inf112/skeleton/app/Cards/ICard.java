@@ -1,6 +1,8 @@
 package inf112.skeleton.app.Cards;
 
 import java.awt.image.BufferedImage;
+import com.badlogic.gdx.graphics.Texture;
+
 
 /**
  *
@@ -14,6 +16,6 @@ public interface ICard{
      * Get the png file of the card.
      *
      */
-    public BufferedImage getImage();
+    public Texture getTexture();
 
 }

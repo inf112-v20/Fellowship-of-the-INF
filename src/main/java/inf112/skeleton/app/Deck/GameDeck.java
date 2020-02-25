@@ -1,9 +1,12 @@
 package inf112.skeleton.app.Deck;
 
+import inf112.skeleton.app.CardButton;
+
 public class GameDeck {
     private Deck drawDeck;
     private Deck discardDeck;
     private final int maxNumberOfCardsOnHand = 9;
+    private CardButton cardButton;
 
     public GameDeck() {
         drawDeck = new Deck();
@@ -15,7 +18,6 @@ public class GameDeck {
     //Number of cards are calculated by subtracting the number of damage you have taken from the maximum number of cards
     public void drawHand(Deck playerHand, int damageValue) {
         int numberOfCards = maxNumberOfCardsOnHand - damageValue;
-
         discardDeck.moveAll(playerHand);
 
         if (canDrawFullHand(numberOfCards)) {
@@ -51,7 +53,9 @@ public class GameDeck {
     }
 
     private void drawNumberOfCardsFromPile(Deck playerHand, int numberOfCards) {
-        for (int i = 0; i < numberOfCards; i++)
-            playerHand.addCard(drawDeck.drawCard(0));
+        for (int i = 0; i < numberOfCards; i++) {
+            playerHand.addCard(drawDeck.getCard(i));
+            cardButton = new CardButton(drawDeck.getCard(i), i);
+        }
     }
 }
