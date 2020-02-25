@@ -24,21 +24,9 @@ public class Deck {
     private int nrOfCards;
 
     public Deck() {
-        deck = new ArrayList<ProgramCard>();
-        priorities = new ArrayList<Integer>();
+        deck = new ArrayList<>();
+        priorities = new ArrayList<>();
         nrOfCards = nrOfMove1+nrOfMove2+nrOfMove3+nrOfBackup+nrOfRotateRight+nrOfRotateLeft+nrOfUturn;
-    }
-
-    /**
-     * Draw card from the top of the deck. This DOES removes the card from the deck
-     *
-     * @param index The index of where in the deck you want to draw the card from
-     * @return The chosen card
-     */
-    public ProgramCard drawCard(int index) {
-        ProgramCard card = deck.get(index);
-        deck.remove(index);
-        return card;
     }
 
     /**
@@ -61,8 +49,10 @@ public class Deck {
      * @param otherDeck A different deck that you want to move all the cards from, to this deck
      */
     public void moveAll(Deck otherDeck){
-        for(int i=0; i<otherDeck.size(); i++)
-            deck.add(otherDeck.drawCard(0));
+        for(int i=0; i<otherDeck.size(); i++) {
+            deck.add(otherDeck.getCard(0));
+            otherDeck.removeCard(0);
+        }
     }
 
     public void addCard(ProgramCard card){
@@ -79,7 +69,7 @@ public class Deck {
      * @param index The index of where in the deck you want to see the card
      * @return The card at the index
      */
-    public ProgramCard seeCard(int index){
+    public ProgramCard getCard(int index){
         return deck.get(index);
     }
 

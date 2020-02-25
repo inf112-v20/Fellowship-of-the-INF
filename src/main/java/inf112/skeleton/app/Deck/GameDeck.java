@@ -39,10 +39,7 @@ public class GameDeck {
 
     //Check to see if you can draw a hand without the drawDeck running out of cards
     private boolean canDrawFullHand(int numberOfCards) {
-        if (numberOfCards <= drawDeck.size() - 1)
-            return true;
-        else
-            return false;
+        return numberOfCards <= drawDeck.size() - 1;
     }
 
     private void resetDrawAndDiscard() {
@@ -51,7 +48,9 @@ public class GameDeck {
     }
 
     private void drawNumberOfCardsFromPile(Deck playerHand, int numberOfCards) {
-        for (int i = 0; i < numberOfCards; i++)
-            playerHand.addCard(drawDeck.drawCard(0));
+        for (int i = 0; i < numberOfCards; i++) {
+            playerHand.addCard(drawDeck.getCard(0));
+            drawDeck.removeCard(0);
+        }
     }
 }
