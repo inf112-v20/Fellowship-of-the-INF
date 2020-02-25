@@ -7,14 +7,11 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.Grid.Direction;
 import inf112.skeleton.app.Grid.PieceGrid;
-import inf112.skeleton.app.Grid.Position;
 import inf112.skeleton.app.GridObjects.AbyssPiece;
 import inf112.skeleton.app.GridObjects.BoardPiece;
 import inf112.skeleton.app.GridObjects.WallPiece;
 
 import java.util.ArrayList;
-
-import static inf112.skeleton.app.Grid.Direction.*;
 
 /**
  *
@@ -85,42 +82,75 @@ public class Player {
         setPos(newX, newY);
     }
 
+    /** Method for checking if a move-1-forward move is applicable.
+     * @param x-coordinate   current x coordinate
+     * @param y-coordinate   current y coordinate
+     * @param dir            current direction
+     * @return whether moving one tile in a given direction is legal
+     */
     private boolean isLegalMove(int x, int y, Direction dir) {
         int xPosIn2dArray = MAP_WIDTH - 1 - x;
         BoardPiece currPiece;
         BoardPiece pieceInFront;
-        for (int i = 0; i < pieceGrid[xPosIn2dArray][y].size(); i++)
+        for (int i = 0; i < pieceGrid[xPosIn2dArray][y].size(); i++) {
+            currPiece = pieceGrid[xPosIn2dArray][y].get(i);
+
             switch (dir) {
                 case EAST:
-                    if (x + 1 < MAP_WIDTH + 1 || x + 1 > -1) {
-                        currPiece = pieceGrid[xPosIn2dArray][y].get(i);
+                    if (withinBoundaries(x + 1, y)) {
                         pieceInFront = pieceGrid[xPosIn2dArray + 1][y].get(i);
                         if (currPiece instanceof WallPiece) {
-                            if (((WallPiece) currPiece).getDir().compareTo(WEST) == 0) return false;
-                            else return true;
+                            return ((WallPiece) currPiece).canLeave(dir);
                         }
                         if (pieceInFront instanceof WallPiece) {
-                            if (((WallPiece) pieceInFront).getDir().compareTo(EAST) == 0) return false;
+                            return ((WallPiece) pieceInFront).canGo(dir);
                         }
                     }
                 case WEST:
-                    if (x - 1 < MAP_WIDTH + 1 || x - 1 > -1) {
-                        currPiece = pieceGrid[xPosIn2dArray][y].get(i);
-                        pieceInFront = pieceGrid[xPosIn2dArray + 1][y].get(i);
+                    if (withinBoundaries(x - 1, y)) {
+                        pieceInFront = pieceGrid[xPosIn2dArray - 1][y].get(i);
                         if (currPiece instanceof WallPiece) {
-                            if (((WallPiece) currPiece).getDir().compareTo(EAST) == 0) return false;
-                            else return true;
+                            return ((WallPiece) currPiece).canLeave(dir);
                         }
                         if (pieceInFront instanceof WallPiece) {
-                            if (((WallPiece) pieceInFront).getDir().compareTo(WEST) == 0) return false;
+                            return ((WallPiece) pieceInFront).canGo(dir);
                         }
-                        case NORTH:
-
-                        case SOUTH:
+                    }
+                case NORTH:
+                    if (withinBoundaries(x, y + 1)) {
+                        pieceInFront = pieceGrid[xPosIn2dArray][y + 1].get(i);
+                        if (currPiece instanceof WallPiece) {
+                            return ((WallPiece) currPiece).canLeave(dir);
+                        }
+                        if (pieceInFront instanceof WallPiece) {
+                            return ((WallPiece) pieceInFront).canGo(dir);
+                        }
+                    }
+                case SOUTH:
+                    if (withinBoundaries(x, y - 1)) {
+                        pieceInFront = pieceGrid[xPosIn2dArray][y - 1].get(i);
+                        if (currPiece instanceof WallPiece) {
+                            return ((WallPiece) currPiece).canLeave(dir);
+                        }
+                        if (pieceInFront instanceof WallPiece) {
+                            return ((WallPiece) pieceInFront).canGo(dir);
+                        }
                     }
             }
+        }
     }
-    private boolean checkBound
+
+    /** Method for checking if a move is within the map boundaries
+     * out of bounds is two tiles outside the map, since one tile is used for death
+     * @param x x-position after move
+     * @param y y-position after move
+     * @return  whether the move is within map boundaries
+     */
+    private boolean withinBoundaries(int x, int y){
+        if (x > MAP_WIDTH+1 || y > MAP_HEIGHT+1 || x < -1 || y < -1)
+            return false;
+        return true;
+    }
 
     private boolean isDeadMove(int x, int y){
         int xPosIn2dArray =  MAP_WIDTH-1 - x;
