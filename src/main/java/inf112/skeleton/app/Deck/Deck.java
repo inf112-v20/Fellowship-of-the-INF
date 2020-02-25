@@ -12,7 +12,6 @@ import java.util.Collections;
 
 public class Deck {
     private ArrayList<ProgramCard> deck;
-    private ArrayList<Integer> priorities;
 
     private final int nrOfMove1 = 18;
     private final int nrOfMove2 = 12;
@@ -21,12 +20,9 @@ public class Deck {
     private final int nrOfRotateRight = 18;
     private final int nrOfRotateLeft = 18;
     private final int nrOfUturn = 6;
-    private int nrOfCards;
 
     public Deck() {
         deck = new ArrayList<>();
-        priorities = new ArrayList<>();
-        nrOfCards = nrOfMove1+nrOfMove2+nrOfMove3+nrOfBackup+nrOfRotateRight+nrOfRotateLeft+nrOfUturn;
     }
 
     /**
@@ -77,7 +73,6 @@ public class Deck {
      * Add the cards used in a programCard deck. Should only be used when making a new deck
      */
     public void createDeck() {
-        createPriority();
         addMove1();
         addMove2();
         addMove3();
@@ -88,61 +83,59 @@ public class Deck {
         shuffle();
     }
 
-    /**
-     * Creates a list with unique priority values. The value is a number between 200 and 200+(10* number of cards)
-     */
-    private void createPriority() {
-        for (int i=0; i<nrOfCards; i++)
-            priorities.add(200+(i*10));
-        Collections.shuffle(priorities);
-    }
-
     private void addMove1() {
+        int priority = 490;
         for (int i=0; i<nrOfMove1; i++) {
-            deck.add(new ProgramCard(priorities.get(0), CardType.MOVE1));
-            priorities.remove(0);
+            deck.add(new ProgramCard(priority, CardType.MOVE1));
+            priority += 10;
         }
     }
 
     private void addMove2() {
+        int priority = 670;
         for (int i=0; i<nrOfMove2; i++) {
-            deck.add(new ProgramCard(priorities.get(0), CardType.MOVE2));
-            priorities.remove(0);
+            deck.add(new ProgramCard(priority, CardType.MOVE2));
+            priority += 10;
         }
     }
 
     private void addMove3() {
+        int priority = 790;
         for (int i=0; i<nrOfMove3; i++) {
-            deck.add(new ProgramCard(priorities.get(0), CardType.MOVE3));
-            priorities.remove(0);
+            deck.add(new ProgramCard(priority, CardType.MOVE3));
+            priority += 10;
         }
     }
 
     private void addBackup() {
+        int priority = 430;
         for (int i=0; i<nrOfBackup; i++) {
-            deck.add(new ProgramCard(priorities.get(0), CardType.BACKUP));
-            priorities.remove(0);
+            deck.add(new ProgramCard(priority, CardType.BACKUP));
+            priority += 10;
         }
     }
 
     private void addRotateRight() {
+        int priority = 80;
         for (int i = 0; i < nrOfRotateRight; i++) {
-            deck.add(new ProgramCard(priorities.get(0), CardType.ROTATERIGHT));
-            priorities.remove(0);
+            deck.add(new ProgramCard(priority, CardType.ROTATERIGHT));
+            priority += 20;
         }
     }
 
     private void addRotateLeft() {
+        int priority = 70;
         for (int i = 0; i < nrOfRotateLeft; i++) {
-            deck.add(new ProgramCard(priorities.get(0), CardType.ROTATELEFT));
-            priorities.remove(0);
+            deck.add(new ProgramCard(priority, CardType.ROTATELEFT));
+            priority += 20;
         }
     }
 
     private void addUturn() {
+        int priority = 10;
         for (int i = 0; i < nrOfUturn; i++) {
-            deck.add(new ProgramCard(priorities.get(0), CardType.UTURN));
-            priorities.remove(0);
+            deck.add(new ProgramCard(priority, CardType.UTURN));
+            priority += 10;
         }
     }
 }
