@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.Grid.Direction;
 import inf112.skeleton.app.Grid.PieceGrid;
+import inf112.skeleton.app.Grid.Position;
 import inf112.skeleton.app.GridObjects.AbyssPiece;
 import inf112.skeleton.app.GridObjects.BoardPiece;
 import inf112.skeleton.app.GridObjects.WallPiece;
@@ -18,33 +18,38 @@ import java.util.ArrayList;
  */
 public class Player {
 
-    private Vector2 pos; //position of player
+    private Position pos; //position of player
+    private TiledMapTileLayer.Cell currentCell; //Cell for the current state of the player
     private TiledMapTileLayer.Cell playerCell; //cell for normal player
     private TiledMapTileLayer.Cell deadPlayerCell; //cell for dead player looks
     private TiledMapTileLayer.Cell wonPlayerCell; //cell for player who has won looks
     private int MAP_WIDTH;
     private int MAP_HEIGHT;
     private ArrayList<BoardPiece>[][] pieceGrid;
+    private Direction dir;
 
     public Player(int playerNumber, PieceGrid pieceGrid) {
         this.pieceGrid = pieceGrid.getGrid();
-        pos = new Vector2();
+        pos = new Position(0,0);
+        dir = Direction.NORTH;
         //place player at the bottom left corner
-        pos.x = 0;
-        pos.y = 0;
+        pos.setX(0);
+        pos.setY(0);
         MAP_WIDTH = pieceGrid.getWidth();
         MAP_HEIGHT = pieceGrid.getHeight();
 
+        currentCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,0)));
         playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,0)));
         deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,1)));
         wonPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,2)));
+
     }
 
     /**
      * Getter for position
      * @return position of player
      */
-    public Vector2 getPos() {
+    public Position getPos() {
         return pos;
     }
 
@@ -53,9 +58,9 @@ public class Player {
      * @param x new x position
      * @param y new y position
      */
-    public void setPos(float x, float y) {
-        pos.x = x;
-        pos.y = y;
+    public void setPos(int x, int y) {
+        pos.setX(x);
+        pos.setY(y);
     }
 
     /**
@@ -63,21 +68,25 @@ public class Player {
      * @return player
      */
     public TiledMapTileLayer.Cell getPlayerCell() {
-        return playerCell;
+        return currentCell;
     }
 
     public void handleInput() {
-        Vector2 pos = getPos();
-        float newX = pos.x;
-        float newY = pos.y;
+        Position pos = getPos();
+        int newX = pos.getX();
+        int newY = pos.getY();
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            if (isLegalMove(pos.x, pos.y, dir)) newY += 1;
+            if (isLegalMove(pos.getX(), pos.getY(), dir)) newY += 1;
+            if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            if (isLegalMove(pos.x, pos.y, dir)) newY -= 1;
+            if (isLegalMove(pos.getX(), pos.getY(), dir)) newY -= 1;
+            if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            if (isLegalMove(pos.x, pos.y, dir)) newX -= 1;
+            if (isLegalMove(pos.getX(), pos.getY(), dir)) newX -= 1;
+            if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            if (isLegalMove(pos.x, pos.y, dir)) newX += 1;
+            if (isLegalMove(pos.getX(), pos.getY(), dir)) newX += 1;
+            if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
         }
         setPos(newX, newY);
     }
@@ -138,6 +147,7 @@ public class Player {
                     }
             }
         }
+        return true;
     }
 
     /** Method for checking if a move is within the map boundaries
@@ -147,9 +157,7 @@ public class Player {
      * @return  whether the move is within map boundaries
      */
     private boolean withinBoundaries(int x, int y){
-        if (x > MAP_WIDTH+1 || y > MAP_HEIGHT+1 || x < -1 || y < -1)
-            return false;
-        return true;
+        return x <= MAP_WIDTH + 1 && y <= MAP_HEIGHT + 1 && x >= -1 && y >= -1;
     }
 
     private boolean isDeadMove(int x, int y){

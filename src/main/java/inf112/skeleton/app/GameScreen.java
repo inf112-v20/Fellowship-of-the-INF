@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import inf112.skeleton.app.Grid.PieceGrid;
+import inf112.skeleton.app.Grid.Position;
 
 /**
  * Game screen at the moment only shows a board with a playerLayer, and a player
@@ -31,9 +32,10 @@ public class GameScreen implements Screen {
     private Player player;
     private TiledMapTileLayer playerLayer;
     private TmxMapLoader mapLoader;
+    private GameLogic game;
+    private PieceGrid pieceGrid;
 
     public GameScreen() {
-        GameLogic game = new GameLogic();
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("RoborallyBoard.tmx");
         tiles = map.getTileSets().getTileSet("tileset.png");
@@ -45,7 +47,8 @@ public class GameScreen implements Screen {
 
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
-        PieceGrid grid = new PieceGrid(MAP_WIDTH, MAP_WIDTH, map);
+        PieceGrid pieceGrid = new PieceGrid(MAP_WIDTH, MAP_WIDTH, map);
+        game = new GameLogic(pieceGrid);
 
         initializePlayer();
     }
@@ -55,9 +58,9 @@ public class GameScreen implements Screen {
      * Add it to the playerLayer
      */
     public void initializePlayer() {
-        player = new Player(0);
+        player = new Player(0, pieceGrid);
         TiledMapTileLayer.Cell playerCell = player.getPlayerCell();
-        playerLayer.setCell((int) player.getPos().x, (int) player.getPos().y, playerCell);
+        playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), playerCell);
     }
 
     @Override
@@ -83,16 +86,17 @@ public class GameScreen implements Screen {
      * For now they are only movements of player
      */
     public void update() {
-        playerLayer.setCell((int) player.getPos().x, (int) player.getPos().y, null);
-        handleInput();
-        playerLayer.setCell((int) player.getPos().x, (int) player.getPos().y, player.getPlayerCell());
+        playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), null);
+        player.handleInput();
+        playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), player.getPlayerCell());
     }
 
     /**
      * Changes the coordinates of the player based on user input
      */
+    /*
     public void handleInput() {
-        Vector2 pos = player.getPos();
+        Position pos = player.getPos();
         float newX = pos.x;
         float newY = pos.y;
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
@@ -106,7 +110,7 @@ public class GameScreen implements Screen {
         }
         player.setPos(newX, newY);
     }
-
+*/
     @Override
     public void resize(int i, int i1) {
 
