@@ -16,7 +16,7 @@ import inf112.skeleton.app.GridObjects.WallPiece;
 import java.util.ArrayList;
 
 /**
- *
+ * Class representing a player.
  */
 public class Player {
 
@@ -27,25 +27,30 @@ public class Player {
     private TiledMapTileLayer.Cell wonPlayerCell; //cell for player who has won looks
     private int MAP_WIDTH;
     private int MAP_HEIGHT;
+    private PieceGrid logicMap;
     private ArrayList<BoardPiece>[][] pieceGrid;
     private Direction dir;
+    private PlayerPiece playerPiece;
+    private GameLogic game;
 
     public Player(int playerNumber, GameLogic game) {
         // TODO Refactor getGrid() (lol)
-        this.pieceGrid = game.getGrid().getGrid();
-        pos = new Position(0,0);
+        this.logicMap = game.getLogicGrid();
+        this.pieceGrid = logicMap.getGrid();
+        this.game = game;
+        this.playerPiece = new PlayerPiece(new Position(0, 0), 200, Direction.NORTH);
+        pos = new Position(0, 0);
         dir = Direction.NORTH;
         //place player at the bottom left corner
         pos.setX(0);
         pos.setY(0);
-        MAP_WIDTH = game.getGrid().getWidth();
-        MAP_HEIGHT = game.getGrid().getHeight();
+        MAP_WIDTH = game.getLogicGrid().getWidth();
+        MAP_HEIGHT = game.getLogicGrid().getHeight();
 
-        currentCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,0)));
-        playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,0)));
-        deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,1)));
-        wonPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,2)));
-
+        playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 0)));
+        deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 1)));
+        wonPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 2)));
+        currentCell = playerCell; //appearance starts as normal player
     }
 
     /**
@@ -74,42 +79,63 @@ public class Player {
         return currentCell;
     }
 
-    public void handleInput() {
-        Position pos = getPos();
+    /**
+     * Tries to move the player in a new direction
+     * @param newDirection
+     */
+    public void tryToGo(Direction newDirection) {
         int newX = pos.getX();
         int newY = pos.getY();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            this.dir=Direction.NORTH;
-            if (isLegalMove(pos.getX(), pos.getY(), dir)) newY += 1;
-            if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            this.dir=Direction.SOUTH;
-            if (isLegalMove(pos.getX(), pos.getY(), dir)) newY -= 1;
-            if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            this.dir=Direction.WEST;
-            if (isLegalMove(pos.getX(), pos.getY(), dir)) newX -= 1;
-            if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            this.dir=Direction.EAST;
-            if (isLegalMove(pos.getX(), pos.getY(), dir)) newX += 1;
-            if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
+        dir = newDirection;
+        switch (newDirection) {
+            case NORTH:
+                if (isLegalMove(pos.getX(), pos.getY(), dir)) newY += 1;
+                if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
+                break;
+            case SOUTH:
+                if (isLegalMove(pos.getX(), pos.getY(), dir)) newY -= 1;
+                if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
+                break;
+            case WEST:
+                if (isLegalMove(pos.getX(), pos.getY(), dir)) newX -= 1;
+                if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
+                break;
+            case EAST:
+                if (isLegalMove(pos.getX(), pos.getY(), dir)) newX += 1;
+                if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
+                break;
         }
-        /*if (!isDeadMove(pos.getX(), pos.getY()) && (newY != pos.getY() || newX != pos.getX())) {
-            System.out.println(newX + "," + newY);
-            ArrayList<BoardPiece> array = pieceGrid[newX][newY];
+
+        //if position has changed, update logic grid
+        if (newY != pos.getY() || newX != pos.getX()) {
+            logicMap.movePlayerToNewPosition(pos, new Position(newX, newY));
+        }
+
+        if (newY != pos.getY() || newX != pos.getX()) {
+            System.out.println("OLD: " + pos.getX() + "," + pos.getY());
+
+            ArrayList<BoardPiece> array = pieceGrid[pos.getX()][pos.getY()];
             for (int i = 0; i < array.size(); i++) {
                 BoardPiece p = array.get(i);
                 System.out.println(p);
             }
-        }*/
+
+            System.out.println("NEW: " + newX + "," + newY);
+            array = pieceGrid[newX][newY];
+            for (int i = 0; i < array.size(); i++) {
+                BoardPiece p = array.get(i);
+                System.out.println(p);
+            }
+        }
         setPos(newX, newY);
     }
 
-    /** Method for checking if a move-1-forward move is applicable.
-     * @param x-coordinate   current x coordinate
-     * @param y-coordinate   current y coordinate
-     * @param dir            current direction
+    /**
+     * Method for checking if a move-1-forward move is applicable.
+     *
+     * @param x-coordinate current x coordinate
+     * @param y-coordinate current y coordinate
+     * @param dir          current direction
      * @return whether moving one tile in a given direction is legal
      */
     private boolean isLegalMove(int x, int y, Direction dir) {
@@ -181,20 +207,21 @@ public class Player {
                             return ((WallPiece) pieceInFront).canGo(dir);
                         }
                     }
-
                     break;
             }
         }
         return true;
     }
 
-    /** Method for checking if a move is within the map boundaries
+    /**
+     * Method for checking if a move is within the map boundaries
      * out of bounds is two tiles outside the map, since one tile is used for death
+     *
      * @param x x-position after move
      * @param y y-position after move
-     * @return  whether the move is within map boundaries
+     * @return whether the move is within map boundaries
      */
-    private boolean withinBoundaries(int x, int y){
+    private boolean withinBoundaries(int x, int y) {
         return x <= MAP_WIDTH + 1 && y <= MAP_HEIGHT + 1 && x >= -1 && y >= -1;
     }
 
@@ -218,7 +245,11 @@ public class Player {
         return false;
     }
 
-    public boolean isDead(){
+    public boolean isDead() {
         return currentCell.equals(deadPlayerCell);
+    }
+
+    public PlayerPiece getPlayerPiece() {
+        return playerPiece;
     }
 }
