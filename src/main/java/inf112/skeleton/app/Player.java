@@ -8,10 +8,7 @@ import inf112.skeleton.app.Deck.GameDeck;
 import inf112.skeleton.app.Grid.Direction;
 import inf112.skeleton.app.Grid.PieceGrid;
 import inf112.skeleton.app.Grid.Position;
-import inf112.skeleton.app.GridObjects.AbyssPiece;
-import inf112.skeleton.app.GridObjects.BoardPiece;
-import inf112.skeleton.app.GridObjects.LaserSourcePiece;
-import inf112.skeleton.app.GridObjects.WallPiece;
+import inf112.skeleton.app.GridObjects.*;
 
 import java.util.ArrayList;
 
