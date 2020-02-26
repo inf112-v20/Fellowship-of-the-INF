@@ -66,10 +66,14 @@ public class GameScreen implements Screen {
         texture = new Texture(Gdx.files.internal("cardslot.png")); //the background image for where the a selected card goes
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
+        //Create lockInButton and add it as an actor to the stage
         cardButton = new CardButton();
         stage.addActor(cardButton.getLockInButton());
-        gameDeck = new GameDeck();
-        gameDeck.drawHand(gameDeck.getDrawDeck(), 0);
+        //Create new gamedeck
+        gameDeck = new GameDeck(); //TODO Gamedeck should be made by gameLogic
+        //Draw cards to hand
+        gameDeck.drawHand(gameDeck.getDrawDeck(), 0); //TODO 0 should be replaced by gameLogic.getPlayer().getHealth() or something like that
+        //Add every cardButton drawn as an actor to the stage
         for (int i = 0; i < cardButton.getListOfCardButtons().size(); i++) {
             stage.addActor(cardButton.getListOfCardButtons().get(i).getButton());
         }

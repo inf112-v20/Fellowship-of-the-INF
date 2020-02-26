@@ -6,7 +6,6 @@ public class GameDeck {
     private Deck drawDeck;
     private Deck discardDeck;
     private final int maxNumberOfCardsOnHand = 9;
-    private CardButton cardButton;
 
     public GameDeck() {
         drawDeck = new Deck();
@@ -53,7 +52,7 @@ public class GameDeck {
     private void drawNumberOfCardsFromPile(Deck playerHand, int numberOfCards) {
         for (int i = 0; i < numberOfCards; i++) {
             playerHand.addCard(drawDeck.getCard(0));
-            cardButton = new CardButton(drawDeck.getCard(0), i);
+            CardButton cardButton = new CardButton(drawDeck.getCard(0), i);
             drawDeck.removeCard(0);
         }
     }
