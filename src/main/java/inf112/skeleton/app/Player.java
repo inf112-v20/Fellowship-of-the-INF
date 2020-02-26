@@ -95,14 +95,14 @@ public class Player {
             if (isLegalMove(pos.getX(), pos.getY(), dir)) newX += 1;
             if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
         }
-        if (newY != pos.getY() || newX != pos.getX()) {
+        /*if (!isDeadMove(pos.getX(), pos.getY()) && (newY != pos.getY() || newX != pos.getX())) {
             System.out.println(newX + "," + newY);
             ArrayList<BoardPiece> array = pieceGrid[newX][newY];
             for (int i = 0; i < array.size(); i++) {
                 BoardPiece p = array.get(i);
                 System.out.println(p);
             }
-        }
+        }*/
         setPos(newX, newY);
     }
 
@@ -123,56 +123,65 @@ public class Player {
 
             switch (dir) {
                 case EAST:
-                    if (!isDeadMove(x + 1, y)) {
-                        if (withinBoundaries(x + 1, y)) {
-                            pieceInFront = pieceGrid[x + 1][y].get(i);
-                            if (currPiece instanceof WallPiece || currPiece instanceof LaserSourcePiece) {
-                                return ((WallPiece) currPiece).canLeave(dir);
-                            }
-                            if (pieceInFront instanceof WallPiece || pieceInFront instanceof LaserSourcePiece) {
-                                return ((WallPiece) pieceInFront).canGo(dir);
-                            }
+                    if (isDeadMove(x + 1, y)) {
+                        if (currPiece instanceof WallPiece) {
+                            return ((WallPiece) currPiece).canLeave(dir);
+                        }
+                    } else {
+                        pieceInFront = pieceGrid[x + 1][y].get(i);
+                        if (currPiece instanceof WallPiece) {
+                            return ((WallPiece) currPiece).canLeave(dir);
+                        }
+                        if (pieceInFront instanceof WallPiece) {
+                            return ((WallPiece) pieceInFront).canGo(dir);
                         }
                     }
                     break;
                 case WEST:
-                    if (!isDeadMove(x - 1, y)) {
-                        if (withinBoundaries(x - 1, y)) {
-                            pieceInFront = pieceGrid[x - 1][y].get(i);
-                            if (currPiece instanceof WallPiece || currPiece instanceof LaserSourcePiece) {
-                                return ((WallPiece) currPiece).canLeave(dir);
-                            }
-                            if (pieceInFront instanceof WallPiece || pieceInFront instanceof LaserSourcePiece) {
-                                return ((WallPiece) pieceInFront).canGo(dir);
-                            }
+                    if (isDeadMove(x - 1, y)) {
+                        if (currPiece instanceof WallPiece) {
+                            return ((WallPiece) currPiece).canLeave(dir);
+                        }
+                    } else {
+                        pieceInFront = pieceGrid[x - 1][y].get(i);
+                        if (currPiece instanceof WallPiece) {
+                            return ((WallPiece) currPiece).canLeave(dir);
+                        }
+                        if (pieceInFront instanceof WallPiece) {
+                            return ((WallPiece) pieceInFront).canGo(dir);
                         }
                     }
                     break;
                 case NORTH:
-                    if (!isDeadMove(x, y+1)) {
-                        if (withinBoundaries(x, y + 1)) {
-                            pieceInFront = pieceGrid[x][y + 1].get(i);
-                            if (currPiece instanceof WallPiece) {
-                                return ((WallPiece) currPiece).canLeave(dir);
-                            }
-                            if (pieceInFront instanceof WallPiece) {
-                                return ((WallPiece) pieceInFront).canGo(dir);
-                            }
+                    if (isDeadMove(x, y + 1)) {
+                        if (currPiece instanceof WallPiece) {
+                            return ((WallPiece) currPiece).canLeave(dir);
+                        }
+                    } else {
+                        pieceInFront = pieceGrid[x][y + 1].get(i);
+                        if (currPiece instanceof WallPiece) {
+                            return ((WallPiece) currPiece).canLeave(dir);
+                        }
+                        if (pieceInFront instanceof WallPiece) {
+                            return ((WallPiece) pieceInFront).canGo(dir);
                         }
                     }
                     break;
                 case SOUTH:
-                    if (!isDeadMove(x, y-1)) {
-                        if (withinBoundaries(x, y - 1)) {
-                            pieceInFront = pieceGrid[x][y - 1].get(i);
-                            if (currPiece instanceof WallPiece) {
-                                return ((WallPiece) currPiece).canLeave(dir);
-                            }
-                            if (pieceInFront instanceof WallPiece) {
-                                return ((WallPiece) pieceInFront).canGo(dir);
-                            }
+                    if (isDeadMove(x, y - 1)) {
+                        if (currPiece instanceof WallPiece) {
+                            return ((WallPiece) currPiece).canLeave(dir);
+                        }
+                    } else {
+                        pieceInFront = pieceGrid[x][y - 1].get(i);
+                        if (currPiece instanceof WallPiece) {
+                            return ((WallPiece) currPiece).canLeave(dir);
+                        }
+                        if (pieceInFront instanceof WallPiece) {
+                            return ((WallPiece) pieceInFront).canGo(dir);
                         }
                     }
+
                     break;
             }
         }
@@ -189,13 +198,21 @@ public class Player {
         return x <= MAP_WIDTH + 1 && y <= MAP_HEIGHT + 1 && x >= -1 && y >= -1;
     }
 
-    private boolean isDeadMove(int x, int y){
+    /** Method for checking if a move results in death
+     * @param x x-position after move
+     * @param y y-position after move
+     * @return  whether the move results in death
+     */
+    private boolean isDeadMove(int x, int y) {
         BoardPiece currPiece;
-        if (x > MAP_WIDTH || x < 0 || y < 0 || y > MAP_WIDTH) return true;
-        for (int i=0; i<pieceGrid[x][y].size(); i++) {
-            currPiece = pieceGrid[x][y].get(i);
-            if (currPiece instanceof AbyssPiece) {
-                return true;
+        if (x > MAP_WIDTH-1 || x < 0 || y < 0 || y > MAP_WIDTH-1) {
+            return true;
+        } else {
+            for (int i = 0; i < pieceGrid[x][y].size(); i++) {
+                currPiece = pieceGrid[x][y].get(i);
+                if (currPiece instanceof AbyssPiece) {
+                    return true;
+                }
             }
         }
         return false;
