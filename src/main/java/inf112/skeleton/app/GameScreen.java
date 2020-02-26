@@ -58,7 +58,7 @@ public class GameScreen implements Screen {
      * Add it to the playerLayer
      */
     public void initializePlayer() {
-        player = new Player(0, game);
+        player = game.getPlayer();
         TiledMapTileLayer.Cell playerCell = player.getPlayerCell();
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), playerCell);
     }
@@ -87,7 +87,8 @@ public class GameScreen implements Screen {
      */
     public void update() {
         playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), null);
-        player.handleInput();
+        game.handleInput();
+       // player.handleInput();
         playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), player.getPlayerCell());
     }
 

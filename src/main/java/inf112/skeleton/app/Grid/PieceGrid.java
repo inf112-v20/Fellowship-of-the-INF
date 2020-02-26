@@ -3,9 +3,10 @@ package inf112.skeleton.app.Grid;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.GridObjects.*;
+import inf112.skeleton.app.Player;
 
 import java.util.ArrayList;
-
+//TODO refractor this to map
 public class PieceGrid {
     //dimensions of grid
     private int width;
@@ -150,5 +151,51 @@ public class PieceGrid {
     public ArrayList<BoardPiece>[][] getGrid() {
         return grid;
     }
+
+    /**
+     * Adds a new PlayerPiece to the logic grid
+     * @param playerPiece
+     */
+    public void placeNewPlayerPieceOnMap(PlayerPiece playerPiece) {
+        if (positionIsFree(playerPiece.getPos(), playerLayerIndex)) {
+            int x = playerPiece.getPos().getX();
+            int y = playerPiece.getPos().getY();
+            grid[x][y].set(playerLayerIndex, playerPiece);
+        }
+    }
+
+    /**
+     * If possible, move a player piece to a new position
+     * @param oldPosition
+     * @param newPosition
+     */
+    public void movePlayerToNewPosition(Position oldPosition, Position newPosition) {
+        BoardPiece playerPiece = grid[oldPosition.getX()][oldPosition.getY()].get(playerLayerIndex);
+        if (playerPiece instanceof PlayerPiece) {
+            //check if position is free in logic grid
+            if(positionIsFree(newPosition, playerLayerIndex)) {
+                //set old position to NullPiece
+                grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
+                //add piece to new position
+                grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
+            } else {
+                System.out.println(newPosition.toString() + " is not available for player");
+            }
+        } else {
+            System.out.println("Cannont move nonplayer object" + playerPiece.toString() + " to new position");
+        }
+    }
+
+    /**
+     * Checks if the position is available in the logic grid
+     * @param position
+     * @param layerIndex
+     * @return true if there is a NullPiece in the position you are checking
+     */
+    private boolean positionIsFree(Position position, int layerIndex) {
+        return (grid[position.getX()][position.getY()].get(layerIndex) instanceof NullPiece);
+    }
+
+
 }
 
