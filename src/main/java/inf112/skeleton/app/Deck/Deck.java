@@ -6,7 +6,6 @@ package inf112.skeleton.app.Deck;
 
 import inf112.skeleton.app.Cards.CardType;
 import inf112.skeleton.app.Cards.ProgramCard;
-
 import java.util.ArrayList;
 import java.util.Collections;
 

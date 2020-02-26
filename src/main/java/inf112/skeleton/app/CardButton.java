@@ -14,10 +14,12 @@ import java.util.ArrayList;
 public class CardButton {
     private ImageButton button;
     private ProgramCard programCard;
-    private int posX; //X position of the card, this is to remember its original position when unselecting a card
-    private int posY = 300;
-    private int currentPosX;
-    private int currentPosY = posY;
+    private float posX; //X position of the card, this is to remember its original position when unselecting a card
+    private float posY = 600;
+    private float selectedCardPosX = 1000;
+    private float selectedCardPosY = 75;
+    private float currentPosX;
+    private float currentPosY;
     private int slotNumber = -1; //The position of a card in the list of selected cards, -1 by default
     private static ArrayList<CardButton> listOfCardButtons = new ArrayList<CardButton>(); //Static list of the selected cards
     private static CardButton[] selectedCardButtons = {null, null, null, null, null}; //Static lit of the selected cardbuttons
@@ -29,15 +31,18 @@ public class CardButton {
         TextureRegion lockInTextureRegion = new TextureRegion(lockInTexture);
         TextureRegionDrawable lockInTexRegionDrawable = new TextureRegionDrawable(lockInTextureRegion);
         lockInButton = new ImageButton(lockInTexRegionDrawable);
-        lockInButton.getImage().setScale(0.6f,0.6f);
-        lockInButton.setScale(0.6f);
-        lockInButton.setPosition(800, 100);
+        lockInButton.getImage().setScale(0.5f,0.5f);
+        lockInButton.setScale(0.5f);
+        lockInButton.setPosition(1750, 125);
         lockInButtonPressed(lockInButton);
     }
-    public CardButton(ProgramCard card, int pos) {
+    public CardButton(ProgramCard card, float pos) {
         this.programCard = card;
-        this.posX = pos*150;
+
+        if(listOfCardButtons.size()>4){posY -= 225; pos -= 5;}
+        this.posX = pos*150 + 1000;
         currentPosX = posX;
+        currentPosY = posY;
         //Make an ImageButton with the cards texture, scaling it and positioning it
         TextureRegion myTextureRegion = new TextureRegion(card.getTexture());
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
@@ -51,8 +56,10 @@ public class CardButton {
         //Add the CardButton to an list where all elements will be added as actors in Stage in GameScreen
         listOfCardButtons.add(this);
     }
-    public int getCurrentPosX(){return currentPosX;}
-    public int getCurrentPosY(){return currentPosY;}
+    public float getSelectedCardPosX(){return selectedCardPosX;}
+    public float getSelectedCardPosY(){return selectedCardPosY;}
+    public float getCurrentPosX(){return currentPosX;}
+    public float getCurrentPosY(){return currentPosY;}
     public ArrayList<CardButton> getListOfCardButtons() {return listOfCardButtons;}
     public ImageButton getLockInButton(){return lockInButton;}
     public ImageButton getButton() {return button;}
@@ -92,8 +99,8 @@ public class CardButton {
         for (int i = 0; i < 5; i++) {
             if (selectedCardButtons[i] == null) {
                 selectedCardButtons[i]= this;
-                currentPosX = 150 *i + 5;
-                currentPosY = 80;
+                currentPosX = 150 *i + selectedCardPosX + 5;
+                currentPosY = selectedCardPosY + 5;
                 setPos(currentPosX, currentPosY);
                 slotNumber = i;
                 return;
