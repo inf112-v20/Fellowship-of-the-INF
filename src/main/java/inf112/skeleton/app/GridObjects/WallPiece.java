@@ -8,12 +8,19 @@ public class WallPiece extends DirectionedPiece {
         super(pos, id, dir);
     }
 
-
+    /**
+     * @param dir direction of player piece
+     * @return whether player piece can move into this tile
+     */
     public boolean canGo(Direction dir) {
-        return true;
+        return !dir.getOppositeDirection().equals(this.dir);
     }
 
+    /**
+     * @param dir direction of player piece
+     * @return whether a player piece can move away from this tile
+     */
     public boolean canLeave(Direction dir) {
-        return true;
+        return !this.dir.equals(dir);
     }
 }

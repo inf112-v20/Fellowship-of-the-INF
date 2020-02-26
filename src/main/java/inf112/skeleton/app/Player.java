@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import inf112.skeleton.app.Deck.GameDeck;
 import inf112.skeleton.app.Grid.Direction;
 import inf112.skeleton.app.Grid.PieceGrid;
 import inf112.skeleton.app.Grid.Position;
 import inf112.skeleton.app.GridObjects.AbyssPiece;
 import inf112.skeleton.app.GridObjects.BoardPiece;
+import inf112.skeleton.app.GridObjects.LaserSourcePiece;
 import inf112.skeleton.app.GridObjects.WallPiece;
 
 import java.util.ArrayList;
@@ -28,15 +30,16 @@ public class Player {
     private ArrayList<BoardPiece>[][] pieceGrid;
     private Direction dir;
 
-    public Player(int playerNumber, PieceGrid pieceGrid) {
-        this.pieceGrid = pieceGrid.getGrid();
+    public Player(int playerNumber, GameLogic game) {
+        // TODO Refactor getGrid() (lol)
+        this.pieceGrid = game.getGrid().getGrid();
         pos = new Position(0,0);
         dir = Direction.NORTH;
         //place player at the bottom left corner
         pos.setX(0);
         pos.setY(0);
-        MAP_WIDTH = pieceGrid.getWidth();
-        MAP_HEIGHT = pieceGrid.getHeight();
+        MAP_WIDTH = game.getGrid().getWidth();
+        MAP_HEIGHT = game.getGrid().getHeight();
 
         currentCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,0)));
         playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber,0)));
@@ -76,17 +79,29 @@ public class Player {
         int newX = pos.getX();
         int newY = pos.getY();
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            this.dir=Direction.NORTH;
             if (isLegalMove(pos.getX(), pos.getY(), dir)) newY += 1;
             if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            this.dir=Direction.SOUTH;
             if (isLegalMove(pos.getX(), pos.getY(), dir)) newY -= 1;
             if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            this.dir=Direction.WEST;
             if (isLegalMove(pos.getX(), pos.getY(), dir)) newX -= 1;
             if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            this.dir=Direction.EAST;
             if (isLegalMove(pos.getX(), pos.getY(), dir)) newX += 1;
             if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
+        }
+        if (newY != pos.getY() || newX != pos.getX()) {
+            System.out.println(newX + "," + newY);
+            ArrayList<BoardPiece> array = pieceGrid[newX][newY];
+            for (int i = 0; i < array.size(); i++) {
+                BoardPiece p = array.get(i);
+                System.out.println(p);
+            }
         }
         setPos(newX, newY);
     }
@@ -98,53 +113,67 @@ public class Player {
      * @return whether moving one tile in a given direction is legal
      */
     private boolean isLegalMove(int x, int y, Direction dir) {
-        int xPosIn2dArray = MAP_WIDTH - 1 - x;
+        //int xPosIn2dArray = MAP_WIDTH - 1 - x;
         BoardPiece currPiece;
         BoardPiece pieceInFront;
-        for (int i = 0; i < pieceGrid[xPosIn2dArray][y].size(); i++) {
-            currPiece = pieceGrid[xPosIn2dArray][y].get(i);
+        if (isDead()) return false;
+        for (int i = 0; i < pieceGrid[x][y].size(); i++) {
+            boolean f = pieceGrid[x][y].isEmpty();
+            currPiece = pieceGrid[x][y].get(i);
 
             switch (dir) {
                 case EAST:
-                    if (withinBoundaries(x + 1, y)) {
-                        pieceInFront = pieceGrid[xPosIn2dArray + 1][y].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
+                    if (!isDeadMove(x + 1, y)) {
+                        if (withinBoundaries(x + 1, y)) {
+                            pieceInFront = pieceGrid[x + 1][y].get(i);
+                            if (currPiece instanceof WallPiece || currPiece instanceof LaserSourcePiece) {
+                                return ((WallPiece) currPiece).canLeave(dir);
+                            }
+                            if (pieceInFront instanceof WallPiece || pieceInFront instanceof LaserSourcePiece) {
+                                return ((WallPiece) pieceInFront).canGo(dir);
+                            }
                         }
                     }
+                    break;
                 case WEST:
-                    if (withinBoundaries(x - 1, y)) {
-                        pieceInFront = pieceGrid[xPosIn2dArray - 1][y].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
+                    if (!isDeadMove(x - 1, y)) {
+                        if (withinBoundaries(x - 1, y)) {
+                            pieceInFront = pieceGrid[x - 1][y].get(i);
+                            if (currPiece instanceof WallPiece || currPiece instanceof LaserSourcePiece) {
+                                return ((WallPiece) currPiece).canLeave(dir);
+                            }
+                            if (pieceInFront instanceof WallPiece || pieceInFront instanceof LaserSourcePiece) {
+                                return ((WallPiece) pieceInFront).canGo(dir);
+                            }
                         }
                     }
+                    break;
                 case NORTH:
-                    if (withinBoundaries(x, y + 1)) {
-                        pieceInFront = pieceGrid[xPosIn2dArray][y + 1].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
+                    if (!isDeadMove(x, y+1)) {
+                        if (withinBoundaries(x, y + 1)) {
+                            pieceInFront = pieceGrid[x][y + 1].get(i);
+                            if (currPiece instanceof WallPiece) {
+                                return ((WallPiece) currPiece).canLeave(dir);
+                            }
+                            if (pieceInFront instanceof WallPiece) {
+                                return ((WallPiece) pieceInFront).canGo(dir);
+                            }
                         }
                     }
+                    break;
                 case SOUTH:
-                    if (withinBoundaries(x, y - 1)) {
-                        pieceInFront = pieceGrid[xPosIn2dArray][y - 1].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
+                    if (!isDeadMove(x, y-1)) {
+                        if (withinBoundaries(x, y - 1)) {
+                            pieceInFront = pieceGrid[x][y - 1].get(i);
+                            if (currPiece instanceof WallPiece) {
+                                return ((WallPiece) currPiece).canLeave(dir);
+                            }
+                            if (pieceInFront instanceof WallPiece) {
+                                return ((WallPiece) pieceInFront).canGo(dir);
+                            }
                         }
                     }
+                    break;
             }
         }
         return true;
@@ -161,11 +190,10 @@ public class Player {
     }
 
     private boolean isDeadMove(int x, int y){
-        int xPosIn2dArray =  MAP_WIDTH-1 - x;
         BoardPiece currPiece;
         if (x > MAP_WIDTH || x < 0 || y < 0 || y > MAP_WIDTH) return true;
-        for (int i=0; i<pieceGrid[xPosIn2dArray][y].size(); i++) {
-            currPiece = pieceGrid[xPosIn2dArray][y].get(i);
+        for (int i=0; i<pieceGrid[x][y].size(); i++) {
+            currPiece = pieceGrid[x][y].get(i);
             if (currPiece instanceof AbyssPiece) {
                 return true;
             }
@@ -173,4 +201,7 @@ public class Player {
         return false;
     }
 
+    public boolean isDead(){
+        return currentCell.equals(deadPlayerCell);
+    }
 }

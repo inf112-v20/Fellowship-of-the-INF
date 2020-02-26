@@ -11,7 +11,7 @@ public class GameLogic  {
 
     public GameLogic(PieceGrid grid) {
         this.grid = grid;
-        this.player = new Player(1, grid);
+        this.player = new Player(1, this);
 
     }
 

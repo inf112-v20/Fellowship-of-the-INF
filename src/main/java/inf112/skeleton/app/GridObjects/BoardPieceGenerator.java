@@ -18,7 +18,7 @@ public class BoardPieceGenerator {
     /**
      * Creates BoardPiece to put in PieceGrid
      * @param id
-     * @return BoardPiece correspinging to the id
+     * @return BoardPiece corresponding to the id
      */
     public BoardPiece generate(int id) {
         switch (id) {
@@ -111,26 +111,26 @@ public class BoardPieceGenerator {
             case (101):
                 return new LaserPiece(pos, id, Direction.NORTH, true, true);
             case (37):
-                return new LaserSourcePiece(pos, id, Direction.NORTH, false);
-            case (38):
-                return new LaserSourcePiece(pos, id, Direction.EAST, false);
-            case (45):
                 return new LaserSourcePiece(pos, id, Direction.SOUTH, false);
-            case (46):
+            case (38):
                 return new LaserSourcePiece(pos, id, Direction.WEST, false);
+            case (45):
+                return new LaserSourcePiece(pos, id, Direction.NORTH, false);
+            case (46):
+                return new LaserSourcePiece(pos, id, Direction.EAST, false);
             case (88):
-                return new LaserSourcePiece(pos, id, Direction.NORTH, true);
-            case (93):
-                return new LaserSourcePiece(pos, id, Direction.EAST, true);
-            case (94):
                 return new LaserSourcePiece(pos, id, Direction.SOUTH, true);
-            case (95):
+            case (93):
                 return new LaserSourcePiece(pos, id, Direction.WEST, true);
+            case (94):
+                return new LaserSourcePiece(pos, id, Direction.NORTH, true);
+            case (95):
+                return new LaserSourcePiece(pos, id, Direction.EAST, true);
             case (31):
                 return new WallPiece(pos, id, Direction.NORTH);
             case (30):
                 return new WallPiece(pos, id, Direction.WEST);
-            case (323):
+            case (23):
                 return new WallPiece(pos, id, Direction.EAST);
             case (29):
                 return new WallPiece(pos, id, Direction.SOUTH);

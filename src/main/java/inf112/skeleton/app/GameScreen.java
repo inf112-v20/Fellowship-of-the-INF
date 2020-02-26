@@ -58,9 +58,9 @@ public class GameScreen implements Screen {
      * Add it to the playerLayer
      */
     public void initializePlayer() {
-        player = new Player(0, pieceGrid);
+        player = new Player(0, game);
         TiledMapTileLayer.Cell playerCell = player.getPlayerCell();
-        playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), playerCell);
+        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), playerCell);
     }
 
     @Override
