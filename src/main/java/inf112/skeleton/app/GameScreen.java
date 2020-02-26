@@ -69,8 +69,8 @@ public class GameScreen implements Screen {
         //Create lockInButton and add it as an actor to the stage
         cardButton = new CardButton();
         stage.addActor(cardButton.getLockInButton());
-        //Create new gamedeck
-        gameDeck = new GameDeck(); //TODO Gamedeck should be made by gameLogic
+        //Create new GameDeck
+        gameDeck = new GameDeck(); //TODO GameDeck should be made by GameLogic
         //Draw cards to hand
         gameDeck.drawHand(gameDeck.getDrawDeck(), 0); //TODO 0 should be replaced by gameLogic.getPlayer().getHealth() or something like that
         //Add every cardButton drawn as an actor to the stage
@@ -104,13 +104,17 @@ public class GameScreen implements Screen {
         mapRenderer.setView(camera);
         update(); //make changes to board, if there are any
         mapRenderer.render();
+        //Draw the background image for the selected cards first
         batch.begin();
         for (int xPosition = 0; xPosition <5 ; xPosition++) {
             batch.draw(texture, 150*xPosition, 75, texture.getWidth()*0.41f, texture.getHeight()*0.41f);
         }
         batch.end();
+        //Draw cards second
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui
+        //Draw prioritynumber as text on top of cards at the correct position third. Will update properly as well.
+        //It is important they get drawn in the correct order, or else something will be hidden (e.g. the prioritynumber gets drawn behind the cards).
         font = new BitmapFont();
         batch.begin();
         int numberOfCardButtons = cardButton.getListOfCardButtons().size();
