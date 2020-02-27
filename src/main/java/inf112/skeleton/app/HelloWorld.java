@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * All the layers have been added to this class. Perhaps move this code to an appropriate class
  * later in the project
  */
+
 public class HelloWorld implements ApplicationListener {
     private SpriteBatch batch;
     private BitmapFont font;
