@@ -11,8 +11,6 @@ import inf112.skeleton.app.Screen.MainMenuScreen;
 public class RoboRallyDemo extends Game {
 
     public SpriteBatch batch;
-    // TEST TODO fjern
-    public int mapSize;
 
     @Override
     public void create() {
