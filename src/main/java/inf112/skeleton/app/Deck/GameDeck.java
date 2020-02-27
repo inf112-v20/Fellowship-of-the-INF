@@ -53,7 +53,7 @@ public class GameDeck {
     private void drawNumberOfCardsFromPile(Deck playerHand, int numberOfCards) {
         for (int i = 0; i < numberOfCards; i++) {
             playerHand.addCard(drawDeck.getCard(0));
-            cardButton = new CardButton(drawDeck.getCard(i), i);
+            cardButton = new CardButton(drawDeck.getCard(0), i);
             drawDeck.removeCard(0);
         }
     }
