@@ -30,7 +30,6 @@ public class UIScreen{
         selectedCardPosX =  width +50;
         stage = new Stage();
         Texture texture = new Texture(Gdx.files.internal("lockinbutton.png"));
-        System.out.println(width);
         ImageButton lockInButton = createButton(texture, 1, width * 2 - 800, 200);
         lockInButtonPressed(lockInButton);
         for (int i = 0; i < 5; i++) {
