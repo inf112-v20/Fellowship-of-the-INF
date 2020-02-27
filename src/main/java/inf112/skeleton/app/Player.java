@@ -47,7 +47,6 @@ public class Player {
 
     /**
      * Getter for position
-     *
      * @return position of player
      */
     public Position getPos() {
@@ -67,7 +66,6 @@ public class Player {
 
     /**
      * Getter for player
-     *
      * @return player
      */
     public TiledMapTileLayer.Cell getPlayerCell() {
