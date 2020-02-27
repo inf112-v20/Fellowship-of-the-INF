@@ -260,6 +260,6 @@ public class Player {
     }
 
     public void turnPlayerRight() {
-        playerPiece.turnPieceRight();
+        playerPiece.rotatePieceRight();
     }
 }
