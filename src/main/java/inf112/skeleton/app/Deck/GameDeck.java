@@ -1,9 +1,12 @@
 package inf112.skeleton.app.Deck;
 
+import inf112.skeleton.app.CardButton;
+
 public class GameDeck {
     private Deck drawDeck;
     private Deck discardDeck;
     private final int maxNumberOfCardsOnHand = 9;
+    private CardButton cardButton;
 
     public GameDeck() {
         drawDeck = new Deck();
@@ -39,10 +42,7 @@ public class GameDeck {
 
     //Check to see if you can draw a hand without the drawDeck running out of cards
     private boolean canDrawFullHand(int numberOfCards) {
-        if (numberOfCards <= drawDeck.size() - 1)
-            return true;
-        else
-            return false;
+        return numberOfCards <= drawDeck.size() - 1;
     }
 
     private void resetDrawAndDiscard() {
@@ -51,7 +51,10 @@ public class GameDeck {
     }
 
     private void drawNumberOfCardsFromPile(Deck playerHand, int numberOfCards) {
-        for (int i = 0; i < numberOfCards; i++)
-            playerHand.addCard(drawDeck.drawCard(0));
+        for (int i = 0; i < numberOfCards; i++) {
+            playerHand.addCard(drawDeck.getCard(0));
+            cardButton = new CardButton(drawDeck.getCard(0), i);
+            drawDeck.removeCard(0);
+        }
     }
 }
