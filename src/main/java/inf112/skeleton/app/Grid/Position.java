@@ -25,4 +25,12 @@ public class Position {
     public void setX(int x) {
         this.x = x;
     }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }
