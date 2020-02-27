@@ -27,7 +27,7 @@ public class Player {
     private GameLogic game;
 
     public Player(int playerNumber, GameLogic game) {
-        // TODO Refactor getGrid() (lol)
+        // TODO refactor logicMap and pieceGrid
         this.logicMap = game.getLogicGrid();
         this.pieceGrid = logicMap.getGrid();
         this.game = game;
@@ -83,6 +83,7 @@ public class Player {
         playerPiece.setDir(newDirection);
         switch (newDirection) {
             case NORTH:
+                // TODO merge isDeadMove() into isLegalMove()?
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
                 if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
                 break;
@@ -140,6 +141,7 @@ public class Player {
         if (isDead()) return false;
         for (int i = 0; i < pieceGrid[x][y].size(); i++) {
             boolean f = pieceGrid[x][y].isEmpty();
+            // TODO create get()-method for pieceGrid? (instead of looping through all cells)
             currPiece = pieceGrid[x][y].get(i);
 
             switch (dir) {
@@ -230,8 +232,11 @@ public class Player {
     private boolean isDeadMove(int x, int y) {
         BoardPiece currPiece;
         if (x > MAP_WIDTH - 1 || x < 0 || y < 0 || y > MAP_WIDTH - 1) {
+         //TEST TODO fjern
+//        if (!withinBoundaries(x, y)) {
             return true;
         } else {
+            // TODO create get()-method for pieceGrid? (instead of looping through all cells)
             for (int i = 0; i < pieceGrid[x][y].size(); i++) {
                 currPiece = pieceGrid[x][y].get(i);
                 if (currPiece instanceof AbyssPiece) {
