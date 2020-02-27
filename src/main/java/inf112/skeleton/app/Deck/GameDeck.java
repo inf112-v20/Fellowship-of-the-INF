@@ -14,11 +14,15 @@ public class GameDeck {
         discardDeck = new Deck();
     }
 
-    //Draw a new hand based on the damage you have taken. Will also handle if you are running out of cards.
-    //Number of cards are calculated by subtracting the number of damage you have taken from the maximum number of cards
-    public void drawHand(Deck playerHand, int damageValue) {
-        int numberOfCards = maxNumberOfCardsOnHand - damageValue;
-
+    /**
+     * Draw a new hand based on the damage you have taken. Will also handle if you are running out of cards.
+     * Number of cards are calculated by subtracting the number of damage you have taken from the maximum number of cards
+     *
+     * @param playerHand The Deck of Cards the player had last round
+     * @param numberOfCards The number of cards the player should draw
+     * @return A new hand of cards to a player
+     */
+    public Deck drawHand(Deck playerHand, int numberOfCards) {
         discardDeck.moveAll(playerHand);
 
         if (canDrawFullHand(numberOfCards)) {
@@ -30,6 +34,8 @@ public class GameDeck {
             resetDrawAndDiscard();
             drawNumberOfCardsFromPile(playerHand, numberOfCards - remainingInDraw);
         }
+
+        return playerHand;
     }
 
     public Deck getDrawDeck() {
