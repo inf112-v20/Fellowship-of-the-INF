@@ -101,7 +101,7 @@ public class Player {
         }
 
         //if position has changed and player isn't dead, update logic grid
-        if (newY != pos.getY() || newX != pos.getX() && !isDead()) {
+        if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
             logicMap.movePlayerToNewPosition(pos, new Position(newX, newY));
         }
 
