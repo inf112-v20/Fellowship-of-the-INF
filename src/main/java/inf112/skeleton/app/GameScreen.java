@@ -1,6 +1,7 @@
 package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,18 +14,13 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import inf112.skeleton.app.Deck.GameDeck;
-import inf112.skeleton.app.Grid.GameLogic;
 import inf112.skeleton.app.Grid.PieceGrid;
 
-import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Game screen at the moment only shows a board with a playerLayer, and a player
@@ -147,33 +143,21 @@ public class GameScreen implements Screen {
      * For now they are only movements of player
      */
     public void update() {
-        playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), null);
-        game.handleInput();
-       // player.handleInput();
-        playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), player.getPlayerCell());
+       handleInput();
     }
 
     /**
      * Changes the coordinates of the player based on user input
      */
-    /*
+
     public void handleInput() {
-        Position pos = player.getPos();
-        float newX = pos.x;
-        float newY = pos.y;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            if (pos.y + 1 < MAP_WIDTH) newY += 1;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            if (pos.y - 1 >= 0) newY -= 1;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            if (pos.x - 1 >= 0) newX -= 1;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            if (pos.x + 1 < MAP_WIDTH) newX += 1;
-        }
-        player.setPos(newX, newY);
+        playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), null);
+        game.handleInput();
+        playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), player.getPlayerCell());
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){Gdx.graphics.setWindowedMode(1200,1200);}
     }
-*/
+
+
     @Override
     public void resize(int i, int i1) {
         gridPort.update(i, i1);
