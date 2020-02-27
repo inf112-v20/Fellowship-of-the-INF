@@ -54,7 +54,7 @@ public class GameScreen implements Screen {
 
     public GameScreen() {
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("RoborallyBoard.tmx");
+        map = mapLoader.load("RoborallyBoard_debugged.tmx");
         tiles = map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WITDTH_DPI*2, MAP_WITDTH_DPI, camera);
