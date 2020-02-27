@@ -2,6 +2,7 @@ package inf112.skeleton.app.Cards;
 
 import java.awt.image.BufferedImage;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 
 /**

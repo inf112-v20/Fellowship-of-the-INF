@@ -3,7 +3,7 @@ package inf112.skeleton.app.GridObjects;
 import inf112.skeleton.app.Grid.Direction;
 import inf112.skeleton.app.Grid.Position;
 
-public class LazerPiece extends DirectionedPiece {
+public class LaserPiece extends DirectionedPiece {
     //true if there are two paralell lasers on this cell
     boolean doubleLaser;
 
@@ -11,8 +11,8 @@ public class LazerPiece extends DirectionedPiece {
     boolean crossingLasers;
 
 
-    public LazerPiece(Position pos, int id, Direction dir, boolean doubleLaser, boolean crossingLasers) {
-       super(pos, id, dir);
+    public LaserPiece(Position pos, int id, Direction dir, boolean doubleLaser, boolean crossingLasers) {
+        super(pos, id, dir);
         this.doubleLaser = doubleLaser;
         this.crossingLasers = crossingLasers;
     }
@@ -27,7 +27,7 @@ public class LazerPiece extends DirectionedPiece {
 
     /***
      * Function that returns how much damage a laser gives
-     * Is based on if there is a double lazer or cross.
+     * Is based on if there is a double laser or cross.
      * @return
      */
     public int getDamageFromLasers() {

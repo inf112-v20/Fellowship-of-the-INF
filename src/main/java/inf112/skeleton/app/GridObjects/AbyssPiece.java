@@ -6,4 +6,5 @@ public class AbyssPiece extends BoardPiece {
     public AbyssPiece(Position pos, int id) {
         super(pos, id);
     }
+
 }
