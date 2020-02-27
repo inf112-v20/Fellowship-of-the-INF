@@ -1,10 +1,7 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import inf112.skeleton.app.Deck.GameDeck;
 import inf112.skeleton.app.Grid.Direction;
 import inf112.skeleton.app.Grid.PieceGrid;
 import inf112.skeleton.app.Grid.Position;
@@ -26,7 +23,6 @@ public class Player {
     private int MAP_HEIGHT;
     private PieceGrid logicMap;
     private ArrayList<BoardPiece>[][] pieceGrid;
-    private Direction dir;
     private PlayerPiece playerPiece;
     private GameLogic game;
 
@@ -37,7 +33,6 @@ public class Player {
         this.game = game;
         this.playerPiece = new PlayerPiece(new Position(0, 0), 200, Direction.NORTH);
         pos = new Position(0, 0);
-        dir = Direction.NORTH;
         //place player at the bottom left corner
         pos.setX(0);
         pos.setY(0);
@@ -52,6 +47,7 @@ public class Player {
 
     /**
      * Getter for position
+     *
      * @return position of player
      */
     public Position getPos() {
@@ -60,6 +56,7 @@ public class Player {
 
     /**
      * Setter for position of player
+     *
      * @param x new x position
      * @param y new y position
      */
@@ -70,6 +67,7 @@ public class Player {
 
     /**
      * Getter for player
+     *
      * @return player
      */
     public TiledMapTileLayer.Cell getPlayerCell() {
@@ -78,42 +76,44 @@ public class Player {
 
     /**
      * Tries to move the player in a new direction
+     *
      * @param newDirection
      */
     public void tryToGo(Direction newDirection) {
         int newX = pos.getX();
         int newY = pos.getY();
-        dir = newDirection;
+        playerPiece.setDir(newDirection);
         switch (newDirection) {
             case NORTH:
-                if (isLegalMove(pos.getX(), pos.getY(), dir)) newY += 1;
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
                 if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
                 break;
             case SOUTH:
-                if (isLegalMove(pos.getX(), pos.getY(), dir)) newY -= 1;
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY -= 1;
                 if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
                 break;
             case WEST:
-                if (isLegalMove(pos.getX(), pos.getY(), dir)) newX -= 1;
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX -= 1;
                 if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
                 break;
             case EAST:
-                if (isLegalMove(pos.getX(), pos.getY(), dir)) newX += 1;
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX += 1;
                 if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
                 break;
         }
 
-        //if position has changed, update logic grid
-        if (newY != pos.getY() || newX != pos.getX()) {
+        //if position has changed and player isn't dead, update logic grid
+        if (newY != pos.getY() || newX != pos.getX() && !isDead()) {
             logicMap.movePlayerToNewPosition(pos, new Position(newX, newY));
         }
 
-        if (newY != pos.getY() || newX != pos.getX()) {
+        /* UNCOMMENT TO SEE PRINTOUT OF PIECES IN CELL
+        if (newY != pos.getY() || newX != pos.getX() && !isDead()) {
             System.out.println("OLD: " + pos.getX() + "," + pos.getY());
 
             ArrayList<BoardPiece> array = pieceGrid[pos.getX()][pos.getY()];
             for (int i = 0; i < array.size(); i++) {
-                BoardPiece p = array.get(i);
+                BoardPiece p = array.get(i);l
                 System.out.println(p);
             }
 
@@ -123,7 +123,7 @@ public class Player {
                 BoardPiece p = array.get(i);
                 System.out.println(p);
             }
-        }
+        }*/
         setPos(newX, newY);
     }
 
@@ -222,14 +222,16 @@ public class Player {
         return x <= MAP_WIDTH + 1 && y <= MAP_HEIGHT + 1 && x >= -1 && y >= -1;
     }
 
-    /** Method for checking if a move results in death
+    /**
+     * Method for checking if a move results in death
+     *
      * @param x x-position after move
      * @param y y-position after move
-     * @return  whether the move results in death
+     * @return whether the move results in death
      */
     private boolean isDeadMove(int x, int y) {
         BoardPiece currPiece;
-        if (x > MAP_WIDTH-1 || x < 0 || y < 0 || y > MAP_WIDTH-1) {
+        if (x > MAP_WIDTH - 1 || x < 0 || y < 0 || y > MAP_WIDTH - 1) {
             return true;
         } else {
             for (int i = 0; i < pieceGrid[x][y].size(); i++) {
@@ -248,5 +250,18 @@ public class Player {
 
     public PlayerPiece getPlayerPiece() {
         return playerPiece;
+    }
+
+
+    public void turnPlayerAround() {
+        playerPiece.turnPieceInOppositeDirection();
+    }
+
+    public void turnPlayerLeft() {
+        playerPiece.rotatePieceLeft();
+    }
+
+    public void turnPlayerRight() {
+        playerPiece.turnPieceRight();
     }
 }

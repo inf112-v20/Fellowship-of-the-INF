@@ -3,9 +3,12 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import inf112.skeleton.app.Cards.ProgramCard;
 import inf112.skeleton.app.Deck.GameDeck;
 import inf112.skeleton.app.Grid.Direction;
 import inf112.skeleton.app.Grid.PieceGrid;
+
+import java.util.ArrayList;
 
 public class GameLogic  {
     private PieceGrid logicGrid;
@@ -60,6 +63,49 @@ public class GameLogic  {
             player.tryToGo(Direction.WEST);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             player.tryToGo(Direction.EAST);
+        }
+    }
+
+    public void executePlayerHand(ArrayList<ProgramCard> hand) {
+        for (ProgramCard programCard : hand) {
+            convertCardToPlayerMove(programCard);
+        }
+    }
+
+
+
+    /**
+     * Gives the player a command, based on the program card
+     * @param programCard to convert to player move
+     */
+    public void convertCardToPlayerMove(ProgramCard programCard) {
+        switch (programCard.getCommand()) {
+            case MOVE1:
+                player.tryToGo(player.getPlayerPiece().getDir());
+                break;
+            case MOVE2:
+                player.tryToGo(player.getPlayerPiece().getDir());
+                player.tryToGo(player.getPlayerPiece().getDir());
+                break;
+            case MOVE3:
+                player.tryToGo(player.getPlayerPiece().getDir());
+                player.tryToGo(player.getPlayerPiece().getDir());
+                player.tryToGo(player.getPlayerPiece().getDir());
+                break;
+            case UTURN:
+                player.turnPlayerAround();
+                break;
+            case BACKUP:
+                player.turnPlayerAround();
+                player.tryToGo(player.getPlayerPiece().getDir());
+                player.turnPlayerAround();
+                break;
+            case ROTATELEFT:
+                player.turnPlayerLeft();
+                break;
+            case ROTATERIGHT:
+                player.turnPlayerRight();
+                break;
         }
     }
 

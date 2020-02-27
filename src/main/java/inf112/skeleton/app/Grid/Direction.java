@@ -3,6 +3,10 @@ package inf112.skeleton.app.Grid;
 public enum Direction {
     NORTH, SOUTH, EAST, WEST;
 
+    /**
+     *
+     * @return the direction opposite to itself
+     */
     public Direction getOppositeDirection() {
         switch(this) {
             case SOUTH: return Direction.NORTH;
@@ -13,6 +17,10 @@ public enum Direction {
         }
     }
 
+    /**
+     *
+     * @return the direction to the right of itself
+     */
     public Direction getRightTurnDirection() {
         switch(this) {
             case SOUTH: return Direction.WEST;
@@ -23,6 +31,10 @@ public enum Direction {
         }
     }
 
+    /**
+     *
+     * @return the direction to the left of itself
+     */
     public Direction getLeftTurnDirection() {
         switch(this) {
             case SOUTH: return Direction.EAST;
