@@ -4,8 +4,8 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import inf112.skeleton.app.Cards.ProgramCard;
-import inf112.skeleton.app.GridObjects.Direction;
 import inf112.skeleton.app.Deck.GameDeck;
+import inf112.skeleton.app.Grid.Direction;
 import inf112.skeleton.app.Grid.PieceGrid;
 
 import java.util.ArrayList;
