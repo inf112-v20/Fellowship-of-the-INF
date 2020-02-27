@@ -8,7 +8,6 @@ import inf112.skeleton.app.Grid.Position;
 import inf112.skeleton.app.GridObjects.*;
 
 import java.util.ArrayList;
-import inf112.skeleton.app.Grid.PieceGrid;
 
 /**
  * Class representing a player.
@@ -26,7 +25,6 @@ public class Player {
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
     private GameLogic game;
-    private PieceGrid grid;
 
     public Player(int playerNumber, GameLogic game) {
         // TODO Refactor getGrid() (lol)
@@ -40,7 +38,6 @@ public class Player {
         pos.setY(0);
         MAP_WIDTH = game.getLogicGrid().getWidth();
         MAP_HEIGHT = game.getLogicGrid().getHeight();
-        this.grid = grid;
 
         playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 0)));
         deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 1)));
@@ -58,6 +55,7 @@ public class Player {
 
     /**
      * Setter for position of player
+     *
      * @param x new x position
      * @param y new y position
      */
