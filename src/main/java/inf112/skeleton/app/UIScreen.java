@@ -1,47 +1,27 @@
 package inf112.skeleton.app;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import inf112.skeleton.app.CardButton;
 import inf112.skeleton.app.Cards.ProgramCard;
 import inf112.skeleton.app.Deck.Deck;
 import inf112.skeleton.app.Deck.GameDeck;
-import inf112.skeleton.app.Player;
 
 public class UIScreen {
     private Stage stage;
     private float width;
-    private Texture texture;
     private float selectedCardPosX;
     private final float selectedCardPosY = 75;
 
-    /*
-    TODO create these images and buttons, position and scale them. Make sure they actually represent the current game status.
-    private ImageButton powerDownButton;
-    private Image lifes;
-    private Image damage;
-    private Image timer;
-    private Image playerImage;
-    private Image checkPoints;
-     */
-
-    /**
-     * @param width
-     * @param gameDeck
-     */
     public UIScreen(float width, GameDeck gameDeck) {
         this.width = width;
         selectedCardPosX =  width +50;
         stage = new Stage();
-        texture = new Texture(Gdx.files.internal("lockinbutton.png"));
+        Texture texture = new Texture(Gdx.files.internal("lockinbutton.png"));
         System.out.println(width);
         createButton(texture, 1, width * 2 - 800, 200);
         for (int i = 0; i < 5; i++) {
@@ -53,6 +33,11 @@ public class UIScreen {
         createCardButtons(gameDeck.drawHand(gameDeck.getDrawDeck(), 0));
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+
+//TODO replace 9 with decksize (and fix decksize)
     public void createCardButtons(Deck deck) {
         for (int i = 0; i < 9; i++) {
             ProgramCard card = deck.getCard(i);
@@ -60,7 +45,7 @@ public class UIScreen {
             float distBetweenCards = card.getTexture().getWidth() * 1.4f + 50;
             float posX = width + 50 + distBetweenCards * i;
             if (i > 4) {
-                posY -= 1000;
+                posY -= 800;
                 posX = width + 50 + distBetweenCards * (i - 5);
             }
             Table table = new Table();
@@ -68,10 +53,6 @@ public class UIScreen {
             CardButton cardButton = new CardButton(card, posX, posY, selectedCardPosX, selectedCardPosY);
             stage.addActor(cardButton.getTable());
         }
-    }
-
-    public Stage getStage() {
-        return stage;
     }
 
     public void createButton(Texture texture, float scale, float posX, float posY) {

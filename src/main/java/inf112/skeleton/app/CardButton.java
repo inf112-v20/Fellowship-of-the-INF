@@ -15,7 +15,6 @@ import inf112.skeleton.app.Cards.ProgramCard;
 import java.util.ArrayList;
 
 public class CardButton {
-    private ImageButton button;
     private ProgramCard programCard;
     private float posX; //X position of the card, this is to remember its original position when unselecting a card
     private float posY = 600;
@@ -23,10 +22,8 @@ public class CardButton {
     private float selectedCardPosY;
     private float currentPosX;
     private float currentPosY;
-    private String priorityText;
     private Table table;
     private int slotNumber = -1; //The position of a card in the list of selected cards, -1 by default
-    private static ArrayList<CardButton> listOfCardButtons = new ArrayList<CardButton>(); //Static list of the selected cards
     private static CardButton[] selectedCardButtons = {null, null, null, null, null}; //Static lit of the selected cardbuttons
 
     public CardButton(ProgramCard card, float posX, float posY, float selectedCardPosX, float selectedCardPosY) {
@@ -35,27 +32,25 @@ public class CardButton {
         this.posY = posY;
         this.selectedCardPosX = selectedCardPosX;
         this.selectedCardPosY = selectedCardPosY;
-        priorityText = String.valueOf(card.getPriority());
-        //Make an ImageButton with the cards texture, scaling it and positioning it
+        //Make an ImageButton with the cards texture and scaling it
+        //Create a table with the ImageButton and the priorityNumber(as text) and set its position
         TextureRegion myTextureRegion = new TextureRegion(card.getTexture());
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
-        button = new ImageButton(myTexRegionDrawable);
+        ImageButton button = new ImageButton(myTexRegionDrawable);
         button.getImage().scaleBy(0.5f);
         button.scaleBy(0.5f);
-        //button.setPosition(posX, posY);
         table = new Table();
         table.addActor(button);
+        String priorityText = String.valueOf(card.getPriority());
         table.addActor(drawText(priorityText));
         table.setPosition(posX,posY);
         //Make clicklistener for the button (i.e. the card) for different mousepresses
         buttonLeftPressed(button);
         buttonRightPressed(button);
-        //Add the CardButton to an list where all elements will be added as actors in Stage in GameScreen
-        listOfCardButtons.add(this);
-
     }
-
-    public ImageButton getButton() {return button;}
+    public Table getTable(){
+        return table;
+    }
 
     public void setPos(float x, float y){table.setPosition(x, y);}
 
@@ -124,16 +119,11 @@ public class CardButton {
         Table textTable = new Table();
         textTable.setPosition(260,640);
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        BitmapFont myFont = new BitmapFont();
-        labelStyle.font = myFont;
+        labelStyle.font = new BitmapFont();
         labelStyle.fontColor = Color.GREEN;
-        Label messageLabel = new Label(text, labelStyle);
-        messageLabel.setFontScale(5);
-        textTable.addActor(messageLabel);
+        Label textLabel = new Label(text, labelStyle);
+        textLabel.setFontScale(5);
+        textTable.addActor(textLabel);
         return textTable;
-    }
-
-    public Table getTable(){
-        return table;
     }
 }
