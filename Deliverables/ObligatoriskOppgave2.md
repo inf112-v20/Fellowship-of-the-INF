@@ -1,26 +1,23 @@
-#ObligatoriskOppgave2#
+#ObligatoriskOppgave2
 
-##Prosjekt og prosjektstruktur##
-Under første sprint valgte vi kun to personer til å ha roller, Johanna som gruppeleder og Martin som kundekontakt. Ved 
-begynnelsen av sprint 2 ble vi enige om å utdele flere roller til gruppen.
+##Project and project structure
+For the first sprint had we chosen roles for just two of our members, as we did not think it was necesarry for more at that point. For this second sprint have we given out more roles, as we see it as necesary at this point.
 
-###Roller###
-* Johanna: Gruppeleder
-* Martin: Kundekontakt, Rettighetsansvarlig
-* Erlend: Testingansvarlig
-* Henrik: Koderyddighet
-* Lena: Markdown-ansvarlig, Regelansvarlig
+###Roles
+* Johanna: Group leader
+* Martin: Contact Manager, Copyright Manager
+* Erlend: Test Manager
+* Henrik: Code Integrity and Tidiness
+* Lena: Markdown Writer, Rules Lawyer
 
-###Rollebeskrivelser###
-* Gruppeleder: Har overblikk over hele prosjektet og holder kontroll på hva alle gjør
-* Kundekontakt: Har ansvar for kommunikasjon med foreleser og labledere
-* Rettighetsansvarlig: Passer på at vi har rettigheter til å bruke det vi bruker for å lage spillet
-* Testingansvarlig: Passer på at tester blir laget til alt vi implementerer
-* Koderyddighet: passer på at koden vi leverer er ryddig og tilstrekkelig dokumentert (relevante variabelnavn, 
-abstraksjon, utfyllende kommentarer, osv)
-* Markdown-anvarlig: Sørger for at markdown dokumentene er oppdaterte og riktig formaterte, og at alt som skal 
-inkluderes er der
-* Regelansvarlig: Ansvar for at vi følger reglene til RoboRally, og at det er riktig versjon
+###Role Description
+* Group leader: Keeps an overview of the project and the work of all the other members of the group.
+* Contact Manager: Main source of communication between the group, the professor, and groupleaders.
+* Copyright Manager: Keeps track of copyrighted material that we use, and that we do not infringe on anything.
+* Test Manager: Makes sure that tests are made
+* Code Integrity and Tidiness: Makes sure that the code that is written is readable and clean.
+* Markdown Writer: Main writer of the Markdown documents, and makes sure that eveything is written for the assignments.
+* Rules Lawyer: Main responsible for knowing the rules of the original RoboRally game.
 
-###Retroperspektiv###
+###Retroperspective
 
