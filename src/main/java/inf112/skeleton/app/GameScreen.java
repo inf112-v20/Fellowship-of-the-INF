@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,12 +13,18 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import inf112.skeleton.app.Deck.GameDeck;
+import inf112.skeleton.app.Grid.GameLogic;
 import inf112.skeleton.app.Grid.PieceGrid;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Game screen at the moment only shows a board with a playerLayer, and a player
@@ -50,31 +57,39 @@ public class GameScreen implements Screen {
         map = mapLoader.load("RoborallyBoard.tmx");
         tiles = map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
-        gridPort = new StretchViewport(MAP_WITDTH_DPI, MAP_WITDTH_DPI, camera);
-        camera.setToOrtho(false, MAP_WIDTH, MAP_WIDTH*2); //Stretch width of map to the edge
-        camera.position.y = 0;        //Make map only take up the upper half of the screen
-        camera.update();
-        mapRenderer = new OrthogonalTiledMapRenderer(map, (float) 1 / TILE_WIDTH_DPI);
-
+        gridPort = new StretchViewport(MAP_WITDTH_DPI*2, MAP_WITDTH_DPI, camera);
+        camera.translate(MAP_WITDTH_DPI, MAP_WITDTH_DPI/2);
+        //camera.setToOrtho(false, MAP_WIDTH, MAP_WIDTH*2); //Stretch width of map to the edge
+        //camera.position.y = 0;        //Make map only take up the upper half of the screen
+        //camera.update();
+       // mapRenderer = new OrthogonalTiledMapRenderer(map, (float) 1 / TILE_WIDTH_DPI);
+        mapRenderer = new OrthogonalTiledMapRenderer(map);
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
         PieceGrid pieceGrid = new PieceGrid(MAP_WIDTH, MAP_WIDTH, map);
         game = new GameLogic(pieceGrid);
 
         initializePlayer();
+
         batch = new SpriteBatch();
         texture = new Texture(Gdx.files.internal("cardslot.png")); //the background image for where the a selected card goes
         stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
+        //stage.setViewport(gridPort);
+        //stage.getViewport().setCamera(camera);
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
+        //Create lockInButton and add it as an actor to the stage
         cardButton = new CardButton();
         stage.addActor(cardButton.getLockInButton());
-        gameDeck = new GameDeck();
-        gameDeck.drawHand(gameDeck.getDrawDeck(), 0);
+        //Create new GameDeck
+        gameDeck = new GameDeck(); //TODO GameDeck should be made by GameLogic
+        //Draw cards to hand
+        gameDeck.drawHand(gameDeck.getDrawDeck(), 0); //TODO 0 should be replaced by gameLogic.getPlayer().getHealth() or something like that
+        //Add every cardButton drawn as an actor to the stage
         for (int i = 0; i < cardButton.getListOfCardButtons().size(); i++) {
             stage.addActor(cardButton.getListOfCardButtons().get(i).getButton());
         }
+        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
     }
-
     /**
      * Create a simple player with the ability to move around the board
      * Add it to the playerLayer
@@ -101,20 +116,27 @@ public class GameScreen implements Screen {
         mapRenderer.setView(camera);
         update(); //make changes to board, if there are any
         mapRenderer.render();
+        //Draw the background image for the selected cards first
         batch.begin();
-        for (int xPosition = 0; xPosition <5 ; xPosition++) {
-            batch.draw(texture, 150*xPosition, 75, texture.getWidth()*0.41f, texture.getHeight()*0.41f);
+        for (int i = 0; i <5 ; i++) {
+            float selectedCardPosX = 150*i + cardButton.getSelectedCardPosX();
+            float selectedCardPosY = cardButton.getSelectedCardPosY();
+            batch.draw(texture, selectedCardPosX, selectedCardPosY, texture.getWidth()*0.41f, texture.getHeight()*0.41f);
         }
         batch.end();
+        //Draw cards second
         stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
         stage.draw(); //Draw the ui
+        //Draw prioritynumber as text on top of cards at the correct position third. Will update properly as well.
+        //It is important they get drawn in the correct order, or else something will be hidden (e.g. the prioritynumber gets drawn behind the cards).
         font = new BitmapFont();
+        font.setColor(Color.LIME);
         batch.begin();
         int numberOfCardButtons = cardButton.getListOfCardButtons().size();
         for (int i = 0; i < numberOfCardButtons; i++) {
             String priorityText = String.valueOf(cardButton.getListOfCardButtons().get(i).getCard().getPriority());
-            int textPosX = cardButton.getListOfCardButtons().get(i).getCurrentPosX()+75;
-            int textPosY = cardButton.getListOfCardButtons().get(i).getCurrentPosY()+178;
+            float textPosX = cardButton.getListOfCardButtons().get(i).getCurrentPosX()+75;
+            float textPosY = cardButton.getListOfCardButtons().get(i).getCurrentPosY()+178;
             font.draw(batch, priorityText, textPosX, textPosY);
         }
         batch.end();
@@ -149,12 +171,16 @@ public class GameScreen implements Screen {
             if (pos.x + 1 < MAP_WIDTH) newX += 1;
         }
         player.setPos(newX, newY);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){Gdx.graphics.setWindowedMode(1200,1200);}
     }
 */
     @Override
     public void resize(int i, int i1) {
-
+        gridPort.update(i, i1);
+        batch.getProjectionMatrix().setToOrtho2D(0, 0, i, i1);
+        stage.getViewport().update(i, i1, true);
     }
+
 
     @Override
     public void pause() {
