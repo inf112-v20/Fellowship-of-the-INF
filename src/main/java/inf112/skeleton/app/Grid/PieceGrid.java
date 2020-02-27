@@ -3,7 +3,6 @@ package inf112.skeleton.app.Grid;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.GridObjects.*;
-import inf112.skeleton.app.Player;
 
 import java.util.ArrayList;
 //TODO refractor this to map

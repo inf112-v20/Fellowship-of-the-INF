@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class CardButton {
     private ImageButton button;
     private ProgramCard programCard;
+    private GameScreen gameScreen;
     private float posX; //X position of the card, this is to remember its original position when unselecting a card
     private float posY = 600;
     private float selectedCardPosX = 1000;
@@ -26,7 +27,8 @@ public class CardButton {
     private static ImageButton lockInButton;
 
 
-    public CardButton(){
+    public CardButton(GameScreen gameScreen){
+        this.gameScreen = gameScreen;
         Texture lockInTexture = new Texture(Gdx.files.internal("lockinbutton.png"));
         TextureRegion lockInTextureRegion = new TextureRegion(lockInTexture);
         TextureRegionDrawable lockInTexRegionDrawable = new TextureRegionDrawable(lockInTextureRegion);
@@ -71,7 +73,7 @@ public class CardButton {
         lockInButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                getSelectedProgramCards();
+                gameScreen.executeLockIn(getSelectedProgramCards());
             }
         });
     }

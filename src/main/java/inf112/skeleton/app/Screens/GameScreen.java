@@ -18,10 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import inf112.skeleton.app.Cards.ProgramCard;
 import inf112.skeleton.app.Deck.GameDeck;
 import inf112.skeleton.app.GameLogic;
 import inf112.skeleton.app.Grid.PieceGrid;
 import inf112.skeleton.app.Player;
+
+import java.util.ArrayList;
 
 
 /**
@@ -48,7 +51,6 @@ public class GameScreen implements Screen {
     private Texture texture;
     private SpriteBatch batch;
     private BitmapFont font;
-    private GameLogic gameLogic;
 
     public GameScreen() {
         mapLoader = new TmxMapLoader();
@@ -76,7 +78,7 @@ public class GameScreen implements Screen {
         //stage.getViewport().setCamera(camera);
         Gdx.input.setInputProcessor(stage); //Start taking input from the ui
         //Create lockInButton and add it as an actor to the stage
-        cardButton = new CardButton();
+        cardButton = new CardButton(this);
         stage.addActor(cardButton.getLockInButton());
         //Create new GameDeck
         gameDeck = new GameDeck(); //TODO GameDeck should be made by GameLogic
@@ -187,5 +189,17 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    /**
+     * Executes the cards that have been chosen
+     * @param programCards to execute
+     */
+    public void executeLockIn(ArrayList<ProgramCard> programCards) {
+        if (programCards != null) {
+            playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), null);
+            game.executePlayerHand(programCards);
+            playerLayer.setCell((int) player.getPos().getX(), (int) player.getPos().getY(), player.getPlayerCell());
+        }
     }
 }
