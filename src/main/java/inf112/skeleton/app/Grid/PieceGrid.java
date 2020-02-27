@@ -181,7 +181,7 @@ public class PieceGrid {
                 System.out.println(newPosition.toString() + " is not available for player");
             }
         } else {
-            System.out.println("Cannont move nonplayer object" + playerPiece.toString() + " to new position");
+            System.out.println("Cannot move nonplayer object" + playerPiece.toString() + " to new position");
         }
     }
 
