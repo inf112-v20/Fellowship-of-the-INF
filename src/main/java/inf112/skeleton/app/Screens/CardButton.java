@@ -12,8 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.Cards.ProgramCard;
 
-import java.util.ArrayList;
-
 public class CardButton {
     private ProgramCard programCard;
     private GameScreen gameScreen;
@@ -52,18 +50,12 @@ public class CardButton {
     public Table getTable(){
         return table;
     }
+    public CardButton[] getSelectedCardButtons(){return selectedCardButtons;}
+    public ProgramCard getProgramCard(){return programCard;}
 
     public void setPos(float x, float y){table.setPosition(x, y);}
 
     //Methods for the buttonpresses
-    public void lockInButtonPressed(ImageButton lockInButton){
-        lockInButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                gameScreen.executeLockIn(getSelectedProgramCards());
-            }
-        });
-    }
     //Left click to add the card to the list of selected cards
     public void buttonLeftPressed(ImageButton button){
         button.addListener(new ClickListener(Input.Buttons.LEFT) {
@@ -106,16 +98,6 @@ public class CardButton {
         currentPosY = posY;
     }
 
-    public ArrayList<ProgramCard> getSelectedProgramCards(){
-        for (int i = 0; i < 5 ; i++) {
-            if(selectedCardButtons[i]==null){System.out.println("Not enough cards");return null;}
-        }
-        ArrayList<ProgramCard> selectedProgramCards = new ArrayList<>();
-        for (int i = 0; i < 5 ; i++) {
-            selectedProgramCards.add(selectedCardButtons[i].programCard);
-        }
-        return selectedProgramCards;
-    }
     public Table drawText(String text){
         Table textTable = new Table();
         textTable.setPosition(260,640);

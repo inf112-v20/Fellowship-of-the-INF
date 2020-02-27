@@ -10,12 +10,16 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import inf112.skeleton.app.Cards.ProgramCard;
 import inf112.skeleton.app.Deck.GameDeck;
-import inf112.skeleton.app.Grid.GameLogic;
+import inf112.skeleton.app.GameLogic;
+import inf112.skeleton.app.Grid.PieceGrid;
+import inf112.skeleton.app.Player;
+
+import java.util.ArrayList;
 
 /**
  * Game screen at the moment only shows a board with a playerLayer, and a player
@@ -30,12 +34,12 @@ public class GameScreen implements Screen {
     private final int MAP_HEIGHT = 12;
     private final int TILE_WIDTH_DPI = 300; //pixel width per cell
     private final int MAP_WITDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI; //total width of map in pixels
-    private Player player;
     private TiledMapTileLayer playerLayer;
     private TmxMapLoader mapLoader;
     private Stage stage;
-    private GameLogic gameLogic;
     private UIScreen uiScreen;
+    private Player player;
+    private GameLogic game;
 
     public GameScreen() {
         mapLoader = new TmxMapLoader();
@@ -49,10 +53,9 @@ public class GameScreen implements Screen {
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
         PieceGrid pieceGrid = new PieceGrid(MAP_WIDTH, MAP_WIDTH, map);
         game = new GameLogic(pieceGrid);
-
         initializePlayer();
         GameDeck gameDeck = new GameDeck();
-        uiScreen = new UIScreen(MAP_WITDTH_DPI, gameDeck);
+        uiScreen = new UIScreen(MAP_WITDTH_DPI, gameDeck, this);
     }
     /**
      * Create a simple player with the ability to move around the board
