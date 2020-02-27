@@ -1,14 +1,17 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.Cards.ProgramCard;
+
 import java.util.ArrayList;
 
 public class CardButton {
@@ -16,55 +19,45 @@ public class CardButton {
     private ProgramCard programCard;
     private float posX; //X position of the card, this is to remember its original position when unselecting a card
     private float posY = 600;
-    private float selectedCardPosX = 1000;
-    private float selectedCardPosY = 75;
+    private float selectedCardPosX;
+    private float selectedCardPosY;
     private float currentPosX;
     private float currentPosY;
+    private String priorityText;
+    private Table table;
     private int slotNumber = -1; //The position of a card in the list of selected cards, -1 by default
     private static ArrayList<CardButton> listOfCardButtons = new ArrayList<CardButton>(); //Static list of the selected cards
     private static CardButton[] selectedCardButtons = {null, null, null, null, null}; //Static lit of the selected cardbuttons
-    private static ImageButton lockInButton;
 
-
-    public CardButton(){
-        Texture lockInTexture = new Texture(Gdx.files.internal("lockinbutton.png"));
-        TextureRegion lockInTextureRegion = new TextureRegion(lockInTexture);
-        TextureRegionDrawable lockInTexRegionDrawable = new TextureRegionDrawable(lockInTextureRegion);
-        lockInButton = new ImageButton(lockInTexRegionDrawable);
-        lockInButton.getImage().setScale(0.5f,0.5f);
-        lockInButton.setScale(0.5f);
-        lockInButton.setPosition(1750, 125);
-        lockInButtonPressed(lockInButton);
-    }
-    public CardButton(ProgramCard card, float pos) {
+    public CardButton(ProgramCard card, float posX, float posY, float selectedCardPosX, float selectedCardPosY) {
         this.programCard = card;
-
-        if(listOfCardButtons.size()>4){posY -= 225; pos -= 5;}
-        this.posX = pos*150 + 1000;
-        currentPosX = posX;
-        currentPosY = posY;
+        this.posX = posX;
+        this.posY = posY;
+        this.selectedCardPosX = selectedCardPosX;
+        this.selectedCardPosY = selectedCardPosY;
+        priorityText = String.valueOf(card.getPriority());
         //Make an ImageButton with the cards texture, scaling it and positioning it
         TextureRegion myTextureRegion = new TextureRegion(card.getTexture());
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
         button = new ImageButton(myTexRegionDrawable);
-        button.getImage().setScale(0.4f,0.4f);
-        button.setScale(0.4f);
-        button.setPosition(posX, posY);
+        button.getImage().scaleBy(0.5f);
+        button.scaleBy(0.5f);
+        //button.setPosition(posX, posY);
+        table = new Table();
+        table.addActor(button);
+        table.addActor(drawText(priorityText));
+        table.setPosition(posX,posY);
         //Make clicklistener for the button (i.e. the card) for different mousepresses
         buttonLeftPressed(button);
         buttonRightPressed(button);
         //Add the CardButton to an list where all elements will be added as actors in Stage in GameScreen
         listOfCardButtons.add(this);
+
     }
-    public float getSelectedCardPosX(){return selectedCardPosX;}
-    public float getSelectedCardPosY(){return selectedCardPosY;}
-    public float getCurrentPosX(){return currentPosX;}
-    public float getCurrentPosY(){return currentPosY;}
-    public ArrayList<CardButton> getListOfCardButtons() {return listOfCardButtons;}
-    public ImageButton getLockInButton(){return lockInButton;}
+
     public ImageButton getButton() {return button;}
-    public ProgramCard getCard(){return programCard;}
-    public void setPos(float x, float y){button.setPosition(x, y);}
+
+    public void setPos(float x, float y){table.setPosition(x, y);}
 
     //Methods for the buttonpresses
     public void lockInButtonPressed(ImageButton lockInButton){
@@ -99,14 +92,15 @@ public class CardButton {
         for (int i = 0; i < 5; i++) {
             if (selectedCardButtons[i] == null) {
                 selectedCardButtons[i]= this;
-                currentPosX = 150 *i + selectedCardPosX + 5;
-                currentPosY = selectedCardPosY + 5;
+                currentPosX = selectedCardPosX + i*550 + 15;
+                currentPosY = selectedCardPosY + 15;
                 setPos(currentPosX, currentPosY);
                 slotNumber = i;
                 return;
             }
         }
     }
+
     public void removeCard(){
         if(slotNumber == -1){return;} //do nothing if the card is not already selected
         selectedCardButtons[slotNumber] = null;
@@ -115,6 +109,7 @@ public class CardButton {
         currentPosX = posX;
         currentPosY = posY;
     }
+
     public ArrayList<ProgramCard> getSelectedProgramCards(){
         for (int i = 0; i < 5 ; i++) {
             if(selectedCardButtons[i]==null){System.out.println("Not enough cards");return null;}
@@ -124,5 +119,21 @@ public class CardButton {
             selectedProgramCards.add(selectedCardButtons[i].programCard);
         }
         return selectedProgramCards;
+    }
+    public Table drawText(String text){
+        Table textTable = new Table();
+        textTable.setPosition(260,640);
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        BitmapFont myFont = new BitmapFont();
+        labelStyle.font = myFont;
+        labelStyle.fontColor = Color.GREEN;
+        Label messageLabel = new Label(text, labelStyle);
+        messageLabel.setFontScale(5);
+        textTable.addActor(messageLabel);
+        return textTable;
+    }
+
+    public Table getTable(){
+        return table;
     }
 }
