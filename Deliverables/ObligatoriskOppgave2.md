@@ -1,6 +1,6 @@
 # ObligatoriskOppgave2
 
-## Project and project structure
+## Deloppgave1:Project and project structure
 For the first sprint had we chosen roles for just two of our members, as we did not think it was necesarry for more at that point. For this second sprint have we given out more roles, as we see it as necesary at this point.
 
 ### Roles
@@ -20,4 +20,13 @@ For the first sprint had we chosen roles for just two of our members, as we did 
 * Rules Lawyer: Main responsible for knowing the rules of the original RoboRally game.
 
 ### Retroperspective
+In the first itteration were there little actual coding, which lead to an uneven spread of commits among the members. For this itteration have we done a lot more coding towards the mvp.
+We have also had to sometimes move the extra meeting based on different reasons, such as waiting for more information, or other external reasons, f.ex. the moving of lectures.
+There is some insecurities among members, where they do not know or understand what some of the others are doing. This might be solved by creating a comprehensive uml, or maybe more pair programming. 
 
+### Møteref...
+
+
+## Deloppgave2: krav
+### Priorities
+Our goal for this itteration was to properly start with both frontend (the used interface, picking cards etc.), and backend (the game logic, cards, decks, colitions etc.).
