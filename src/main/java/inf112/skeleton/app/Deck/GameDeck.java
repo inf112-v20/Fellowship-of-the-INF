@@ -1,6 +1,6 @@
 package inf112.skeleton.app.Deck;
 
-import inf112.skeleton.app.CardButton;
+import inf112.skeleton.app.Screens.CardButton;
 
 public class GameDeck {
     private Deck drawDeck;
