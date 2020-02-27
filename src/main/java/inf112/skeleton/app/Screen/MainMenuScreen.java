@@ -31,6 +31,7 @@ public class MainMenuScreen implements Screen {
     private BitmapFont white, black;
     private Label heading;
 
+    private Image background;
     private ImageButton playButton;
 
     public MainMenuScreen (RoboRallyDemo game) {
@@ -41,7 +42,14 @@ public class MainMenuScreen implements Screen {
     public void show() {
         stage = new Stage();
 
-        Sprite picture = new Sprite(new Texture("play_button_active.png"));
+        // picture = all actors on stage
+        Sprite picture = new Sprite(new Texture("menu_background.png"));
+        background = new Image((new SpriteDrawable(picture)));
+        background.setSize(3600, 3600);
+        background.setPosition(0, 0);
+        stage.addActor(background);
+
+        picture = new Sprite(new Texture("play_button_active.png"));
         playButton = new ImageButton(new SpriteDrawable(picture));
         playButton.setPosition(50,50);
         playButton.addListener(new ClickListener() {
