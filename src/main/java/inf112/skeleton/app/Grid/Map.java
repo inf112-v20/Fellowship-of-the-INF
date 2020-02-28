@@ -47,7 +47,7 @@ public class Map {
     private ArrayList<BoardPiece>[][] grid;
     private BoardPieceGenerator boardPieceGenerator;
 
-    public Map(int width, int height, TiledMap map) { //TODO get source for map
+    public Map(int width, int height, TiledMap map) {
         grid = new ArrayList[width][height];
         this.width = grid[0].length;
         this.height = grid.length;
