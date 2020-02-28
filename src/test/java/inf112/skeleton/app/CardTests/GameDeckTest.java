@@ -7,6 +7,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * This test cannot run, as the ProgramCard class uses gdx to save a texture,
+ * but this makes the class not able to run by itself
+ */
+
 public class GameDeckTest {
 
     GameDeck gameDeck;
