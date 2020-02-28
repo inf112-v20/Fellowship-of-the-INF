@@ -3,10 +3,11 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import inf112.skeleton.app.Cards.ProgramCard;
-import inf112.skeleton.app.Deck.GameDeck;
-import inf112.skeleton.app.Grid.Direction;
-import inf112.skeleton.app.Grid.Map;
+import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.deck.GameDeck;
+import inf112.skeleton.app.grid.Direction;
+import inf112.skeleton.app.grid.Map;
+import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
 
