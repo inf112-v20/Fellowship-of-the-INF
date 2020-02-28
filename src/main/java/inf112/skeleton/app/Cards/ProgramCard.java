@@ -15,7 +15,7 @@ public class ProgramCard implements IProgramCard{
         createImage();
     }
 
-    //TODO get the correct png file according to the cardType
+
     private void createImage() {
         switch (cardType) {
             case MOVE1:
