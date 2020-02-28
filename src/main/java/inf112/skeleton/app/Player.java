@@ -27,7 +27,6 @@ public class Player {
     private Game game;
 
     public Player(int playerNumber, Game game) {
-        // TODO Refactor getGrid() (lol)
         this.map = game.getMap();
         this.pieceGrid = map.getGrid();
         this.game = game;
@@ -144,63 +143,23 @@ public class Player {
 
             switch (dir) {
                 case EAST:
-                    if (isDeadMove(x + 1, y)) {
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                    } else {
-                        pieceInFront = pieceGrid[x + 1][y].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
-                        }
+                    if (!isLegalMoveInDirection(x+1, y, currPiece, dir, i)) {
+                        return false;
                     }
                     break;
                 case WEST:
-                    if (isDeadMove(x - 1, y)) {
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                    } else {
-                        pieceInFront = pieceGrid[x - 1][y].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
-                        }
+                    if (!isLegalMoveInDirection(x-1, y, currPiece, dir, i)) {
+                        return false;
                     }
                     break;
                 case NORTH:
-                    if (isDeadMove(x, y + 1)) {
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                    } else {
-                        pieceInFront = pieceGrid[x][y + 1].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
-                        }
+                    if (!isLegalMoveInDirection(x, y+1, currPiece, dir, i)) {
+                        return false;
                     }
                     break;
                 case SOUTH:
-                    if (isDeadMove(x, y - 1)) {
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                    } else {
-                        pieceInFront = pieceGrid[x][y - 1].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
-                        }
+                    if (!isLegalMoveInDirection(x, y-1, currPiece, dir, i)) {
+                        return false;
                     }
                     break;
             }
@@ -208,16 +167,21 @@ public class Player {
         return true;
     }
 
-    /**
-     * Method for checking if a move is within the map boundaries
-     * out of bounds is two tiles outside the map, since one tile is used for death
-     *
-     * @param x x-position after move
-     * @param y y-position after move
-     * @return whether the move is within map boundaries
-     */
-    private boolean withinBoundaries(int x, int y) {
-        return x <= MAP_WIDTH + 1 && y <= MAP_HEIGHT + 1 && x >= -1 && y >= -1;
+    public boolean isLegalMoveInDirection(int newX, int newY, BoardPiece currentPiece, Direction dir, int layerLevel) {
+        if (isDeadMove(newX, newY)) {
+            if (currentPiece instanceof WallPiece) {
+                return ((WallPiece) currentPiece).canLeave(dir);
+            }
+        } else {
+            BoardPiece pieceInFront = pieceGrid[newX][newY].get(layerLevel);
+            if (currentPiece instanceof WallPiece) {
+                return ((WallPiece) currentPiece).canLeave(dir);
+            }
+            if (pieceInFront instanceof WallPiece) {
+                return ((WallPiece) pieceInFront).canGo(dir);
+            }
+        }
+        return true;
     }
 
     /**
