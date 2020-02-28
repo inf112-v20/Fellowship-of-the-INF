@@ -193,7 +193,12 @@ Then, we need to represent the role of the player (note, Player /= PlayerPiece).
 ### How to run the program
 * Ensure maven install and build is complete. Then, run Main. A Menu Screen will pop up. Press the play button to start the game.
 * You can select cards by left clicking them, and move them back by right clicking them. Once you have selected five cards, you can execute them by pressing the lock in button.
-* You can also move the player around using UP, DOWN, LEFT RIGHT. Note: you die if you go off the board or if you walk into an abyss. Then you need to restart the program if you want to play again.
+* You can also move the player around using UP, DOWN, LEFT RIGHT. 
+* Things to note:
+  * The player has a direction (facing north at start), but the game screen does not show it.
+  * When using the arrow keys, you always turn in the direction you move. This is not the case when using the cards (for example the MoveBack card)
+  * You die if you go off the board or if you walk into an abyss
+  * If you die you need to restart the program to play again
 
 ### How to run tests
 * To run the CardTests, you have to go to the ProgramCard.java class and comment out line 15 where the createImage() method is called, as this method will throw a nullPointerException if not run in the program as a whole. 
