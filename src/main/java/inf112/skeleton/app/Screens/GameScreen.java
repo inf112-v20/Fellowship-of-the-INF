@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
@@ -29,24 +30,32 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer mapRenderer;
     private OrthographicCamera camera;
     private Viewport gridPort;
-    private final int MAP_WIDTH = 12; //dimensions of board
-    private final int MAP_HEIGHT = 12;
-    private final int TILE_WIDTH_DPI = 300; //pixel width per cell
-    private final int MAP_WITDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI; //total width of map in pixels
+    private int MAP_WIDTH; //dimensions of board
+    private int MAP_HEIGHT;
+    private int TILE_WIDTH_DPI; //pixel width per cell
+    private int MAP_WIDTH_DPI; //total width of map in pixels
     private TiledMapTileLayer playerLayer;
     private TmxMapLoader mapLoader;
+    private MapProperties mapProperties;
     private Stage stage;
     private UIScreen uiScreen;
     private Player player;
     private Game game;
 
-    public GameScreen() {
+
+    public GameScreen(String mapName) {
         mapLoader = new TmxMapLoader();
-        this.map = mapLoader.load("RoborallyBoard_debugged.tmx");
+        this.map = mapLoader.load(mapName);
+        mapProperties = map.getProperties();
+        MAP_WIDTH = mapProperties.get("width", Integer.class);
+        MAP_HEIGHT = mapProperties.get("height", Integer.class);
+        TILE_WIDTH_DPI = mapProperties.get("tilewidth", Integer.class);
+        MAP_WIDTH_DPI =  MAP_WIDTH * TILE_WIDTH_DPI;
+
         tiles = this.map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
-        gridPort = new StretchViewport(MAP_WITDTH_DPI*2, MAP_WITDTH_DPI, camera);
-        camera.translate(MAP_WITDTH_DPI, MAP_WITDTH_DPI/2);
+        gridPort = new StretchViewport(MAP_WIDTH_DPI *2, MAP_WIDTH_DPI, camera);
+        camera.translate(MAP_WIDTH_DPI, MAP_WIDTH_DPI /2);
         mapRenderer = new OrthogonalTiledMapRenderer(this.map);
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) this.map.getLayers().get("Player");
@@ -54,7 +63,7 @@ public class GameScreen implements Screen {
         game = new Game(map);
         initializePlayer();
         //UI gets game deck from game class
-        uiScreen = new UIScreen(MAP_WITDTH_DPI, game.getGameDeck(), this);
+        uiScreen = new UIScreen(MAP_WIDTH_DPI, game.getGameDeck(), this);
     }
     /**
      * Create a simple player with the ability to move around the board
