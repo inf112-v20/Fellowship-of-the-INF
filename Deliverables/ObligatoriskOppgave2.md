@@ -28,9 +28,11 @@ There is some insecurities among members, where they do not know or understand w
 
 #### 13.02.2020
 __Attendence__: Everyone
+
 __Summary__: 
 * Researching the game by playing it in board game format. 
 * Recieved feedback on compulsory1 from TAs.
+
 __Work for next time__: 
 * Create more roles
 * Create iteration plan
@@ -38,10 +40,12 @@ __Work for next time__:
 
 #### 18.02.2020
 __Attendence__: Martin, Erlend, Johanna, Lena
+
 __Summary__: 
 * Assigned new roles for team members.
 * Further planning of development towards compulsory2.
 * Comming to an agreement regarding the MVP for the next itteration
+
 __Work for next time:__
 * Take a closer look at the hand outs
 * Lena: Implement Cards, ProgramCard, and ENUM ProgramCardType
@@ -50,6 +54,7 @@ __Work for next time:__
 
 #### 20.02.2020
 __Attendence__: Everyone
+
 __Summary__:
 * The PieceGrid and BoardPiece classes approved and pushed to develop
 * Card Classes approved and pushed to develop
@@ -59,6 +64,7 @@ __Summary__:
   * Henrik: Implement menu screen screen and gameScreen
   * Martin: Further implements player collision
   * Johanna: Extract more boardPieces from tmx file
+
 __Work for next time:__
 * Lena: implement deck and GameDeck
 * Martin: Squash some bugs regarding collision mechanics, and implement death mechanic
@@ -67,9 +73,11 @@ __Work for next time:__
 
 #### 24.02.2020
 __Attendence__: Everyone
+
 __Summary__:
 * Erlend and Lena cooperated regarding the use of the Card and Deck classes.
 * Martin and Johanna pairprogrammed to connect different backends, connect player movement to map
+
 __Work for next time:__
 * Lena: Start looking at tests for card and decks, and work on MarkDown file
 * Martin: Squash bugs
@@ -78,9 +86,11 @@ __Work for next time:__
 
 #### 27.02.2020
 __Attendence__: Everyone
+
 __Summary__: 
 * Went through presentation for next week
 * Merging backend and frontend
+
 __Work for next time:__
 * General refactoring for the deadline
 * Martin: Starts implementing tests for player
