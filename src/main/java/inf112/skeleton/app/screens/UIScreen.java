@@ -44,7 +44,7 @@ public class UIScreen{
         return stage;
     }
 
-//TODO replace 9 with decksize (and fix decksize)
+
     public void createCardButtons(Deck deck) {
         for (int i = 0; i < 9; i++) {
             ProgramCard card = deck.getCard(i);

@@ -29,15 +29,4 @@ public class LaserPieceTest {
         this.laserPiece = new LaserPiece(new Position(0, 0), 1, Direction.NORTH, true, false);
         assertFalse(laserPiece.isCrossingLasers());
     }
-
-    @Test
-    public void getDamageFromLasers() {
-        assertEquals(laserPiece.getDamageFromLasers(), 4);
-        laserPiece = new LaserPiece(new Position(0, 0), 1, Direction.NORTH, false, true);
-        assertEquals(laserPiece.getDamageFromLasers(), 2);
-        laserPiece = new LaserPiece(new Position(0, 0), 1, Direction.NORTH, true, false);
-        assertEquals(laserPiece.getDamageFromLasers(), 2);
-        laserPiece = new LaserPiece(new Position(0, 0), 1, Direction.NORTH, false, false);
-        assertEquals(laserPiece.getDamageFromLasers(), 1);
-    }
 }

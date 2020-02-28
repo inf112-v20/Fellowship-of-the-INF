@@ -8,7 +8,6 @@ import inf112.skeleton.app.gridObjects.NullPiece;
 import inf112.skeleton.app.gridObjects.PlayerPiece;
 
 import java.util.ArrayList;
-//TODO refractor this to map
 public class Map {
     //dimensions of grid
     private int width;
