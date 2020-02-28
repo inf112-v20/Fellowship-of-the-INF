@@ -22,7 +22,11 @@ For the first sprint had we chosen roles for just two of our members, as we did 
 ### Retroperspective
 In the first itteration were there little actual coding, which lead to an uneven spread of commits among the members. For this itteration have we done a lot more coding towards the mvp.
 We have also had to sometimes move the extra meeting based on different reasons, such as waiting for more information, or other external reasons, f.ex. the moving of lectures.
-There is some insecurities among members, where they do not know or understand what some of the others are doing. This might be solved by creating a comprehensive uml, or maybe more pair programming. 
+There is some insecurities among members, where they do not know or understand what some of the others are doing. This might be solved by creating a comprehensive uml, or maybe more pair programming. For the next iteration we would like to improve communication, so that all team members feel confident in what they are doing.
+
+
+### Communication
+Knowledge is mostely shared during meetings, when team members explain their implementations. Skill building is also ofte done during meetings, when team members show others how to do certian things (for example how to deal with a merge conflict, generate test classes etc). Pair programming has also been shown to be very useful for building the skills of team members.
 
 ### Meeting Report
 
