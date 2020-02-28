@@ -105,7 +105,7 @@ __Work for next time:__
 * Collision with walls
 * Death when falling off board
 
-## How to reach these requirements:
+### How to reach these requirements:
 First, we need to represent the board and the pieces on the board.
 * Map
   * Data structure that encompasses the requirement for a game board
@@ -161,23 +161,32 @@ Then, we need to represent the role of the player (note, Player /= PlayerPiece).
   
  Finally, we need a way to show all this to the user.
 * Game
- * The "bridge" between frontend and backend
- * Has the Map object corresponding to the state of the game
- * Has the Player object representing the player in the game
- * Can recieve input from GameScreen
- * Can make the player execute input
+  * The "bridge" between frontend and backend
+  * Has the Map object corresponding to the state of the game
+  * Has the Player object representing the player in the game
+  * Can recieve input from GameScreen
+  * Can make the player execute input
 
 * Menu Screen
- * The first screen that the user sees when running the program
- * Has an EXIT buttton that closes the program
- * Has a play button, which closes the menu screen, and opens the game screen
+  * The first screen that the user sees when running the program
+  * Has an EXIT buttton that closes the program
+  * Has a play button, which closes the menu screen, and opens the game screen
  
 * Game Screen
- * Shows the board, with objects on it
- * Shows the cards available to the player
- * Allows the user to select 5 cards, and execute them
- * Also allows the user to move around the board with UP, DOWN, LEFT, RIGHT
+  * Shows the board, with objects on it
+  * Shows the cards available to the player
+  * Allows the user to select 5 cards, and execute them
+  * Also allows the user to move around the board with UP, DOWN, LEFT, RIGHT
 
-## Known bugs
+### Known bugs
 * The CardButtons hitbox do not entirely match the images on screen
 * The CardTests send nullPointerException because the ProgramCard class uses gdx to create an image. The tests run if you comment out line 15 in ProgramCard.java where the createImage(); method is called
+
+## Deloppgave3: Code
+
+### How to run the program
+
+### How to run tests
+* To run the CardTests, you have to go to the ProgramCard.java class and comment out line 15 where the createImage() method is called, as this method will throw a nullPointerException if not run in the program as a whole. 
+
+### How to run manual tests
