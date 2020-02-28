@@ -116,7 +116,7 @@ First, we need to represent the board and the pieces on the board.
   * Prevents a moveable piece from moving across cell
 _Sidenote: all “board objects”, ie things that lie on the board are called SomethingPiece to underline the fact that they are pieces on the board._
 
-Then, we need to represent the role of the player (note, Player /= PlayerPiece)
+Then, we need to represent the role of the player (note, Player /= PlayerPiece). This is of course not a complete description of the requirements for Player, just the requirements for this iteration.
 * Player
   * The class that represents the “programmer” in the game
   * Must take movement input, and move PlayerPiece accordingly.
@@ -124,17 +124,8 @@ Then, we need to represent the role of the player (note, Player /= PlayerPiece)
   * Variables: 
   PlayerPiece, 
   PlayerNumber, 
-  PlayerState, 
-  DamageTokens (own class), 
-  LifeTokens (own class), 
-  PlayerHandDeck, 
-  ChosenDeck, 
-  PowerDown (boolean)
-* PlayerState
-  * ENUM class
-  * Active
-  * Powerdown
-  * Dead
+  A type of player state (dead, alive etc), 
+
 * Card
   * Abstract class that represents a single card
   * CardImage (visual representation of card)
