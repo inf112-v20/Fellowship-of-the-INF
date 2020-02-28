@@ -36,7 +36,8 @@ public class Deck {
      * @param otherDeck A different deck that you want to move all the cards from, to this deck
      */
     public void moveAll(Deck otherDeck){
-        for(int i=0; i<otherDeck.size(); i++) {
+        int deckSize = otherDeck.size();
+        for(int i=0; i<deckSize; i++) {
             deck.add(otherDeck.getCard(0));
             otherDeck.removeCard(0);
         }
