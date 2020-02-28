@@ -14,9 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import inf112.skeleton.app.Cards.ProgramCard;
-import inf112.skeleton.app.Deck.GameDeck;
-import inf112.skeleton.app.GameLogic;
-import inf112.skeleton.app.Grid.PieceGrid;
+import inf112.skeleton.app.Game;
+import inf112.skeleton.app.Grid.Map;
 import inf112.skeleton.app.Player;
 
 import java.util.ArrayList;
@@ -39,23 +38,23 @@ public class GameScreen implements Screen {
     private Stage stage;
     private UIScreen uiScreen;
     private Player player;
-    private GameLogic game;
+    private Game game;
 
     public GameScreen() {
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("RoborallyBoard_debugged.tmx");
-        tiles = map.getTileSets().getTileSet("tileset.png");
+        this.map = mapLoader.load("RoborallyBoard_debugged.tmx");
+        tiles = this.map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WITDTH_DPI*2, MAP_WITDTH_DPI, camera);
         camera.translate(MAP_WITDTH_DPI, MAP_WITDTH_DPI/2);
-        mapRenderer = new OrthogonalTiledMapRenderer(map);
+        mapRenderer = new OrthogonalTiledMapRenderer(this.map);
         // Layers, add more later
-        playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
-        PieceGrid pieceGrid = new PieceGrid(MAP_WIDTH, MAP_WIDTH, map);
-        game = new GameLogic(pieceGrid);
+        playerLayer = (TiledMapTileLayer) this.map.getLayers().get("Player");
+        Map map = new Map(MAP_WIDTH, MAP_WIDTH, this.map);
+        game = new Game(map);
         initializePlayer();
-        GameDeck gameDeck = new GameDeck();
-        uiScreen = new UIScreen(MAP_WITDTH_DPI, gameDeck, this);
+        //UI gets game deck from game class
+        uiScreen = new UIScreen(MAP_WITDTH_DPI, game.getGameDeck(), this);
     }
     /**
      * Create a simple player with the ability to move around the board

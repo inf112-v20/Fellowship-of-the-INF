@@ -6,29 +6,29 @@ import com.badlogic.gdx.Input;
 import inf112.skeleton.app.Cards.ProgramCard;
 import inf112.skeleton.app.Deck.GameDeck;
 import inf112.skeleton.app.Grid.Direction;
-import inf112.skeleton.app.Grid.PieceGrid;
+import inf112.skeleton.app.Grid.Map;
 
 import java.util.ArrayList;
 
-public class GameLogic  {
-    private PieceGrid logicGrid;
+public class Game {
+    private Map map;
     private GameDeck gameDeck;
     private Player player;
-    private int playerLayerIndex;
 
 
-    public GameLogic(PieceGrid logicGrid) {
-        this.logicGrid = logicGrid;
+    public Game(Map map) {
+        this.map = map;
         this.player = new Player(1, this);
-        logicGrid.placeNewPlayerPieceOnMap(player.getPlayerPiece()); //place the new player piece on logic grid
+        map.placeNewPlayerPieceOnMap(player.getPlayerPiece()); //place the new player piece on logic grid
+        this.gameDeck = new GameDeck();
     }
 
-    public PieceGrid getLogicGrid() {
-        return logicGrid;
+    public Map getMap() {
+        return map;
     }
 
-    public void setLogicGrid(PieceGrid logicGrid) {
-        this.logicGrid = logicGrid;
+    public void setMap(Map map) {
+        this.map = map;
     }
 
     public GameDeck getGameDeck() {
