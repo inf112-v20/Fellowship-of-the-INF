@@ -22,6 +22,7 @@ For the first sprint had we chosen roles for just two of our members, as we did 
 ### Retroperspective
 In the first itteration were there little actual coding, which lead to an uneven spread of commits among the members. For this itteration have we done a lot more coding towards the mvp.
 We have also had to sometimes move the extra meeting based on different reasons, such as waiting for more information, or other external reasons, f.ex. the moving of lectures.
+
 There is some insecurities among members, where they do not know or understand what some of the others are doing. This might be solved by creating a comprehensive uml, or maybe more pair programming. For the next iteration we would like to improve communication, so that all team members feel confident in what they are doing.
 
 
@@ -198,4 +199,4 @@ Then, we need to represent the role of the player (note, Player /= PlayerPiece).
 * To run the CardTests, you have to go to the ProgramCard.java class and comment out line 15 where the createImage() method is called, as this method will throw a nullPointerException if not run in the program as a whole. 
 
 ### How to run manual tests
-* Read the md files in the ManualTests package in Test for instructions.
+* Read the md file in the ManualTests package in Test for instructions.
