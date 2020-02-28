@@ -181,6 +181,7 @@ Then, we need to represent the role of the player (note, Player /= PlayerPiece).
 ### Known bugs
 * The CardButtons hitbox do not entirely match the images on screen
 * The CardTests send nullPointerException because the ProgramCard class uses gdx to create an image. The tests run if you comment out line 15 in ProgramCard.java where the createImage(); method is called
+* The menu screen may not show in it's entirety on macBook, but is still interactive and useable
 
 ## Deloppgave3: Code
 
