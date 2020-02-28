@@ -34,7 +34,7 @@ public class PlayerTest {
 //        this.gameMap = new Map(mapWidth, mapHeight, map);
 //        this.game = new Game(gameMap);
 //        this.testPlayer = new Player(0, game);
-    }
+//    }
 
 //    @Test
 //    public void testPlayerDiesInAbyss() {
