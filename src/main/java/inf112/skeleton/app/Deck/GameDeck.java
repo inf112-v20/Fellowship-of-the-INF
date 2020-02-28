@@ -19,18 +19,17 @@ public class GameDeck {
 
     public GameDeck() {
         drawDeck = new Deck();
-        createDeck(drawDeck);
+        generateDeck(drawDeck);
         discardDeck = new Deck();
     }
 
-    //Draw a new hand based on the damage you have taken. Will also handle if you are running out of cards.
-    //Number of cards are calculated by subtracting the number of damage you have taken from the maximum number of cards
-
     /**
+     * Draw a new hand based on the damage you have taken. Will also handle if you are running out of cards.
+     * Number of cards are calculated by subtracting the number of damage you have taken from the maximum number of cards
      *
-     * @param playerHand
-     * @param damageValue
-     * @return
+     * @param playerHand The cards the player has had on their hand
+     * @param damageValue The amount of damage the player has taken
+     * @return A new deck of cards to the play
      */
     public Deck drawHand(Deck playerHand, int damageValue) {
         int numberOfCards = maxNumberOfCardsOnHand - damageValue;
@@ -51,9 +50,6 @@ public class GameDeck {
         return drawDeck;
     }
 
-    public Deck getDiscardDeck() {
-        return discardDeck;
-    }
 
     //Check to see if you can draw a hand without the drawDeck running out of cards
     private boolean canDrawFullHand(int numberOfCards) {
@@ -75,7 +71,7 @@ public class GameDeck {
     /**
      * Add the cards used in a programCard deck. Should only be used when making a new deck
      */
-    private void createDeck(Deck deck) {
+    private void generateDeck(Deck deck) {
         addMove1(deck);
         addMove2(deck);
         addMove3(deck);
