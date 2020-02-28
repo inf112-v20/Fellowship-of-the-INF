@@ -158,6 +158,25 @@ Then, we need to represent the role of the player (note, Player /= PlayerPiece).
   * A collection of a drawDeck and discardDeck
   * Ability to create a deck according to the rules of the game
   * Method to draw a hand of cards from the drawDeck 
+  
+ Finally, we need a way to show all this to the user.
+* Game
+ * The "bridge" between frontend and backend
+ * Has the Map object corresponding to the state of the game
+ * Has the Player object representing the player in the game
+ * Can recieve input from GameScreen
+ * Can make the player execute input
+
+* Menu Screen
+ * The first screen that the user sees when running the program
+ * Has an EXIT buttton that closes the program
+ * Has a play button, which closes the menu screen, and opens the game screen
+ 
+* Game Screen
+ * Shows the board, with objects on it
+ * Shows the cards available to the player
+ * Allows the user to select 5 cards, and execute them
+ * Also allows the user to move around the board with UP, DOWN, LEFT, RIGHT
 
 ## Known bugs
 * The CardButtons hitbox do not entirely match the images on screen
