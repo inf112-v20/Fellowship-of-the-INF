@@ -6,10 +6,11 @@ import inf112.skeleton.app.GridObjects.*;
 
 import java.util.ArrayList;
 //TODO refractor this to map
-public class PieceGrid {
+public class Map {
     //dimensions of grid
     private int width;
     private int height;
+
     private int numberOfLayers;
 
     //Tiled layers
@@ -46,7 +47,7 @@ public class PieceGrid {
     private ArrayList<BoardPiece>[][] grid;
     private BoardPieceGenerator boardPieceGenerator;
 
-    public PieceGrid(int width, int height, TiledMap map) { //TODO get source for map
+    public Map(int width, int height, TiledMap map) { //TODO get source for map
         grid = new ArrayList[width][height];
         this.width = grid[0].length;
         this.height = grid.length;

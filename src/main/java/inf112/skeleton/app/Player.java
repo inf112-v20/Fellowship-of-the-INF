@@ -3,7 +3,7 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.Grid.Direction;
-import inf112.skeleton.app.Grid.PieceGrid;
+import inf112.skeleton.app.Grid.Map;
 import inf112.skeleton.app.Grid.Position;
 import inf112.skeleton.app.GridObjects.*;
 
@@ -21,23 +21,23 @@ public class Player {
     private TiledMapTileLayer.Cell wonPlayerCell; //cell for player who has won looks
     private int MAP_WIDTH;
     private int MAP_HEIGHT;
-    private PieceGrid logicMap;
+    private Map map;
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
-    private GameLogic game;
+    private Game game;
 
-    public Player(int playerNumber, GameLogic game) {
-        // TODO refactor logicMap and pieceGrid
-        this.logicMap = game.getLogicGrid();
-        this.pieceGrid = logicMap.getGrid();
+    public Player(int playerNumber, Game game) {
+        // TODO Refactor getGrid() (lol)
+        this.map = game.getMap();
+        this.pieceGrid = map.getGrid();
         this.game = game;
         this.playerPiece = new PlayerPiece(new Position(0, 0), 200, Direction.NORTH);
         pos = new Position(0, 0);
         //place player at the bottom left corner
         pos.setX(0);
         pos.setY(0);
-        MAP_WIDTH = game.getLogicGrid().getWidth();
-        MAP_HEIGHT = game.getLogicGrid().getHeight();
+        MAP_WIDTH = game.getMap().getWidth();
+        MAP_HEIGHT = game.getMap().getHeight();
 
         playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 0)));
         deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 1)));
@@ -83,7 +83,6 @@ public class Player {
         playerPiece.setDir(newDirection);
         switch (newDirection) {
             case NORTH:
-                // TODO merge isDeadMove() into isLegalMove()?
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
                 if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
                 break;
@@ -103,7 +102,7 @@ public class Player {
 
         //if position has changed and player isn't dead, update logic grid
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
-            logicMap.movePlayerToNewPosition(pos, new Position(newX, newY));
+            map.movePlayerToNewPosition(pos, new Position(newX, newY));
         }
 
         /* UNCOMMENT TO SEE PRINTOUT OF PIECES IN CELL
@@ -141,7 +140,6 @@ public class Player {
         if (isDead()) return false;
         for (int i = 0; i < pieceGrid[x][y].size(); i++) {
             boolean f = pieceGrid[x][y].isEmpty();
-            // TODO create get()-method for pieceGrid? (instead of looping through all cells)
             currPiece = pieceGrid[x][y].get(i);
 
             switch (dir) {
@@ -232,11 +230,8 @@ public class Player {
     private boolean isDeadMove(int x, int y) {
         BoardPiece currPiece;
         if (x > MAP_WIDTH - 1 || x < 0 || y < 0 || y > MAP_WIDTH - 1) {
-         //TEST TODO fjern
-//        if (!withinBoundaries(x, y)) {
             return true;
         } else {
-            // TODO create get()-method for pieceGrid? (instead of looping through all cells)
             for (int i = 0; i < pieceGrid[x][y].size(); i++) {
                 currPiece = pieceGrid[x][y].get(i);
                 if (currPiece instanceof AbyssPiece) {
