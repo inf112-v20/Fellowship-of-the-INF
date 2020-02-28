@@ -34,7 +34,7 @@ __Summary__:
 __Work for next time__: 
 * Create more roles
 * Create iteration plan
-* Johanna: Implement objectsGenerator
+* Johanna: BoardPiece objects and implement objectsGenerator
 
 #### 18.02.2020
 __Attendence__: Martin, Erlend, Johanna, Lena
@@ -63,6 +63,7 @@ __Work for next time:__
 * Lena: implement deck and GameDeck
 * Martin: Squash some bugs regarding collision mechanics, and implement death mechanic
 * Erlend: Create the card images
+* Johanna: Create bridge between backend and frontend
 
 #### 24.02.2020
 __Attendence__: Everyone
@@ -78,6 +79,7 @@ __Work for next time:__
 #### 27.02.2020
 __Attendence__: Everyone
 __Summary__: 
+* Went through presentation for next week
 * Merging backend and frontend
 __Work for next time:__
 * General refactoring for the deadline
@@ -85,6 +87,7 @@ __Work for next time:__
 * Erlend: Create new UI class
 * Henrik: Fine tuning of main menu screen, implement switching screen functionality
 * Lena: Keep implementing Card and Deck tests
+* Johanna: Greate tests for the GridObjects package, finsh implementation of Lock In button, make UML
 
 ## Deloppgave2: Requirements
 ### Requirements for Second Iteration
