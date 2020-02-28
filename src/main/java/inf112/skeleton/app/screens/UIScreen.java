@@ -1,4 +1,4 @@
-package inf112.skeleton.app.Screens;
+package inf112.skeleton.app.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,9 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import inf112.skeleton.app.Cards.ProgramCard;
-import inf112.skeleton.app.Deck.Deck;
-import inf112.skeleton.app.Deck.GameDeck;
+import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.deck.Deck;
+import inf112.skeleton.app.deck.GameDeck;
+
 import java.util.ArrayList;
 
 public class UIScreen{
