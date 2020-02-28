@@ -33,7 +33,7 @@ public abstract class DirectionedPiece extends BoardPiece {
         this.dir = dir.getLeftTurnDirection();
     }
 
-    public void turnPieceRight() {
+    public void rotatePieceRight() {
         this.dir = dir.getRightTurnDirection();
     }
 

@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Game;
 import inf112.skeleton.app.Screens.GameScreen;
+import inf112.skeleton.app.Screens.MainMenuScreen;
 
 /**
  * Game to send to the application
@@ -10,8 +11,8 @@ import inf112.skeleton.app.Screens.GameScreen;
 public class RoboRallyDemo extends Game {
     @Override
     public void create() {
-        GameScreen gameScreen = new GameScreen();
-        setScreen(gameScreen);
+        MainMenuScreen menuScreen = new MainMenuScreen(this);
+        setScreen(menuScreen);
     }
 
     @Override

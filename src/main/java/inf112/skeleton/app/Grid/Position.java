@@ -1,5 +1,7 @@
 package inf112.skeleton.app.Grid;
 
+import java.util.Objects;
+
 public class Position {
 
     private int x;
@@ -32,5 +34,14 @@ public class Position {
                 "x=" + x +
                 ", y=" + y +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Position)) return false;
+        Position position = (Position) o;
+        return x == position.x &&
+                y == position.y;
     }
 }

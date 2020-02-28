@@ -3,7 +3,7 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.Grid.Direction;
-import inf112.skeleton.app.Grid.PieceGrid;
+import inf112.skeleton.app.Grid.Map;
 import inf112.skeleton.app.Grid.Position;
 import inf112.skeleton.app.GridObjects.*;
 
@@ -21,23 +21,22 @@ public class Player {
     private TiledMapTileLayer.Cell wonPlayerCell; //cell for player who has won looks
     private int MAP_WIDTH;
     private int MAP_HEIGHT;
-    private PieceGrid logicMap;
+    private Map map;
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
-    private GameLogic game;
+    private Game game;
 
-    public Player(int playerNumber, GameLogic game) {
-        // TODO Refactor getGrid() (lol)
-        this.logicMap = game.getLogicGrid();
-        this.pieceGrid = logicMap.getGrid();
+    public Player(int playerNumber, Game game) {
+        this.map = game.getMap();
+        this.pieceGrid = map.getGrid();
         this.game = game;
         this.playerPiece = new PlayerPiece(new Position(0, 0), 200, Direction.NORTH);
         pos = new Position(0, 0);
         //place player at the bottom left corner
         pos.setX(0);
         pos.setY(0);
-        MAP_WIDTH = game.getLogicGrid().getWidth();
-        MAP_HEIGHT = game.getLogicGrid().getHeight();
+        MAP_WIDTH = game.getMap().getWidth();
+        MAP_HEIGHT = game.getMap().getHeight();
 
         playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 0)));
         deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 1)));
@@ -101,8 +100,8 @@ public class Player {
         }
 
         //if position has changed and player isn't dead, update logic grid
-        if (newY != pos.getY() || newX != pos.getX() && !isDead()) {
-            logicMap.movePlayerToNewPosition(pos, new Position(newX, newY));
+        if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
+            map.movePlayerToNewPosition(pos, new Position(newX, newY));
         }
 
         /* UNCOMMENT TO SEE PRINTOUT OF PIECES IN CELL
@@ -144,63 +143,23 @@ public class Player {
 
             switch (dir) {
                 case EAST:
-                    if (isDeadMove(x + 1, y)) {
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                    } else {
-                        pieceInFront = pieceGrid[x + 1][y].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
-                        }
+                    if (!isLegalMoveInDirection(x+1, y, currPiece, dir, i)) {
+                        return false;
                     }
                     break;
                 case WEST:
-                    if (isDeadMove(x - 1, y)) {
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                    } else {
-                        pieceInFront = pieceGrid[x - 1][y].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
-                        }
+                    if (!isLegalMoveInDirection(x-1, y, currPiece, dir, i)) {
+                        return false;
                     }
                     break;
                 case NORTH:
-                    if (isDeadMove(x, y + 1)) {
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                    } else {
-                        pieceInFront = pieceGrid[x][y + 1].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
-                        }
+                    if (!isLegalMoveInDirection(x, y+1, currPiece, dir, i)) {
+                        return false;
                     }
                     break;
                 case SOUTH:
-                    if (isDeadMove(x, y - 1)) {
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                    } else {
-                        pieceInFront = pieceGrid[x][y - 1].get(i);
-                        if (currPiece instanceof WallPiece) {
-                            return ((WallPiece) currPiece).canLeave(dir);
-                        }
-                        if (pieceInFront instanceof WallPiece) {
-                            return ((WallPiece) pieceInFront).canGo(dir);
-                        }
+                    if (!isLegalMoveInDirection(x, y-1, currPiece, dir, i)) {
+                        return false;
                     }
                     break;
             }
@@ -208,16 +167,21 @@ public class Player {
         return true;
     }
 
-    /**
-     * Method for checking if a move is within the map boundaries
-     * out of bounds is two tiles outside the map, since one tile is used for death
-     *
-     * @param x x-position after move
-     * @param y y-position after move
-     * @return whether the move is within map boundaries
-     */
-    private boolean withinBoundaries(int x, int y) {
-        return x <= MAP_WIDTH + 1 && y <= MAP_HEIGHT + 1 && x >= -1 && y >= -1;
+    public boolean isLegalMoveInDirection(int newX, int newY, BoardPiece currentPiece, Direction dir, int layerLevel) {
+        if (isDeadMove(newX, newY)) {
+            if (currentPiece instanceof WallPiece) {
+                return ((WallPiece) currentPiece).canLeave(dir);
+            }
+        } else {
+            BoardPiece pieceInFront = pieceGrid[newX][newY].get(layerLevel);
+            if (currentPiece instanceof WallPiece) {
+                return ((WallPiece) currentPiece).canLeave(dir);
+            }
+            if (pieceInFront instanceof WallPiece) {
+                return ((WallPiece) pieceInFront).canGo(dir);
+            }
+        }
+        return true;
     }
 
     /**
@@ -260,6 +224,6 @@ public class Player {
     }
 
     public void turnPlayerRight() {
-        playerPiece.turnPieceRight();
+        playerPiece.rotatePieceRight();
     }
 }
