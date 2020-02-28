@@ -8,7 +8,7 @@ import inf112.skeleton.app.RoboRallyDemo;
 public class Main {
     public static void main(String[] args) {
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-        cfg.title = "hello-world";
+        cfg.title = "Roborally";
         cfg.width = 1200;
         cfg.height = 1200;
         new LwjglApplication(new RoboRallyDemo(), cfg);
