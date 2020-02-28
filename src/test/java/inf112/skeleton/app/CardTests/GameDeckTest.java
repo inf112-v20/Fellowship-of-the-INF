@@ -9,15 +9,15 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * This test cannot run, as the ProgramCard class uses gdx to save a texture,
- * but this makes the class not able to run by itself
+ * this makes the class not able to run by itself
+ *
+ * To run this test comment out line 15 in ProgramCard.java where the createImage(); method is called
  */
-
 public class GameDeckTest {
 
     GameDeck gameDeck;
     Deck playerHand;
 
-    /**
     @Before
     public void setUp() {
         gameDeck = new GameDeck();
@@ -37,5 +37,4 @@ public class GameDeckTest {
         }
         assertEquals(9,playerHand.size());
     }
-    */
 }
