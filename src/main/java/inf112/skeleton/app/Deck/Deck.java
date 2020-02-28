@@ -4,7 +4,6 @@ package inf112.skeleton.app.Deck;
  * I list of Cards, with some extra functionalities.
  */
 
-import inf112.skeleton.app.Cards.CardType;
 import inf112.skeleton.app.Cards.ProgramCard;
 import java.util.ArrayList;
 import java.util.Collections;
