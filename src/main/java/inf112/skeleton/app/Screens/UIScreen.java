@@ -6,14 +6,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.Cards.ProgramCard;
 import inf112.skeleton.app.Deck.Deck;
 import inf112.skeleton.app.Deck.GameDeck;
-import inf112.skeleton.app.Screens.CardButton;
-import inf112.skeleton.app.Screens.GameScreen;
 import java.util.ArrayList;
 
 public class UIScreen{
@@ -23,14 +20,15 @@ public class UIScreen{
     private float selectedCardPosX;
     private final float selectedCardPosY = 75;
     private CardButton cardButton;
+    private Deck playerHandDeck;
 
     public UIScreen(float width, GameDeck gameDeck, GameScreen gameScreen) {
         this.width = width;
         this.gameScreen = gameScreen;
-        selectedCardPosX =  width +50;
+        selectedCardPosX =  width * 1.05f;
         stage = new Stage();
         Texture texture = new Texture(Gdx.files.internal("lockinbutton.png"));
-        ImageButton lockInButton = createButton(texture, 1, width * 2 - 800, 200);
+        ImageButton lockInButton = createButton(texture, 1, width * 1.81f, 200);
         lockInButtonPressed(lockInButton);
         for (int i = 0; i < 5; i++) {
             texture = new Texture(Gdx.files.internal("cardslot.png"));
@@ -38,7 +36,9 @@ public class UIScreen{
             float posX = selectedCardPosX + i * 550;
             createImage(texture, scale, posX, selectedCardPosY);
         }
-        createCardButtons(gameDeck.drawHand(gameDeck.getDrawDeck(), 0));
+
+        playerHandDeck = gameDeck.drawHand(gameDeck.getDrawDeck(),0);
+        createCardButtons(playerHandDeck);
     }
 
     public Stage getStage() {
@@ -50,15 +50,13 @@ public class UIScreen{
         for (int i = 0; i < 9; i++) {
             ProgramCard card = deck.getCard(i);
             float posY = 2500;
-            float distBetweenCards = card.getTexture().getWidth() * 1.4f + 50;
-            float posX = width + 50 + distBetweenCards * i;
+            float posX =  (width * 1.05f) + (i * 500);
             if (i > 4) {
                 posY -= 800;
-                posX = width + 50 + distBetweenCards * (i - 5);
+                posX = (width * 1.05f) + ((i-5) * 500);
             }
-            Table table = new Table();
-            table.setPosition(posX, posY);
             cardButton = new CardButton(card, posX, posY, selectedCardPosX, selectedCardPosY);
+            stage.addActor(cardButton.getButton());
             stage.addActor(cardButton.getTable());
         }
     }
@@ -67,8 +65,7 @@ public class UIScreen{
         TextureRegion myTextureRegion = new TextureRegion(texture);
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
         ImageButton button = new ImageButton(myTexRegionDrawable);
-        button.getImage().scaleBy(scale, scale);
-        button.scaleBy(scale);
+        button.getImage().scaleBy(scale);
         button.setPosition(posX, posY);
         stage.addActor(button);
         return button;
