@@ -35,6 +35,7 @@ public class PlayerTest {
      */
     @Test
     public void playerDiesFromAbyssTest() {
+        // Commit test
         setUp();
         testPlayer.setPos(3, 2);
         testPlayer.tryToGo(Direction.WEST);
