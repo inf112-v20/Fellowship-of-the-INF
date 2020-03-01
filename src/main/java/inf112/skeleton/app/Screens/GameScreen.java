@@ -54,7 +54,7 @@ public class GameScreen implements Screen {
         game = new Game(map);
         initializePlayer();
         //UI gets game deck from game class
-        uiScreen = new UIScreen(MAP_WITDTH_DPI, game.getGameDeck(), this);
+        uiScreen = new UIScreen(MAP_WITDTH_DPI*2, game.getGameDeck(), this);
     }
     /**
      * Create a simple player with the ability to move around the board

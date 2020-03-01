@@ -1,106 +1,161 @@
 package inf112.skeleton.app.Screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.Cards.ProgramCard;
+import inf112.skeleton.app.Deck.Deck;
+
+import java.util.ArrayList;
 
 public class CardButton {
     private ProgramCard programCard;
-    private float posX; //X position of the card, this is to remember its original position when unselecting a card
-    private float posY = 600;
-    private float selectedCardPosX;
-    private float selectedCardPosY;
+    private ArrayList<Float> xPositions = new ArrayList<>();
+    private ArrayList<Float> yPositions = new ArrayList<>();
     private float currentPosX;
     private float currentPosY;
-    private Table table;
-    private ImageButton button;
+    private float selectedCardPosY;
+    private float textPosX;
+    private float textPosY;
+    private float gap;
+    private float width;
+    private float height;
+    private Stage stage;
     private int slotNumber = -1; //The position of a card in the list of selected cards, -1 by default
-    private static CardButton[] selectedCardButtons = {null, null, null, null, null}; //Static lit of the selected cardbuttons
+    private static ArrayList<Float> selectedCardXPositions = new ArrayList<>();
+    private ArrayList<ImageButton> cardButtons = new ArrayList<>();
+    private ArrayList<Table> cardTexts = new ArrayList<>();
+    private Deck playerHand;
+    private ImageButton[] selectedCardButtons = {null, null, null, null, null};//Static lit of the selected cardbuttons
+    private ProgramCard[] selectedCards = new ProgramCard[5];
 
-    public CardButton(ProgramCard card, float posX, float posY, float selectedCardPosX, float selectedCardPosY) {
-        this.programCard = card;
-        this.posX = posX;
-        this.posY = posY;
-        this.selectedCardPosX = selectedCardPosX;
-        this.selectedCardPosY = selectedCardPosY;
-        //Make an ImageButton with the cards texture and scaling it
-        //Create a table with the ImageButton and the priorityNumber(as text) and set its position
-        TextureRegion myTextureRegion = new TextureRegion(card.getTexture());
-        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
-        button = new ImageButton(myTexRegionDrawable);
-        button.getImage().scaleBy(0.5f);
-        button.setPosition(posX, posY);
-        table = new Table();
-        table.setPosition(posX+315, posY+650);
-        String priorityText = String.valueOf(card.getPriority());
-        table.add(drawText(priorityText));
-        //Make clicklistener for the button (i.e. the card) for different mousepresses
-        buttonLeftPressed(button);
-        buttonRightPressed(button);
-    }
-    public Table getTable(){
-        return table;
-    }
-    public ImageButton getButton(){ return button;}
-    public CardButton[] getSelectedCardButtons(){return selectedCardButtons;}
-    public ProgramCard getProgramCard(){return programCard;}
+    public CardButton(Deck deck, float width, float height, Stage stage) {
+        this.playerHand = deck;
+        this.width = width;
+        this.height = height;
+        this.stage = stage;
+        selectedCardPosY = height / 20;
+        gap = deck.getCard(0).getTexture().getWidth() * 1.7f;
+        createSelectedCardsImages();
+        for (int i = 0; i < deck.size(); i++) {
+            this.programCard = deck.getCard(i);
+            float posY = height * 0.6f;
+            float posX = (width * 0.52f) + (i * gap);
+            if (i > 4) {
+                posY -= programCard.getTexture().getHeight() * 1.7f;
+                posX = (width * 0.52f) + ((i - 5) * gap);
+            }
+            //Make an ImageButton with the cards texture and scaling it
+            //Create a table with the ImageButton and the priorityNumber(as text) and set its position
+            TextureRegion myTextureRegion = new TextureRegion(programCard.getTexture());
+            TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+            ImageButton button = new ImageButton(myTexRegionDrawable);
+            button.getImage().scaleBy(0.5f);
+            button.setPosition(posX, posY);
+            cardButtons.add(button);
+            xPositions.add(posX);
+            yPositions.add(posY);
+            //Make clicklistener for the button (i.e. the card) for different mousepresses
+            buttonLeftPressed(button);
+            buttonRightPressed(button);
+            stage.addActor(button);
 
-    public void setPos(float x, float y){
+            //Create prioritynumber as text on the cards
+            Table table = new Table();
+            textPosX = button.getWidth() * 1;
+            textPosY = button.getHeight() * 1.27f;
+            table.setPosition(posX + textPosX, posY + textPosY);
+            String priorityText = String.valueOf(programCard.getPriority());
+            table.add(drawText(priorityText));
+            stage.addActor(table);
+            cardTexts.add(table);
+        }
+    }
+    public ProgramCard[] getSelectedCards(){return selectedCards;}
+
+    public void setPos(ImageButton button, Table cardText, float x, float y){
         button.setPosition(x, y);
-        table.setPosition(x+315, y+650);
+        cardText.setPosition(x + textPosX, y + textPosY);
+    }
+
+    public void createSelectedCardsImages(){
+        for (int i = 0; i < 5; i++) {
+            Texture texture = new Texture(Gdx.files.internal("cardslot.png"));
+            TextureRegion myTextureRegion = new TextureRegion(texture);
+            TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+            Image selectedCardImage = new Image(myTexRegionDrawable);
+            selectedCardImage.scaleBy(0.5f);
+            float selectedCardPosX = (width * 0.52f) + (i * gap);
+            selectedCardImage.setPosition(selectedCardPosX, selectedCardPosY);
+            selectedCardXPositions.add(selectedCardPosX);
+            stage.addActor(selectedCardImage);
+        }
     }
 
     //Methods for the buttonpresses
     //Left click to add the card to the list of selected cards
     public void buttonLeftPressed(ImageButton button){
+        final ImageButton tempButton = button;
         button.addListener(new ClickListener(Input.Buttons.LEFT) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                addCard();
+                addCard(tempButton);
             }
         });
     }
     //Right click to deselect a card
     public void buttonRightPressed(ImageButton button){
+        final ImageButton tempButton = button;
         button.addListener(new ClickListener(Input.Buttons.RIGHT) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                removeCard();
+                removeCard(tempButton);
             }
         });
     }
 
-    public void addCard() {
-        if(slotNumber != -1){return;} //do nothing if the card is already selected
+    public void addCard(ImageButton button) {
         for (int i = 0; i < 5; i++) {
-            if (selectedCardButtons[i] == null) {
-                selectedCardButtons[i]= this;
-                currentPosX = selectedCardPosX + i*550 + 15;
+            if (selectedCardButtons[i] == null && selectedCardButtons[i] != button) {
+                selectedCardButtons[i]= button;
+                currentPosX = selectedCardXPositions.get(i) + 15;
                 currentPosY = selectedCardPosY + 15;
-                setPos(currentPosX, currentPosY);
-                slotNumber = i;
+                for (int j = 0; j <playerHand.size() ; j++) {
+                    if (cardButtons.get(j) == button) {
+                        setPos(button, cardTexts.get(j), currentPosX, currentPosY);
+                    }
+                }
+                selectedCards[i] = playerHand.getCard(i);
                 return;
             }
         }
     }
 
-    public void removeCard(){
-        if(slotNumber == -1){return;} //do nothing if the card is not already selected
-        selectedCardButtons[slotNumber] = null;
-        slotNumber = -1;
-        setPos(posX, posY); //set the card back to its original position
-        currentPosX = posX;
-        currentPosY = posY;
+    public void removeCard(ImageButton button){
+        for (int i = 0; i < 5; i++) {
+            if(selectedCardButtons[i] == button) {
+                selectedCardButtons[i] = null;
+                selectedCards[i] = null;
+                for (int j = 0; j < playerHand.size(); j++) {
+                    if(cardButtons.get(j) == button){
+                        currentPosX = xPositions.get(j);
+                        currentPosY = yPositions.get(j);
+                        setPos(button, cardTexts.get(j), currentPosX, currentPosY); //set the card back to its original position
+                    }
+                }
+            }
+        }
     }
 
     public Label drawText(String text){

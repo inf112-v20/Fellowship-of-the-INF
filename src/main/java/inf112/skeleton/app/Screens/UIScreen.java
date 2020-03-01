@@ -16,49 +16,34 @@ import java.util.ArrayList;
 public class UIScreen{
     private Stage stage;
     private float width;
+    private float height;
     private GameScreen gameScreen;
-    private float selectedCardPosX;
-    private final float selectedCardPosY = 75;
+
     private CardButton cardButton;
     private Deck playerHandDeck;
 
     public UIScreen(float width, GameDeck gameDeck, GameScreen gameScreen) {
         this.width = width;
+        height = width * 0.5f;
+        //selectedCardPosX = width * 0.52f;
+        //selectedCardPosY = height * 0.05f;
         this.gameScreen = gameScreen;
-        selectedCardPosX =  width * 1.05f;
         stage = new Stage();
-        Texture texture = new Texture(Gdx.files.internal("lockinbutton.png"));
-        ImageButton lockInButton = createButton(texture, 1, width * 1.81f, 200);
-        lockInButtonPressed(lockInButton);
-        for (int i = 0; i < 5; i++) {
-            texture = new Texture(Gdx.files.internal("cardslot.png"));
-            float scale = 0.51f;
-            float posX = selectedCardPosX + i * 550;
-            createImage(texture, scale, posX, selectedCardPosY);
-        }
-
-        playerHandDeck = gameDeck.drawHand(gameDeck.getDrawDeck(),0);
-        createCardButtons(playerHandDeck);
+        playerHandDeck = gameDeck.dealHand(0);
+        createLockInButton();
+        cardButton = new CardButton(playerHandDeck, width, height, stage);
     }
 
     public Stage getStage() {
         return stage;
     }
 
-//TODO replace 9 with decksize (and fix decksize)
-    public void createCardButtons(Deck deck) {
-        for (int i = 0; i < 9; i++) {
-            ProgramCard card = deck.getCard(i);
-            float posY = 2500;
-            float posX =  (width * 1.05f) + (i * 500);
-            if (i > 4) {
-                posY -= 800;
-                posX = (width * 1.05f) + ((i-5) * 500);
-            }
-            cardButton = new CardButton(card, posX, posY, selectedCardPosX, selectedCardPosY);
-            stage.addActor(cardButton.getButton());
-            stage.addActor(cardButton.getTable());
-        }
+
+    //TODO make position and size entirely dependent of the screen size (i.e percentages of width and height)
+    public void createLockInButton(){
+        Texture texture = new Texture(Gdx.files.internal("lockinbutton.png"));
+        ImageButton lockInButton = createButton(texture, 1, width * 0.90f, height*0.1f);
+        lockInButtonPressed(lockInButton);
     }
 
     public ImageButton createButton(Texture texture, float scale, float posX, float posY) {
@@ -79,6 +64,7 @@ public class UIScreen{
         image.setPosition(posX, posY);
         stage.addActor(image);
     }
+
     public void lockInButtonPressed(ImageButton lockInButton){
         lockInButton.addListener(new ClickListener() {
             @Override
@@ -87,13 +73,14 @@ public class UIScreen{
             }
         });
     }
+
     public ArrayList<ProgramCard> getSelectedProgramCards(){
         for (int i = 0; i < 5 ; i++) {
-            if(cardButton.getSelectedCardButtons()[i] == null){System.out.println("Not enough cards");return null;}
+            if(cardButton.getSelectedCards()[i] == null){System.out.println("Not enough cards");return null;}
         }
         ArrayList<ProgramCard> selectedProgramCards = new ArrayList<>();
         for (int i = 0; i < 5 ; i++) {
-            selectedProgramCards.add(cardButton.getSelectedCardButtons()[i].getProgramCard());
+            selectedProgramCards.add(cardButton.getSelectedCards()[i]);
         }
         return selectedProgramCards;
     }
