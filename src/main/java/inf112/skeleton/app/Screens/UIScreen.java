@@ -18,15 +18,12 @@ public class UIScreen{
     private float width;
     private float height;
     private GameScreen gameScreen;
-
     private CardButton cardButton;
     private Deck playerHandDeck;
 
     public UIScreen(float width, GameDeck gameDeck, GameScreen gameScreen) {
         this.width = width;
         height = width * 0.5f;
-        //selectedCardPosX = width * 0.52f;
-        //selectedCardPosY = height * 0.05f;
         this.gameScreen = gameScreen;
         stage = new Stage();
         playerHandDeck = gameDeck.dealHand(0);
@@ -38,8 +35,6 @@ public class UIScreen{
         return stage;
     }
 
-
-    //TODO make position and size entirely dependent of the screen size (i.e percentages of width and height)
     public void createLockInButton(){
         Texture texture = new Texture(Gdx.files.internal("lockinbutton.png"));
         ImageButton lockInButton = createButton(texture, 1, width * 0.90f, height*0.1f);

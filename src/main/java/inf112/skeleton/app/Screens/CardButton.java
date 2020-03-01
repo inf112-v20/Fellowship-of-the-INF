@@ -20,9 +20,7 @@ import inf112.skeleton.app.Deck.Deck;
 import java.util.ArrayList;
 
 public class CardButton {
-    private ProgramCard programCard;
-    private ArrayList<Float> xPositions = new ArrayList<>();
-    private ArrayList<Float> yPositions = new ArrayList<>();
+
     private float currentPosX;
     private float currentPosY;
     private float selectedCardPosY;
@@ -30,26 +28,27 @@ public class CardButton {
     private float textPosY;
     private float gap;
     private float width;
-    private float height;
     private Stage stage;
-    private int slotNumber = -1; //The position of a card in the list of selected cards, -1 by default
-    private static ArrayList<Float> selectedCardXPositions = new ArrayList<>();
+
+    private ArrayList<Float> xPositions = new ArrayList<>();
+    private ArrayList<Float> yPositions = new ArrayList<>();
+    private ArrayList<Float> selectedCardXPositions = new ArrayList<>();
     private ArrayList<ImageButton> cardButtons = new ArrayList<>();
     private ArrayList<Table> cardTexts = new ArrayList<>();
-    private Deck playerHand;
-    private ImageButton[] selectedCardButtons = {null, null, null, null, null};//Static lit of the selected cardbuttons
+    private ImageButton[] selectedCardButtons = new ImageButton[5];
     private ProgramCard[] selectedCards = new ProgramCard[5];
+    private Deck playerHand;
 
     public CardButton(Deck deck, float width, float height, Stage stage) {
         this.playerHand = deck;
         this.width = width;
-        this.height = height;
         this.stage = stage;
         selectedCardPosY = height / 20;
         gap = deck.getCard(0).getTexture().getWidth() * 1.7f;
         createSelectedCardsImages();
+
         for (int i = 0; i < deck.size(); i++) {
-            this.programCard = deck.getCard(i);
+            ProgramCard programCard = deck.getCard(i);
             float posY = height * 0.6f;
             float posX = (width * 0.52f) + (i * gap);
             if (i > 4) {
@@ -127,8 +126,13 @@ public class CardButton {
 
     public void addCard(ImageButton button) {
         for (int i = 0; i < 5; i++) {
+            if (selectedCardButtons[i] == button) {
+                return;
+            }
+        }
+        for (int i = 0; i < 5; i++){
             if (selectedCardButtons[i] == null && selectedCardButtons[i] != button) {
-                selectedCardButtons[i]= button;
+                selectedCardButtons[i] = button;
                 currentPosX = selectedCardXPositions.get(i) + 15;
                 currentPosY = selectedCardPosY + 15;
                 for (int j = 0; j <playerHand.size() ; j++) {
