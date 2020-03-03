@@ -49,11 +49,6 @@ public class GameDeck {
         return playerHand;
     }
 
-    public ArrayList<ProgramCard> getDrawDeck() {
-        return drawDeck;
-    }
-
-
     //Check to see if you can draw a hand without the drawDeck running out of cards
     private boolean canDrawFullHand(int numberOfCards) {
         return numberOfCards <= drawDeck.size() - 1;
