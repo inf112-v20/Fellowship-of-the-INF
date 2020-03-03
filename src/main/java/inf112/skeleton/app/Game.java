@@ -134,6 +134,10 @@ public class Game {
     }
 
     public void executeRound() {
+        System.out.println("EXECUTED CARDS");
+        for (ProgramCard card : player1.getSelectedCards()) {
+            System.out.println(card.toString());
+        }
         for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
             playerList[playerNumber - 1].pickFirstFiveCards();
         }
