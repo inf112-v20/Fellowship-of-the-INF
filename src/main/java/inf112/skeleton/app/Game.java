@@ -3,10 +3,11 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import inf112.skeleton.app.Cards.ProgramCard;
-import inf112.skeleton.app.Deck.GameDeck;
-import inf112.skeleton.app.Grid.Direction;
-import inf112.skeleton.app.Grid.Map;
+import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.deck.GameDeck;
+import inf112.skeleton.app.grid.Direction;
+import inf112.skeleton.app.grid.Map;
+import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
 
@@ -14,13 +15,16 @@ public class Game {
     private Map map;
     private GameDeck gameDeck;
     private Player player;
+    private ArrayList<Player> playerList;
 
 
     public Game(Map map) {
         this.map = map;
+        this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player = new Player(1, this);
+        this.playerList = new ArrayList<>();
+        playerList.add(player);
         map.placeNewPlayerPieceOnMap(player.getPlayerPiece()); //place the new player piece on logic grid
-        this.gameDeck = new GameDeck();
     }
 
     public Map getMap() {
@@ -106,8 +110,13 @@ public class Game {
             case ROTATERIGHT:
                 player.turnPlayerRight();
                 break;
+            default:
+                //TODO error handling as default maybe?
+                break;
         }
     }
 
-
+    public ArrayList<Player> getListOfPlayers() {
+        return playerList;
+    }
 }

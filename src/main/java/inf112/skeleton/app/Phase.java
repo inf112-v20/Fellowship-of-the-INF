@@ -1,6 +1,7 @@
 package inf112.skeleton.app;
 
-import inf112.skeleton.app.Cards.ProgramCard;
+import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.player.Player;
 
 import java.util.*;
 
@@ -15,7 +16,7 @@ public class Phase {
         HashMap<Player, Integer> playerAndPriority = new HashMap<>();
         for (int i = 0; i < listOfPlayers.size() ; i++) {
             Player player = listOfPlayers.get(i);
-            ProgramCard programCardThisPhase = player.getSelectedCards.get(phaseNumber); //Make this variable and getter in Player class
+            ProgramCard programCardThisPhase = player.getSelectedCards().get(phaseNumber); //Make this variable and getter in Player class
             Integer cardPriority = programCardThisPhase.getPriority();
             playerAndPriority.put(player, cardPriority);
         }
@@ -28,7 +29,7 @@ public class Phase {
         });
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
-            ProgramCard cardThisPhase = player.getSelectedCards.get(phaseNumber);
+            ProgramCard cardThisPhase = player.getSelectedCards().get(phaseNumber);
             player.executeCardAction(cardThisPhase); //Create this method in Player
         }
     }
