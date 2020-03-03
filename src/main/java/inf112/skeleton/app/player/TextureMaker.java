@@ -11,14 +11,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class TextureMaker {
 
     public static TextureRegion getPlayerTextureRegion(int playerNumber, int state) {
-        Texture playerTexture = new Texture("player.png");
+        Texture playerTexture = new Texture("playerSprites.png");
         TextureRegion region = new TextureRegion(playerTexture);
         //split image into texture regions
         TextureRegion[][] regions = region.split(300,300);
 
-        TextureRegion alive = regions[0][0];
-        TextureRegion dead = regions[0][1];
-        TextureRegion won = regions[0][2];
+        TextureRegion alive = regions[playerNumber-1][0];
+        TextureRegion dead = regions[playerNumber-1][1];
+        TextureRegion won = regions[playerNumber-1][2];
 
         //this can be used later to change the state of the player
         switch(state) {
