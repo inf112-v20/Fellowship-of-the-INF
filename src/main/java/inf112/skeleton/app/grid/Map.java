@@ -2,10 +2,10 @@ package inf112.skeleton.app.grid;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import inf112.skeleton.app.gridObjects.BoardPiece;
-import inf112.skeleton.app.gridObjects.BoardPieceGenerator;
-import inf112.skeleton.app.gridObjects.NullPiece;
-import inf112.skeleton.app.gridObjects.PlayerPiece;
+import inf112.skeleton.app.grid_objects.BoardPiece;
+import inf112.skeleton.app.grid_objects.BoardPieceGenerator;
+import inf112.skeleton.app.grid_objects.NullPiece;
+import inf112.skeleton.app.grid_objects.PlayerPiece;
 
 import java.util.ArrayList;
 public class Map {
@@ -13,6 +13,7 @@ public class Map {
     private int width;
     private int height;
 
+    //TODO unused atm
     private int numberOfLayers;
 
     //Tiled layers

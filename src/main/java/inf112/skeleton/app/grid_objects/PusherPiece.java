@@ -1,4 +1,4 @@
-package inf112.skeleton.app.gridObjects;
+package inf112.skeleton.app.grid_objects;
 
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;

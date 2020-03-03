@@ -107,6 +107,9 @@ public class Game {
             case ROTATERIGHT:
                 player.turnPlayerRight();
                 break;
+            default:
+                //TODO error handling as default maybe?
+                break;
         }
     }
 

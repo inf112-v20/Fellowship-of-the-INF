@@ -1,8 +1,8 @@
 package inf112.skeleton.app.gridObjectTests;
 
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.gridObjects.BoardPiece;
-import inf112.skeleton.app.gridObjects.FloorPiece;
+import inf112.skeleton.app.grid_objects.BoardPiece;
+import inf112.skeleton.app.grid_objects.FloorPiece;
 import org.junit.Before;
 import org.junit.Test;
 

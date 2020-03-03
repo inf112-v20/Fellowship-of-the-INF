@@ -6,10 +6,10 @@ import inf112.skeleton.app.Game;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.gridObjects.AbyssPiece;
-import inf112.skeleton.app.gridObjects.BoardPiece;
-import inf112.skeleton.app.gridObjects.PlayerPiece;
-import inf112.skeleton.app.gridObjects.WallPiece;
+import inf112.skeleton.app.grid_objects.AbyssPiece;
+import inf112.skeleton.app.grid_objects.BoardPiece;
+import inf112.skeleton.app.grid_objects.PlayerPiece;
+import inf112.skeleton.app.grid_objects.WallPiece;
 
 import java.util.ArrayList;
 

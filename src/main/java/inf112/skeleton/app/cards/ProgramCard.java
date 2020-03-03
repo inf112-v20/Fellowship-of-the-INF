@@ -39,6 +39,9 @@ public class ProgramCard implements IProgramCard{
             case UTURN:
                 texture = new Texture(Gdx.files.internal("carduturn.png"));
                 break;
+            default:
+                //TODO error handling as default maybe?
+                break;
         }
     }
 

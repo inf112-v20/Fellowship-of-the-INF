@@ -2,7 +2,7 @@ package inf112.skeleton.app.gridObjectTests;
 
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.gridObjects.LaserPiece;
+import inf112.skeleton.app.grid_objects.LaserPiece;
 import org.junit.Before;
 import org.junit.Test;
 
