@@ -80,13 +80,6 @@ public class UIScreen{
         for (int i = 0; i < 5 ; i++) {
             selectedProgramCards.add(cardButton.getSelectedCards()[i]);
         }
-        /*
-        System.out.println("SELECTED PROGRAM CARDS");
-        for (int i = 0; i < selectedProgramCards.size(); i++) {
-            System.out.println(selectedProgramCards.get(i).toString());
-        }
-
-         */
         return selectedProgramCards;
     }
 }
