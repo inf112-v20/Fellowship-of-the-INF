@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Round {
 
-    final int NUMBER_OF_PHASES = 1;
+    final int NUMBER_OF_PHASES = 5;
     private Phase phase;
 
     public Round(Game game) {

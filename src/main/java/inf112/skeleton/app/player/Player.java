@@ -262,7 +262,6 @@ public class Player {
                 //TODO error handling as default maybe?
                 break;
         }
-        System.out.println(toString() + getPlayerPiece().getPos().toString());
     }
 
     public int getPlayerNumber() {

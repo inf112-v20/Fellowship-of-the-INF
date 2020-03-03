@@ -19,10 +19,8 @@ public class Phase {
     public void executePhase(int phaseNumber) {
         playerAndPriority = new HashMap<>();
         for (int i = 0; i < listOfPlayers.length ; i++) {
-            System.out.println("Moving Player " + i);
             Player player = listOfPlayers[i];
             ProgramCard programCardThisPhase = player.getSelectedCards().get(phaseNumber);
-            System.out.println(player.toString() + " is executing " + programCardThisPhase.toString());
             Integer cardPriority = programCardThisPhase.getPriority();
             playerAndPriority.put(player, cardPriority);
         }
@@ -36,7 +34,6 @@ public class Phase {
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             ProgramCard cardThisPhase = player.getSelectedCards().get(phaseNumber);
-            System.out.println(player.toString() + " is executing " + cardThisPhase.toString());
             player.executeCardAction(cardThisPhase);
         }
     }

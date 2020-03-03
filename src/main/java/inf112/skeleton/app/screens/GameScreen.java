@@ -63,7 +63,7 @@ public class GameScreen implements Screen {
         game = new Game(map);
         initializePlayers();
         //UI gets game deck from game class
-        uiScreen = new UIScreen(MAP_WIDTH_DPI*2, game, this);
+        uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game, this);
     }
 
     /**
@@ -71,7 +71,7 @@ public class GameScreen implements Screen {
      * Add it to the playerLayer
      */
     public void initializePlayers() {
-        for( Player playerToInitialize : game.getListOfPlayers() ){
+        for (Player playerToInitialize : game.getListOfPlayers()) {
             TiledMapTileLayer.Cell playerCell = playerToInitialize.getPlayerCell();
             playerLayer.setCell(playerToInitialize.getPos().getX(), playerToInitialize.getPos().getY(), playerCell);
         }
@@ -164,9 +164,21 @@ public class GameScreen implements Screen {
             game.executePlayerHand(programCards);
             playerLayer.setCell( player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
             */
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
+            erasePlayers();
             game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
             game.executeRound();
+            repaintPlayers();
+        }
+    }
+
+    public void erasePlayers() {
+        for (Player player : game.getListOfPlayers()) {
+            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
+        }
+    }
+
+    public void repaintPlayers() {
+        for (Player player : game.getListOfPlayers()) {
             playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
         }
     }
