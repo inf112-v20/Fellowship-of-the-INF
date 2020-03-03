@@ -19,9 +19,9 @@ public class Game {
 
     public Game(Map map) {
         this.map = map;
+        this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player = new Player(1, this);
         map.placeNewPlayerPieceOnMap(player.getPlayerPiece()); //place the new player piece on logic grid
-        this.gameDeck = new GameDeck();
     }
 
     public Map getMap() {

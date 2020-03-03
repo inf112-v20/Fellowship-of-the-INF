@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import inf112.skeleton.app.Game;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.Deck;
 import inf112.skeleton.app.deck.GameDeck;
@@ -21,11 +22,14 @@ public class UIScreen{
     private float selectedCardPosX;
     private final float selectedCardPosY = 75;
     private CardButton cardButton;
+    private Game game;
     private ArrayList<ProgramCard> playerHandDeck;
 
-    public UIScreen(float width, GameDeck gameDeck, GameScreen gameScreen) {
+    public UIScreen(float width, Game game, GameScreen gameScreen) {
         this.width = width;
         this.gameScreen = gameScreen;
+        this.game = game;
+        this.playerHandDeck = game.getPlayer().getPlayerHandDeck();
         selectedCardPosX =  width * 1.05f;
         stage = new Stage();
         Texture texture = new Texture(Gdx.files.internal("lockinbutton.png"));
@@ -37,8 +41,6 @@ public class UIScreen{
             float posX = selectedCardPosX + i * 550;
             createImage(texture, scale, posX, selectedCardPosY);
         }
-
-        playerHandDeck = gameDeck.drawHand(new ArrayList<ProgramCard>(),0);
         createCardButtons(playerHandDeck);
     }
 

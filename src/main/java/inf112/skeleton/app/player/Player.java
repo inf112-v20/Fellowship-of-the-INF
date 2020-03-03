@@ -3,6 +3,8 @@ package inf112.skeleton.app.player;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.Game;
+import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.grid.Position;
@@ -29,11 +31,18 @@ public class Player {
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
     private Game game;
+    private ArrayList<ProgramCard> playerHandDeck;
+    private ArrayList<ProgramCard> selectedCards;
+    private int damage;
 
     public Player(int playerNumber, Game game) {
         this.map = game.getMap();
         this.pieceGrid = map.getGrid();
         this.game = game;
+        this.damage = 0;
+        GameDeck gameDeck = game.getGameDeck();
+        this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
+        this.selectedCards = new ArrayList<>();
         this.playerPiece = new PlayerPiece(new Position(0, 0), 200, Direction.NORTH);
         pos = new Position(0, 0);
         //place player at the bottom left corner
@@ -46,6 +55,10 @@ public class Player {
         deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 1)));
         wonPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 2)));
         currentCell = playerCell; //appearance starts as normal player
+    }
+
+    private int getDamage() {
+        return damage;
     }
 
     /**
@@ -228,5 +241,14 @@ public class Player {
 
     public void turnPlayerRight() {
         playerPiece.rotatePieceRight();
+    }
+
+
+    public ArrayList<ProgramCard> getPlayerHandDeck() {
+        return playerHandDeck;
+    }
+
+    public ArrayList<ProgramCard> getSelectedCards() {
+        return selectedCards;
     }
 }
