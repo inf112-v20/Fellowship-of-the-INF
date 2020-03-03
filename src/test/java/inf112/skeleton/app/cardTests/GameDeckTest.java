@@ -1,4 +1,4 @@
-package inf112.skeleton.app.cardTests;
+/*package inf112.skeleton.app.cardTests;
 
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.Deck;
@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
  *
  * To run this test comment out line 15 in ProgramCard.java where the createImage(); method is called
  */
+/*
 public class GameDeckTest {
 
     GameDeck gameDeck;
@@ -41,3 +42,4 @@ public class GameDeckTest {
         assertEquals(9,playerHand.size());
     }
 }
+*/

@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.deck.Deck;
 import inf112.skeleton.app.deck.GameDeck;
 
 import java.util.ArrayList;
