@@ -10,6 +10,7 @@ public class Phase {
     private static int phaseNumber = 0;
 
     public Phase (Game game){
+        // kake
         listOfPlayers = game.getListOfPlayers();  //Make this variable and getter in Game class
         HashMap<Player, Integer> playerAndPriority = new HashMap<>();
         for (int i = 0; i < listOfPlayers.size() ; i++) {

@@ -15,4 +15,4 @@ public interface IProgramCard extends ICard{
      * @return The command
      */
     public CardType getCommand();
-}
+} 
