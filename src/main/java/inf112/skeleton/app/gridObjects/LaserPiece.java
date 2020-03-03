@@ -25,15 +25,4 @@ public class LaserPiece extends DirectionedPiece {
         return crossingLasers;
     }
 
-    /***
-     * Function that returns how much damage a laser gives
-     * Is based on if there is a double laser or cross.
-     * @return number of lives lost from laser damage
-     */
-    public int getDamageFromLasers() {
-        int damageCount = 1;
-        if (doubleLaser) damageCount = damageCount * 2;
-        if (crossingLasers) damageCount = damageCount * 2;
-        return damageCount;
-    }
 }

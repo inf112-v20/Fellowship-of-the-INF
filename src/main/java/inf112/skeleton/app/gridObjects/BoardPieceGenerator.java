@@ -142,7 +142,6 @@ public class BoardPieceGenerator {
                 return new FlagPiece(pos, id, 3);
             case (79):
                 return new FlagPiece(pos, id, 4);
-            //TODO: find id of player
             default:
                 return new NullPiece(pos, id);
         }

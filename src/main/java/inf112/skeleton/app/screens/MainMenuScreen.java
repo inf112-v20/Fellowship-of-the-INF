@@ -50,7 +50,6 @@ public class MainMenuScreen implements Screen {
         // Play button
         picture = new Sprite(new Texture("play_button_up.png"));
         playButton = new ImageButton(new SpriteDrawable(picture));
-        // TODO make variables for padding
         playButton.setPosition(125,150);
         playButton.addListener(new ClickListener() {
             @Override

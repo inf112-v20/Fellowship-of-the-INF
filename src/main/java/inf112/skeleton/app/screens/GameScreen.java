@@ -137,7 +137,6 @@ public class GameScreen implements Screen {
 
     }
 
-    //TODO understand and implement dispose
     @Override
     public void dispose() {
 
