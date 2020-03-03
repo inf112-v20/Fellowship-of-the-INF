@@ -143,6 +143,7 @@ public class GameScreen implements Screen {
 
     }
 
+    //TODO This is a logic and should maybe be a method in the Game class?
     /**
      * Executes the cards that have been chosen
      * @param programCards to execute
