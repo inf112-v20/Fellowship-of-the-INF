@@ -136,10 +136,10 @@ public class CardButton {
                 currentPosY = selectedCardPosY + 15;
                 for (int j = 0; j <playerHand.size() ; j++) {
                     if (cardButtons.get(j) == button) {
+                        selectedCards[i] = playerHand.get(j);
                         setPos(button, cardTexts.get(j), currentPosX, currentPosY);
                     }
                 }
-                selectedCards[i] = playerHand.get(i);
                 return;
             }
         }

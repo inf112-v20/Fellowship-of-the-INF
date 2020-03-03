@@ -19,20 +19,16 @@ public class UIScreen{
     private float width;
     private float height;
     private GameScreen gameScreen;
-    private float selectedCardPosX;
-    private final float selectedCardPosY = 75; //TODO refactor
     private CardButton cardButton;
     private Game game;
     private ArrayList<ProgramCard> playerHandDeck;
 
     public UIScreen(float width, Game game, GameScreen gameScreen) {
         this.width = width;
-
         height = width * 0.5f; //TODO refactor
         this.gameScreen = gameScreen;
         this.game = game;
         this.playerHandDeck = game.getPlayer().getPlayerHandDeck();
-        selectedCardPosX =  width * 1.05f; //TODO refactor
         stage = new Stage();
         createLockInButton();
         cardButton = new CardButton(playerHandDeck, width, height, stage);
