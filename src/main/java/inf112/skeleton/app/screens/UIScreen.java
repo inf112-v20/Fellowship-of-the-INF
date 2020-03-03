@@ -21,7 +21,7 @@ public class UIScreen{
     private float selectedCardPosX;
     private final float selectedCardPosY = 75;
     private CardButton cardButton;
-    private Deck playerHandDeck;
+    private ArrayList<ProgramCard> playerHandDeck;
 
     public UIScreen(float width, GameDeck gameDeck, GameScreen gameScreen) {
         this.width = width;
@@ -38,7 +38,7 @@ public class UIScreen{
             createImage(texture, scale, posX, selectedCardPosY);
         }
 
-        playerHandDeck = gameDeck.drawHand(gameDeck.getDrawDeck(),0);
+        playerHandDeck = gameDeck.drawHand(new ArrayList<ProgramCard>(),0);
         createCardButtons(playerHandDeck);
     }
 
@@ -47,9 +47,9 @@ public class UIScreen{
     }
 
 
-    public void createCardButtons(Deck deck) {
+    public void createCardButtons(ArrayList<ProgramCard> deck) {
         for (int i = 0; i < 9; i++) {
-            ProgramCard card = deck.getCard(i);
+            ProgramCard card = deck.get(i);
             float posY = 2500;
             float posX =  (width * 1.05f) + (i * 500);
             if (i > 4) {
