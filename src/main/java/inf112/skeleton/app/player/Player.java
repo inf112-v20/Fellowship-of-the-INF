@@ -142,7 +142,6 @@ public class Player {
         BoardPiece pieceInFront;
         if (isDead()) return false;
         for (int i = 0; i < pieceGrid[x][y].size(); i++) {
-            boolean f = pieceGrid[x][y].isEmpty();
             currPiece = pieceGrid[x][y].get(i);
 
             switch (dir) {

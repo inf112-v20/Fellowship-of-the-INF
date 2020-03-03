@@ -22,10 +22,14 @@ public class TextureMaker {
 
         //this can be used later to change the state of the player
         switch(state) {
-            case 0: return alive;
-            case 1: return dead;
-            case 2: return won;
+            case 0:
+                return alive;
+            case 1:
+                return dead;
+            case 2:
+                return won;
+            default:
+                return null;
         }
-        return null;
     }
 }
