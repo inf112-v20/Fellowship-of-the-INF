@@ -9,14 +9,18 @@ public class Phase {
 
     private ArrayList<Player> listOfPlayers;
     private static int phaseNumber = 0;
+    HashMap<Player, Integer> playerAndPriority;
 
     public Phase (Game game){
-        // kake
-        listOfPlayers = game.getListOfPlayers();  //Make this variable and getter in Game class
-        HashMap<Player, Integer> playerAndPriority = new HashMap<>();
+        listOfPlayers = game.getListOfPlayers();
+        this.playerAndPriority = new HashMap<>();
+    }
+
+    public void executePhase(int phaseNumber) {
+        playerAndPriority = new HashMap<>();
         for (int i = 0; i < listOfPlayers.size() ; i++) {
             Player player = listOfPlayers.get(i);
-            ProgramCard programCardThisPhase = player.getSelectedCards().get(phaseNumber); //Make this variable and getter in Player class
+            ProgramCard programCardThisPhase = player.getSelectedCards().get(phaseNumber);
             Integer cardPriority = programCardThisPhase.getPriority();
             playerAndPriority.put(player, cardPriority);
         }
@@ -30,7 +34,8 @@ public class Phase {
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             ProgramCard cardThisPhase = player.getSelectedCards().get(phaseNumber);
-            player.executeCardAction(cardThisPhase); //Create this method in Player
+            player.executeCardAction(cardThisPhase);
         }
     }
+
 }

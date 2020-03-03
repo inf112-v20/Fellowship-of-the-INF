@@ -16,6 +16,7 @@ public class Game {
     private GameDeck gameDeck;
     private Player player;
     private ArrayList<Player> playerList;
+    private Round round;
 
 
     public Game(Map map) {
@@ -25,6 +26,7 @@ public class Game {
         this.playerList = new ArrayList<>();
         playerList.add(player);
         map.placeNewPlayerPieceOnMap(player.getPlayerPiece()); //place the new player piece on logic grid
+        this.round = new Round(this);
     }
 
     public Map getMap() {
@@ -118,5 +120,9 @@ public class Game {
 
     public ArrayList<Player> getListOfPlayers() {
         return playerList;
+    }
+
+    public void startRound()  {
+        round.startRound();
     }
 }

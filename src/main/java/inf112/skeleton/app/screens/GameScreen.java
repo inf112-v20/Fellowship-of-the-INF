@@ -50,12 +50,12 @@ public class GameScreen implements Screen {
         MAP_WIDTH = mapProperties.get("width", Integer.class);
         MAP_HEIGHT = mapProperties.get("height", Integer.class);
         TILE_WIDTH_DPI = mapProperties.get("tilewidth", Integer.class);
-        MAP_WIDTH_DPI =  MAP_WIDTH * TILE_WIDTH_DPI;
+        MAP_WIDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI;
 
         tiles = this.map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
-        gridPort = new StretchViewport(MAP_WIDTH_DPI *2, MAP_WIDTH_DPI, camera);
-        camera.translate(MAP_WIDTH_DPI, MAP_WIDTH_DPI /2);
+        gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_WIDTH_DPI, camera);
+        camera.translate(MAP_WIDTH_DPI, MAP_WIDTH_DPI / 2);
         mapRenderer = new OrthogonalTiledMapRenderer(this.map);
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) this.map.getLayers().get("Player");
@@ -65,6 +65,7 @@ public class GameScreen implements Screen {
         //UI gets game deck from game class
         uiScreen = new UIScreen(MAP_WIDTH_DPI, game, this);
     }
+
     /**
      * Create a simple player with the ability to move around the board
      * Add it to the playerLayer
@@ -82,7 +83,8 @@ public class GameScreen implements Screen {
     }
 
     /**
-     *This method is called continuously
+     * This method is called continuously
+     *
      * @param v deltaTime
      */
     @Override
@@ -100,7 +102,9 @@ public class GameScreen implements Screen {
      * For now they are only movements of player
      */
     public void update() {
-       handleInput();
+        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
+        handleInput();
+        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
     }
 
     /**
@@ -108,10 +112,12 @@ public class GameScreen implements Screen {
      */
 
     public void handleInput() {
-        playerLayer.setCell( player.getPos().getX(), player.getPos().getY(), null);
+        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         game.handleInput();
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){Gdx.graphics.setWindowedMode(1200,1200);}
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.graphics.setWindowedMode(1200, 1200);
+        }
     }
 
 
@@ -143,15 +149,23 @@ public class GameScreen implements Screen {
     }
 
     //TODO This is a logic and should maybe be a method in the Game class?
+
     /**
      * Executes the cards that have been chosen
+     *
      * @param programCards to execute
      */
     public void executeLockIn(ArrayList<ProgramCard> programCards) {
         if (programCards != null) {
+            /*
             playerLayer.setCell( player.getPos().getX(), player.getPos().getY(), null);
             game.executePlayerHand(programCards);
             playerLayer.setCell( player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
+            */
+            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
+            game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
+            game.startRound();
+            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
         }
     }
 }

@@ -289,4 +289,12 @@ public class Player {
     public ArrayList<ProgramCard> getSelectedCards() {
         return selectedCards;
     }
+
+    public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) {
+        this.playerHandDeck = playerHandDeck;
+    }
+
+    public void setSelectedCards(ArrayList<ProgramCard> selectedCards) {
+        this.selectedCards = selectedCards;
+    }
 }

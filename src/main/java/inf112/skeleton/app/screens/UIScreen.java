@@ -13,7 +13,7 @@ import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 
 import java.util.ArrayList;
-
+//TODO add comments to this class
 public class UIScreen{
     private Stage stage;
     private float width;
@@ -31,7 +31,7 @@ public class UIScreen{
         this.gameScreen = gameScreen;
         this.game = game;
         this.playerHandDeck = game.getPlayer().getPlayerHandDeck();
-        selectedCardPosX =  width * 1.05f;
+        selectedCardPosX =  width * 1.05f; //TODO refactor
         stage = new Stage();
         createLockInButton();
         cardButton = new CardButton(playerHandDeck, width, height, stage);
