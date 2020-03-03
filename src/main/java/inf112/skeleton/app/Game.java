@@ -9,24 +9,35 @@ import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.player.Player;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Game {
     private Map map;
     private GameDeck gameDeck;
-    private Player player;
-    private ArrayList<Player> playerList;
+    private Player player1;
+    private Player[] playerList;
     private Round round;
+    private final int NUMBER_OF_PLAYERS = 4;
 
 
     public Game(Map map) {
         this.map = map;
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
-        this.player = new Player(1, this);
-        this.playerList = new ArrayList<>();
-        playerList.add(player);
-        map.placeNewPlayerPieceOnMap(player.getPlayerPiece()); //place the new player piece on logic grid
+        this.player1 = new Player(1, this);
+        this.playerList = new Player[NUMBER_OF_PLAYERS];
+        playerList[0] = player1;
+        map.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
+        initiateComputerPlayers();
         this.round = new Round(this);
+    }
+
+    public void initiateComputerPlayers() {
+        for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
+            Player playerToBeInitiated = new Player(playerNumber,this);
+            playerList[playerNumber-1] = playerToBeInitiated;
+            map.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
+        }
     }
 
     public Map getMap() {
@@ -46,11 +57,11 @@ public class Game {
     }
 
     public Player getPlayer() {
-        return player;
+        return player1;
     }
 
     public void setPlayer(Player player) {
-        this.player = player;
+        this.player1 = player;
     }
 
     public void setNewPlayerPos(int x, int y) {
@@ -62,13 +73,13 @@ public class Game {
      */
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player.tryToGo(Direction.NORTH);
+            player1.tryToGo(Direction.NORTH);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            player.tryToGo(Direction.SOUTH);
+            player1.tryToGo(Direction.SOUTH);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            player.tryToGo(Direction.WEST);
+            player1.tryToGo(Direction.WEST);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            player.tryToGo(Direction.EAST);
+            player1.tryToGo(Direction.EAST);
         }
     }
 
@@ -87,30 +98,30 @@ public class Game {
     public void convertCardToPlayerMove(ProgramCard programCard) {
         switch (programCard.getCommand()) {
             case MOVE1:
-                player.tryToGo(player.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
                 break;
             case MOVE2:
-                player.tryToGo(player.getPlayerPiece().getDir());
-                player.tryToGo(player.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
                 break;
             case MOVE3:
-                player.tryToGo(player.getPlayerPiece().getDir());
-                player.tryToGo(player.getPlayerPiece().getDir());
-                player.tryToGo(player.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
                 break;
             case UTURN:
-                player.turnPlayerAround();
+                player1.turnPlayerAround();
                 break;
             case BACKUP:
-                player.turnPlayerAround();
-                player.tryToGo(player.getPlayerPiece().getDir());
-                player.turnPlayerAround();
+                player1.turnPlayerAround();
+                player1.tryToGo(player1.getPlayerPiece().getDir());
+                player1.turnPlayerAround();
                 break;
             case ROTATELEFT:
-                player.turnPlayerLeft();
+                player1.turnPlayerLeft();
                 break;
             case ROTATERIGHT:
-                player.turnPlayerRight();
+                player1.turnPlayerRight();
                 break;
             default:
                 //TODO error handling as default maybe?
@@ -118,11 +129,15 @@ public class Game {
         }
     }
 
-    public ArrayList<Player> getListOfPlayers() {
+    public Player[] getListOfPlayers() {
         return playerList;
     }
 
     public void startRound()  {
+   /*     for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
+            ArrayList<ProgramCard>
+            playerList[playerNumber-1].setSelectedCards();
+        }*/
         round.startRound();
     }
 }

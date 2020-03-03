@@ -61,19 +61,24 @@ public class GameScreen implements Screen {
         playerLayer = (TiledMapTileLayer) this.map.getLayers().get("Player");
         Map map = new Map(MAP_WIDTH, MAP_WIDTH, this.map);
         game = new Game(map);
-        initializePlayer();
+        initializePlayers();
         //UI gets game deck from game class
-        uiScreen = new UIScreen(MAP_WIDTH_DPI, game, this);
+        uiScreen = new UIScreen(MAP_WIDTH_DPI*2, game, this);
     }
 
     /**
      * Create a simple player with the ability to move around the board
      * Add it to the playerLayer
      */
-    public void initializePlayer() {
+    public void initializePlayers() {
+        for( Player playerToInitialize : game.getListOfPlayers() ){
+            TiledMapTileLayer.Cell playerCell = playerToInitialize.getPlayerCell();
+            playerLayer.setCell(playerToInitialize.getPos().getX(), playerToInitialize.getPos().getY(), playerCell);
+        }
         player = game.getPlayer();
+        /* player = game.getPlayer();
         TiledMapTileLayer.Cell playerCell = player.getPlayerCell();
-        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), playerCell);
+        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), playerCell);*/
     }
 
     @Override

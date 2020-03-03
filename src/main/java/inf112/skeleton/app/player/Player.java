@@ -43,11 +43,12 @@ public class Player {
         GameDeck gameDeck = game.getGameDeck();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
         this.selectedCards = new ArrayList<>();
-        this.playerPiece = new PlayerPiece(new Position(0, 0), 200, Direction.NORTH);
-        pos = new Position(0, 0);
-        //place player at the bottom left corner
-        pos.setX(0);
-        pos.setY(0);
+        //player is player is placed at bottom of board in position of player number
+        int playerStartPositionX = (playerNumber-1)*2;
+        int playerStartPositionY = 0;
+        this.playerPiece = new PlayerPiece(new Position(playerStartPositionX, playerStartPositionY), 200, Direction.NORTH);
+        pos = new Position(playerStartPositionX, playerStartPositionY);
+
         MAP_WIDTH = game.getMap().getWidth();
         MAP_HEIGHT = game.getMap().getHeight();
 
@@ -297,4 +298,12 @@ public class Player {
     public void setSelectedCards(ArrayList<ProgramCard> selectedCards) {
         this.selectedCards = selectedCards;
     }
+
+   /* public void pickRandomCards() {
+        int NUMBER_
+        if (playerHandDeck.size() > 4) {
+            for (int i = 0; i < 4;)
+        }
+    }*/
+
 }

@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Phase {
 
-    private ArrayList<Player> listOfPlayers;
+    private Player[] listOfPlayers;
     private static int phaseNumber = 0;
     HashMap<Player, Integer> playerAndPriority;
 
@@ -18,8 +18,8 @@ public class Phase {
 
     public void executePhase(int phaseNumber) {
         playerAndPriority = new HashMap<>();
-        for (int i = 0; i < listOfPlayers.size() ; i++) {
-            Player player = listOfPlayers.get(i);
+        for (int i = 0; i < listOfPlayers.length ; i++) {
+            Player player = listOfPlayers[i];
             ProgramCard programCardThisPhase = player.getSelectedCards().get(phaseNumber);
             Integer cardPriority = programCardThisPhase.getPriority();
             playerAndPriority.put(player, cardPriority);
