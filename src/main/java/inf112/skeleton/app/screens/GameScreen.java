@@ -76,9 +76,6 @@ public class GameScreen implements Screen {
             playerLayer.setCell(playerToInitialize.getPos().getX(), playerToInitialize.getPos().getY(), playerCell);
         }
         player = game.getPlayer();
-        /* player = game.getPlayer();
-        TiledMapTileLayer.Cell playerCell = player.getPlayerCell();
-        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), playerCell);*/
     }
 
     @Override
@@ -169,7 +166,7 @@ public class GameScreen implements Screen {
             */
             playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
             game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
-            game.startRound();
+            game.executeRound();
             playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
         }
     }

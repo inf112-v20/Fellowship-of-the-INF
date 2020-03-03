@@ -19,6 +19,7 @@ public class Phase {
     public void executePhase(int phaseNumber) {
         playerAndPriority = new HashMap<>();
         for (int i = 0; i < listOfPlayers.length ; i++) {
+            System.out.println("Moving Player " + i);
             Player player = listOfPlayers[i];
             ProgramCard programCardThisPhase = player.getSelectedCards().get(phaseNumber);
             Integer cardPriority = programCardThisPhase.getPriority();

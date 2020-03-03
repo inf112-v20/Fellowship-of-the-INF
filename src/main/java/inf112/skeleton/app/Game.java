@@ -34,8 +34,8 @@ public class Game {
 
     public void initiateComputerPlayers() {
         for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
-            Player playerToBeInitiated = new Player(playerNumber,this);
-            playerList[playerNumber-1] = playerToBeInitiated;
+            Player playerToBeInitiated = new Player(playerNumber, this);
+            playerList[playerNumber - 1] = playerToBeInitiated;
             map.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
     }
@@ -90,9 +90,9 @@ public class Game {
     }
 
 
-
     /**
      * Gives the player a command, based on the program card
+     *
      * @param programCard to convert to player move
      */
     public void convertCardToPlayerMove(ProgramCard programCard) {
@@ -133,11 +133,10 @@ public class Game {
         return playerList;
     }
 
-    public void startRound()  {
-   /*     for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
-            ArrayList<ProgramCard>
-            playerList[playerNumber-1].setSelectedCards();
-        }*/
+    public void executeRound() {
+        for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
+            playerList[playerNumber - 1].pickFirstFiveCards();
+        }
         round.startRound();
     }
 }

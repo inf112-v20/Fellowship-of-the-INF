@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Round {
 
-    final int NUMBER_OF_PHASES = 5;
+    final int NUMBER_OF_PHASES = 1;
     private Phase phase;
 
     public Round(Game game) {
@@ -13,8 +13,6 @@ public class Round {
 
     /**
      * Starts executing all the phases
-     *
-     * @throws InterruptedException
      */
     public void startRound(){
         for (int i = 0; i < NUMBER_OF_PHASES; i++) {
@@ -22,3 +20,4 @@ public class Round {
         }
     }
 }
+//FIND OUT WHY NO ONE IS MOVING!!!!!

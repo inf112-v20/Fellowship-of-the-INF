@@ -34,8 +34,10 @@ public class Player {
     private ArrayList<ProgramCard> playerHandDeck;
     private ArrayList<ProgramCard> selectedCards;
     private int damage;
+    private int playerNumber;
 
     public Player(int playerNumber, Game game) {
+        this.playerNumber = playerNumber;
         this.map = game.getMap();
         this.pieceGrid = map.getGrid();
         this.game = game;
@@ -119,6 +121,7 @@ public class Player {
 
         //if position has changed and player isn't dead, update logic grid
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
+            playerPiece.setPos(new Position(newX, newY));
             map.movePlayerToNewPosition(pos, new Position(newX, newY));
         }
 
@@ -259,6 +262,11 @@ public class Player {
                 //TODO error handling as default maybe?
                 break;
         }
+        System.out.println(toString() + getPlayerPiece().getPos().toString());
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
     }
 
     public boolean isDead() {
@@ -299,11 +307,21 @@ public class Player {
         this.selectedCards = selectedCards;
     }
 
-   /* public void pickRandomCards() {
-        int NUMBER_
-        if (playerHandDeck.size() > 4) {
-            for (int i = 0; i < 4;)
+   public void pickFirstFiveCards() {
+        int NUMBER_OF_CARDS_TO_CHOOSE = 5;
+        ArrayList<ProgramCard> firstFiveCards = new ArrayList<>();
+        if (playerHandDeck.size() >= NUMBER_OF_CARDS_TO_CHOOSE) {
+            for (int i = 0; i < NUMBER_OF_CARDS_TO_CHOOSE; i++) {
+                firstFiveCards.add(playerHandDeck.get(i));
+            }
+            selectedCards = firstFiveCards;
         }
-    }*/
+    }
 
+    @Override
+    public String toString() {
+        return "Player{" +
+                "playerNumber=" + playerNumber +
+                '}';
+    }
 }
