@@ -122,7 +122,7 @@ public class Player {
         //if position has changed and player isn't dead, update logic grid
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
             playerPiece.setPos(new Position(newX, newY));
-            map.movePlayerToNewPosition(pos, new Position(newX, newY));
+            map.movePlayerToNewPosition(pos, new Position(newX, newY), currentCell);
         }
 
         /* UNCOMMENT TO SEE PRINTOUT OF PIECES IN CELL
@@ -277,17 +277,31 @@ public class Player {
         return playerPiece;
     }
 
+    /*
+    This now rotates the cell also which is the image of the player.
+    A cells rotation is an integer between 0 and 3, where 0 = North, 1 = West, 2 = South, 3 = East.
+    This does not affect the playerPiece direction in any way.
+     */
 
     public void turnPlayerAround() {
         playerPiece.turnPieceInOppositeDirection();
+        int newDir = currentCell.getRotation() + 2;
+        if (newDir > 3){ newDir -= 4;}
+        currentCell.setRotation(newDir);
     }
 
     public void turnPlayerLeft() {
         playerPiece.rotatePieceLeft();
+        int newDir = currentCell.getRotation() + 1;
+        if (newDir > 3){ newDir -= 4;}
+        currentCell.setRotation(newDir);
     }
 
     public void turnPlayerRight() {
         playerPiece.rotatePieceRight();
+        int newDir = currentCell.getRotation() + 3;
+        if (newDir > 3){ newDir -= 4;}
+        currentCell.setRotation(newDir);
     }
 
 

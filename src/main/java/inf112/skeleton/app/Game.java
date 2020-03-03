@@ -80,6 +80,14 @@ public class Game {
             player1.tryToGo(Direction.WEST);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             player1.tryToGo(Direction.EAST);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.W)){
+            player1.turnPlayerAround();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)){
+            player1.turnPlayerLeft();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)){
+            player1.turnPlayerAround();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)){
+            player1.turnPlayerRight();
         }
     }
 
@@ -135,9 +143,11 @@ public class Game {
 
     public void executeRound() {
         System.out.println("EXECUTED CARDS");
+        /*
         for (ProgramCard card : player1.getSelectedCards()) {
             System.out.println(card.toString());
         }
+         */
         for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
             playerList[playerNumber - 1].pickFirstFiveCards();
         }

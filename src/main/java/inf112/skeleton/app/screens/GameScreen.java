@@ -118,7 +118,7 @@ public class GameScreen implements Screen {
         game.handleInput();
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            Gdx.graphics.setWindowedMode(1200, 1200);
+            Gdx.graphics.setWindowedMode(600, 600);
         }
     }
 
