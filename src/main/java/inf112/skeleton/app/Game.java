@@ -73,21 +73,17 @@ public class Game {
      */
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player1.tryToGo(Direction.NORTH);
+            player1.tryToGo(player1.getPlayerPiece().getDir());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            player1.tryToGo(Direction.SOUTH);
+            player1.turnPlayerAround();
+            player1.tryToGo(player1.getPlayerPiece().getDir());
+            player1.turnPlayerAround();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            player1.tryToGo(Direction.WEST);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            player1.tryToGo(Direction.EAST);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.W)){
-            player1.turnPlayerAround();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)){
             player1.turnPlayerLeft();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)){
-            player1.turnPlayerAround();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             player1.turnPlayerRight();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            player1.turnPlayerAround();
         }
     }
 

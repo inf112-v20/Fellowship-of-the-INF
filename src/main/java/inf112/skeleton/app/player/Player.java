@@ -122,7 +122,7 @@ public class Player {
         //if position has changed and player isn't dead, update logic grid
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
             playerPiece.setPos(new Position(newX, newY));
-            map.movePlayerToNewPosition(pos, new Position(newX, newY), currentCell);
+            map.movePlayerToNewPosition(pos, new Position(newX, newY));
         }
 
         /* UNCOMMENT TO SEE PRINTOUT OF PIECES IN CELL
