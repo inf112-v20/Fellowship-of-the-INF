@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.utils.ShapeCache;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Shape2D;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
+import inf112.skeleton.app.player.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -31,6 +33,10 @@ public class UIScreen{
     private Game game;
     private ArrayList<ProgramCard> playerHandDeck;
     private ImageButton lockInButton;
+    private Player player;
+    private Actor[] lifeActors = new Actor[3];
+    private Actor[] checkpointActors = new Actor[3];
+    private Actor[] damageActors = new Actor[10];
 
     public UIScreen(float width, Game game, GameScreen gameScreen) {
         this.width = width;
@@ -42,9 +48,10 @@ public class UIScreen{
         createLockInButton();
         cardButton = new CardButton(playerHandDeck, width, height, stage, lockInButton);
         lockInButton.setTouchable(Touchable.disabled);
-        TextureRegion playerPicture = game.getListOfPlayers()[1].getPlayerCell().getTile().getTextureRegion();
+        player = game.getListOfPlayers()[0];
+        TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
         createImage(playerPicture, 1, width *0.5f, height*0.75f, 1);
-        String playerName  = "Player " + game.getListOfPlayers()[1].getPlayerNumber();
+        String playerName  = "Player " + player.getPlayerNumber();
         drawText(playerName, 10, width * 0.51f, height * 0.95f);
         createDamageTokens();
         createLifeTokens();
@@ -52,18 +59,41 @@ public class UIScreen{
         createPowerDownImage();
     }
 
+    public void update(){
+        float alpha; //opacity of the image
+        Color c = lifeActors[0].getColor();
+        for (int i = 0; i < 3 ; i++) {
+            if (i > player.getLifes() - 1) {alpha = 0.2f; }
+            else {alpha = 1;}
+            lifeActors[i].setColor(c.r, c.g, c.b, alpha);
+        }
+        c = checkpointActors[0].getColor();
+        for (int i = 0; i < 3; i++) {
+            if(i > player.getCheckpointsVisited()-1){alpha = 0.2f;}
+            else{alpha = 1;}
+            checkpointActors[i].setColor(c.r, c.g, c.b, alpha);
+        }
+        c = damageActors[0].getColor();
+        for (int i = 0; i < 10; i++) {
+            if(i > player.getDamage()-1){alpha = 0.2f;}
+            else{alpha = 1;}
+            damageActors[9-i].setColor(c.r, c.g, c.b, alpha);
+        }
+    }
+
     public Stage getStage() {
         return stage;
     }
 
-
     public void createLifeTokens(){
         Texture texture = new Texture(Gdx.files.internal("lifetoken.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
+        float alpha = 1;
         float posY = height * 0.87f;
         for (int i = 0; i < 3 ; i++) {
             float posX = (width * 0.6f) + (i * texture.getWidth() * 1.8f);
-            createImage(textureRegion, 0.25f, posX, posY, 1);
+            Image lifeTokenImage = createImage(textureRegion, 0.25f, posX, posY, alpha);
+            lifeActors[i] = lifeTokenImage;
         }
     }
 
@@ -73,7 +103,8 @@ public class UIScreen{
         float posY = height * 0.75f;
         for (int i = 0; i < 3 ; i++) {
             float posX = (width * 0.6f) + (i * texture.getWidth() * 1.8f);
-            createImage(textureRegion, 0.25f, posX, posY, 0.2f);
+            Image checkpointTokenImage = createImage(textureRegion, 0.25f, posX, posY, 0.2f);
+            checkpointActors[i] = checkpointTokenImage;
         }
     }
 
@@ -83,7 +114,8 @@ public class UIScreen{
         float posY = height * 0.25f;
         for (int i = 0; i < 10 ; i++) {
             float posX = (width * 0.51f) + (i * texture.getWidth() * 2.5f);
-            createImage(textureRegion, 1.1f, posX, posY, 1);
+            Image damageTokenImage = createImage(textureRegion, 1.1f, posX, posY, 1);
+            damageActors[i] = damageTokenImage;
         }
     }
 
@@ -98,7 +130,7 @@ public class UIScreen{
 
     public void createLockInButton(){
         Texture texture = new Texture(Gdx.files.internal("lockinbutton.png"));
-        lockInButton = createButton(texture, 0.75f, width * 0.8f, height*0.1f);
+        lockInButton = createButton(texture, 0.75f, width * 0.8f, height*0.08f);
         Color c = lockInButton.getColor();
         lockInButton.setColor(c.r, c.g, c.b, 0.5f);
         lockInButtonPressed(lockInButton);
@@ -114,7 +146,7 @@ public class UIScreen{
         return button;
     }
 
-    public void createImage(TextureRegion textureRegion, float scale, float posX, float posY, float alpha) {
+    public Image createImage(TextureRegion textureRegion, float scale, float posX, float posY, float alpha) {
         TextureRegion myTextureRegion = textureRegion;
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
         Image image = new Image(myTexRegionDrawable);
@@ -123,6 +155,7 @@ public class UIScreen{
         Color c = image.getColor();
         image.setColor(c.r, c.g, c.b, alpha);
         stage.addActor(image);
+        return image;
     }
 
     public void lockInButtonPressed(ImageButton lockInButton){

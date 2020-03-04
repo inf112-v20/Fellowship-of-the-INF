@@ -95,6 +95,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         mapRenderer.setView(camera);
         update(); //make changes to board, if there are any
+        uiScreen.update();
         mapRenderer.render();
         stage.draw();
     }

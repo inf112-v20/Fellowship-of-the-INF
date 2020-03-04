@@ -35,6 +35,8 @@ public class Player {
     private ArrayList<ProgramCard> selectedCards;
     private int damage;
     private int playerNumber;
+    private int lifes = 3;
+    private int checkpointsVisited;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -60,9 +62,6 @@ public class Player {
         currentCell = playerCell; //appearance starts as normal player
     }
 
-    private int getDamage() {
-        return damage;
-    }
 
     /**
      * Getter for position
@@ -337,4 +336,26 @@ public class Player {
                 "playerNumber=" + playerNumber +
                 '}';
     }
+
+    public void takeDamage(int amountOfDamage){ damage += amountOfDamage; System.out.println("Damage: " + damage); }
+
+    public void repairDamage(int amountOfRepairs){damage -= amountOfRepairs; System.out.println("Damage: " + damage);}
+
+    public int getDamage(){return damage;}
+
+    public void loseLife(){lifes--; System.out.println("Lifes: " + lifes);}
+
+    //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
+    public void gainLife(){lifes++; System.out.println("Lifes: " + lifes);}
+
+    public int getLifes(){return lifes;}
+
+    public void visitedCheckpoint(){checkpointsVisited++; System.out.println("Checkpoints: " + checkpointsVisited);}
+
+    //TODO remove this later since it is not possible to undo a checkpoint/flag. This is for testing purposes only.
+    public void removeCheckpoint(){checkpointsVisited--; System.out.println("Checkpoints: " + checkpointsVisited);}
+
+    public int getCheckpointsVisited(){return checkpointsVisited;}
+
+
 }

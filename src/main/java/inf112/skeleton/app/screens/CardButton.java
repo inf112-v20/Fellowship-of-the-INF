@@ -79,7 +79,6 @@ public class CardButton {
             buttonRightPressed(button);
             stage.addActor(button);
 
-            //TODO fix text position
             //Create prioritynumber as text on the cards
             Table table = new Table();
             textPosX = button.getWidth() * 0.82f;

@@ -3,6 +3,7 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
@@ -84,6 +85,18 @@ public class Game {
             player1.turnPlayerRight();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             player1.turnPlayerAround();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            player1.takeDamage(1);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            player1.repairDamage(1);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            player1.gainLife();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+            player1.loseLife();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+            player1.visitedCheckpoint();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+            player1.removeCheckpoint();
         }
     }
 
