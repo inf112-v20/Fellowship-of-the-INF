@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -29,6 +30,7 @@ public class CardButton {
     private float gap;
     private float width;
     private Stage stage;
+    private ImageButton lockInButton;
 
     private ArrayList<Float> xPositions = new ArrayList<>();
     private ArrayList<Float> yPositions = new ArrayList<>();
@@ -41,10 +43,11 @@ public class CardButton {
     private ProgramCard[] selectedCards = new ProgramCard[5];
     private ArrayList<ProgramCard> playerHand;
 
-    public CardButton(ArrayList<ProgramCard> playerHand, float width, float height, Stage stage) {
+    public CardButton(ArrayList<ProgramCard> playerHand, float width, float height, Stage stage, ImageButton lockInButton) {
         this.playerHand = playerHand;
         this.width = width;
         this.stage = stage;
+        this.lockInButton = lockInButton;
         selectedCardPosY = height / 20;
         gap = playerHand.get(0).getTexture().getWidth() * 1.7f;
         createSelectedCardsImages();
@@ -94,6 +97,8 @@ public class CardButton {
 
     public ProgramCard[] getSelectedCards(){return selectedCards;}
 
+    public ImageButton[] getSelectedCardButtons(){return selectedCardButtons;}
+
     public void setPos(ImageButton button, Table cardText, float x, float y){
         button.setPosition(x, y);
         cardText.setPosition(x + textPosX, y + textPosY);
@@ -136,6 +141,7 @@ public class CardButton {
     }
 
     public void addCard(ImageButton button) {
+
         for (int i = 0; i < 5; i++) {
             if (selectedCardButtons[i] == button) {
                 return;
@@ -152,9 +158,14 @@ public class CardButton {
                         setPos(button, cardTexts.get(j), currentPosX, currentPosY);
                         leftOverCardButtons.set(j, null);
                         leftOverCardTexts.set(j, null);
+                        if(hasSelectedFiveCards()){
+                            Color c = lockInButton.getColor();
+                            lockInButton.setColor(c.r, c.g, c.b, 1f);
+                            lockInButton.setTouchable(Touchable.enabled);
+                        }
+                        return;
                     }
                 }
-                return;
             }
         }
     }
@@ -171,6 +182,12 @@ public class CardButton {
                         setPos(button, cardTexts.get(j), currentPosX, currentPosY); //set the card back to its original position
                         leftOverCardButtons.set(j, button);
                         leftOverCardTexts.set(j, cardTexts.get(j));
+                        if(!hasSelectedFiveCards()){
+                            Color c = lockInButton.getColor();
+                            lockInButton.setColor(c.r, c.g, c.b, 0.5f);
+                            lockInButton.setTouchable(Touchable.disabled);
+                        }
+                        return;
                     }
                 }
             }
@@ -184,5 +201,12 @@ public class CardButton {
         Label textLabel = new Label(text, labelStyle);
         textLabel.setFontScale(5);
         return textLabel;
+    }
+
+    public boolean hasSelectedFiveCards(){
+        for (int i = 0; i < 5; i++) {
+            if(selectedCards[i] == null){return false;}
+        }
+        return true;
     }
 }
