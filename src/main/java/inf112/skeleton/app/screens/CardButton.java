@@ -49,23 +49,26 @@ public class CardButton {
         this.stage = stage;
         this.lockInButton = lockInButton;
         selectedCardPosY = height / 20;
-        gap = playerHand.get(0).getTexture().getWidth() * 1.7f;
+        gap = playerHand.get(0).getTexture().getWidth() * 1.3f;
         createSelectedCardsImages();
 
         for (int i = 0; i < playerHand.size(); i++) {
             ProgramCard programCard = playerHand.get(i);
-            float posY = height * 0.6f;
-            float posX = (width * 0.52f) + (i * gap);
+            float posY = height * 0.5f;
+            float posX = (width * 0.51f) + (i * gap);
+
             if (i > 4) {
-                posY -= programCard.getTexture().getHeight() * 1.7f;
-                posX = (width * 0.52f) + ((i - 5) * gap);
+                posY -= programCard.getTexture().getHeight() * 1.4f;
+                posX = (width * 0.51f) + ((i - 5) * gap);
             }
+
+
             //Make an ImageButton with the cards texture and scaling it
             //Create a table with the ImageButton and the priorityNumber(as text) and set its position
             TextureRegion myTextureRegion = new TextureRegion(programCard.getTexture());
             TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
             ImageButton button = new ImageButton(myTexRegionDrawable);
-            button.getImage().scaleBy(0.5f);
+            button.getImage().scaleBy(0.2f);
             button.setPosition(posX, posY);
             cardButtons.add(button);
             leftOverCardButtons.add(button);
@@ -110,8 +113,8 @@ public class CardButton {
             TextureRegion myTextureRegion = new TextureRegion(texture);
             TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
             Image selectedCardImage = new Image(myTexRegionDrawable);
-            selectedCardImage.scaleBy(0.5f);
-            float selectedCardPosX = (width * 0.52f) + (i * gap);
+            selectedCardImage.scaleBy(0.2f);
+            float selectedCardPosX = (width * 0.51f) + (i * gap);
             selectedCardImage.setPosition(selectedCardPosX, selectedCardPosY);
             selectedCardXPositions.add(selectedCardPosX);
             stage.addActor(selectedCardImage);
