@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -33,7 +34,9 @@ public class CardButton {
     private ArrayList<Float> yPositions = new ArrayList<>();
     private ArrayList<Float> selectedCardXPositions = new ArrayList<>();
     private ArrayList<ImageButton> cardButtons = new ArrayList<>();
+    private ArrayList<ImageButton> leftOverCardButtons = new ArrayList<>();
     private ArrayList<Table> cardTexts = new ArrayList<>();
+    private ArrayList<Table> leftOverCardTexts = new ArrayList<>();
     private ImageButton[] selectedCardButtons = new ImageButton[5];
     private ProgramCard[] selectedCards = new ProgramCard[5];
     private ArrayList<ProgramCard> playerHand;
@@ -62,6 +65,7 @@ public class CardButton {
             button.getImage().scaleBy(0.5f);
             button.setPosition(posX, posY);
             cardButtons.add(button);
+            leftOverCardButtons.add(button);
             xPositions.add(posX);
             yPositions.add(posY);
             //Make clicklistener for the button (i.e. the card) for different mousepresses
@@ -78,8 +82,16 @@ public class CardButton {
             table.add(drawText(priorityText));
             stage.addActor(table);
             cardTexts.add(table);
+            leftOverCardTexts.add(table);
+
         }
+
     }
+
+    public ArrayList<ImageButton> getLeftOverCardButtons(){ return leftOverCardButtons; }
+
+    public ArrayList<Table> getLeftOverCardTexts(){return leftOverCardTexts;}
+
     public ProgramCard[] getSelectedCards(){return selectedCards;}
 
     public void setPos(ImageButton button, Table cardText, float x, float y){
@@ -138,6 +150,8 @@ public class CardButton {
                     if (cardButtons.get(j) == button) {
                         selectedCards[i] = playerHand.get(j);
                         setPos(button, cardTexts.get(j), currentPosX, currentPosY);
+                        leftOverCardButtons.set(j, null);
+                        leftOverCardTexts.set(j, null);
                     }
                 }
                 return;
@@ -155,6 +169,8 @@ public class CardButton {
                         currentPosX = xPositions.get(j);
                         currentPosY = yPositions.get(j);
                         setPos(button, cardTexts.get(j), currentPosX, currentPosY); //set the card back to its original position
+                        leftOverCardButtons.set(j, button);
+                        leftOverCardTexts.set(j, cardTexts.get(j));
                     }
                 }
             }
