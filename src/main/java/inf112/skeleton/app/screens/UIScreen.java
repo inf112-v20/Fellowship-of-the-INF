@@ -79,6 +79,15 @@ public class UIScreen{
             else{alpha = 1;}
             damageActors[9-i].setColor(c.r, c.g, c.b, alpha);
         }
+        if(player.getDamage()> 4 && player.getDamage() < 10){
+            for (int i = 0; i < player.getDamage()-4; i++) {
+                if(player.getDamage() < 9) {cardButton.getSelectedCardImages()[3-i].setColor(Color.WHITE);}
+                cardButton.getSelectedCardImages()[4-i].setColor(Color.RED);
+            }
+        }
+        else if(player.getDamage() < 5){cardButton.getSelectedCardImages()[4].setColor(Color.WHITE);}
+
+
     }
 
     public Stage getStage() {

@@ -42,6 +42,7 @@ public class CardButton {
     private ImageButton[] selectedCardButtons = new ImageButton[5];
     private ProgramCard[] selectedCards = new ProgramCard[5];
     private ArrayList<ProgramCard> playerHand;
+    private Image[] selectedCardImages = new Image[5];
 
     public CardButton(ArrayList<ProgramCard> playerHand, float width, float height, Stage stage, ImageButton lockInButton) {
         this.playerHand = playerHand;
@@ -93,6 +94,7 @@ public class CardButton {
         }
 
     }
+    public Image[] getSelectedCardImages(){return selectedCardImages;}
 
     public ArrayList<ImageButton> getLeftOverCardButtons(){ return leftOverCardButtons; }
 
@@ -118,6 +120,7 @@ public class CardButton {
             selectedCardImage.setPosition(selectedCardPosX, selectedCardPosY);
             selectedCardXPositions.add(selectedCardPosX);
             stage.addActor(selectedCardImage);
+            selectedCardImages[i] = selectedCardImage;
         }
     }
 
