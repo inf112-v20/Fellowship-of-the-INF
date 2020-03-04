@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.utils.ShapeCache;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -16,6 +19,7 @@ import inf112.skeleton.app.Game;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 
+import java.awt.*;
 import java.util.ArrayList;
 //TODO add comments to this class
 public class UIScreen{
@@ -38,15 +42,58 @@ public class UIScreen{
         createLockInButton();
         cardButton = new CardButton(playerHandDeck, width, height, stage, lockInButton);
         lockInButton.setTouchable(Touchable.disabled);
-        TextureRegion playerPicture = game.getPlayer().getPlayerCell().getTile().getTextureRegion();
-        createImage(playerPicture, 1, width *0.5f, height*0.8f);
-        String playerName  = "Player " + game.getPlayer().getPlayerNumber();
-        drawText(playerName, 10, width * 0.51f, height * 0.97f);
-
+        TextureRegion playerPicture = game.getListOfPlayers()[1].getPlayerCell().getTile().getTextureRegion();
+        createImage(playerPicture, 1, width *0.5f, height*0.75f, 1);
+        String playerName  = "Player " + game.getListOfPlayers()[1].getPlayerNumber();
+        drawText(playerName, 10, width * 0.51f, height * 0.95f);
+        createDamageTokens();
+        createLifeTokens();
+        createCheckPointTokens();
+        createPowerDownImage();
     }
 
     public Stage getStage() {
         return stage;
+    }
+
+
+    public void createLifeTokens(){
+        Texture texture = new Texture(Gdx.files.internal("lifetoken.png"));
+        TextureRegion textureRegion = new TextureRegion(texture);
+        float posY = height * 0.87f;
+        for (int i = 0; i < 3 ; i++) {
+            float posX = (width * 0.6f) + (i * texture.getWidth() * 1.8f);
+            createImage(textureRegion, 0.25f, posX, posY, 1);
+        }
+    }
+
+    public void createCheckPointTokens(){
+        Texture texture = new Texture(Gdx.files.internal("checkpointtoken.png"));
+        TextureRegion textureRegion = new TextureRegion(texture);
+        float posY = height * 0.75f;
+        for (int i = 0; i < 3 ; i++) {
+            float posX = (width * 0.6f) + (i * texture.getWidth() * 1.8f);
+            createImage(textureRegion, 0.25f, posX, posY, 0.2f);
+        }
+    }
+
+    public void createDamageTokens(){
+        Texture texture = new Texture(Gdx.files.internal("damagetoken.png"));
+        TextureRegion textureRegion = new TextureRegion(texture);
+        float posY = height * 0.25f;
+        for (int i = 0; i < 10 ; i++) {
+            float posX = (width * 0.51f) + (i * texture.getWidth() * 2.5f);
+            createImage(textureRegion, 1.1f, posX, posY, 1);
+        }
+    }
+
+    //TODO Change powerDown from image to button
+    public void createPowerDownImage(){
+        Texture texture = new Texture(Gdx.files.internal("powerdown.png"));
+        TextureRegion textureRegion = new TextureRegion(texture);
+        float posY = height * 0.39f;
+        float posX = width * 0.74f;
+        createImage(textureRegion, 0.5f, posX, posY, 1);
     }
 
     public void createLockInButton(){
@@ -67,12 +114,14 @@ public class UIScreen{
         return button;
     }
 
-    public void createImage(TextureRegion textureRegion, float scale, float posX, float posY) {
+    public void createImage(TextureRegion textureRegion, float scale, float posX, float posY, float alpha) {
         TextureRegion myTextureRegion = textureRegion;
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
         Image image = new Image(myTexRegionDrawable);
         image.scaleBy(scale);
         image.setPosition(posX, posY);
+        Color c = image.getColor();
+        image.setColor(c.r, c.g, c.b, alpha);
         stage.addActor(image);
     }
 

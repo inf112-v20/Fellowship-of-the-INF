@@ -54,7 +54,7 @@ public class CardButton {
 
         for (int i = 0; i < playerHand.size(); i++) {
             ProgramCard programCard = playerHand.get(i);
-            float posY = height * 0.5f;
+            float posY = height * 0.55f;
             float posX = (width * 0.51f) + (i * gap);
 
             if (i > 4) {
@@ -79,10 +79,11 @@ public class CardButton {
             buttonRightPressed(button);
             stage.addActor(button);
 
+            //TODO fix text position
             //Create prioritynumber as text on the cards
             Table table = new Table();
-            textPosX = button.getWidth() * 1;
-            textPosY = button.getHeight() * 1.27f;
+            textPosX = button.getWidth() * 0.82f;
+            textPosY = button.getHeight() * 1.02f;
             table.setPosition(posX + textPosX, posY + textPosY);
             String priorityText = String.valueOf(programCard.getPriority());
             table.add(drawText(priorityText));
@@ -202,7 +203,7 @@ public class CardButton {
         labelStyle.font = new BitmapFont();
         labelStyle.fontColor = Color.GREEN;
         Label textLabel = new Label(text, labelStyle);
-        textLabel.setFontScale(5);
+        textLabel.setFontScale(4);
         return textLabel;
     }
 
