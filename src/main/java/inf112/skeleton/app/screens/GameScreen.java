@@ -14,7 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import inf112.skeleton.app.ConveyerBeltExecuter;
+import inf112.skeleton.app.ConveyorBeltExecuter;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.grid.Map;
@@ -108,8 +108,8 @@ public class GameScreen implements Screen {
     public void update() {
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         handleInput();
-        if(player.isOnConveyerBelt() || player.isOnExpressBelt()){
-         ConveyerBeltExecuter executer =  new ConveyerBeltExecuter(player.getCurrentBoardPiece(), player);
+        if(player.isOnConveyorBelt() || player.isOnExpressBelt()){
+         ConveyorBeltExecuter executer =  new ConveyorBeltExecuter(player.getCurrentBoardPiece(), player);
         }
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
     }
@@ -169,23 +169,10 @@ public class GameScreen implements Screen {
             game.executePlayerHand(programCards);
             playerLayer.setCell( player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
             */
-            erasePlayers();
             game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
             game.executeRound();
-            repaintPlayers();
             uiScreen.updateGameLog();
         }
     }
 
-    public void erasePlayers() {
-        for (Player player : game.getListOfPlayers()) {
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
-        }
-    }
-
-    public void repaintPlayers() {
-        for (Player player : game.getListOfPlayers()) {
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
-        }
-    }
 }

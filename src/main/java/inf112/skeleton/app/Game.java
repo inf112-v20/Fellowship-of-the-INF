@@ -76,9 +76,7 @@ public class Game {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.tryToGo(player1.getPlayerPiece().getDir());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            player1.turnPlayerAround();
-            player1.tryToGo(player1.getPlayerPiece().getDir());
-            player1.turnPlayerAround();
+            player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             player1.turnPlayerLeft();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {

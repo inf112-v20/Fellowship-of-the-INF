@@ -79,7 +79,7 @@ public class Player {
         int newX = playerPiece.getPos().getX();
         int newY = playerPiece.getPos().getY();
 
-        playerPiece.setDir(newDirection);
+        //playerPiece.setDir(newDirection);
         switch (newDirection) {
             case NORTH:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
@@ -107,14 +107,16 @@ public class Player {
             BoardPiece currPiece;
             for (int i = 0; i < pieceGrid[newX][newY].size(); i++) {
                 currPiece = pieceGrid[newX][newY].get(i);
-                if(currPiece instanceof NullPiece){continue;}
-                else if(currPiece instanceof PlayerPiece){continue;}
-                else if(currPiece instanceof WallPiece){continue;}
-                else if(currPiece instanceof LaserPiece){continue;}
-                currentBoardPiece = currPiece;
-                System.out.println(currentBoardPiece);
+                if(currPiece instanceof ExpressBeltPiece){currentBoardPiece = currPiece;}
+                else if(currPiece instanceof ConveyorBeltPiece){currentBoardPiece = currPiece;}
+                else if(currPiece instanceof CogPiece){currentBoardPiece = currPiece;}
+                else if(currPiece instanceof PusherPiece){currentBoardPiece = currPiece;}
+                else if(currPiece instanceof FlagPiece){currentBoardPiece = currPiece;}
+                else if(currPiece instanceof AbyssPiece){currentBoardPiece = currPiece;}
+                else if(currPiece instanceof SpawnPointPiece){currentBoardPiece = currPiece;}
+                else if(currPiece instanceof FloorPiece){currentBoardPiece = currPiece;}
             }
-
+            System.out.println(getPlayerPiece().getDir());
         }
         setPos(newX, newY);
     }
@@ -216,9 +218,7 @@ public class Player {
                 turnPlayerAround();
                 break;
             case BACKUP:
-                turnPlayerAround();
-                tryToGo(getPlayerPiece().getDir());
-                turnPlayerAround();
+                tryToGo(getPlayerPiece().getDir().getOppositeDirection());
                 break;
             case ROTATELEFT:
                 turnPlayerLeft();
@@ -307,17 +307,23 @@ public class Player {
 
     public int getCheckpointsVisited(){return checkpointsVisited;}
 
-    public boolean isOnConveyerBelt(){
-        if (currentBoardPiece instanceof ConveyorBeltPiece) { return true; }
+
+    public boolean isOnConveyorBelt(){
+        if (currentBoardPiece instanceof ConveyorBeltPiece) {
+            System.out.println("Standing on Conveyorbelt");
+            return true;
+        }
         return false;
     }
 
     public boolean isOnExpressBelt(){
-        if (currentBoardPiece instanceof ExpressBeltPiece) { return true; }
+        if (currentBoardPiece instanceof ExpressBeltPiece) {
+            System.out.println("Standing on Expressbelt");
+            return true;
+        }
         return false;
     }
 
     public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
-
 
 }
