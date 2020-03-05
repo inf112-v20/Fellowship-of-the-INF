@@ -48,8 +48,8 @@ public class Player {
         GameDeck gameDeck = game.getGameDeck();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
         this.selectedCards = new ArrayList<>();
-        //player is player is placed at bottom of board in position of player number
 
+        //player is player is placed at bottom of board in position of player number
         int playerStartPositionX = (playerNumber-1)*2;
         int playerStartPositionY = 0;
 
@@ -111,19 +111,19 @@ public class Player {
         switch (newDirection) {
             case NORTH:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
-                if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
+                if (isDeadMove(pos.getX(), newY)) loseLife();
                 break;
             case SOUTH:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY -= 1;
-                if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
+                if (isDeadMove(pos.getX(), newY)) loseLife();
                 break;
             case WEST:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX -= 1;
-                if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
+                if (isDeadMove(newX, pos.getY())) loseLife();
                 break;
             case EAST:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX += 1;
-                if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
+                if (isDeadMove(newX, pos.getY())) loseLife();
                 break;
         }
 
@@ -131,6 +131,15 @@ public class Player {
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
             playerPiece.setPos(new Position(newX, newY));
             map.movePlayerToNewPosition(pos, new Position(newX, newY));
+            setPos(newX, newY);
+        }
+        //If the player still have lives left, respawn it
+        else if (isDead() && lives>=0) {
+            respawnPlayer();
+        }
+        //Handle what happens if the player runs out of lives
+        else {
+            setPos(newX, newY);
         }
 
         /* UNCOMMENT TO SEE PRINTOUT OF PIECES IN CELL
@@ -150,7 +159,6 @@ public class Player {
                 System.out.println(p);
             }
         }*/
-        setPos(newX, newY);
     }
 
     /**
@@ -311,7 +319,6 @@ public class Player {
         currentCell.setRotation(newDir);
     }
 
-
     public ArrayList<ProgramCard> getPlayerHandDeck() {
         return playerHandDeck;
     }
@@ -349,13 +356,24 @@ public class Player {
 
     public void setSpawnPoint(int x, int y) { spawnPoint = new Position(x, y); }
 
+    public void respawnPlayer() {
+        currentCell = playerCell;
+        setPos(spawnPoint.getX(), spawnPoint.getY());
+        playerPiece.setPos(new Position(spawnPoint.getX(), spawnPoint.getY()));
+        map.movePlayerToNewPosition(pos, new Position(spawnPoint.getX(), spawnPoint.getX()));
+    }
+
     public void takeDamage(int amountOfDamage){ damage += amountOfDamage; System.out.println("Damage: " + damage); }
 
     public void repairDamage(int amountOfRepairs){damage -= amountOfRepairs; System.out.println("Damage: " + damage);}
 
     public int getDamage(){return damage;}
 
-    public void loseLife(){lives--; System.out.println("Lives: " + lives);}
+    public void loseLife(){
+        lives--;
+        currentCell = deadPlayerCell;
+        System.out.println("Lives: " + lives);
+    }
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
     public void gainLife(){lives++; System.out.println("Lives: " + lives);}
