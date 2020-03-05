@@ -133,6 +133,7 @@ public class Player {
             map.movePlayerToNewPosition(pos, new Position(newX, newY));
             setPos(newX, newY);
         }
+        //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it
         else if (isDead() && lives>=0) {
             respawnPlayer();
@@ -347,6 +348,9 @@ public class Player {
 
     public void setSpawnPoint(int x, int y) { spawnPoint = new Position(x, y); }
 
+    /**
+     * Put the player back to it's respawn position and update all maps
+     */
     public void respawnPlayer() {
         currentCell = playerCell;
         setPos(spawnPoint.getX(), spawnPoint.getY());
@@ -360,6 +364,9 @@ public class Player {
 
     public int getDamage(){return damage;}
 
+    /**
+     * Remove a life from the life counter, and turn the player cell into a dead player cell
+     */
     public void loseLife(){
         lives--;
         currentCell = deadPlayerCell;
