@@ -140,8 +140,22 @@ public class BoardPieceGenerator {
                 return new FlagPiece(pos, id, 2);
             case (71):
                 return new FlagPiece(pos, id, 3);
-            case (79):
-                return new FlagPiece(pos, id, 4);
+            case (121):
+                return new SpawnPointPiece(pos, id, 1);
+            case (122):
+                return new SpawnPointPiece(pos, id, 2);
+            case (123):
+                return new SpawnPointPiece(pos, id, 3);
+            case (124):
+                return new SpawnPointPiece(pos, id, 4);
+            case (129):
+                return new SpawnPointPiece(pos, id, 5);
+            case (130):
+                return new SpawnPointPiece(pos, id, 6);
+            case (131):
+                return new SpawnPointPiece(pos, id, 7);
+            case (132):
+                return new SpawnPointPiece(pos, id, 8);
             default:
                 return new NullPiece(pos, id);
         }
