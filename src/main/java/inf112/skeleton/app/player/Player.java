@@ -8,10 +8,7 @@ import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.grid_objects.AbyssPiece;
-import inf112.skeleton.app.grid_objects.BoardPiece;
-import inf112.skeleton.app.grid_objects.PlayerPiece;
-import inf112.skeleton.app.grid_objects.WallPiece;
+import inf112.skeleton.app.grid_objects.*;
 
 import java.util.ArrayList;
 
@@ -37,6 +34,10 @@ public class Player {
     private int playerNumber;
     private int lifes = 3;
     private int checkpointsVisited;
+    private BoardPiece currentBoardPiece;
+
+
+
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -126,6 +127,17 @@ public class Player {
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
             playerPiece.setPos(new Position(newX, newY));
             map.movePlayerToNewPosition(pos, new Position(newX, newY));
+            BoardPiece currPiece;
+            for (int i = 0; i < pieceGrid[newX][newY].size(); i++) {
+                currPiece = pieceGrid[newX][newY].get(i);
+                if(currPiece instanceof NullPiece){continue;}
+                else if(currPiece instanceof PlayerPiece){continue;}
+                else if(currPiece instanceof WallPiece){continue;}
+                else if(currPiece instanceof LaserPiece){continue;}
+                currentBoardPiece = currPiece;
+                System.out.println(currentBoardPiece);
+            }
+
         }
 
         /* UNCOMMENT TO SEE PRINTOUT OF PIECES IN CELL
@@ -360,6 +372,18 @@ public class Player {
     public void removeCheckpoint(){checkpointsVisited--; System.out.println("Checkpoints: " + checkpointsVisited);}
 
     public int getCheckpointsVisited(){return checkpointsVisited;}
+
+    public boolean isOnConveyerBelt(){
+        if (currentBoardPiece instanceof ConveyorBeltPiece) { return true; }
+        return false;
+    }
+
+    public boolean isOnExpressBelt(){
+        if (currentBoardPiece instanceof ExpressBeltPiece) { return true; }
+        return false;
+    }
+
+    public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
 
 
 }
