@@ -155,6 +155,7 @@ public class Game {
         for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
             playerList[playerNumber - 1].pickFirstFiveCards();
         }
+        //check all players have hand
         round.startRound();
     }
 }

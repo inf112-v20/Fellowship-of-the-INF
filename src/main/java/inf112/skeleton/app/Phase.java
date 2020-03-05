@@ -41,6 +41,7 @@ public class Phase {
             System.out.println("Player " + player.getPlayerNumber() + " played card "
                     + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
         }
+
     }
     public ArrayList<Player> getOrderedListOfPlayers(){return orderedListOfPlayers;}
 
