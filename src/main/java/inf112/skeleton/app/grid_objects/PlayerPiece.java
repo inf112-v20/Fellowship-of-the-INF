@@ -63,4 +63,6 @@ public class PlayerPiece extends DirectionedPiece {
     public void showDeadPlayer() {
         currentCell = deadPlayerCell;
     }
+
+    public void showAlivePlayer() { currentCell = playerCell; }
 }

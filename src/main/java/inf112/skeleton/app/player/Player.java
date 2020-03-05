@@ -26,9 +26,10 @@ public class Player {
     private Game game;
     private ArrayList<ProgramCard> playerHandDeck;
     private ArrayList<ProgramCard> selectedCards;
+    private Position spawnPoint;
     private int damage;
     private int playerNumber;
-    private int lifes = 3;
+    private int lives = 3;
     private int checkpointsVisited;
 
     public Player(int playerNumber, Game game) {
@@ -40,9 +41,12 @@ public class Player {
         GameDeck gameDeck = game.getGameDeck();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
         this.selectedCards = new ArrayList<>();
+
         //player is player is placed at bottom of board in position of player number
         int playerStartPositionX = (playerNumber-1)*2;
         int playerStartPositionY = 0;
+        this.spawnPoint = new Position(playerStartPositionX, playerStartPositionY);
+
         this.playerPiece = new PlayerPiece(new Position(playerStartPositionX, playerStartPositionY), 200, Direction.NORTH, playerNumber);
         this.isDead = false;
     }
@@ -93,18 +97,25 @@ public class Player {
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX += 1;
                 break;
         }
-        //check if the move kills the player
-        if (isDeadMove(newX, newY)) {
-            playerPiece.showDeadPlayer();
-            isDead = true;
-        }
+        //check if the move kills the player, if so lose a life
+        if (isDeadMove(newX, newY)) { loseLife(); }
 
         //if position has changed and player isn't dead, update logic grid
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
             playerPiece.setPos(new Position(newX, newY));
             map.movePlayerToNewPosition(pos, new Position(newX, newY));
+            setPos(newX, newY);
         }
-        setPos(newX, newY);
+        //TODO This should probably only happen when the round is over, and we are about to start a new round
+        //If the player still have lives left, respawn it
+        else if (lives>=0 && isDead()) {
+            respawnPlayer();
+        }
+        //Handle what happens if the player runs out of lives
+        else {
+            setPos(newX, newY);
+        }
+
     }
 
     /**
@@ -274,6 +285,20 @@ public class Player {
                 "playerNumber=" + playerNumber +
                 '}';
     }
+    public Position getSpawnPoint() { return spawnPoint; }
+
+    public void setSpawnPoint(int x, int y) { spawnPoint = new Position(x, y); }
+
+    /**
+     * Put the player back to it's respawn position and update all maps
+     */
+    public void respawnPlayer() {
+        isDead = false;
+        playerPiece.showAlivePlayer();
+        playerPiece.setPos(new Position(spawnPoint.getX(), spawnPoint.getY()));
+        map.movePlayerToNewPosition(playerPiece.getPos(), new Position(spawnPoint.getX(), spawnPoint.getY()));
+        setPos(spawnPoint.getX(), spawnPoint.getY());
+    }
 
     public void takeDamage(int amountOfDamage){ damage += amountOfDamage; System.out.println("Damage: " + damage); }
 
@@ -281,12 +306,32 @@ public class Player {
 
     public int getDamage(){return damage;}
 
-    public void loseLife(){lifes--; System.out.println("Lifes: " + lifes);}
+    /**
+     * Remove a life from the life counter, and turn the player cell into a dead player cell
+     */
+    public void loseLife(){
+        lives--;
+        isDead = true;
+        playerPiece.showDeadPlayer();
+        System.out.println("Lives: " + lives);
+    }
+
+    //TODO Find out how to this
+    /**
+    public void findFirstSpawnPoint() {
+        Position spawn = null;
+        for (int x=0; x<map.getWidth(); x++) {
+            for (int y=0; y<map.getHeight(); y++) {
+                //map.getPieceType(new Position(x,y), );
+            }
+        }
+    }
+     */
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
-    public void gainLife(){lifes++; System.out.println("Lifes: " + lifes);}
+    public void gainLife(){lives++; System.out.println("Lives: " + lives);}
 
-    public int getLifes(){return lifes;}
+    public int getLives(){return lives;}
 
     public void visitedCheckpoint(){checkpointsVisited++; System.out.println("Checkpoints: " + checkpointsVisited);}
 
