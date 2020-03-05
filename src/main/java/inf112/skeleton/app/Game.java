@@ -65,9 +65,9 @@ public class Game {
         this.player1 = player;
     }
 
-    public void setNewPlayerPos(int x, int y) {
+    public void setNewPlayerPos(int x, int y) { }
 
-    }
+    public Round getRound(){return round;}
 
     /**
      * Handles player input

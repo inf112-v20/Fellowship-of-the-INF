@@ -90,6 +90,10 @@ public class Player {
         return currentCell;
     }
 
+    public TiledMapTileLayer.Cell getStandardPlayerCell() {
+        return playerCell;
+    }
+
     /**
      * Tries to move the player in a new direction
      *

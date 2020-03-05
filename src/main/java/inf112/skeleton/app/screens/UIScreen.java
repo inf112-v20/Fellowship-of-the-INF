@@ -4,9 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.utils.ShapeCache;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,12 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.Game;
+import inf112.skeleton.app.Phase;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.player.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
+
 //TODO add comments to this class
 public class UIScreen{
     private Stage stage;
@@ -59,6 +58,24 @@ public class UIScreen{
         createPowerDownImage();
     }
 
+    public void updateGameLog() {
+        Phase phase = game.getRound().getPhase();
+        drawText("Phase " + (phase.getPhaseNumber()+1), 10, width*0.6f, height*0.7f);
+        for (int i = 0; i < phase.getOrderedListOfPlayers().size(); i++) {
+            Player player = phase.getOrderedListOfPlayers().get(i);
+            ProgramCard card = player.getSelectedCards().get(0);
+            float gap = card.getTexture().getWidth() * 1.3f;
+            float posX = (width * 0.51f) + (i * gap);
+            TextureRegion cardPicture = new TextureRegion(card.getTexture());
+            createImage(cardPicture, 0.2f, posX, height*0.4f, 1);
+            TextureRegion playerPicture = player.getStandardPlayerCell().getTile().getTextureRegion();
+            posX = (width * 0.515f) + (i * gap);
+            createImage(playerPicture, 0.01f, posX, height*0.55f, 1);
+            posX = (width * 0.53f) + (i * gap);
+            drawText("" + (i+1), 10, posX, height*0.37f);
+        }
+    }
+
     public void update(){
         float alpha; //opacity of the image
         Color c = lifeActors[0].getColor();
@@ -86,8 +103,6 @@ public class UIScreen{
             }
         }
         else if(player.getDamage() < 5){cardButton.getSelectedCardImages()[4].setColor(Color.WHITE);}
-
-
     }
 
     public Stage getStage() {
@@ -132,8 +147,8 @@ public class UIScreen{
     public void createPowerDownImage(){
         Texture texture = new Texture(Gdx.files.internal("powerdown.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
-        float posY = height * 0.39f;
-        float posX = width * 0.74f;
+        float posY = height * 0.08f;
+        float posX = width * 0.9f;
         createImage(textureRegion, 0.5f, posX, posY, 1);
     }
 

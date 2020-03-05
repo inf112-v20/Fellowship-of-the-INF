@@ -8,6 +8,8 @@ import java.util.*;
 public class Phase {
 
     private Player[] listOfPlayers;
+    private ArrayList<Player> orderedListOfPlayers = new ArrayList<>();
+    private int phaseNumber;
     HashMap<Player, Integer> playerAndPriority;
 
     public Phase (Game game){
@@ -16,6 +18,7 @@ public class Phase {
     }
 
     public void executePhase(int phaseNumber) {
+        this.phaseNumber = phaseNumber;
         playerAndPriority = new HashMap<>();
         for (int i = 0; i < listOfPlayers.length ; i++) {
             Player player = listOfPlayers[i];
@@ -32,9 +35,14 @@ public class Phase {
         });
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
+            orderedListOfPlayers.add(player);
             ProgramCard cardThisPhase = player.getSelectedCards().get(phaseNumber);
             player.executeCardAction(cardThisPhase);
+            System.out.println("Player " + player.getPlayerNumber() + " played card "
+                    + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
         }
     }
+    public ArrayList<Player> getOrderedListOfPlayers(){return orderedListOfPlayers;}
 
+    public int getPhaseNumber(){return phaseNumber;}
 }

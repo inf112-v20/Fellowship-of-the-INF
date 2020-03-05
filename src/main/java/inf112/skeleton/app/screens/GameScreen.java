@@ -169,6 +169,7 @@ public class GameScreen implements Screen {
             game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
             game.executeRound();
             repaintPlayers();
+            uiScreen.updateGameLog();
         }
     }
 
