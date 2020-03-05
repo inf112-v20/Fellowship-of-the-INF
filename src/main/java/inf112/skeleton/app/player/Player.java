@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class Player {
 
     private Position pos; //position of player
+    private Position spawnPoint; //Current spawn point
     private TiledMapTileLayer.Cell currentCell; //Cell for the current state of the player
     private TiledMapTileLayer.Cell playerCell; //cell for normal player
     private TiledMapTileLayer.Cell deadPlayerCell; //cell for dead player looks
@@ -35,7 +36,7 @@ public class Player {
     private ArrayList<ProgramCard> selectedCards;
     private int damage;
     private int playerNumber;
-    private int lifes = 3;
+    private int lives = 3;
     private int checkpointsVisited;
 
     public Player(int playerNumber, Game game) {
@@ -48,10 +49,14 @@ public class Player {
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
         this.selectedCards = new ArrayList<>();
         //player is player is placed at bottom of board in position of player number
+
         int playerStartPositionX = (playerNumber-1)*2;
         int playerStartPositionY = 0;
-        this.playerPiece = new PlayerPiece(new Position(playerStartPositionX, playerStartPositionY), 200, Direction.NORTH);
-        pos = new Position(playerStartPositionX, playerStartPositionY);
+
+        this.spawnPoint = new Position(playerStartPositionX, playerStartPositionY);
+
+        this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH);
+        pos = new Position(spawnPoint.getX(), spawnPoint.getY());
 
         MAP_WIDTH = game.getMap().getWidth();
         MAP_HEIGHT = game.getMap().getHeight();
@@ -340,6 +345,9 @@ public class Player {
                 "playerNumber=" + playerNumber +
                 '}';
     }
+    public Position getSpawnPoint() { return spawnPoint; }
+
+
 
     public void takeDamage(int amountOfDamage){ damage += amountOfDamage; System.out.println("Damage: " + damage); }
 
@@ -347,12 +355,12 @@ public class Player {
 
     public int getDamage(){return damage;}
 
-    public void loseLife(){lifes--; System.out.println("Lifes: " + lifes);}
+    public void loseLife(){lives--; System.out.println("Lifes: " + lives);}
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
-    public void gainLife(){lifes++; System.out.println("Lifes: " + lifes);}
+    public void gainLife(){lives++; System.out.println("Lifes: " + lives);}
 
-    public int getLifes(){return lifes;}
+    public int getLifes(){return lives;}
 
     public void visitedCheckpoint(){checkpointsVisited++; System.out.println("Checkpoints: " + checkpointsVisited);}
 
