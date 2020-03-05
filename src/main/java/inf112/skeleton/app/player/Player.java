@@ -47,7 +47,7 @@ public class Player {
         int playerStartPositionY = 0;
         this.spawnPoint = new Position(playerStartPositionX, playerStartPositionY);
 
-        this.playerPiece = new PlayerPiece(new Position(playerStartPositionX, playerStartPositionY), 200, Direction.NORTH, playerNumber);
+        this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, playerNumber);
         this.isDead = false;
     }
 
