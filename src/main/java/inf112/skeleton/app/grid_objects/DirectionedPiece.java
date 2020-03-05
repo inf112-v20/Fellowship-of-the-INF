@@ -4,6 +4,7 @@ import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
 
 public abstract class DirectionedPiece extends BoardPiece {
+    
     Direction dir;
 
     /**
