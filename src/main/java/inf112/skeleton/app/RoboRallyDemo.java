@@ -1,7 +1,7 @@
 package inf112.skeleton.app;
 
 import com.badlogic.gdx.Game;
-import inf112.skeleton.app.screens.MainMenuScreen;
+import inf112.skeleton.app.Screens.MainMenuScreen;
 
 /**
  * Game to send to the application
