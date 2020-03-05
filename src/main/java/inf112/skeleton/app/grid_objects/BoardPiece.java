@@ -8,9 +8,14 @@ import inf112.skeleton.app.grid.Position;
 public abstract class BoardPiece {
 
     private Position pos;
-    //id number is retrieved from RoborallyBoard.tmx
     private int id;
 
+    /**
+     *
+     * @param pos position of boardPiece
+     * @param id number is retrieved from RoborallyBoard.tmx. It essetially tells us which tile image represents this
+     *           board piece
+     */
     public BoardPiece(Position pos, int id) {
         this.pos = pos;
         this.id = id;

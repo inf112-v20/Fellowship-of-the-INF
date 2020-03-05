@@ -179,24 +179,16 @@ public class Player {
 
             switch (dir) {
                 case EAST:
-                    if (!isLegalMoveInDirection(x+1, y, currPiece, dir, i)) {
-                        return false;
-                    }
+                    if (!isLegalMoveInDirection(x+1, y, currPiece, dir, i)) { return false; }
                     break;
                 case WEST:
-                    if (!isLegalMoveInDirection(x-1, y, currPiece, dir, i)) {
-                        return false;
-                    }
+                    if (!isLegalMoveInDirection(x-1, y, currPiece, dir, i)) { return false; }
                     break;
                 case NORTH:
-                    if (!isLegalMoveInDirection(x, y+1, currPiece, dir, i)) {
-                        return false;
-                    }
+                    if (!isLegalMoveInDirection(x, y+1, currPiece, dir, i)) { return false; }
                     break;
                 case SOUTH:
-                    if (!isLegalMoveInDirection(x, y-1, currPiece, dir, i)) {
-                        return false;
-                    }
+                    if (!isLegalMoveInDirection(x, y-1, currPiece, dir, i)) { return false; }
                     break;
             }
         }
@@ -297,7 +289,6 @@ public class Player {
     A cells rotation is an integer between 0 and 3, where 0 = North, 1 = West, 2 = South, 3 = East.
     This does not affect the playerPiece direction in any way.
      */
-
     public void turnPlayerAround() {
         playerPiece.turnPieceInOppositeDirection();
         int newDir = currentCell.getRotation() + 2;
