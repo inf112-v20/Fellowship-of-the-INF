@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * A little class to move the create of player texture away from player
- * The player.png file is a 900*300 dpi image, which needs to be split into three,
+ * The playerSprites.png file is a 900*24000 dpi image, which needs to be split into three,
  * as each 300*300 image is an appearance of the player.
  */
 public class TextureMaker {
