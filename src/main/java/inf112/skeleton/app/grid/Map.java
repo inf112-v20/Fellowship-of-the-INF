@@ -2,12 +2,10 @@ package inf112.skeleton.app.grid;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import inf112.skeleton.app.grid_objects.BoardPiece;
-import inf112.skeleton.app.grid_objects.BoardPieceGenerator;
-import inf112.skeleton.app.grid_objects.NullPiece;
-import inf112.skeleton.app.grid_objects.PlayerPiece;
+import inf112.skeleton.app.grid_objects.*;
 
 import java.util.ArrayList;
+
 public class Map {
     //dimensions of grid
     private int width;
@@ -92,13 +90,13 @@ public class Map {
     /**
      * For each position in the grid, the corresponding cell in each layer is checked.
      * If the cell is non-empty, the corresponding BoardPiece is added to the PieceGrid
-     *
+     * <p>
      * Ignore the warnings such as "x should not be passed as parameter y", since this setup is neccasary
      * because of the way the grid is initialized.
      */
     public void readTiledMapToPieceGrid() {
-            for (int x = 0; x < height; x++) {
-                for (int y = width-1; y >= 0; y--) {
+        for (int x = 0; x < height; x++) {
+            for (int y = width - 1; y >= 0; y--) {
                 grid[y][x] = new ArrayList<BoardPiece>();
                 //create new boardpieceGenerator for appropriate coordinate
                 boardPieceGenerator = new BoardPieceGenerator(y, x);
@@ -160,6 +158,7 @@ public class Map {
 
     /**
      * Adds a new PlayerPiece to the logic grid
+     *
      * @param playerPiece
      */
     public void placeNewPlayerPieceOnMap(PlayerPiece playerPiece) {
@@ -172,6 +171,7 @@ public class Map {
 
     /**
      * If possible, move a player piece to a new position
+     *
      * @param oldPosition
      * @param newPosition
      */
@@ -179,7 +179,7 @@ public class Map {
         BoardPiece playerPiece = grid[oldPosition.getX()][oldPosition.getY()].get(playerLayerIndex);
         if (playerPiece instanceof PlayerPiece) {
             //check if position is free in logic grid
-            if(positionIsFree(newPosition, playerLayerIndex)) {
+            if (positionIsFree(newPosition, playerLayerIndex)) {
                 //set old position to NullPiece
                 grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
                 //add piece to new position
@@ -195,6 +195,7 @@ public class Map {
 
     /**
      * Checks if the position is available in the logic grid
+     *
      * @param position
      * @param layerIndex
      * @return true if there is a NullPiece in the position you are checking
@@ -203,6 +204,25 @@ public class Map {
         return (grid[position.getX()][position.getY()].get(layerIndex) instanceof NullPiece);
     }
 
+    /**
+     * @param pos position you are getting a list of piece from
+     * @return list of piece in the position you are checking
+     */
+    public ArrayList<BoardPiece> getAllPieces(Position pos) {
+        return grid[pos.getX()][pos.getY()];
+    }
 
+    /**
+     * Remember to check that this method does not return null
+     * @param pos position of piece
+     * @param type piece type
+     * @param <T>
+     * @return piece if it is there, null otherwise
+     */
+    public <T extends BoardPiece> T getPieceType(Position pos, Class<T> type) {
+        for (BoardPiece piece : grid[pos.getX()][pos.getY()]) {
+            if (piece.getClass().equals(type)) return (T) piece;
+        }
+        return null;
+    }
 }
-
