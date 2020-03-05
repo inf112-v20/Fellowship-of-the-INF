@@ -26,6 +26,9 @@ public class Phase {
         moveExpressBelts();
         moveConveyorBelts();
         rotateCogs();
+        //fire lasers
+        //touch flag
+        //update respawn point (flag or repair site)
     }
 
     public void sortPlayersAndExecuteCards(){

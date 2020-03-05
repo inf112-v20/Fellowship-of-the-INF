@@ -5,6 +5,7 @@ import inf112.skeleton.app.player.Player;
 
 public class BoardElementsMove {
 
+    //TODO Implement conflict solution for when robots collide on conveyor belts
     public BoardElementsMove(){ }
 
     public void moveExpressBelt(BoardPiece boardPiece, Player player){
