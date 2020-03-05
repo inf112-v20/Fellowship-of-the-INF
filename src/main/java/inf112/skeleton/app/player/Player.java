@@ -347,7 +347,7 @@ public class Player {
     }
     public Position getSpawnPoint() { return spawnPoint; }
 
-
+    public void setSpawnPoint(int x, int y) { spawnPoint = new Position(x, y); }
 
     public void takeDamage(int amountOfDamage){ damage += amountOfDamage; System.out.println("Damage: " + damage); }
 
@@ -355,12 +355,12 @@ public class Player {
 
     public int getDamage(){return damage;}
 
-    public void loseLife(){lives--; System.out.println("Lifes: " + lives);}
+    public void loseLife(){lives--; System.out.println("Lives: " + lives);}
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
-    public void gainLife(){lives++; System.out.println("Lifes: " + lives);}
+    public void gainLife(){lives++; System.out.println("Lives: " + lives);}
 
-    public int getLifes(){return lives;}
+    public int getLives(){return lives;}
 
     public void visitedCheckpoint(){checkpointsVisited++; System.out.println("Checkpoints: " + checkpointsVisited);}
 
