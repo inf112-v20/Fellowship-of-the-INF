@@ -50,7 +50,7 @@ public class Player {
         //player is player is placed at bottom of board in position of player number
         int playerStartPositionX = (playerNumber-1)*2;
         int playerStartPositionY = 0;
-        this.playerPiece = new PlayerPiece(new Position(playerStartPositionX, playerStartPositionY), 200, Direction.NORTH);
+        this.playerPiece = new PlayerPiece(new Position(playerStartPositionX, playerStartPositionY), 200, Direction.NORTH, playerNumber);
         pos = new Position(playerStartPositionX, playerStartPositionY);
 
         MAP_WIDTH = game.getMap().getWidth();
@@ -87,12 +87,10 @@ public class Player {
      * @return player
      */
     public TiledMapTileLayer.Cell getPlayerCell() {
-        return currentCell;
+        return playerPiece.getCurrentCell();
     }
 
-    public TiledMapTileLayer.Cell getStandardPlayerCell() {
-        return playerCell;
-    }
+    public TiledMapTileLayer.Cell getStandardPlayerCell() { return playerPiece.getPlayerCell(); }
 
     /**
      * Tries to move the player in a new direction
@@ -271,31 +269,11 @@ public class Player {
         return playerPiece;
     }
 
-    /*
-    This now rotates the cell also which is the image of the player.
-    A cells rotation is an integer between 0 and 3, where 0 = North, 1 = West, 2 = South, 3 = East.
-    This does not affect the playerPiece direction in any way.
-     */
-    public void turnPlayerAround() {
-        playerPiece.turnPieceInOppositeDirection();
-        int newDir = currentCell.getRotation() + 2;
-        if (newDir > 3){ newDir -= 4;}
-        currentCell.setRotation(newDir);
-    }
+    public void turnPlayerAround() { playerPiece.turnAround(); }
 
-    public void turnPlayerLeft() {
-        playerPiece.rotatePieceLeft();
-        int newDir = currentCell.getRotation() + 1;
-        if (newDir > 3){ newDir -= 4;}
-        currentCell.setRotation(newDir);
-    }
+    public void turnPlayerLeft() { playerPiece.turnLeft(); }
 
-    public void turnPlayerRight() {
-        playerPiece.rotatePieceRight();
-        int newDir = currentCell.getRotation() + 3;
-        if (newDir > 3){ newDir -= 4;}
-        currentCell.setRotation(newDir);
-    }
+    public void turnPlayerRight() { playerPiece.turnRight(); }
 
 
     public ArrayList<ProgramCard> getPlayerHandDeck() {
