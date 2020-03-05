@@ -60,4 +60,11 @@ public class ProgramCard implements IProgramCard{
         return texture;
     }
 
+    @Override
+    public String toString() {
+        return "ProgramCard{" +
+                "priority=" + priority +
+                ", cardType=" + cardType +
+                '}';
+    }
 }

@@ -3,25 +3,42 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.player.Player;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Game {
     private Map map;
     private GameDeck gameDeck;
-    private Player player;
+    private Player player1;
+    private Player[] playerList;
+    private Round round;
+    private final int NUMBER_OF_PLAYERS = 4;
 
 
     public Game(Map map) {
         this.map = map;
-        this.player = new Player(1, this);
-        map.placeNewPlayerPieceOnMap(player.getPlayerPiece()); //place the new player piece on logic grid
-        this.gameDeck = new GameDeck();
+        this.gameDeck = new GameDeck(); //make sure this is initialized before players
+        this.player1 = new Player(1, this);
+        this.playerList = new Player[NUMBER_OF_PLAYERS];
+        playerList[0] = player1;
+        map.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
+        initiateComputerPlayers();
+        this.round = new Round(this);
+    }
+
+    public void initiateComputerPlayers() {
+        for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
+            Player playerToBeInitiated = new Player(playerNumber, this);
+            playerList[playerNumber - 1] = playerToBeInitiated;
+            map.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
+        }
     }
 
     public Map getMap() {
@@ -41,29 +58,45 @@ public class Game {
     }
 
     public Player getPlayer() {
-        return player;
+        return player1;
     }
 
     public void setPlayer(Player player) {
-        this.player = player;
+        this.player1 = player;
     }
 
-    public void setNewPlayerPos(int x, int y) {
+    public void setNewPlayerPos(int x, int y) { }
 
-    }
+    public Round getRound(){return round;}
 
     /**
      * Handles player input
      */
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player.tryToGo(Direction.NORTH);
+            player1.tryToGo(player1.getPlayerPiece().getDir());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            player.tryToGo(Direction.SOUTH);
+            player1.turnPlayerAround();
+            player1.tryToGo(player1.getPlayerPiece().getDir());
+            player1.turnPlayerAround();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            player.tryToGo(Direction.WEST);
+            player1.turnPlayerLeft();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            player.tryToGo(Direction.EAST);
+            player1.turnPlayerRight();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            player1.turnPlayerAround();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            player1.takeDamage(1);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            player1.repairDamage(1);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            player1.gainLife();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+            player1.loseLife();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+            player1.visitedCheckpoint();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+            player1.removeCheckpoint();
         }
     }
 
@@ -74,38 +107,38 @@ public class Game {
     }
 
 
-
     /**
      * Gives the player a command, based on the program card
+     *
      * @param programCard to convert to player move
      */
     public void convertCardToPlayerMove(ProgramCard programCard) {
         switch (programCard.getCommand()) {
             case MOVE1:
-                player.tryToGo(player.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
                 break;
             case MOVE2:
-                player.tryToGo(player.getPlayerPiece().getDir());
-                player.tryToGo(player.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
                 break;
             case MOVE3:
-                player.tryToGo(player.getPlayerPiece().getDir());
-                player.tryToGo(player.getPlayerPiece().getDir());
-                player.tryToGo(player.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
+                player1.tryToGo(player1.getPlayerPiece().getDir());
                 break;
             case UTURN:
-                player.turnPlayerAround();
+                player1.turnPlayerAround();
                 break;
             case BACKUP:
-                player.turnPlayerAround();
-                player.tryToGo(player.getPlayerPiece().getDir());
-                player.turnPlayerAround();
+                player1.turnPlayerAround();
+                player1.tryToGo(player1.getPlayerPiece().getDir());
+                player1.turnPlayerAround();
                 break;
             case ROTATELEFT:
-                player.turnPlayerLeft();
+                player1.turnPlayerLeft();
                 break;
             case ROTATERIGHT:
-                player.turnPlayerRight();
+                player1.turnPlayerRight();
                 break;
             default:
                 //TODO error handling as default maybe?
@@ -113,5 +146,16 @@ public class Game {
         }
     }
 
+    public Player[] getListOfPlayers() {
+        return playerList;
+    }
 
+    public void executeRound() {
+        //let computer players pick the first five cards as their selected
+        for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
+            playerList[playerNumber - 1].pickFirstFiveCards();
+        }
+        //check all players have hand
+        round.startRound();
+    }
 }

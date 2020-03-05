@@ -3,6 +3,8 @@ package inf112.skeleton.app.player;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.Game;
+import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.grid.Position;
@@ -29,16 +31,28 @@ public class Player {
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
     private Game game;
+    private ArrayList<ProgramCard> playerHandDeck;
+    private ArrayList<ProgramCard> selectedCards;
+    private int damage;
+    private int playerNumber;
+    private int lifes = 3;
+    private int checkpointsVisited;
 
     public Player(int playerNumber, Game game) {
+        this.playerNumber = playerNumber;
         this.map = game.getMap();
         this.pieceGrid = map.getGrid();
         this.game = game;
-        this.playerPiece = new PlayerPiece(new Position(0, 0), 200, Direction.NORTH);
-        pos = new Position(0, 0);
-        //place player at the bottom left corner
-        pos.setX(0);
-        pos.setY(0);
+        this.damage = 0;
+        GameDeck gameDeck = game.getGameDeck();
+        this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
+        this.selectedCards = new ArrayList<>();
+        //player is player is placed at bottom of board in position of player number
+        int playerStartPositionX = (playerNumber-1)*2;
+        int playerStartPositionY = 0;
+        this.playerPiece = new PlayerPiece(new Position(playerStartPositionX, playerStartPositionY), 200, Direction.NORTH);
+        pos = new Position(playerStartPositionX, playerStartPositionY);
+
         MAP_WIDTH = game.getMap().getWidth();
         MAP_HEIGHT = game.getMap().getHeight();
 
@@ -47,6 +61,7 @@ public class Player {
         wonPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 2)));
         currentCell = playerCell; //appearance starts as normal player
     }
+
 
     /**
      * Getter for position
@@ -73,6 +88,10 @@ public class Player {
      */
     public TiledMapTileLayer.Cell getPlayerCell() {
         return currentCell;
+    }
+
+    public TiledMapTileLayer.Cell getStandardPlayerCell() {
+        return playerCell;
     }
 
     /**
@@ -105,6 +124,7 @@ public class Player {
 
         //if position has changed and player isn't dead, update logic grid
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
+            playerPiece.setPos(new Position(newX, newY));
             map.movePlayerToNewPosition(pos, new Position(newX, newY));
         }
 
@@ -209,6 +229,48 @@ public class Player {
         return false;
     }
 
+    /**
+     * Player executes the move on the given card
+     * @param programCard to convert to player move
+     */
+    public void executeCardAction(ProgramCard programCard) {
+        switch (programCard.getCommand()) {
+            case MOVE1:
+                tryToGo(getPlayerPiece().getDir());
+                break;
+            case MOVE2:
+                tryToGo(getPlayerPiece().getDir());
+                tryToGo(getPlayerPiece().getDir());
+                break;
+            case MOVE3:
+                tryToGo(getPlayerPiece().getDir());
+                tryToGo(getPlayerPiece().getDir());
+                tryToGo(getPlayerPiece().getDir());
+                break;
+            case UTURN:
+                turnPlayerAround();
+                break;
+            case BACKUP:
+                turnPlayerAround();
+                tryToGo(getPlayerPiece().getDir());
+                turnPlayerAround();
+                break;
+            case ROTATELEFT:
+                turnPlayerLeft();
+                break;
+            case ROTATERIGHT:
+                turnPlayerRight();
+                break;
+            default:
+                //TODO error handling as default maybe?
+                break;
+        }
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
+
     public boolean isDead() {
         return currentCell.equals(deadPlayerCell);
     }
@@ -217,16 +279,87 @@ public class Player {
         return playerPiece;
     }
 
+    /*
+    This now rotates the cell also which is the image of the player.
+    A cells rotation is an integer between 0 and 3, where 0 = North, 1 = West, 2 = South, 3 = East.
+    This does not affect the playerPiece direction in any way.
+     */
 
     public void turnPlayerAround() {
         playerPiece.turnPieceInOppositeDirection();
+        int newDir = currentCell.getRotation() + 2;
+        if (newDir > 3){ newDir -= 4;}
+        currentCell.setRotation(newDir);
     }
 
     public void turnPlayerLeft() {
         playerPiece.rotatePieceLeft();
+        int newDir = currentCell.getRotation() + 1;
+        if (newDir > 3){ newDir -= 4;}
+        currentCell.setRotation(newDir);
     }
 
     public void turnPlayerRight() {
         playerPiece.rotatePieceRight();
+        int newDir = currentCell.getRotation() + 3;
+        if (newDir > 3){ newDir -= 4;}
+        currentCell.setRotation(newDir);
     }
+
+
+    public ArrayList<ProgramCard> getPlayerHandDeck() {
+        return playerHandDeck;
+    }
+
+    public ArrayList<ProgramCard> getSelectedCards() {
+        return selectedCards;
+    }
+
+    public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) {
+        this.playerHandDeck = playerHandDeck;
+    }
+
+    public void setSelectedCards(ArrayList<ProgramCard> selectedCards) {
+        this.selectedCards = selectedCards;
+    }
+
+   public void pickFirstFiveCards() {
+        int NUMBER_OF_CARDS_TO_CHOOSE = 5;
+        ArrayList<ProgramCard> firstFiveCards = new ArrayList<>();
+        if (playerHandDeck.size() >= NUMBER_OF_CARDS_TO_CHOOSE) {
+            for (int i = 0; i < NUMBER_OF_CARDS_TO_CHOOSE; i++) {
+                firstFiveCards.add(playerHandDeck.get(i));
+            }
+            selectedCards = firstFiveCards;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "playerNumber=" + playerNumber +
+                '}';
+    }
+
+    public void takeDamage(int amountOfDamage){ damage += amountOfDamage; System.out.println("Damage: " + damage); }
+
+    public void repairDamage(int amountOfRepairs){damage -= amountOfRepairs; System.out.println("Damage: " + damage);}
+
+    public int getDamage(){return damage;}
+
+    public void loseLife(){lifes--; System.out.println("Lifes: " + lifes);}
+
+    //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
+    public void gainLife(){lifes++; System.out.println("Lifes: " + lifes);}
+
+    public int getLifes(){return lifes;}
+
+    public void visitedCheckpoint(){checkpointsVisited++; System.out.println("Checkpoints: " + checkpointsVisited);}
+
+    //TODO remove this later since it is not possible to undo a checkpoint/flag. This is for testing purposes only.
+    public void removeCheckpoint(){checkpointsVisited--; System.out.println("Checkpoints: " + checkpointsVisited);}
+
+    public int getCheckpointsVisited(){return checkpointsVisited;}
+
+
 }

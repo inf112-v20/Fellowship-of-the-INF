@@ -184,8 +184,9 @@ public class Map {
                 grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
                 //add piece to new position
                 grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
+
             } else {
-                System.out.println(newPosition.toString() + " is not available for player");
+                System.out.println(newPosition.toString() + " is not available for " + playerPiece.toString());
             }
         } else {
             System.out.println("Cannot move nonplayer object" + playerPiece.toString() + " to new position");
