@@ -1,7 +1,6 @@
 package inf112.skeleton.app.player;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
@@ -20,13 +19,7 @@ import java.util.ArrayList;
  */
 public class Player {
 
-    private Position pos; //position of player
-    private TiledMapTileLayer.Cell currentCell; //Cell for the current state of the player
-    private TiledMapTileLayer.Cell playerCell; //cell for normal player
-    private TiledMapTileLayer.Cell deadPlayerCell; //cell for dead player looks
-    private TiledMapTileLayer.Cell wonPlayerCell; //cell for player who has won looks
-    private int MAP_WIDTH;
-    private int MAP_HEIGHT;
+    private boolean isDead;
     private Map map;
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
@@ -51,15 +44,7 @@ public class Player {
         int playerStartPositionX = (playerNumber-1)*2;
         int playerStartPositionY = 0;
         this.playerPiece = new PlayerPiece(new Position(playerStartPositionX, playerStartPositionY), 200, Direction.NORTH, playerNumber);
-        pos = new Position(playerStartPositionX, playerStartPositionY);
-
-        MAP_WIDTH = game.getMap().getWidth();
-        MAP_HEIGHT = game.getMap().getHeight();
-
-        playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 0)));
-        deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 1)));
-        wonPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 2)));
-        currentCell = playerCell; //appearance starts as normal player
+        this.isDead = false;
     }
 
 
@@ -68,19 +53,10 @@ public class Player {
      * @return position of player
      */
     public Position getPos() {
-        return pos;
+        return playerPiece.getPos();
     }
 
-    /**
-     * Setter for position of player
-     *
-     * @param x new x position
-     * @param y new y position
-     */
-    public void setPos(int x, int y) {
-        pos.setX(x);
-        pos.setY(y);
-    }
+    public void setPos(int x, int y) { playerPiece.setPos(new Position(x, y)); }
 
     /**
      * Getter for player
@@ -98,26 +74,29 @@ public class Player {
      * @param newDirection new direction to move the player
      */
     public void tryToGo(Direction newDirection) {
-        int newX = pos.getX();
-        int newY = pos.getY();
+        Position pos = playerPiece.getPos();
+        int newX = playerPiece.getPos().getX();
+        int newY = playerPiece.getPos().getY();
+
         playerPiece.setDir(newDirection);
         switch (newDirection) {
             case NORTH:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
-                if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
                 break;
             case SOUTH:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY -= 1;
-                if (isDeadMove(pos.getX(), newY)) currentCell = deadPlayerCell;
                 break;
             case WEST:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX -= 1;
-                if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
                 break;
             case EAST:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX += 1;
-                if (isDeadMove(newX, pos.getY())) currentCell = deadPlayerCell;
                 break;
+        }
+        //check if the move kills the player
+        if (isDeadMove(newX, newY)) {
+            playerPiece.showDeadPlayer();
+            isDead = true;
         }
 
         //if position has changed and player isn't dead, update logic grid
@@ -125,24 +104,6 @@ public class Player {
             playerPiece.setPos(new Position(newX, newY));
             map.movePlayerToNewPosition(pos, new Position(newX, newY));
         }
-
-        /* UNCOMMENT TO SEE PRINTOUT OF PIECES IN CELL
-        if (newY != pos.getY() || newX != pos.getX() && !isDead()) {
-            System.out.println("OLD: " + pos.getX() + "," + pos.getY());
-
-            ArrayList<BoardPiece> array = pieceGrid[pos.getX()][pos.getY()];
-            for (int i = 0; i < array.size(); i++) {
-                BoardPiece p = array.get(i);l
-                System.out.println(p);
-            }
-
-            System.out.println("NEW: " + newX + "," + newY);
-            array = pieceGrid[newX][newY];
-            for (int i = 0; i < array.size(); i++) {
-                BoardPiece p = array.get(i);
-                System.out.println(p);
-            }
-        }*/
         setPos(newX, newY);
     }
 
@@ -205,8 +166,10 @@ public class Player {
      * @return whether the move results in death
      */
     private boolean isDeadMove(int x, int y) {
+        int MAP_WIDTH = game.getMap().getWidth();
+        int MAP_HEIGHT = game.getMap().getHeight();
         BoardPiece currPiece;
-        if (x > MAP_WIDTH - 1 || x < 0 || y < 0 || y > MAP_WIDTH - 1) {
+        if (x > MAP_WIDTH - 1 || x < 0 || y < 0 || y > MAP_HEIGHT - 1) {
             return true;
         } else {
             for (int i = 0; i < pieceGrid[x][y].size(); i++) {
@@ -262,7 +225,7 @@ public class Player {
     }
 
     public boolean isDead() {
-        return currentCell.equals(deadPlayerCell);
+        return isDead;
     }
 
     public PlayerPiece getPlayerPiece() {
@@ -274,7 +237,6 @@ public class Player {
     public void turnPlayerLeft() { playerPiece.turnLeft(); }
 
     public void turnPlayerRight() { playerPiece.turnRight(); }
-
 
     public ArrayList<ProgramCard> getPlayerHandDeck() {
         return playerHandDeck;
@@ -292,6 +254,9 @@ public class Player {
         this.selectedCards = selectedCards;
     }
 
+    /**
+     * Sets the first five cards in the given hand of nine cards, to be the chosen five cards in a round
+     */
    public void pickFirstFiveCards() {
         int NUMBER_OF_CARDS_TO_CHOOSE = 5;
         ArrayList<ProgramCard> firstFiveCards = new ArrayList<>();
