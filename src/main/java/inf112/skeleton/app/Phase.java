@@ -2,6 +2,8 @@ package inf112.skeleton.app;
 
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.player.Player;
+import inf112.skeleton.app.BoardElementsMove;
+
 
 import java.util.*;
 
@@ -10,7 +12,8 @@ public class Phase {
     private Player[] listOfPlayers;
     private ArrayList<Player> orderedListOfPlayers = new ArrayList<>();
     private int phaseNumber;
-    HashMap<Player, Integer> playerAndPriority;
+    private HashMap<Player, Integer> playerAndPriority;
+    private BoardElementsMove boardElementsMove = new BoardElementsMove();
 
     public Phase (Game game){
         listOfPlayers = game.getListOfPlayers();
@@ -19,6 +22,13 @@ public class Phase {
 
     public void executePhase(int phaseNumber) {
         this.phaseNumber = phaseNumber;
+        sortPlayersAndExecuteCards();
+        moveExpressBelts();
+        moveConveyorBelts();
+        rotateCogs();
+    }
+
+    public void sortPlayersAndExecuteCards(){
         playerAndPriority = new HashMap<>();
         for (int i = 0; i < listOfPlayers.length ; i++) {
             Player player = listOfPlayers[i];
@@ -43,6 +53,31 @@ public class Phase {
         }
 
     }
+
+    public void moveExpressBelts(){
+        for (int i = 0; i < listOfPlayers.length ; i++) {
+            if(listOfPlayers[i].isOnExpressBelt()){
+                boardElementsMove.moveExpressBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+            }
+        }
+    }
+
+    public void moveConveyorBelts(){
+        for (int i = 0; i < listOfPlayers.length ; i++) {
+            if(listOfPlayers[i].isOnConveyorBelt()){
+                boardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+            }
+        }
+    }
+
+    public void rotateCogs(){
+        for (int i = 0; i < listOfPlayers.length ; i++) {
+            if(listOfPlayers[i].isOnCog()){
+                boardElementsMove.rotateCog(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+            }
+        }
+    }
+
     public ArrayList<Player> getOrderedListOfPlayers(){return orderedListOfPlayers;}
 
     public int getPhaseNumber(){return phaseNumber;}

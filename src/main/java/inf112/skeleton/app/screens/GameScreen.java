@@ -14,7 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import inf112.skeleton.app.ConveyorBeltExecuter;
+import inf112.skeleton.app.BoardElementsMove;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.grid.Map;
@@ -42,6 +42,7 @@ public class GameScreen implements Screen {
     private UIScreen uiScreen;
     private Player player;
     private Game game;
+    private BoardElementsMove boardElements = new BoardElementsMove();
 
 
     public GameScreen(String mapName) {
@@ -108,9 +109,12 @@ public class GameScreen implements Screen {
     public void update() {
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         handleInput();
-        if(player.isOnConveyorBelt() || player.isOnExpressBelt()){
-         ConveyorBeltExecuter executer =  new ConveyorBeltExecuter(player.getCurrentBoardPiece(), player);
-        }
+        /*
+        if(player.isOnExpressBelt()){ boardElements.moveExpressBelt(player.getCurrentBoardPiece(), player); }
+        if(player.isOnConveyorBelt()){ boardElements.moveConveyorBelt(player.getCurrentBoardPiece(), player);}
+        if(player.isOnCog()){ boardElements.rotateCog(player.getCurrentBoardPiece(), player);}
+
+         */
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
     }
 

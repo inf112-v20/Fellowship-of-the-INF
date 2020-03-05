@@ -324,6 +324,17 @@ public class Player {
         return false;
     }
 
+    public boolean isOnCog(){
+       if(currentBoardPiece instanceof CogPiece){
+           String rotation;
+           if(((CogPiece) currentBoardPiece).isRotateClockwise()){rotation = "Clockwise cog";}
+           else{rotation = "Counterclockwise cog";}
+           System.out.println("Standing on " + rotation);
+           return true;
+       }
+       return false;
+    }
+
     public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
 
 }
