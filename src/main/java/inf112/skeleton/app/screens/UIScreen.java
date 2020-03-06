@@ -214,7 +214,6 @@ public class UIScreen{
         for (int i = 0; i <cardButton.getLeftOverCardButtons().size() ; i++) {
             if(cardButton.getLeftOverCardButtons().get(i) != null) {
                 cardButton.getLeftOverCardButtons().get(i).remove();
-                cardButton.getLeftOverCardTexts().get(i).remove();
             }
         }
         return selectedProgramCards;
