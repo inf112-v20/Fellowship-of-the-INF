@@ -16,7 +16,7 @@ public class Phase {
     private BoardElementsMove boardElementsMove = new BoardElementsMove();
 
     public Phase (Game game){
-        listOfPlayers = game.getListOfPlayers();
+        this.listOfPlayers = game.getListOfPlayers();
         this.playerAndPriority = new HashMap<>();
     }
 

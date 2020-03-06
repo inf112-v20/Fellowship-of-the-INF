@@ -28,10 +28,10 @@ public class CardButton {
     private ImageButton lockInButton;
 
     private ArrayList<ProgramCard> playerHand;
-    private ArrayList<Stack> cardButtons = new ArrayList<>();
-    private ArrayList<Stack> leftOverCardButtons = new ArrayList<>();
-    private Stack[] selectedCardButtons = new Stack[5];
-    private ProgramCard[] selectedCards = new ProgramCard[5];
+    private ArrayList<Stack> cardButtons;
+    private ArrayList<Stack> leftOverCardButtons;
+    private Stack[] selectedCardButtons;
+    private ProgramCard[] selectedCards;
     private Image[] selectedCardImages = new Image[5];
 
     public CardButton(Player player, float width, float height, Stage stage, ImageButton lockInButton) {
@@ -40,12 +40,19 @@ public class CardButton {
         this.height = height;
         this.stage = stage;
         this.lockInButton = lockInButton;
-        playerHand = player.getPlayerHandDeck();
+        selectedCardButtons = new Stack[5];
+        selectedCards = player.getSelectedCards();
+        this.playerHand = player.getPlayerHandDeck();
         selectedCardPosY = height / 20;
         gap = playerHand.get(0).getTexture().getWidth() * 1.3f;
         createSelectedCardsImages();
-        cardButtons = createCardButtons(playerHand);
-        leftOverCardButtons = cardButtons;
+        ArrayList<Stack> listOfCardButtons = createCardButtons(playerHand);
+        cardButtons = new ArrayList<>();
+        leftOverCardButtons = new ArrayList<>();
+        for (int i = 0; i < listOfCardButtons.size() ; i++) {
+            cardButtons.add(listOfCardButtons.get(i));
+            leftOverCardButtons.add(listOfCardButtons.get(i));
+        }
         createLockedCardButtons();
     }
 
@@ -63,7 +70,6 @@ public class CardButton {
         if(player.getSelectedCards()[4] != null){
             ArrayList<ProgramCard> lockedCards = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
-                System.out.println(player.getSelectedCards()[i].toString());
                 if(player.getSelectedCards()[i] == null){continue;}
                 lockedCards.add(player.getSelectedCards()[i]);
             }
@@ -167,7 +173,7 @@ public class CardButton {
                 selectedCardButtons[i] = cardButton;
                 float newPosX = selectedCardImages[i].getX() + 15;
                 float newPosY = selectedCardImages[i].getY()+ 15;
-                for (int j = 0; j <playerHand.size() ; j++) {
+                for (int j = 0; j < cardButtons.size() ; j++) {
                     if (cardButtons.get(j) == cardButton) {
                         selectedCards[i] = playerHand.get(j);
                         setPos(cardButton, newPosX, newPosY);
@@ -189,8 +195,8 @@ public class CardButton {
             if(selectedCardButtons[i] == cardButton) {
                 selectedCardButtons[i] = null;
                 selectedCards[i] = null;
-                for (int j = 0; j < playerHand.size(); j++) {
-                    if(cardButtons.get(j) == cardButton){
+                for (int j = 0; j < cardButtons.size(); j++) {
+                    if(cardButtons.get(j) == (cardButton)){
                         setPos(cardButton, cardButton.getOriginX(),cardButton.getOriginY()); //set the card back to its original position
                         leftOverCardButtons.set(j, cardButton);
                         if(!hasSelectedFiveCards()){
@@ -221,7 +227,4 @@ public class CardButton {
         return true;
     }
 
-    public float getSelectedCardPosY(){
-        return selectedCardPosY;
-    }
 }

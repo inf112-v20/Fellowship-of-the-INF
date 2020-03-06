@@ -28,10 +28,8 @@ public class UIScreen{
     private Stage stage;
     private float width;
     private float height;
-    private GameScreen gameScreen;
     private CardButton cardButton;
     private Game game;
-    private ArrayList<ProgramCard> playerHandDeck;
     private ImageButton lockInButton;
     private Player player;
     private Actor[] lifeActors = new Actor[3];
@@ -39,13 +37,11 @@ public class UIScreen{
     private Actor[] damageActors = new Actor[10];
     private ArrayList<Actor> gamelogActors = new ArrayList<>();
 
-    public UIScreen(float width, Game game, GameScreen gameScreen) {
+    public UIScreen(float width, Game game) {
         this.width = width;
         this.game = game;
-        this.gameScreen = gameScreen;
         height = width * 0.5f;
         player = game.getListOfPlayers()[0];
-        playerHandDeck = player.getPlayerHandDeck();
         stage = new Stage();
         createLockInButton();
         createPlayerPicture();
@@ -53,23 +49,27 @@ public class UIScreen{
         createLifeTokens();
         createCheckPointTokens();
         createPowerDownImage();
+        this.newRound();
     }
 
     public void handleInput(){
          if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-             game.getRound().nextPhase();
-             updateGameLog();
-         }
-         else if(Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)){
-             newRound();
-             game.getRound().startRound();
-             cardButton = new CardButton(player, width, height, stage, lockInButton);
+             if(!cardButton.hasSelectedFiveCards()){return;}
+             if(game.getRound().getPhaseNr() > 4){
+                 this.newRound();
+             }
+             else {
+                 game.getRound().nextPhase();
+                 updateGameLog();
+             }
          }
     }
 
     public void newRound(){
+        game.newRound();
         lockInButton.setTouchable(Touchable.disabled);
         removeGameLog();
+        cardButton = new CardButton(player, width, height, stage, lockInButton);
         //update();
     }
 
@@ -77,7 +77,7 @@ public class UIScreen{
         removeGameLog();
         Phase phase = game.getRound().getPhase();
         gamelogActors.add(drawText("Round " + game.getRound().getRoundNumber() +
-                ":          Phase " + (phase.getPhaseNumber()+1), 10, width*0.52f, height*0.7f));
+                ":          Phase " + (phase.getPhaseNumber()+1), 10, width*0.52f, height*0.7f, Color.GOLD));
         for (int i = 0; i < phase.getOrderedListOfPlayers().size(); i++) {
             Player player = phase.getOrderedListOfPlayers().get(i);
             ProgramCard card = player.getSelectedCards()[phase.getPhaseNumber()];
@@ -85,11 +85,15 @@ public class UIScreen{
             float posX = (width * 0.51f) + (i * gap);
             TextureRegion cardPicture = new TextureRegion(card.getTexture());
             gamelogActors.add(createImage(cardPicture, 0.2f, posX, height*0.4f, 1));
+            String priorityText = String.valueOf(card.getPriority());
+            float textPosX = cardPicture.getRegionWidth()*0.65f;
+            float textPosY = cardPicture.getRegionHeight();
+            gamelogActors.add(drawText(priorityText, 4, posX + textPosX, height*0.4f + textPosY, Color.GREEN));
             TextureRegion playerPicture = player.getStandardPlayerCell().getTile().getTextureRegion();
             posX = (width * 0.515f) + (i * gap);
             gamelogActors.add(createImage(playerPicture, 0.01f, posX, height*0.55f, 1));
             posX = (width * 0.53f) + (i * gap);
-            gamelogActors.add(drawText("" + (i+1), 10, posX, height*0.37f));
+            gamelogActors.add(drawText("" + (i+1), 10, posX, height*0.37f, Color.BLACK));
         }
     }
     public void removeGameLog(){
@@ -139,7 +143,7 @@ public class UIScreen{
         TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
         createImage(playerPicture, 1, width *0.5f, height*0.75f, 1);
         String playerName  = "Player " + player.getPlayerNumber();
-        drawText(playerName, 10, width * 0.51f, height * 0.95f);
+        drawText(playerName, 10, width * 0.51f, height * 0.95f, Color.BLACK);
     }
 
     public void createLifeTokens(){
@@ -204,8 +208,7 @@ public class UIScreen{
     }
 
     public Image createImage(TextureRegion textureRegion, float scale, float posX, float posY, float alpha) {
-        TextureRegion myTextureRegion = textureRegion;
-        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(textureRegion);
         Image image = new Image(myTexRegionDrawable);
         image.scaleBy(scale);
         image.setPosition(posX, posY);
@@ -220,15 +223,15 @@ public class UIScreen{
         lockInButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameScreen.executeLockIn(getSelectedProgramCards());
+                executeLockInButton();
                 updateGameLog();
             }
         });
     }
-    public Label drawText(String text, float scale, float posX, float posY){
+    public Label drawText(String text, float scale, float posX, float posY, Color color){
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = new BitmapFont();
-        labelStyle.fontColor = Color.BLACK;
+        labelStyle.fontColor = color;
         Label textLabel = new Label(text, labelStyle);
         textLabel.setFontScale(scale);
         textLabel.setPosition(posX, posY);
@@ -236,21 +239,23 @@ public class UIScreen{
         return textLabel;
     }
 
-    public ProgramCard[] getSelectedProgramCards(){
+    public void executeLockInButton(){
 
         for (int i = 0; i < 5 ; i++) {
-            if(cardButton.getSelectedCards()[i] == null){System.out.println("Not enough cards");return null;}
+            if(cardButton.getSelectedCards()[i] == null){System.out.println("Not enough cards");return;}
         }
-        lockInButton.setTouchable(Touchable.disabled);
         for (int i = 0; i < 5 ; i++) {
             cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
         }
+        Color c = lockInButton.getColor();
+        lockInButton.setColor(c.r, c.g, c.b, 0.5f);
+        lockInButton.setTouchable(Touchable.disabled);
         for (int i = 0; i <cardButton.getLeftOverCardButtons().size() ; i++) {
             if(cardButton.getLeftOverCardButtons().get(i) != null) {
                 cardButton.getLeftOverCardButtons().get(i).remove();
             }
         }
-        return cardButton.getSelectedCards();
+        game.getRound().nextPhase();
     }
 }
 

@@ -18,6 +18,7 @@ public class Game {
     private GameDeck gameDeck;
     private Player player1;
     private Player[] playerList;
+    private int roundNumber = 0;
     private Round round;
     private final int NUMBER_OF_PLAYERS = 4;
 
@@ -30,7 +31,6 @@ public class Game {
         playerList[0] = player1;
         map.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
-        this.round = new Round(this);
     }
 
     public void initiateComputerPlayers() {
@@ -146,9 +146,11 @@ public class Game {
         return playerList;
     }
 
-    public void executeRound() {
-        //let computer players pick the first five cards as their selected
-        //check all players have hand
-        round.nextPhase();
+    public void newRound(){
+        roundNumber++;
+        round = new Round(this);
+        round.setRoundNumber(roundNumber);
+        round.startRound();
     }
+
 }

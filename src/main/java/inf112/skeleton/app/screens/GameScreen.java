@@ -66,7 +66,7 @@ public class GameScreen implements Screen {
         game = new Game(map);
         initializePlayers();
         //UI gets game deck from game class
-        uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game, this);
+        uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game);
     }
 
     /**
@@ -168,11 +168,14 @@ public class GameScreen implements Screen {
      *
      * @param programCards to execute
      */
+    /*
     public void executeLockIn(ProgramCard[] programCards) {
         if (programCards != null) {
             game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
             game.executeRound();
         }
     }
+
+     */
 
 }
