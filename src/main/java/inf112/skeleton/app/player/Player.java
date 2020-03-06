@@ -22,8 +22,8 @@ public class Player {
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
     private Game game;
-    private ArrayList<ProgramCard> playerHandDeck;
-    private ArrayList<ProgramCard> selectedCards;
+    private ArrayList<ProgramCard> playerHandDeck = new ArrayList<>();
+    private ProgramCard[] selectedCards = new ProgramCard[5];
     private ArrayList<ProgramCard> lockedCards;
     private int damage;
     private int playerNumber;
@@ -41,9 +41,7 @@ public class Player {
         this.game = game;
         this.damage = 0;
         GameDeck gameDeck = game.getGameDeck();
-        this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
-        this.selectedCards = new ArrayList<>();
-        this.lockedCards = new ArrayList<>();
+        //this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
         this.lockedCards = new ArrayList<>();
         //player is player is placed at bottom of board in position of player number
         int playerStartPositionX = (playerNumber-1)*2;
@@ -119,7 +117,6 @@ public class Player {
                 else if(currPiece instanceof SpawnPointPiece){currentBoardPiece = currPiece;}
                 else if(currPiece instanceof FloorPiece){currentBoardPiece = currPiece;}
             }
-            System.out.println(getPlayerPiece().getDir());
         }
         setPos(newX, newY);
     }
@@ -257,7 +254,7 @@ public class Player {
         return playerHandDeck;
     }
 
-    public ArrayList<ProgramCard> getSelectedCards() {
+    public ProgramCard[] getSelectedCards() {
         return selectedCards;
     }
 
@@ -265,7 +262,7 @@ public class Player {
         this.playerHandDeck = playerHandDeck;
     }
 
-    public void setSelectedCards(ArrayList<ProgramCard> selectedCards) {
+    public void setSelectedCards(ProgramCard[] selectedCards) {
         this.selectedCards = selectedCards;
     }
 
@@ -274,10 +271,10 @@ public class Player {
      */
    public void pickFirstFiveCards() {
         int NUMBER_OF_CARDS_TO_CHOOSE = 5;
-        ArrayList<ProgramCard> firstFiveCards = new ArrayList<>();
+        ProgramCard[] firstFiveCards = new ProgramCard[NUMBER_OF_CARDS_TO_CHOOSE];
         if (playerHandDeck.size() >= NUMBER_OF_CARDS_TO_CHOOSE) {
             for (int i = 0; i < NUMBER_OF_CARDS_TO_CHOOSE; i++) {
-                firstFiveCards.add(playerHandDeck.get(i));
+                firstFiveCards[i] = (playerHandDeck.get(i));
             }
             selectedCards = firstFiveCards;
         }
@@ -300,7 +297,7 @@ public class Player {
 
         if(damage >= 5 && damage <= 9){
            for (int i = damage-amountOfDamage-4; i < damage-4; i++) {
-               lockedCards.add(0, selectedCards.get(4-i));
+               lockedCards.add(0, selectedCards[4-i]);
                playerHandDeck.remove(lockedCards.get(0));
                System.out.println("Locking card: " + lockedCards.get(0).toString());
            }
@@ -347,7 +344,6 @@ public class Player {
 
     public boolean isOnConveyorBelt(){
         if (currentBoardPiece instanceof ConveyorBeltPiece) {
-            System.out.println("Standing on Conveyorbelt");
             return true;
         }
         return false;
@@ -355,7 +351,6 @@ public class Player {
 
     public boolean isOnExpressBelt(){
         if (currentBoardPiece instanceof ExpressBeltPiece) {
-            System.out.println("Standing on Expressbelt");
             return true;
         }
         return false;
@@ -363,15 +358,19 @@ public class Player {
 
     public boolean isOnCog(){
        if(currentBoardPiece instanceof CogPiece){
-           String rotation;
-           if(((CogPiece) currentBoardPiece).isRotateClockwise()){rotation = "Clockwise cog";}
-           else{rotation = "Counterclockwise cog";}
-           System.out.println("Standing on " + rotation);
            return true;
        }
        return false;
     }
 
     public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
+
+    public ArrayList<ProgramCard> getLockedCards(){return lockedCards;}
+
+    public void removeSelectedCards(){
+        for (int i = 0; i < selectedCards.length ; i++) {
+            selectedCards[i] = null;
+        }
+    }
 
 }

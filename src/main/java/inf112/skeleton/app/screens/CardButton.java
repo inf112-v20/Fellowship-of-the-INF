@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -14,15 +13,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
 
+//TODO Fix removing cards from the selected cards. Fix lockInButton to be disabled on a new round. Make locked cards still be read when starting a new round.
 public class CardButton {
     private float selectedCardPosY;
     private float gap;
     private float width;
     private float height;
     private Stage stage;
+    private Player player;
     private ImageButton lockInButton;
 
     private ArrayList<ProgramCard> playerHand;
@@ -32,16 +34,19 @@ public class CardButton {
     private ProgramCard[] selectedCards = new ProgramCard[5];
     private Image[] selectedCardImages = new Image[5];
 
-    public CardButton(ArrayList<ProgramCard> playerHand, float width, float height, Stage stage, ImageButton lockInButton) {
-        this.playerHand = playerHand;
+    public CardButton(Player player, float width, float height, Stage stage, ImageButton lockInButton) {
+        this.player = player;
         this.width = width;
         this.height = height;
         this.stage = stage;
         this.lockInButton = lockInButton;
+        playerHand = player.getPlayerHandDeck();
         selectedCardPosY = height / 20;
         gap = playerHand.get(0).getTexture().getWidth() * 1.3f;
         createSelectedCardsImages();
-        createCardButtons();
+        cardButtons = createCardButtons(playerHand);
+        leftOverCardButtons = cardButtons;
+        createLockedCardButtons();
     }
 
     public Image[] getSelectedCardImages(){return selectedCardImages;}
@@ -52,8 +57,26 @@ public class CardButton {
 
     public Stack[] getSelectedCardButtons(){return selectedCardButtons;}
 
-    public void setPos(Stack cardButton, float x, float y){
-        cardButton.setPosition(x, y);
+    public void setPos(Stack cardButton, float x, float y){ cardButton.setPosition(x, y); }
+
+    public void createLockedCardButtons(){
+        if(player.getSelectedCards()[4] != null){
+            ArrayList<ProgramCard> lockedCards = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                System.out.println(player.getSelectedCards()[i].toString());
+                if(player.getSelectedCards()[i] == null){continue;}
+                lockedCards.add(player.getSelectedCards()[i]);
+            }
+            ArrayList<Stack> lockedCardButtons = createCardButtons(lockedCards);
+            for (int i = 0; i < lockedCardButtons.size() ; i++) {
+                Stack lockedCardButton = lockedCardButtons.get(i);
+                selectedCardButtons[4-i] = lockedCardButton;
+                float newPosX = selectedCardImages[4-i].getX() + 15;
+                float newPosY = selectedCardImages[4-i].getY() + 15;
+                setPos(lockedCardButton, newPosX, newPosY);
+                lockedCardButtons.get(i).setTouchable(Touchable.disabled);
+            }
+        }
     }
 
     public void createSelectedCardsImages(){
@@ -70,9 +93,10 @@ public class CardButton {
         }
     }
 
-    public void createCardButtons(){
-        for (int i = 0; i < playerHand.size(); i++) {
-            ProgramCard programCard = playerHand.get(i);
+    public ArrayList<Stack> createCardButtons(ArrayList<ProgramCard> listOfCards){
+        ArrayList<Stack> listOfCardButtons = new ArrayList<>();
+        for (int i = 0; i < listOfCards.size(); i++) {
+            ProgramCard programCard = listOfCards.get(i);
             float posY = height * 0.55f;
             float posX = (width * 0.51f) + (i * gap);
             if (i > 4) {
@@ -102,13 +126,12 @@ public class CardButton {
             textImage.add(priorityTextLabel).expand().fillX().top().right().padLeft(leftPad).padTop(topPad);
             cardButton.add(textImage);
 
-            cardButtons.add(cardButton);
-            leftOverCardButtons.add(cardButton);
             buttonLeftPressed(cardButton);
             buttonRightPressed(cardButton);
             stage.addActor(cardButton);
+            listOfCardButtons.add(cardButton);
         }
-
+        return listOfCardButtons;
     }
 
     //Methods for the buttonpresses
@@ -196,5 +219,9 @@ public class CardButton {
             if(selectedCards[i] == null){return false;}
         }
         return true;
+    }
+
+    public float getSelectedCardPosY(){
+        return selectedCardPosY;
     }
 }

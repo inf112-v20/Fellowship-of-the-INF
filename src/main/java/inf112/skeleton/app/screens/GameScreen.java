@@ -19,6 +19,7 @@ import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.player.Player;
+import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 
@@ -125,6 +126,7 @@ public class GameScreen implements Screen {
     public void handleInput() {
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         game.handleInput();
+        uiScreen.handleInput();
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.graphics.setWindowedMode(600, 600);
@@ -166,16 +168,10 @@ public class GameScreen implements Screen {
      *
      * @param programCards to execute
      */
-    public void executeLockIn(ArrayList<ProgramCard> programCards) {
+    public void executeLockIn(ProgramCard[] programCards) {
         if (programCards != null) {
-            /*
-            playerLayer.setCell( player.getPos().getX(), player.getPos().getY(), null);
-            game.executePlayerHand(programCards);
-            playerLayer.setCell( player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
-            */
             game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
             game.executeRound();
-            uiScreen.updateGameLog();
         }
     }
 

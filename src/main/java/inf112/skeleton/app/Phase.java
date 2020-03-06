@@ -10,7 +10,7 @@ import java.util.*;
 public class Phase {
 
     private Player[] listOfPlayers;
-    private ArrayList<Player> orderedListOfPlayers = new ArrayList<>();
+    private ArrayList<Player> orderedListOfPlayers;
     private int phaseNumber;
     private HashMap<Player, Integer> playerAndPriority;
     private BoardElementsMove boardElementsMove = new BoardElementsMove();
@@ -32,10 +32,12 @@ public class Phase {
     }
 
     public void sortPlayersAndExecuteCards(){
+
         playerAndPriority = new HashMap<>();
+        orderedListOfPlayers = new ArrayList<>();
         for (int i = 0; i < listOfPlayers.length ; i++) {
             Player player = listOfPlayers[i];
-            ProgramCard programCardThisPhase = player.getSelectedCards().get(phaseNumber);
+            ProgramCard programCardThisPhase = player.getSelectedCards()[phaseNumber];
             Integer cardPriority = programCardThisPhase.getPriority();
             playerAndPriority.put(player, cardPriority);
         }
@@ -49,7 +51,7 @@ public class Phase {
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
-            ProgramCard cardThisPhase = player.getSelectedCards().get(phaseNumber);
+            ProgramCard cardThisPhase = player.getSelectedCards()[phaseNumber];
             player.executeCardAction(cardThisPhase);
             System.out.println("Player " + player.getPlayerNumber() + " played card "
                     + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());

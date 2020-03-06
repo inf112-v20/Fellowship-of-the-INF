@@ -148,10 +148,7 @@ public class Game {
 
     public void executeRound() {
         //let computer players pick the first five cards as their selected
-        for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
-            playerList[playerNumber - 1].pickFirstFiveCards();
-        }
         //check all players have hand
-        round.startRound();
+        round.nextPhase();
     }
 }
