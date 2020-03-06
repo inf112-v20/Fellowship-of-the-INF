@@ -49,9 +49,7 @@ public class Game {
         this.map = map;
     }
 
-    public GameDeck getGameDeck() {
-        return gameDeck;
-    }
+    public GameDeck getGameDeck() { return gameDeck; }
 
     public void setGameDeck(GameDeck gameDeck) {
         this.gameDeck = gameDeck;

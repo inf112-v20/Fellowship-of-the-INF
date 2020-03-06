@@ -1,5 +1,6 @@
 package inf112.skeleton.app.player;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -23,6 +24,7 @@ public class Player {
     private Game game;
     private ArrayList<ProgramCard> playerHandDeck;
     private ArrayList<ProgramCard> selectedCards;
+    private ArrayList<ProgramCard> lockedCards;
     private int damage;
     private int playerNumber;
     private int lifes = 3;
@@ -41,6 +43,8 @@ public class Player {
         GameDeck gameDeck = game.getGameDeck();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
         this.selectedCards = new ArrayList<>();
+        this.lockedCards = new ArrayList<>();
+        this.lockedCards = new ArrayList<>();
         //player is player is placed at bottom of board in position of player number
         int playerStartPositionX = (playerNumber-1)*2;
         int playerStartPositionY = 0;
@@ -79,7 +83,6 @@ public class Player {
         int newX = playerPiece.getPos().getX();
         int newY = playerPiece.getPos().getY();
 
-        //playerPiece.setDir(newDirection);
         switch (newDirection) {
             case NORTH:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
@@ -287,9 +290,43 @@ public class Player {
                 '}';
     }
 
-    public void takeDamage(int amountOfDamage){ damage += amountOfDamage; System.out.println("Damage: " + damage); }
+    public void takeDamage(int amountOfDamage){
+       damage += amountOfDamage;
+        if(damage >= 10){
+            lifes--;
+            damage = 10;
+        }
+       System.out.println("Damage: " + damage);
 
-    public void repairDamage(int amountOfRepairs){damage -= amountOfRepairs; System.out.println("Damage: " + damage);}
+        if(damage >= 5 && damage <= 9){
+           for (int i = damage-amountOfDamage-4; i < damage-4; i++) {
+               lockedCards.add(0, selectedCards.get(4-i));
+               playerHandDeck.remove(lockedCards.get(0));
+               System.out.println("Locking card: " + lockedCards.get(0).toString());
+           }
+       }
+        System.out.println("Number of cards in playerhand: " + playerHandDeck.size());
+        System.out.println("Number of locked cards: " + lockedCards.size());
+   }
+
+    public void repairDamage(int amountOfRepairs){
+       damage -= amountOfRepairs;
+        if(damage < 0){
+            damage = 0;
+        }
+       System.out.println("Damage: " + damage);
+
+       int numberOfCardsToUnlock =  lockedCards.size()-(damage - 4);
+       if (numberOfCardsToUnlock > 0 && lockedCards.size() > 0) {
+           for (int i = 0; i < numberOfCardsToUnlock; i++) {
+               System.out.println("Unlocking card: " + lockedCards.get(0).toString());
+               playerHandDeck.add(lockedCards.get(0));
+               lockedCards.remove(0);
+            }
+        }
+       System.out.println("Number of cards in playerhand: " + playerHandDeck.size());
+       System.out.println("Number of locked cards: " + lockedCards.size());
+   }
 
     public int getDamage(){return damage;}
 

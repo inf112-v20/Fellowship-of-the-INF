@@ -16,10 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.Phase;
 import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.player.Player;
 
-import java.awt.*;
+
 import java.util.ArrayList;
 
 //TODO add comments to this class
@@ -43,6 +42,7 @@ public class UIScreen{
         this.gameScreen = gameScreen;
         this.game = game;
         this.playerHandDeck = game.getPlayer().getPlayerHandDeck();
+        System.out.println(playerHandDeck.size());
         stage = new Stage();
         createLockInButton();
         cardButton = new CardButton(playerHandDeck, width, height, stage, lockInButton);

@@ -1,7 +1,5 @@
 package inf112.skeleton.app;
 
-import java.util.concurrent.TimeUnit;
-
 public class Round {
 
     final int NUMBER_OF_PHASES = 1;
@@ -23,4 +21,3 @@ public class Round {
 
     public Phase getPhase(){return phase;}
 }
-//FIND OUT WHY NO ONE IS MOVING!!!!!
