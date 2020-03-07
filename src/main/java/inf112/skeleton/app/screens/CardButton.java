@@ -17,7 +17,6 @@ import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
 
-//TODO Fix removing cards from the selected cards. Fix lockInButton to be disabled on a new round. Make locked cards still be read when starting a new round.
 public class CardButton {
     private float selectedCardPosY;
     private float gap;
@@ -64,27 +63,36 @@ public class CardButton {
 
     public Stack[] getSelectedCardButtons(){return selectedCardButtons;}
 
-    public void setPos(Stack cardButton, float x, float y){ cardButton.setPosition(x, y); }
+    /**
+     * Sets the position of a cardbutton
+     * @param cardButton the cardbutton to move
+     * @param posX the new x position of the cardbutton
+     * @param posY the new y position of the cardbutton
+     */
+    public void setPos(Stack cardButton, float posX, float posY){ cardButton.setPosition(posX, posY); }
 
+    /**
+     * Creates cardbuttons for the locked cards of a player from the previous round
+     * and puts them in the list of selectedcardbuttons immediately and disables the cardbuttons.
+     */
     public void createLockedCardButtons(){
-        if(player.getSelectedCards()[4] != null){
-            ArrayList<ProgramCard> lockedCards = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                if(player.getSelectedCards()[i] == null){continue;}
-                lockedCards.add(player.getSelectedCards()[i]);
-            }
-            ArrayList<Stack> lockedCardButtons = createCardButtons(lockedCards);
-            for (int i = 0; i < lockedCardButtons.size() ; i++) {
+        if(player.getLockedCards().size() > 0 ){
+            ArrayList<Stack> lockedCardButtons = createCardButtons(player.getLockedCards());
+            for (int i = lockedCardButtons.size()-1; i >= 0 ; i--) {
                 Stack lockedCardButton = lockedCardButtons.get(i);
-                selectedCardButtons[4-i] = lockedCardButton;
-                float newPosX = selectedCardImages[4-i].getX() + 15;
-                float newPosY = selectedCardImages[4-i].getY() + 15;
+                int number = 5-lockedCardButtons.size();
+                selectedCardButtons[number + i] = lockedCardButton;
+                float newPosX = selectedCardImages[number + i].getX() + 15;
+                float newPosY = selectedCardImages[number + i].getY() + 15;
                 setPos(lockedCardButton, newPosX, newPosY);
                 lockedCardButtons.get(i).setTouchable(Touchable.disabled);
             }
         }
     }
 
+    /**
+     * Creates the background image for where the selected cards gets placed
+     */
     public void createSelectedCardsImages(){
         for (int i = 0; i < 5; i++) {
             Texture texture = new Texture(Gdx.files.internal("cardslot.png"));
@@ -99,6 +107,11 @@ public class CardButton {
         }
     }
 
+    /**
+     * Creates cardbuttons
+     * @param listOfCards the cards to create cardbuttons for
+     * @return the list of created cardbuttons
+     */
     public ArrayList<Stack> createCardButtons(ArrayList<ProgramCard> listOfCards){
         ArrayList<Stack> listOfCardButtons = new ArrayList<>();
         for (int i = 0; i < listOfCards.size(); i++) {
@@ -140,8 +153,10 @@ public class CardButton {
         return listOfCardButtons;
     }
 
-    //Methods for the buttonpresses
-    //Left click to add the card to the list of selected cards
+    /**
+     * Creates a left mousebutton clicklistener for a cardbutton
+     * Tries to add the card to the selected cards
+     */
     public void buttonLeftPressed(Stack cardButton){
         final Stack tempButton = cardButton;
         cardButton.addListener(new ClickListener(Input.Buttons.LEFT) {
@@ -151,7 +166,11 @@ public class CardButton {
             }
         });
     }
-    //Right click to deselect a card
+
+    /**
+     * Creates a right mousebutton clicklistener for a cardbutton
+     * Tries remove the card from the selected cards
+     */
     public void buttonRightPressed(Stack cardButton){
         final Stack tempButton = cardButton;
         cardButton.addListener(new ClickListener(Input.Buttons.RIGHT) {
@@ -162,6 +181,15 @@ public class CardButton {
         });
     }
 
+    /**
+     * Adds the cardbutton to the first available spot in the list
+     * of selected cardbuttons only if there is any space left and
+     * it isn't already in the list of selected cardbuttons.
+     * The programcard that the cardbutton represents
+     * will be added to the players list of selected cards.
+     * Enables the lockinbutton if there are five selected cards.
+     * @param cardButton the cardbutton that is leftclicked
+     */
     public void addCard(Stack cardButton) {
         for (int i = 0; i < 5; i++) {
             if (selectedCardButtons[i] == cardButton) {
@@ -190,6 +218,13 @@ public class CardButton {
         }
     }
 
+    /**
+     * Removes a cardbutton from the list of selected cardbuttons
+     * only if it is already the list, and places it back to its
+     * original position. Removes the programcard that the cardbutton
+     * represents from the players list of selected cards.
+     * @param cardButton
+     */
     public void removeCard(Stack cardButton){
         for (int i = 0; i < 5; i++) {
             if(selectedCardButtons[i] == cardButton) {
@@ -211,6 +246,11 @@ public class CardButton {
         }
     }
 
+    /**
+     * Creates a Label. Is used to draw the prioritynumber on the cardbuttons.
+     * @param text the text to be made into a label
+     * @return the label that is created
+     */
     public Label drawText(String text){
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = new BitmapFont();
@@ -220,6 +260,10 @@ public class CardButton {
         return textLabel;
     }
 
+    /**
+     * Checks if the player has selected five cards
+     * @return true if the player has selected five cards, false otherwise.
+     */
     public boolean hasSelectedFiveCards(){
         for (int i = 0; i < 5; i++) {
             if(selectedCards[i] == null){return false;}

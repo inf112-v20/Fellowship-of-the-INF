@@ -3,8 +3,6 @@ package inf112.skeleton.app;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.BoardElementsMove;
-
-
 import java.util.*;
 
 public class Phase {
@@ -13,26 +11,36 @@ public class Phase {
     private ArrayList<Player> orderedListOfPlayers;
     private int phaseNumber;
     private HashMap<Player, Integer> playerAndPriority;
-    private BoardElementsMove boardElementsMove = new BoardElementsMove();
 
     public Phase (Game game){
         this.listOfPlayers = game.getListOfPlayers();
         this.playerAndPriority = new HashMap<>();
     }
 
+    /**
+     * Executes a phase which consists of:
+     * Executing programcards
+     * Move players on expressbelts
+     * Move players on conveyorbelts
+     * Rotate players on cogs
+     * @param phaseNumber the current phase number
+     */
     public void executePhase(int phaseNumber) {
         this.phaseNumber = phaseNumber;
         sortPlayersAndExecuteCards();
         moveExpressBelts();
         moveConveyorBelts();
         rotateCogs();
-        //fire lasers
-        //touch flag
-        //update respawn point (flag or repair site)
+        //TODO add lasers
+        //TODO add touching flags/checkpoints
+        //TODO add updating of respawn point (flag or repair site)
     }
 
+    /**
+     * Sort all players based on the priority of their cards this phase.
+     * Execute all players programcards for this phase in the order of sorting.
+     */
     public void sortPlayersAndExecuteCards(){
-
         playerAndPriority = new HashMap<>();
         orderedListOfPlayers = new ArrayList<>();
         for (int i = 0; i < listOfPlayers.length ; i++) {
@@ -53,32 +61,43 @@ public class Phase {
             orderedListOfPlayers.add(player);
             ProgramCard cardThisPhase = player.getSelectedCards()[phaseNumber];
             player.executeCardAction(cardThisPhase);
-            System.out.println("Player " + player.getPlayerNumber() + " played card "
-                    + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
+            System.out.println(player.toString() + " played card " + cardThisPhase.toString());
         }
-
     }
+
+    /**
+     * Checks if any player is on an expressbelt,
+     * and will move them accordingly if true.
+     */
 
     public void moveExpressBelts(){
         for (int i = 0; i < listOfPlayers.length ; i++) {
             if(listOfPlayers[i].isOnExpressBelt()){
-                boardElementsMove.moveExpressBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+                BoardElementsMove.moveExpressBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
             }
         }
     }
 
+    /**
+     * Checks if any player is on a conveyorbelt,
+     * and will move them accordingly if true.
+     */
     public void moveConveyorBelts(){
         for (int i = 0; i < listOfPlayers.length ; i++) {
             if(listOfPlayers[i].isOnConveyorBelt()){
-                boardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+                BoardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
             }
         }
     }
 
+    /**
+     * Checks if any player is on a cog,
+     * and will rotate them accordingly if true.
+     */
     public void rotateCogs(){
         for (int i = 0; i < listOfPlayers.length ; i++) {
             if(listOfPlayers[i].isOnCog()){
-                boardElementsMove.rotateCog(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+                BoardElementsMove.rotateCog(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
             }
         }
     }

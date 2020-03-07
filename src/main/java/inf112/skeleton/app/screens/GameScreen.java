@@ -23,6 +23,7 @@ import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 
+
 /**
  * Game screen at the moment only shows a board with a playerLayer, and a player
  */
@@ -43,8 +44,6 @@ public class GameScreen implements Screen {
     private UIScreen uiScreen;
     private Player player;
     private Game game;
-    private BoardElementsMove boardElements = new BoardElementsMove();
-
 
     public GameScreen(String mapName) {
         mapLoader = new TmxMapLoader();
@@ -111,11 +110,10 @@ public class GameScreen implements Screen {
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         handleInput();
         /*
-        if(player.isOnExpressBelt()){ boardElements.moveExpressBelt(player.getCurrentBoardPiece(), player); }
-        if(player.isOnConveyorBelt()){ boardElements.moveConveyorBelt(player.getCurrentBoardPiece(), player);}
-        if(player.isOnCog()){ boardElements.rotateCog(player.getCurrentBoardPiece(), player);}
-
-         */
+        if(player.isOnExpressBelt()){ BoardElementsMove.moveExpressBelt(player.getCurrentBoardPiece(), player); }
+        if(player.isOnConveyorBelt()){ BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(), player);}
+        if(player.isOnCog()){ BoardElementsMove.rotateCog(player.getCurrentBoardPiece(), player);}
+        */
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
     }
 
@@ -160,22 +158,5 @@ public class GameScreen implements Screen {
     public void dispose() {
 
     }
-
-    //TODO This is a logic and should maybe be a method in the Game class?
-
-    /**
-     * Executes the cards that have been chosen
-     *
-     * @param programCards to execute
-     */
-    /*
-    public void executeLockIn(ProgramCard[] programCards) {
-        if (programCards != null) {
-            game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
-            game.executeRound();
-        }
-    }
-
-     */
 
 }

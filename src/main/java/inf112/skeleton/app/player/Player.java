@@ -24,15 +24,12 @@ public class Player {
     private Game game;
     private ArrayList<ProgramCard> playerHandDeck = new ArrayList<>();
     private ProgramCard[] selectedCards = new ProgramCard[5];
-    private ArrayList<ProgramCard> lockedCards;
+    private ArrayList<ProgramCard> lockedCards = new ArrayList<>();
     private int damage;
     private int playerNumber;
     private int lifes = 3;
     private int checkpointsVisited;
     private BoardPiece currentBoardPiece;
-
-
-
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -40,9 +37,6 @@ public class Player {
         this.pieceGrid = map.getGrid();
         this.game = game;
         this.damage = 0;
-        GameDeck gameDeck = game.getGameDeck();
-        //this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
-        this.lockedCards = new ArrayList<>();
         //player is player is placed at bottom of board in position of player number
         int playerStartPositionX = (playerNumber-1)*2;
         int playerStartPositionY = 0;
@@ -232,17 +226,11 @@ public class Player {
         }
     }
 
-    public int getPlayerNumber() {
-        return playerNumber;
-    }
+    public int getPlayerNumber() { return playerNumber; }
 
-    public boolean isDead() {
-        return isDead;
-    }
+    public boolean isDead() { return isDead; }
 
-    public PlayerPiece getPlayerPiece() {
-        return playerPiece;
-    }
+    public PlayerPiece getPlayerPiece() { return playerPiece; }
 
     public void turnPlayerAround() { playerPiece.turnAround(); }
 
@@ -250,21 +238,13 @@ public class Player {
 
     public void turnPlayerRight() { playerPiece.turnRight(); }
 
-    public ArrayList<ProgramCard> getPlayerHandDeck() {
-        return playerHandDeck;
-    }
+    public ArrayList<ProgramCard> getPlayerHandDeck() { return playerHandDeck; }
 
-    public ProgramCard[] getSelectedCards() {
-        return selectedCards;
-    }
+    public ProgramCard[] getSelectedCards() { return selectedCards; }
 
-    public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) {
-        this.playerHandDeck = playerHandDeck;
-    }
+    public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) { this.playerHandDeck = playerHandDeck; }
 
-    public void setSelectedCards(ProgramCard[] selectedCards) {
-        this.selectedCards = selectedCards;
-    }
+    public void setSelectedCards(ProgramCard[] selectedCards) { this.selectedCards = selectedCards; }
 
     /**
      * Sets the first five cards in the given hand of nine cards, to be the chosen five cards in a round
@@ -287,6 +267,13 @@ public class Player {
                 '}';
     }
 
+    /**
+     * Damages a player a given amount
+     * A player loses a life if its damage is 10 or higher
+     * Starts locking a players selected cards (from right to left)
+     * when a players current damage is 5 or higher.
+     * @param amountOfDamage the number of damage the player takes
+     */
     public void takeDamage(int amountOfDamage){
        damage += amountOfDamage;
         if(damage >= 10){
@@ -294,35 +281,31 @@ public class Player {
             damage = 10;
         }
        System.out.println("Damage: " + damage);
-
         if(damage >= 5 && damage <= 9){
            for (int i = damage-amountOfDamage-4; i < damage-4; i++) {
                lockedCards.add(0, selectedCards[4-i]);
                playerHandDeck.remove(lockedCards.get(0));
-               System.out.println("Locking card: " + lockedCards.get(0).toString());
            }
        }
-        System.out.println("Number of cards in playerhand: " + playerHandDeck.size());
-        System.out.println("Number of locked cards: " + lockedCards.size());
    }
 
+    /**
+     * Heals a player a given amount.
+     * Will unlock a players selected cards (from left to right)
+     * if the player already have locked cards.
+     * @param amountOfRepairs the number of damage to remove from the player
+     */
     public void repairDamage(int amountOfRepairs){
        damage -= amountOfRepairs;
-        if(damage < 0){
-            damage = 0;
-        }
+       if(damage < 0){ damage = 0; }
        System.out.println("Damage: " + damage);
-
        int numberOfCardsToUnlock =  lockedCards.size()-(damage - 4);
        if (numberOfCardsToUnlock > 0 && lockedCards.size() > 0) {
            for (int i = 0; i < numberOfCardsToUnlock; i++) {
-               System.out.println("Unlocking card: " + lockedCards.get(0).toString());
                playerHandDeck.add(lockedCards.get(0));
                lockedCards.remove(0);
             }
         }
-       System.out.println("Number of cards in playerhand: " + playerHandDeck.size());
-       System.out.println("Number of locked cards: " + lockedCards.size());
    }
 
     public int getDamage(){return damage;}
@@ -341,7 +324,10 @@ public class Player {
 
     public int getCheckpointsVisited(){return checkpointsVisited;}
 
-
+    /**
+     * Checks if a player is currently on a ConveyorBeltPiece
+     * @return true if a player is on a conveyorBelt, false otherwise.
+     */
     public boolean isOnConveyorBelt(){
         if (currentBoardPiece instanceof ConveyorBeltPiece) {
             return true;
@@ -349,6 +335,10 @@ public class Player {
         return false;
     }
 
+    /**
+     * Checks if a player is currently on an ExpressBeltPiece
+     * @return true if a player is on an ExpressBelt, false otherwise.
+     */
     public boolean isOnExpressBelt(){
         if (currentBoardPiece instanceof ExpressBeltPiece) {
             return true;
@@ -356,6 +346,10 @@ public class Player {
         return false;
     }
 
+    /**
+     * Checks if a player is currently on a CogPiece
+     * @return true if a player is on a cog, false otherwise.
+     */
     public boolean isOnCog(){
        if(currentBoardPiece instanceof CogPiece){
            return true;
@@ -367,6 +361,9 @@ public class Player {
 
     public ArrayList<ProgramCard> getLockedCards(){return lockedCards;}
 
+    /*
+    Removes all cards from the players selected cards
+     */
     public void removeSelectedCards(){
         for (int i = 0; i < selectedCards.length ; i++) {
             selectedCards[i] = null;

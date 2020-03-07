@@ -3,14 +3,11 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
-import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.player.Player;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Game {
@@ -142,10 +139,11 @@ public class Game {
         }
     }
 
-    public Player[] getListOfPlayers() {
-        return playerList;
-    }
+    public Player[] getListOfPlayers() { return playerList; }
 
+    /**
+     * Starts a new round
+     */
     public void newRound(){
         roundNumber++;
         round = new Round(this);
