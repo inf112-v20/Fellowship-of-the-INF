@@ -37,6 +37,7 @@ public class Phase {
         touchCheckPoints();
     }
 
+    //TODO add comments @Erlend
     public void moveRobots() {
         playerAndPriority = new HashMap<>();
         for (int i = 0; i < listOfPlayers.length ; i++) {
@@ -56,13 +57,13 @@ public class Phase {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
             ProgramCard cardThisPhase = player.getSelectedCards().get(phaseNumber);
-
             Position oldPos = player.getPos();
             Direction oldDir = player.getPlayerPiece().getDir();
-            player.executeCardAction(cardThisPhase);
+            player.executeCardAction(cardThisPhase); //updates the state of the player, not the board
             Direction newDir = player.getPlayerPiece().getDir();
             Position newPos = player.getPos();
-            game.executeMove(new Move(player, oldPos, newPos, oldDir, newDir));
+            Move move = new Move(player, oldPos, newPos, oldDir, newDir);
+            game.executeMove(move); //executes backend, and adds to list of frontend moves to show
             System.out.println("Player " + player.getPlayerNumber() + " played card "
                     + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
         }

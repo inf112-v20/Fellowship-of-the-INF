@@ -85,9 +85,9 @@ public class Game {
     public Round getRound(){return round;}
 
     /**
-     * Handles player input
+     * Handles keyboard input
      */
-    public void handleInput() {
+    public void handleKeyBoardInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.tryToGo(player1.getPlayerPiece().getDir());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -166,6 +166,7 @@ public class Game {
     }
 
     public void executeRound() {
+        // If there are moves to execute, then don't start new round
         if (!moves.isEmpty())
             return;
         //let computer players pick the first five cards as their selected
@@ -187,5 +188,6 @@ public class Game {
     public void executeMove(Move move) {
         performMove(move); //backend execution
         moves.add(move);//add to list of things to do in frontend
+       // gameScreen.executeMove(move); //frontend execution
     }
 }

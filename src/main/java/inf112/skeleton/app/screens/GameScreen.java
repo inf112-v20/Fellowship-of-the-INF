@@ -157,10 +157,9 @@ public class GameScreen implements Screen {
     /**
      * Changes the coordinates of the player based on user input
      */
-
     public void handleKeyboardInput() {
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
-        game.handleInput();
+        game.handleKeyBoardInput();
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.graphics.setWindowedMode(600, 600);
