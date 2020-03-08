@@ -63,4 +63,11 @@ public class PlayerPiece extends DirectionedPiece {
     public void showDeadPlayer() {
         currentCell = deadPlayerCell;
     }
+
+    @Override
+    public String toString() {
+        return "PlayerPiece{" +
+                "playerNumber=" + playerNumber +
+                '}';
+    }
 }

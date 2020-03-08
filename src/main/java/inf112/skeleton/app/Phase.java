@@ -1,6 +1,8 @@
 package inf112.skeleton.app;
 
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.grid.Direction;
+import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
 
 import java.util.*;
@@ -11,8 +13,10 @@ public class Phase {
     private ArrayList<Player> orderedListOfPlayers = new ArrayList<>();
     private int phaseNumber;
     HashMap<Player, Integer> playerAndPriority;
+    private Game game;
 
     public Phase (Game game){
+        this.game = game;
         listOfPlayers = game.getListOfPlayers();
         this.playerAndPriority = new HashMap<>();
     }
@@ -37,7 +41,15 @@ public class Phase {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
             ProgramCard cardThisPhase = player.getSelectedCards().get(phaseNumber);
+
+            Position oldPos = player.getPos();
+            Direction oldDir = player.getPlayerPiece().getDir();
             player.executeCardAction(cardThisPhase);
+            Direction newDir = player.getPlayerPiece().getDir();
+            Position newPos = player.getPos();
+           game.executeMove(new Move(player, oldPos, newPos, oldDir, newDir));
+
+            //game.getMoves().add(new Move(player, oldPos, newPos, oldDir, newDir)); //adds to moves that need to be shown
             System.out.println("Player " + player.getPlayerNumber() + " played card "
                     + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
         }

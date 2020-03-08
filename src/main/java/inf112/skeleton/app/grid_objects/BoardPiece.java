@@ -28,4 +28,6 @@ public abstract class BoardPiece {
     public void setPos(Position pos) {
         this.pos = pos;
     }
+
+
 }

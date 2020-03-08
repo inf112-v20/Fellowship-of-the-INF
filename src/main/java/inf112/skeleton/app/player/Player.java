@@ -2,6 +2,7 @@ package inf112.skeleton.app.player;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.Game;
+import inf112.skeleton.app.Move;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
@@ -102,7 +103,7 @@ public class Player {
         //if position has changed and player isn't dead, update logic grid
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
             playerPiece.setPos(new Position(newX, newY));
-            map.movePlayerToNewPosition(pos, new Position(newX, newY));
+           // map.movePlayerToNewPosition(pos, new Position(newX, newY));
         }
         setPos(newX, newY);
     }
@@ -187,6 +188,7 @@ public class Player {
      * @param programCard to convert to player move
      */
     public void executeCardAction(ProgramCard programCard) {
+        Position oldPos = getPos();
         switch (programCard.getCommand()) {
             case MOVE1:
                 tryToGo(getPlayerPiece().getDir());

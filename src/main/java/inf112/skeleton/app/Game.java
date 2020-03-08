@@ -3,15 +3,22 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
+import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
+import inf112.skeleton.app.screens.GameScreen;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 public class Game {
     private Map map;
@@ -20,10 +27,13 @@ public class Game {
     private Player[] playerList;
     private Round round;
     private final int NUMBER_OF_PLAYERS = 4;
+    private Queue<Move> moves;
+    private GameScreen gameScreen;
 
 
-    public Game(Map map) {
+    public Game(Map map, GameScreen gameScreen) {
         this.map = map;
+        this.gameScreen = gameScreen;
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player1 = new Player(1, this);
         this.playerList = new Player[NUMBER_OF_PLAYERS];
@@ -31,6 +41,7 @@ public class Game {
         map.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
         this.round = new Round(this);
+        this.moves = new LinkedList<>();
     }
 
     public void initiateComputerPlayers() {
@@ -39,6 +50,12 @@ public class Game {
             playerList[playerNumber - 1] = playerToBeInitiated;
             map.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
+    }
+
+    public void performMove(Move move) {
+        Position oldPos = move.getOldPos();
+        Position newPos = move.getNewPos();
+        map.movePlayerToNewPosition(oldPos, newPos);;
     }
 
     public Map getMap() {
@@ -151,11 +168,26 @@ public class Game {
     }
 
     public void executeRound() {
+        if (!moves.isEmpty())
+            return;
         //let computer players pick the first five cards as their selected
         for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
             playerList[playerNumber - 1].pickFirstFiveCards();
         }
         //check all players have hand
         round.startRound();
+    }
+
+    public Queue<Move> getMoves() {
+        return moves;
+    }
+
+    /**
+     * Executes both the back,end and front end version of the move
+     * @param move to execute
+     */
+    public void executeMove(Move move) {
+        performMove(move); //backend execution
+        moves.add(move);//add to list of things to do in frontend
     }
 }

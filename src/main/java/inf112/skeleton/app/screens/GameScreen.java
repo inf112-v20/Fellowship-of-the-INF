@@ -14,12 +14,15 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import inf112.skeleton.app.Move;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.grid.Map;
+import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Game screen at the moment only shows a board with a playerLayer, and a player
@@ -41,6 +44,7 @@ public class GameScreen implements Screen {
     private UIScreen uiScreen;
     private Player player;
     private Game game;
+    private boolean currentMoveIsExecuted;
 
 
     public GameScreen(String mapName) {
@@ -60,8 +64,9 @@ public class GameScreen implements Screen {
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) this.map.getLayers().get("Player");
         Map map = new Map(MAP_WIDTH, MAP_WIDTH, this.map);
-        game = new Game(map);
+        game = new Game(map, this);
         initializePlayers();
+        currentMoveIsExecuted = true;
         //UI gets game deck from game class
         uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game, this);
     }
@@ -105,10 +110,38 @@ public class GameScreen implements Screen {
      * For now they are only movements of player
      */
     public void update() {
-        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
+
+      /*  playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         handleInput();
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
+        */if (movestoExecute() && currentMoveIsExecuted) {
+            currentMoveIsExecuted = false;
+            executeMove();
+        }
     }
+
+    public boolean movestoExecute() {
+        return !game.getMoves().isEmpty();
+    }
+
+    public void executeMove() {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            System.out.println("Timer was interrupted");
+        }
+            Move currentMove = game.getMoves().peek();
+            Player playerToUpdate = currentMove.getPlayer();
+            Position oldPos = currentMove.getOldPos();
+            Position newPos = currentMove.getNewPos();
+            playerLayer.setCell(oldPos.getX(), oldPos.getY(), null);
+            playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //TODO fix direction
+            System.out.println("Frontend executing: " + currentMove);
+
+            game.getMoves().poll();
+            currentMoveIsExecuted = true;
+        }
+
 
     /**
      * Changes the coordinates of the player based on user input
@@ -165,10 +198,10 @@ public class GameScreen implements Screen {
             game.executePlayerHand(programCards);
             playerLayer.setCell( player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
             */
-            erasePlayers();
+           // erasePlayers();
             game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
             game.executeRound();
-            repaintPlayers();
+           // repaintPlayers();
             uiScreen.updateGameLog();
         }
     }
