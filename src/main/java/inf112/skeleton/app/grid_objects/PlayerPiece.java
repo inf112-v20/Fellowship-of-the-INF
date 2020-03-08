@@ -41,23 +41,45 @@ public class PlayerPiece extends DirectionedPiece {
      */
     public void turnAround() {
       turnPieceInOppositeDirection();
-      int newDir = currentCell.getRotation() + 2;
+        turnCellInDirection(dir);
+      /*int newDir = currentCell.getRotation() + 2;
       if (newDir > 3){ newDir -= 4;}
-      currentCell.setRotation(newDir);
+      currentCell.setRotation(newDir);*/
     }
 
     public void turnLeft() {
         rotatePieceLeft();
-        int newDir = currentCell.getRotation() + 1;
+        turnCellInDirection(dir);
+       /* int newDir = currentCell.getRotation() + 1;
         if (newDir > 3){ newDir -= 4;}
-        currentCell.setRotation(newDir);
+        currentCell.setRotation(newDir);*/
     }
 
     public void turnRight() {
         rotatePieceRight();
+        turnCellInDirection(dir);
+        /*
         int newDir = currentCell.getRotation() + 3;
         if (newDir > 3){ newDir -= 4;}
-        currentCell.setRotation(newDir);
+        currentCell.setRotation(newDir);*/
+    }
+
+    public void turnCellInDirection(Direction newDir) {
+        switch (newDir){
+                case NORTH:
+                    currentCell.setRotation(0);
+                    break;
+                case SOUTH:
+                    currentCell.setRotation(2);
+                    break;
+                case WEST:
+                    currentCell.setRotation(1);
+                    break;
+                case EAST:
+                    currentCell.setRotation(3);
+                    break;
+        }
+
     }
 
     public void showDeadPlayer() {

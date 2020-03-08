@@ -82,8 +82,6 @@ public class Game {
         this.player1 = player;
     }
 
-    public void setNewPlayerPos(int x, int y) { }
-
     public Round getRound(){return round;}
 
     /**
@@ -183,7 +181,7 @@ public class Game {
     }
 
     /**
-     * Executes both the back,end and front end version of the move
+     * Executes both the backend and frontend version of the move
      * @param move to execute
      */
     public void executeMove(Move move) {

@@ -1,7 +1,5 @@
 package inf112.skeleton.app;
 
-import java.util.concurrent.TimeUnit;
-
 public class Round {
 
     final int NUMBER_OF_PHASES = 2;
@@ -19,10 +17,7 @@ public class Round {
     public void startRound(){
         for (int i = 0; i < NUMBER_OF_PHASES; i++) {
             System.out.println("PHASE " + (i+1) + " START!");
-           /* while(!game.getMoves().isEmpty() && i != 0) {
-                System.out.println("Moves to execute");
-            }*/
-            phase.executePhase(i);
+            phase.performPhase(i);
         }
     }
 

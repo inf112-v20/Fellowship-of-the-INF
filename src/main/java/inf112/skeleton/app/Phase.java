@@ -21,7 +21,15 @@ public class Phase {
         this.playerAndPriority = new HashMap<>();
     }
 
-    public void executePhase(int phaseNumber) {
+    /**
+     * Executes all things that need to happen in a phase, in order
+     * @param phaseNumber
+     */
+    public void performPhase(int phaseNumber) {
+        executePlayerMoves(phaseNumber);
+    }
+
+    public void executePlayerMoves(int phaseNumber) {
         this.phaseNumber = phaseNumber;
         playerAndPriority = new HashMap<>();
         for (int i = 0; i < listOfPlayers.length ; i++) {
@@ -47,9 +55,7 @@ public class Phase {
             player.executeCardAction(cardThisPhase);
             Direction newDir = player.getPlayerPiece().getDir();
             Position newPos = player.getPos();
-           game.executeMove(new Move(player, oldPos, newPos, oldDir, newDir));
-
-            //game.getMoves().add(new Move(player, oldPos, newPos, oldDir, newDir)); //adds to moves that need to be shown
+            game.executeMove(new Move(player, oldPos, newPos, oldDir, newDir));
             System.out.println("Player " + player.getPlayerNumber() + " played card "
                     + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
         }

@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import inf112.skeleton.app.Move;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.Game;
+import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
@@ -107,40 +108,46 @@ public class GameScreen implements Screen {
 
     /**
      * Update all changes to board
-     * For now they are only movements of player
+     *
+     * If there are moves to execute, they are executed with a delay.
+     * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
-
-      /*  playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
+        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         handleInput();
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
-        */if (movestoExecute() && currentMoveIsExecuted) {
+        if (movesToExecute() && currentMoveIsExecuted) {
             currentMoveIsExecuted = false;
+            delayForSeconds(1); //add delay
             executeMove();
         }
     }
 
-    public boolean movestoExecute() {
+    /**
+     * @return true if there are frontend moves to execute
+     */
+    public boolean movesToExecute() {
         return !game.getMoves().isEmpty();
     }
 
+    /**
+     * This method executed the move in the front of the movesToExecute queue.
+     * It has a delay so that moves can be shown one by one
+     */
     public void executeMove() {
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            System.out.println("Timer was interrupted");
-        }
-            Move currentMove = game.getMoves().peek();
-            Player playerToUpdate = currentMove.getPlayer();
-            Position oldPos = currentMove.getOldPos();
-            Position newPos = currentMove.getNewPos();
-            playerLayer.setCell(oldPos.getX(), oldPos.getY(), null);
-            playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //TODO fix direction
-            System.out.println("Frontend executing: " + currentMove);
+        Move currentMove = game.getMoves().peek();
+        Player playerToUpdate = currentMove.getPlayer();
+        Position oldPos = currentMove.getOldPos();
+        Position newPos = currentMove.getNewPos();
+        Direction newDir = currentMove.getNewDir();
+        playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the correct direction
+        playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
+        playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
+        System.out.println("Frontend executing: " + currentMove);
 
-            game.getMoves().poll();
-            currentMoveIsExecuted = true;
-        }
+        game.getMoves().poll(); //remove move once excecuted
+        currentMoveIsExecuted = true;
+    }
 
 
     /**
@@ -193,15 +200,8 @@ public class GameScreen implements Screen {
      */
     public void executeLockIn(ArrayList<ProgramCard> programCards) {
         if (programCards != null) {
-            /*
-            playerLayer.setCell( player.getPos().getX(), player.getPos().getY(), null);
-            game.executePlayerHand(programCards);
-            playerLayer.setCell( player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
-            */
-           // erasePlayers();
             game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
             game.executeRound();
-           // repaintPlayers();
             uiScreen.updateGameLog();
         }
     }
@@ -215,6 +215,17 @@ public class GameScreen implements Screen {
     public void repaintPlayers() {
         for (Player player : game.getListOfPlayers()) {
             playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
+        }
+    }
+
+    /**
+     * @param secondsOfDelay number of seconds delay should last
+     */
+    public void delayForSeconds(int secondsOfDelay) {
+        try {
+            TimeUnit.SECONDS.sleep(secondsOfDelay);
+        } catch (InterruptedException e) {
+            System.out.println("Timer was interrupted");
         }
     }
 }
