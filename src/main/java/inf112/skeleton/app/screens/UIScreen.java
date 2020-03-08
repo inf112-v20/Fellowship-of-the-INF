@@ -23,8 +23,8 @@ import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
 
-//TODO add comments to this class
 public class UIScreen{
+    private ScoreBoardScreen scoreBoardScreen;
     private Stage stage;
     private float width;
     private float height;
@@ -40,6 +40,7 @@ public class UIScreen{
     public UIScreen(float width, Game game) {
         this.width = width;
         this.game = game;
+        this.scoreBoardScreen = new ScoreBoardScreen(game);
         height = width * 0.5f;
         player = game.getListOfPlayers()[0]; //Should be made more general
         stage = new Stage();
@@ -156,6 +157,7 @@ public class UIScreen{
                 }
             }
         }
+        scoreBoardScreen.update();
     }
 
     /**
@@ -335,5 +337,7 @@ public class UIScreen{
     public Stage getStage() {
         return stage;
     }
+
+    public ScoreBoardScreen getScoreBoardScreen(){return scoreBoardScreen;}
 }
 

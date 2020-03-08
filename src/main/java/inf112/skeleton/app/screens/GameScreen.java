@@ -44,6 +44,7 @@ public class GameScreen implements Screen {
     private UIScreen uiScreen;
     private Player player;
     private Game game;
+    private ScoreBoardScreen scoreBoardScreen;
 
     public GameScreen(String mapName) {
         mapLoader = new TmxMapLoader();
@@ -82,6 +83,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        scoreBoardScreen = uiScreen.getScoreBoardScreen();
         stage = uiScreen.getStage();
         Gdx.input.setInputProcessor(stage);
     }
@@ -122,6 +124,15 @@ public class GameScreen implements Screen {
      */
 
     public void handleInput() {
+        if(Gdx.input.isKeyPressed(Input.Keys.TAB)){
+            stage = scoreBoardScreen.getStage();
+            stage.setViewport(gridPort);
+        }
+        else {
+            stage = uiScreen.getStage();
+            stage.setViewport(gridPort);
+        }
+
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         game.handleInput();
         uiScreen.handleInput();
