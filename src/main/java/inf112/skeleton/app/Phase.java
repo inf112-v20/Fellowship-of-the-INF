@@ -19,6 +19,7 @@ public class Phase {
         this.game = game;
         listOfPlayers = game.getListOfPlayers();
         this.playerAndPriority = new HashMap<>();
+        this.phaseNumber = 0;
     }
 
     /**
@@ -26,11 +27,17 @@ public class Phase {
      * @param phaseNumber
      */
     public void performPhase(int phaseNumber) {
-        executePlayerMoves(phaseNumber);
+        this.phaseNumber = phaseNumber;
+        moveRobots();
+        expressConveyorBeltsMoveOne();
+        expressAndNormalConveyorBeltsMoveOne();
+        pushersPush();
+        gearsRotate();
+        lasersFire();
+        touchCheckPoints();
     }
 
-    public void executePlayerMoves(int phaseNumber) {
-        this.phaseNumber = phaseNumber;
+    public void moveRobots() {
         playerAndPriority = new HashMap<>();
         for (int i = 0; i < listOfPlayers.length ; i++) {
             Player player = listOfPlayers[i];
@@ -59,8 +66,26 @@ public class Phase {
             System.out.println("Player " + player.getPlayerNumber() + " played card "
                     + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
         }
-
     }
+
+    private void touchCheckPoints() {
+    }
+
+    private void lasersFire() {
+    }
+
+    private void gearsRotate() {
+    }
+
+    private void pushersPush() {
+    }
+
+    private void expressAndNormalConveyorBeltsMoveOne() {
+    }
+
+    private void expressConveyorBeltsMoveOne() {
+    }
+
     public ArrayList<Player> getOrderedListOfPlayers(){return orderedListOfPlayers;}
 
     public int getPhaseNumber(){return phaseNumber;}

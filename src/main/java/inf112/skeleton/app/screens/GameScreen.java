@@ -113,9 +113,13 @@ public class GameScreen implements Screen {
      * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
-        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
-        handleInput();
-        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
+        //only handle keyboard inpuut if there are no moves to execute
+        if (!movesToExecute()) {
+            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
+            handleKeyboardInput();
+            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
+        }
+        //only execute moves if there are any, the the current one hasn't been executed yet
         if (movesToExecute() && currentMoveIsExecuted) {
             currentMoveIsExecuted = false;
             delayForSeconds(1); //add delay
@@ -145,7 +149,7 @@ public class GameScreen implements Screen {
         playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
         System.out.println("Frontend executing: " + currentMove);
 
-        game.getMoves().poll(); //remove move once excecuted
+        game.getMoves().poll(); //remove move once executed
         currentMoveIsExecuted = true;
     }
 
@@ -154,7 +158,7 @@ public class GameScreen implements Screen {
      * Changes the coordinates of the player based on user input
      */
 
-    public void handleInput() {
+    public void handleKeyboardInput() {
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         game.handleInput();
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());

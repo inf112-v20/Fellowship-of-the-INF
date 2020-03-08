@@ -2,7 +2,7 @@ package inf112.skeleton.app;
 
 public class Round {
 
-    final int NUMBER_OF_PHASES = 2;
+    final int NUMBER_OF_PHASES = 5;
     private Phase phase;
     private Game game;
 
