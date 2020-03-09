@@ -92,4 +92,6 @@ public class PlayerPiece extends DirectionedPiece {
                 "playerNumber=" + playerNumber +
                 '}';
     }
+
+    public void showAlivePlayer() { currentCell = playerCell; }
 }

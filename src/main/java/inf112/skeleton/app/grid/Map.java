@@ -14,6 +14,12 @@ public class Map {
     //TODO unused atm
     private int numberOfLayers;
 
+    //The number of players i the game
+    private int numberOfPlayers;
+
+    //A list of the locations of the spawn points
+    private ArrayList<Position> spawnPointPositions;
+
     //Tiled layers
     private TiledMapTileLayer floorLayer;
     private TiledMapTileLayer repairLayer;
@@ -52,7 +58,11 @@ public class Map {
         grid = new ArrayList[width][height];
         this.width = grid[0].length;
         this.height = grid.length;
+        numberOfPlayers = 8;
         numberOfLayers = map.getLayers().getCount(); //not used right now
+
+        //Make a list of what will be the first player spawns
+        initializeSpawns();
 
         //extract each layer from the tiled map
         floorLayer = (TiledMapTileLayer) map.getLayers().get("Floor");
@@ -133,6 +143,9 @@ public class Map {
             int id = layer.getCell(x, y).getTile().getId();
             //if cell in layer is not empty, generate the corresponding BoardPiece and add to grid
             BoardPiece piece = boardPieceGenerator.generate(id);
+
+            isThisASpawnPoint(id, piece, x, y);
+
             //check returned piece isn't a null
             int size = grid[x][y].size();
             if (piece != null) {
@@ -224,4 +237,20 @@ public class Map {
         }
         return null;
     }
+
+    private void initializeSpawns() {
+        spawnPointPositions = new ArrayList<>();
+        for (int i=0; i<numberOfPlayers; i++) {
+            spawnPointPositions.add(null);
+        }
+    }
+
+    private void isThisASpawnPoint(int id, BoardPiece piece, int x, int y) {
+        //If it is a spawnPoint tile, add it to a list of start positions
+        if (id >= 121 && id <= 132) {
+            spawnPointPositions.set(((SpawnPointPiece) piece).getSpawnNumber()-1, new Position(x,y));
+        }
+    }
+
+    public ArrayList<Position> getSpawnPointPositions() { return spawnPointPositions; }
 }

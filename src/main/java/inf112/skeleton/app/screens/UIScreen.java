@@ -80,7 +80,7 @@ public class UIScreen{
         float alpha; //opacity of the image
         Color c = lifeActors[0].getColor();
         for (int i = 0; i < 3 ; i++) {
-            if (i > player.getLifes() - 1) {alpha = 0.2f; }
+            if (i > player.getLives() - 1) {alpha = 0.2f; }
             else {alpha = 1;}
             lifeActors[i].setColor(c.r, c.g, c.b, alpha);
         }
