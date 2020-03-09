@@ -122,8 +122,8 @@ public class GameScreen implements Screen {
         //only execute moves if there are any, the the current one hasn't been executed yet
         if (movesToExecute() && currentMoveIsExecuted) {
             currentMoveIsExecuted = false;
-            delayForSeconds(1); //add delay
             executeMove();
+            delayForSeconds(1); //add delay
         }
     }
 
@@ -135,19 +135,21 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * This method executed the move in the front of the movesToExecute queue.
+     * This method executed the list of moves in the front end of the movesToExecute queue.
      * It has a delay so that moves can be shown one by one
      */
     public void executeMove() {
-        Move currentMove = game.getMoves().peek();
-        Player playerToUpdate = currentMove.getPlayer();
-        Position oldPos = currentMove.getOldPos();
-        Position newPos = currentMove.getNewPos();
-        Direction newDir = currentMove.getNewDir();
-        playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the correct direction
-        playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
-        playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
-        System.out.println("Frontend executing: " + currentMove);
+        ArrayList<Move> firstSetOfMoves = game.getMoves().peek();
+        for (Move currentMove : firstSetOfMoves) {
+            Player playerToUpdate = currentMove.getPlayer();
+            Position oldPos = currentMove.getOldPos();
+            Position newPos = currentMove.getNewPos();
+            Direction newDir = currentMove.getNewDir();
+            playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the correct direction
+            playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
+            playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
+            System.out.println("Frontend executing: " + currentMove);
+        }
 
         game.getMoves().poll(); //remove move once executed
         currentMoveIsExecuted = true;

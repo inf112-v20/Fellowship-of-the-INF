@@ -56,17 +56,30 @@ public class Phase {
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
-            ProgramCard cardThisPhase = player.getSelectedCards().get(phaseNumber);
-            Position oldPos = player.getPos();
-            Direction oldDir = player.getPlayerPiece().getDir();
-            player.executeCardAction(cardThisPhase); //updates the state of the player, not the board
-            Direction newDir = player.getPlayerPiece().getDir();
-            Position newPos = player.getPos();
-            Move move = new Move(player, oldPos, newPos, oldDir, newDir);
-            game.executeMove(move); //executes backend, and adds to list of frontend moves to show
-            System.out.println("Player " + player.getPlayerNumber() + " played card "
-                    + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
+            ArrayList<Move> movesToExecuteTogether = generateMovesToExecuteTogether(player);
+            game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
         }
+    }
+
+    /**
+     * Even though only one player executes a move, it may affect other robots on the map.
+     * Therefore we generate a list of moves that need to be executed together.
+     * @param player that is executing a move
+     * @return list of moves to execute together, in the other they should be executed
+     */
+    private ArrayList<Move> generateMovesToExecuteTogether(Player player){
+        ProgramCard cardThisPhase = player.getSelectedCards().get(phaseNumber);
+        Position oldPos = player.getPos();
+        Direction oldDir = player.getPlayerPiece().getDir();
+        player.executeCardAction(cardThisPhase); //updates the state of the player, not the board
+        Direction newDir = player.getPlayerPiece().getDir();
+        Position newPos = player.getPos();
+        Move move = new Move(player, oldPos, newPos, oldDir, newDir);
+        ArrayList<Move> movesToExecuteTogether = new ArrayList<>();
+        movesToExecuteTogether.add(move);
+        System.out.println("Player " + player.getPlayerNumber() + " played card "
+                + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
+        return movesToExecuteTogether;
     }
 
     private void touchCheckPoints() {

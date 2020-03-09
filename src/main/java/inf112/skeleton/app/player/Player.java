@@ -123,7 +123,6 @@ public class Player {
         if (isDead()) return false;
         for (int i = 0; i < pieceGrid[x][y].size(); i++) {
             currPiece = pieceGrid[x][y].get(i);
-
             switch (dir) {
                 case EAST:
                     if (!isLegalMoveInDirection(x+1, y, currPiece, dir, i)) { return false; }

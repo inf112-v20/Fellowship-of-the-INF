@@ -27,7 +27,7 @@ public class Game {
     private Player[] playerList;
     private Round round;
     private final int NUMBER_OF_PLAYERS = 4;
-    private Queue<Move> moves;
+    private Queue<ArrayList<Move>> moves;
     private GameScreen gameScreen;
 
 
@@ -52,10 +52,12 @@ public class Game {
         }
     }
 
-    public void performMove(Move move) {
-        Position oldPos = move.getOldPos();
-        Position newPos = move.getNewPos();
-        map.movePlayerToNewPosition(oldPos, newPos);;
+    public void performMove(ArrayList<Move> moves) {
+        for (Move move : moves) {
+            Position oldPos = move.getOldPos();
+            Position newPos = move.getNewPos();
+            map.movePlayerToNewPosition(oldPos, newPos);
+        }
     }
 
     public Map getMap() {
@@ -177,17 +179,17 @@ public class Game {
         round.startRound();
     }
 
-    public Queue<Move> getMoves() {
+    public Queue<ArrayList<Move>> getMoves() {
         return moves;
     }
 
     /**
      * Executes both the backend and frontend version of the move
-     * @param move to execute
+     * @param moves to execute
      */
-    public void executeMove(Move move) {
-        performMove(move); //backend execution
-        moves.add(move);//add to list of things to do in frontend
+    public void executeMoves(ArrayList<Move> moves) {
+        performMove(moves); //backend execution
+        this.moves.add(moves);//add to list of things to do in frontend
        // gameScreen.executeMove(move); //frontend execution
     }
 }
