@@ -22,12 +22,13 @@ public class MainMenuScreen implements Screen {
     private Image background;
     private Image logo;
     private ImageButton playButton;
+    private ImageButton testButton;
     private ImageButton exitButton;
 
     public MainMenuScreen (RoboRallyDemo game) {
         this.game = game;
-        this.width = 1200; // width and height from Main.java
-        this.height = 1200;
+        this.width = Gdx.graphics.getWidth(); // width and height from Main.java
+        this.height = Gdx.graphics.getHeight();
     }
 
     @Override
@@ -35,12 +36,14 @@ public class MainMenuScreen implements Screen {
         stage = new Stage();
 
         // picture = all actors on stage
+        // Background
         Sprite picture = new Sprite(new Texture("menu_background.png"));
         background = new Image(new SpriteDrawable(picture));
         background.setSize(width, height);
         background.setPosition(0, 0);
         stage.addActor(background);
 
+        // Logo
         picture = new Sprite(new Texture("RoboRally_logo.png"));
         logo = new Image(new SpriteDrawable(picture));
         logo.setSize(logo.getWidth()*1.5f, logo.getHeight()*2);
@@ -58,6 +61,8 @@ public class MainMenuScreen implements Screen {
             }
         });
         stage.addActor(playButton);
+
+        // Test button
 
         // Exit button
         picture = new Sprite(new Texture("exit_button_up.png"));
