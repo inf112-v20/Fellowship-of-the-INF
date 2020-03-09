@@ -44,16 +44,20 @@ public class MainMenuScreen implements Screen {
         stage.addActor(background);
 
         // Logo
+        int yPadding = 50;
         picture = new Sprite(new Texture("RoboRally_logo.png"));
         logo = new Image(new SpriteDrawable(picture));
         logo.setSize(logo.getWidth()*1.5f, logo.getHeight()*2);
-        logo.setPosition((width-logo.getWidth())/2, height-475);
+        logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));
         stage.addActor(logo);
 
+        // TODO dispose of Play/Exit button, add new buttons to stage (choose maps)
         // Play button
+        yPadding = 100;
+        int xPadding = 100;
         picture = new Sprite(new Texture("play_button_up.png"));
         playButton = new ImageButton(new SpriteDrawable(picture));
-        playButton.setPosition(125,150);
+        playButton.setPosition(xPadding, yPadding);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
@@ -62,12 +66,10 @@ public class MainMenuScreen implements Screen {
         });
         stage.addActor(playButton);
 
-        // Test button
-
         // Exit button
         picture = new Sprite(new Texture("exit_button_up.png"));
         exitButton = new ImageButton(new SpriteDrawable(picture));
-        exitButton.setPosition((width-exitButton.getWidth())-125,150);
+        exitButton.setPosition((width-xPadding)-exitButton.getWidth(), yPadding);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
