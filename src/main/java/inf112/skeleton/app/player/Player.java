@@ -38,14 +38,13 @@ public class Player {
         this.pieceGrid = map.getGrid();
         this.game = game;
         this.damage = 0;
+        this.checkpointsVisited = 0;
         GameDeck gameDeck = game.getGameDeck();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
         this.selectedCards = new ArrayList<>();
 
-        //player is player is placed at bottom of board in position of player number
-        int playerStartPositionX = (playerNumber-1)*2;
-        int playerStartPositionY = 0;
-        this.spawnPoint = new Position(playerStartPositionX, playerStartPositionY);
+        //Find the spawn point of the player, and set spawnPoint position to the first spawn
+        findFirstSpawnPoint();
 
         this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, playerNumber);
         this.isDead = false;
@@ -111,6 +110,7 @@ public class Player {
         else if (lives>=0 && isDead()) {
             respawnPlayer();
         }
+        //TODO Add what happens when a player runs out of lives
         //Handle what happens if the player runs out of lives
         else {
             setPos(newX, newY);
@@ -316,17 +316,11 @@ public class Player {
         System.out.println("Lives: " + lives);
     }
 
-    //TODO Find out how to this
-    /**
+    //Get the spawn point position from a list of spawn points
     public void findFirstSpawnPoint() {
-        Position spawn = null;
-        for (int x=0; x<map.getWidth(); x++) {
-            for (int y=0; y<map.getHeight(); y++) {
-                //map.getPieceType(new Position(x,y), );
-            }
-        }
+        ArrayList<Position> spawns = map.getSpawnPointPositions();
+        spawnPoint = new Position(spawns.get(playerNumber-1).getX(), spawns.get(playerNumber-1).getY());
     }
-     */
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
     public void gainLife(){lives++; System.out.println("Lives: " + lives);}
