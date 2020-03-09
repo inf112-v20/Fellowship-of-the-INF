@@ -54,23 +54,29 @@ public class Player {
 
     /**
      * Getter for position
+
      * @return position of player
      */
     public Position getPos() {
         return playerPiece.getPos();
     }
 
-    public void setPos(int x, int y) { playerPiece.setPos(new Position(x, y)); }
+    public void setPos(int x, int y) {
+        playerPiece.setPos(new Position(x, y));
+    }
 
     /**
      * Getter for player
+     *
      * @return player
      */
     public TiledMapTileLayer.Cell getPlayerCell() {
         return playerPiece.getCurrentCell();
     }
 
-    public TiledMapTileLayer.Cell getStandardPlayerCell() { return playerPiece.getPlayerCell(); }
+    public TiledMapTileLayer.Cell getStandardPlayerCell() {
+        return playerPiece.getPlayerCell();
+    }
 
     /**
      * Tries to move the player in a new direction
@@ -137,16 +143,24 @@ public class Player {
             currPiece = pieceGrid[x][y].get(i);
             switch (dir) {
                 case EAST:
-                    if (!isLegalMoveInDirection(x+1, y, currPiece, dir, i)) { return false; }
+                    if (!isLegalMoveInDirection(x + 1, y, currPiece, dir, i)) {
+                        return false;
+                    }
                     break;
                 case WEST:
-                    if (!isLegalMoveInDirection(x-1, y, currPiece, dir, i)) { return false; }
+                    if (!isLegalMoveInDirection(x - 1, y, currPiece, dir, i)) {
+                        return false;
+                    }
                     break;
                 case NORTH:
-                    if (!isLegalMoveInDirection(x, y+1, currPiece, dir, i)) { return false; }
+                    if (!isLegalMoveInDirection(x, y + 1, currPiece, dir, i)) {
+                        return false;
+                    }
                     break;
                 case SOUTH:
-                    if (!isLegalMoveInDirection(x, y-1, currPiece, dir, i)) { return false; }
+                    if (!isLegalMoveInDirection(x, y - 1, currPiece, dir, i)) {
+                        return false;
+                    }
                     break;
             }
         }
@@ -196,6 +210,7 @@ public class Player {
 
     /**
      * Player executes the move on the given card
+     *
      * @param programCard to convert to player move
      */
     public void executeCardAction(ProgramCard programCard) {
@@ -245,11 +260,17 @@ public class Player {
         return playerPiece;
     }
 
-    public void turnPlayerAround() { playerPiece.turnAround(); }
+    public void turnPlayerAround() {
+        playerPiece.turnAround();
+    }
 
-    public void turnPlayerLeft() { playerPiece.turnLeft(); }
+    public void turnPlayerLeft() {
+        playerPiece.turnLeft();
+    }
 
-    public void turnPlayerRight() { playerPiece.turnRight(); }
+    public void turnPlayerRight() {
+        playerPiece.turnRight();
+    }
 
     public ArrayList<ProgramCard> getPlayerHandDeck() {
         return playerHandDeck;
@@ -270,7 +291,7 @@ public class Player {
     /**
      * Sets the first five cards in the given hand of nine cards, to be the chosen five cards in a round
      */
-   public void pickFirstFiveCards() {
+    public void pickFirstFiveCards() {
         int NUMBER_OF_CARDS_TO_CHOOSE = 5;
         ArrayList<ProgramCard> firstFiveCards = new ArrayList<>();
         if (playerHandDeck.size() >= NUMBER_OF_CARDS_TO_CHOOSE) {
@@ -287,9 +308,14 @@ public class Player {
                 "playerNumber=" + playerNumber +
                 '}';
     }
-    public Position getSpawnPoint() { return spawnPoint; }
 
-    public void setSpawnPoint(int x, int y) { spawnPoint = new Position(x, y); }
+    public Position getSpawnPoint() {
+        return spawnPoint;
+    }
+
+    public void setSpawnPoint(int x, int y) {
+        spawnPoint = new Position(x, y);
+    }
 
     /**
      * Put the player back to it's respawn position and update all maps
@@ -302,39 +328,62 @@ public class Player {
         setPos(spawnPoint.getX(), spawnPoint.getY());
     }
 
-    public void takeDamage(int amountOfDamage){ damage += amountOfDamage; System.out.println("Damage: " + damage); }
+    public void takeDamage(int amountOfDamage) {
+        damage += amountOfDamage;
+        System.out.println("Damage: " + damage);
+    }
 
-    public void repairDamage(int amountOfRepairs){damage -= amountOfRepairs; System.out.println("Damage: " + damage);}
+    public void repairDamage(int amountOfRepairs) {
+        damage -= amountOfRepairs;
+        System.out.println("Damage: " + damage);
+    }
 
-    public int getDamage(){return damage;}
+    public int getDamage() {
+        return damage;
+    }
 
     /**
      * Remove a life from the life counter, and turn the player cell into a dead player cell
      */
-    public void loseLife(){
+    public void loseLife() {
         lives--;
         isDead = true;
         playerPiece.showDeadPlayer();
         System.out.println("Lives: " + lives);
     }
 
-    //Get the spawn point position from a list of spawn points
+    /**
+     * Get the spawn point position from a list of spawn points
+     */
     public void findFirstSpawnPoint() {
         ArrayList<Position> spawns = map.getSpawnPointPositions();
-        spawnPoint = new Position(spawns.get(playerNumber-1).getX(), spawns.get(playerNumber-1).getY());
+        spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
     }
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
-    public void gainLife(){lives++; System.out.println("Lives: " + lives);}
+    public void gainLife() {
+        lives++;
+        System.out.println("Lives: " + lives);
+    }
 
-    public int getLives(){return lives;}
+    public int getLives() {
+        return lives;
+    }
 
-    public void visitedCheckpoint(){checkpointsVisited++; System.out.println("Checkpoints: " + checkpointsVisited);}
+    public void visitedCheckpoint() {
+        checkpointsVisited++;
+        System.out.println("Checkpoints: " + checkpointsVisited);
+    }
 
     //TODO remove this later since it is not possible to undo a checkpoint/flag. This is for testing purposes only.
-    public void removeCheckpoint(){checkpointsVisited--; System.out.println("Checkpoints: " + checkpointsVisited);}
+    public void removeCheckpoint() {
+        checkpointsVisited--;
+        System.out.println("Checkpoints: " + checkpointsVisited);
+    }
 
-    public int getCheckpointsVisited(){return checkpointsVisited;}
+    public int getCheckpointsVisited() {
+        return checkpointsVisited;
+    }
 
 
 }

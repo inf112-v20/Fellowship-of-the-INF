@@ -244,9 +244,18 @@ public class Map {
         }
     }
 
+    /**
+     * TODO add comments @Lena
+     * @param id
+     * @param piece
+     * @param x
+     * @param y
+     */
     private void isThisASpawnPoint(int id, BoardPiece piece, int x, int y) {
         //If it is a spawnPoint tile, add it to a list of start positions
-        if (id >= 121 && id <= 132) {
+        int MIN_SPAWNPOINT_NUMBER = 121;
+        int MAX_SPAWNPOINT_NUMBER = 132;
+        if (id >= MIN_SPAWNPOINT_NUMBER && id <= MAX_SPAWNPOINT_NUMBER) {
             spawnPointPositions.set(((SpawnPointPiece) piece).getSpawnNumber()-1, new Position(x,y));
         }
     }
