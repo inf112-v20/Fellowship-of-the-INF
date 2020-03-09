@@ -105,25 +105,24 @@ public class Map {
      * because of the way the grid is initialized.
      */
     public void readTiledMapToPieceGrid() {
-        for (int x = 0; x < height; x++) {
-            for (int y = width - 1; y >= 0; y--) {
-                grid[y][x] = new ArrayList<BoardPiece>();
+        for (int y = width - 1; y >= 0; y--) {
+            for (int x = 0; x < height; x++) {
+                grid[x][y] = new ArrayList<BoardPiece>();
                 //create new boardpieceGenerator for appropriate coordinate
-                boardPieceGenerator = new BoardPieceGenerator(y, x);
-
-                setPieceInGrid(floorLayer, floorLayerIndex, y, x);
-                setPieceInGrid(repairLayer, repairLayerIndex, y, x);
-                setPieceInGrid(opCardLayer, opCardLayerIndex, y, x);
-                setPieceInGrid(abyssLayer, abyssLayerIndex, y, x);
-                setPieceInGrid(conveyorBeltLayer, conveyorBeltLayerIndex, y, x);
-                setPieceInGrid(expressBeltLayer, expressBeltLayerIndex, y, x);
-                setPieceInGrid(cogLayer, cogLayerIndex, y, x);
-                setPieceInGrid(pusherLayer, pusherLayerIndex, y, x);
-                setPieceInGrid(laserLayer, laserLayerIndex, y, x);
-                setPieceInGrid(laserSourceLayer, laserSourceLayerIndex, y, x);
-                setPieceInGrid(wallLayer, wallLayerIndex, y, x);
-                setPieceInGrid(flagLayer, flagLayerIndex, y, x);
-                setPieceInGrid(playerLayer, playerLayerIndex, y, x);
+                boardPieceGenerator = new BoardPieceGenerator(x, y);
+                setPieceInGrid(floorLayer, floorLayerIndex, x, y);
+                setPieceInGrid(repairLayer, repairLayerIndex, x, y);
+                setPieceInGrid(opCardLayer, opCardLayerIndex, x, y);
+                setPieceInGrid(abyssLayer, abyssLayerIndex, x, y);
+                setPieceInGrid(conveyorBeltLayer, conveyorBeltLayerIndex, x, y);
+                setPieceInGrid(expressBeltLayer, expressBeltLayerIndex, x, y);
+                setPieceInGrid(cogLayer, cogLayerIndex, x, y);
+                setPieceInGrid(pusherLayer, pusherLayerIndex, x, y);
+                setPieceInGrid(laserLayer, laserLayerIndex, x, y);
+                setPieceInGrid(laserSourceLayer, laserSourceLayerIndex, x, y);
+                setPieceInGrid(wallLayer, wallLayerIndex, x, y);
+                setPieceInGrid(flagLayer, flagLayerIndex, x, y);
+                setPieceInGrid(playerLayer, playerLayerIndex, x, y);
             }
         }
     }
