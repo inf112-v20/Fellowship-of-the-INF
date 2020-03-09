@@ -44,6 +44,9 @@ public class UIScreen{
         height = width * 0.5f;
         player = game.getListOfPlayers()[0]; //Should be made more general
         stage = new Stage();
+        Texture texture = new Texture(Gdx.files.internal("background.png"));
+        TextureRegion textureRegion = new TextureRegion(texture);
+        createImage(textureRegion, 1, width*0.5f, 0, 1);
         createLockInButton();
         createPlayerPicture();
         createDamageTokens();
@@ -164,6 +167,9 @@ public class UIScreen{
      * Creates the player picture and the name of the player above it.
      */
     public void createPlayerPicture(){
+        Texture backgroundTexture = new Texture(Gdx.files.internal("profilepicture.png"));
+        TextureRegion backgroundPicture = new TextureRegion(backgroundTexture);
+        createImage(backgroundPicture, 1, width *0.5f, height*0.75f, 0.85f);
         TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
         createImage(playerPicture, 1, width *0.5f, height*0.75f, 1);
         String playerName  = "Player " + player.getPlayerNumber();
