@@ -64,7 +64,7 @@ public class GameScreen implements Screen {
         mapRenderer = new OrthogonalTiledMapRenderer(this.map);
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) this.map.getLayers().get("Player");
-        Map map = new Map(MAP_WIDTH, MAP_WIDTH, this.map);
+        Map map = new Map(MAP_WIDTH, MAP_HEIGHT, this.map);
         game = new Game(map, this);
         initializePlayers();
         currentMoveIsExecuted = true;
