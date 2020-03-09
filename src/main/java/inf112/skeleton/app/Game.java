@@ -39,7 +39,6 @@ public class Game {
         playerList[0] = player1;
         map.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
-        this.round = new Round(this);
         this.moves = new LinkedList<>();
     }
 
@@ -162,6 +161,7 @@ public class Game {
 
     public void executeRound() {
         // If there are moves to execute, then don't start new round
+        this.round = new Round(this);
         if (!moves.isEmpty())
             return;
         //let computer players pick the first five cards as their selected

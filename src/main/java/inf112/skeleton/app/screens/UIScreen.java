@@ -79,7 +79,7 @@ public class UIScreen{
      * Creates new cardbuttons for the new playerhand
      */
     public void newRound(){
-        game.newRound();
+        game.executeRound();
         lockInButton.setTouchable(Touchable.disabled);
         removeGameLog();
         cardButton = new CardButton(player, width, height, stage, lockInButton);
@@ -337,7 +337,9 @@ public class UIScreen{
                 cardButton.getLeftOverCardButtons().get(i).remove();
             }
         }
+        player.setSelectedCards(cardButton.getSelectedCards());
         game.getRound().nextPhase();
+        //updateGameLog();
     }
 
     public Stage getStage() {

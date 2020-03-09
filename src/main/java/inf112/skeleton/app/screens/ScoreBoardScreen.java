@@ -83,7 +83,7 @@ public class ScoreBoardScreen {
         table.row();
         for (int i = 0; i < game.getListOfPlayers().length ; i++) {
             Player player = game.getListOfPlayers()[i];
-            String text = "Player " + player.getPlayerNumber() + "          " + player.getLifes() + "                   "
+            String text = "Player " + player.getPlayerNumber() + "          " + player.getLives() + "                   "
                     + player.getDamage() + "                     " + player.getCheckpointsVisited();
             Label playerLabel;
             if(i%2 == 0){ playerLabel = new Label(text, evenRowStyle); }

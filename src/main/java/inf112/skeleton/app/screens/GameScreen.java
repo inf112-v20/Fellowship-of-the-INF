@@ -217,6 +217,7 @@ public class GameScreen implements Screen {
      *
      * @param programCards to execute
      */
+    /*
     public void executeLockIn(ArrayList<ProgramCard> programCards) {
         if (programCards != null) {
             game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
@@ -224,6 +225,8 @@ public class GameScreen implements Screen {
             uiScreen.updateGameLog();
         }
     }
+
+     */
 
     public void erasePlayers() {
         for (Player player : game.getListOfPlayers()) {
