@@ -7,13 +7,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
-import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +23,7 @@ public class Game {
     private GameDeck gameDeck;
     private Player player1;
     private Player[] playerList;
+    private int roundNumber = 0;
     private Round round;
     private final int NUMBER_OF_PLAYERS = 4;
     private Queue<ArrayList<Move>> moves;
@@ -68,9 +67,7 @@ public class Game {
         this.map = map;
     }
 
-    public GameDeck getGameDeck() {
-        return gameDeck;
-    }
+    public GameDeck getGameDeck() { return gameDeck; }
 
     public void setGameDeck(GameDeck gameDeck) {
         this.gameDeck = gameDeck;
@@ -93,9 +90,7 @@ public class Game {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.tryToGo(player1.getPlayerPiece().getDir());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            player1.turnPlayerAround();
-            player1.tryToGo(player1.getPlayerPiece().getDir());
-            player1.turnPlayerAround();
+            player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             player1.turnPlayerLeft();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
@@ -163,9 +158,7 @@ public class Game {
         }
     }
 
-    public Player[] getListOfPlayers() {
-        return playerList;
-    }
+    public Player[] getListOfPlayers() { return playerList; }
 
     public void executeRound() {
         // If there are moves to execute, then don't start new round
@@ -175,6 +168,8 @@ public class Game {
         for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
             playerList[playerNumber - 1].pickFirstFiveCards();
         }
+        roundNumber++;
+        round.setRoundNumber(roundNumber);
         //check all players have hand
         round.startRound();
     }

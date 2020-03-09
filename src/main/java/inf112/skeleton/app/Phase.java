@@ -4,45 +4,55 @@ import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
-
+import inf112.skeleton.app.BoardElementsMove;
 import java.util.*;
 
 public class Phase {
 
     private Player[] listOfPlayers;
-    private ArrayList<Player> orderedListOfPlayers = new ArrayList<>();
+    private ArrayList<Player> orderedListOfPlayers;
     private int phaseNumber;
     HashMap<Player, Integer> playerAndPriority;
     private Game game;
 
     public Phase (Game game){
         this.game = game;
-        listOfPlayers = game.getListOfPlayers();
+        this.listOfPlayers = game.getListOfPlayers();
         this.playerAndPriority = new HashMap<>();
         this.phaseNumber = 0;
     }
 
     /**
-     * Executes all things that need to happen in a phase, in order
-     * @param phaseNumber
+     * Executes a phase which in order consists of:
+     * Executing programcards
+     * Move players on expressbelts
+     * Move players on conveyorbelts
+     * Rotate players on cogs
+     * @param phaseNumber the current phase number
      */
-    public void performPhase(int phaseNumber) {
+    public void executePhase(int phaseNumber) {
         this.phaseNumber = phaseNumber;
         moveRobots();
-        expressConveyorBeltsMoveOne();
-        expressAndNormalConveyorBeltsMoveOne();
-        pushersPush();
-        gearsRotate();
+        moveExpressBelts();
+        moveConveyorBelts();
+        rotateCogs();
         lasersFire();
         touchCheckPoints();
+        //TODO add lasers
+        //TODO add touching flags/checkpoints
+        //TODO add updating of respawn point (flag or repair site)
     }
 
-    //TODO add comments @Erlend
-    public void moveRobots() {
+    /**
+     * Sort all players based on the priority of their cards this phase.
+     * Execute all players programcards for this phase in the order of sorting.
+     */
+    public void moveRobots(){
         playerAndPriority = new HashMap<>();
+        orderedListOfPlayers = new ArrayList<>();
         for (int i = 0; i < listOfPlayers.length ; i++) {
             Player player = listOfPlayers[i];
-            ProgramCard programCardThisPhase = player.getSelectedCards().get(phaseNumber);
+            ProgramCard programCardThisPhase = player.getSelectedCards()[phaseNumber];
             Integer cardPriority = programCardThisPhase.getPriority();
             playerAndPriority.put(player, cardPriority);
         }
@@ -68,7 +78,7 @@ public class Phase {
      * @return list of moves to execute together, in the other they should be executed
      */
     private ArrayList<Move> generateMovesToExecuteTogether(Player player){
-        ProgramCard cardThisPhase = player.getSelectedCards().get(phaseNumber);
+        ProgramCard cardThisPhase = player.getSelectedCards()[phaseNumber];
         Position oldPos = player.getPos();
         Direction oldDir = player.getPlayerPiece().getDir();
         player.executeCardAction(cardThisPhase); //updates the state of the player, not the board
@@ -88,16 +98,45 @@ public class Phase {
     private void lasersFire() {
     }
 
-    private void gearsRotate() {
-    }
 
     private void pushersPush() {
+        }
+
+    /**
+     * Checks if any player is on an expressbelt,
+     * and will move them accordingly if true.
+     */
+
+    public void moveExpressBelts(){
+        for (int i = 0; i < listOfPlayers.length ; i++) {
+            if(listOfPlayers[i].isOnExpressBelt()){
+                BoardElementsMove.moveExpressBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+            }
+        }
     }
 
-    private void expressAndNormalConveyorBeltsMoveOne() {
+    /**
+     * Checks if any player is on a conveyorbelt,
+     * and will move them accordingly if true.
+     */
+    public void moveConveyorBelts(){
+        for (int i = 0; i < listOfPlayers.length ; i++) {
+            if(listOfPlayers[i].isOnConveyorBelt()){
+                BoardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+            }
+        }
     }
 
-    private void expressConveyorBeltsMoveOne() {
+    /**
+     * Checks if any player is on a cog,
+     * and will rotate them accordingly if true.
+     */
+    public void rotateCogs(){
+        for (int i = 0; i < listOfPlayers.length ; i++) {
+            if(listOfPlayers[i].isOnCog()){
+                BoardElementsMove.rotateCog(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+            }
+        }
     }
 
     public ArrayList<Player> getOrderedListOfPlayers(){return orderedListOfPlayers;}

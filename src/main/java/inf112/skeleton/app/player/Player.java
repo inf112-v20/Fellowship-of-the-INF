@@ -1,5 +1,6 @@
 package inf112.skeleton.app.player;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.Move;
@@ -8,10 +9,7 @@ import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Map;
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.grid_objects.AbyssPiece;
-import inf112.skeleton.app.grid_objects.BoardPiece;
-import inf112.skeleton.app.grid_objects.PlayerPiece;
-import inf112.skeleton.app.grid_objects.WallPiece;
+import inf112.skeleton.app.grid_objects.*;
 
 import java.util.ArrayList;
 
@@ -26,12 +24,15 @@ public class Player {
     private PlayerPiece playerPiece;
     private Game game;
     private ArrayList<ProgramCard> playerHandDeck;
-    private ArrayList<ProgramCard> selectedCards;
+    private ProgramCard[] selectedCards;
+    private ArrayList<ProgramCard> lockedCards;
+
     private Position spawnPoint;
     private int damage;
     private int playerNumber;
     private int lives = 3;
     private int checkpointsVisited;
+    private BoardPiece currentBoardPiece;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -42,7 +43,9 @@ public class Player {
         this.checkpointsVisited = 0;
         GameDeck gameDeck = game.getGameDeck();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
-        this.selectedCards = new ArrayList<>();
+         this.selectedCards = new ProgramCard[5];
+        this.lockedCards = new ArrayList<>();
+
 
         //Find the spawn point of the player, and set spawnPoint position to the first spawn
         findFirstSpawnPoint();
@@ -82,7 +85,6 @@ public class Player {
         int newX = playerPiece.getPos().getX();
         int newY = playerPiece.getPos().getY();
 
-        playerPiece.setDir(newDirection);
         switch (newDirection) {
             case NORTH:
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
@@ -106,6 +108,7 @@ public class Player {
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
             playerPiece.setPos(new Position(newX, newY));
             // map.movePlayerToNewPosition(pos, new Position(newX, newY));
+            setCurrentBoardPiece(newX, newY);
             setPos(newX, newY);
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
@@ -117,6 +120,20 @@ public class Player {
         //Handle what happens if the player runs out of lives
         else {
             setPos(newX, newY);
+        }
+    }
+    public void setCurrentBoardPiece(int newX, int newY){
+        BoardPiece currPiece;
+        for (int i = 0; i < pieceGrid[newX][newY].size(); i++) {
+            currPiece = pieceGrid[newX][newY].get(i);
+            if(currPiece instanceof ExpressBeltPiece){currentBoardPiece = currPiece;}
+            else if(currPiece instanceof ConveyorBeltPiece){currentBoardPiece = currPiece;}
+            else if(currPiece instanceof CogPiece){currentBoardPiece = currPiece;}
+            else if(currPiece instanceof PusherPiece){currentBoardPiece = currPiece;}
+            else if(currPiece instanceof FlagPiece){currentBoardPiece = currPiece;}
+            else if(currPiece instanceof AbyssPiece){currentBoardPiece = currPiece;}
+            else if(currPiece instanceof SpawnPointPiece){currentBoardPiece = currPiece;}
+            else if(currPiece instanceof FloorPiece){currentBoardPiece = currPiece;}
         }
     }
 
@@ -199,7 +216,6 @@ public class Player {
      * @param programCard to convert to player move
      */
     public void executeCardAction(ProgramCard programCard) {
-        Position oldPos = getPos();
         switch (programCard.getCommand()) {
             case MOVE1:
                 tryToGo(getPlayerPiece().getDir());
@@ -217,9 +233,7 @@ public class Player {
                 turnPlayerAround();
                 break;
             case BACKUP:
-                turnPlayerAround();
-                tryToGo(getPlayerPiece().getDir());
-                turnPlayerAround();
+                tryToGo(getPlayerPiece().getDir().getOppositeDirection());
                 break;
             case ROTATELEFT:
                 turnPlayerLeft();
@@ -233,17 +247,11 @@ public class Player {
         }
     }
 
-    public int getPlayerNumber() {
-        return playerNumber;
-    }
+    public int getPlayerNumber() { return playerNumber; }
 
-    public boolean isDead() {
-        return isDead;
-    }
+    public boolean isDead() { return isDead; }
 
-    public PlayerPiece getPlayerPiece() {
-        return playerPiece;
-    }
+    public PlayerPiece getPlayerPiece() { return playerPiece; }
 
     public void turnPlayerAround() { playerPiece.turnAround(); }
 
@@ -251,31 +259,23 @@ public class Player {
 
     public void turnPlayerRight() { playerPiece.turnRight(); }
 
-    public ArrayList<ProgramCard> getPlayerHandDeck() {
-        return playerHandDeck;
-    }
+    public ArrayList<ProgramCard> getPlayerHandDeck() { return playerHandDeck; }
 
-    public ArrayList<ProgramCard> getSelectedCards() {
-        return selectedCards;
-    }
+    public ProgramCard[] getSelectedCards() { return selectedCards; }
 
-    public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) {
-        this.playerHandDeck = playerHandDeck;
-    }
+    public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) { this.playerHandDeck = playerHandDeck; }
 
-    public void setSelectedCards(ArrayList<ProgramCard> selectedCards) {
-        this.selectedCards = selectedCards;
-    }
+    public void setSelectedCards(ProgramCard[] selectedCards) { this.selectedCards = selectedCards; }
 
     /**
      * Sets the first five cards in the given hand of nine cards, to be the chosen five cards in a round
      */
    public void pickFirstFiveCards() {
         int NUMBER_OF_CARDS_TO_CHOOSE = 5;
-        ArrayList<ProgramCard> firstFiveCards = new ArrayList<>();
+        ProgramCard[] firstFiveCards = new ProgramCard[NUMBER_OF_CARDS_TO_CHOOSE];
         if (playerHandDeck.size() >= NUMBER_OF_CARDS_TO_CHOOSE) {
             for (int i = 0; i < NUMBER_OF_CARDS_TO_CHOOSE; i++) {
-                firstFiveCards.add(playerHandDeck.get(i));
+                firstFiveCards[i] = (playerHandDeck.get(i));
             }
             selectedCards = firstFiveCards;
         }
@@ -302,9 +302,46 @@ public class Player {
         setPos(spawnPoint.getX(), spawnPoint.getY());
     }
 
-    public void takeDamage(int amountOfDamage){ damage += amountOfDamage; System.out.println("Damage: " + damage); }
+    /**
+     * Damages a player a given amount
+     * A player loses a life if its damage is 10 or higher
+     * Starts locking a players selected cards (from right to left)
+     * when a players current damage is 5 or higher.
+     * @param amountOfDamage the number of damage the player takes
+     */
+    public void takeDamage(int amountOfDamage){
+       damage += amountOfDamage;
+        if(damage >= 10){
+            lives--;
+            damage = 10;
+        }
+       System.out.println("Damage: " + damage);
+        if(damage >= 5 && damage <= 9){
+           for (int i = damage-amountOfDamage-4; i < damage-4; i++) {
+               lockedCards.add(0, selectedCards[4-i]);
+               playerHandDeck.remove(lockedCards.get(0));
+           }
+       }
+   }
 
-    public void repairDamage(int amountOfRepairs){damage -= amountOfRepairs; System.out.println("Damage: " + damage);}
+    /**
+     * Heals a player a given amount.
+     * Will unlock a players selected cards (from left to right)
+     * if the player already have locked cards.
+     * @param amountOfRepairs the number of damage to remove from the player
+     */
+    public void repairDamage(int amountOfRepairs){
+       damage -= amountOfRepairs;
+       if(damage < 0){ damage = 0; }
+       System.out.println("Damage: " + damage);
+       int numberOfCardsToUnlock =  lockedCards.size()-(damage - 4);
+       if (numberOfCardsToUnlock > 0 && lockedCards.size() > 0) {
+           for (int i = 0; i < numberOfCardsToUnlock; i++) {
+               playerHandDeck.add(lockedCards.get(0));
+               lockedCards.remove(0);
+            }
+        }
+   }
 
     public int getDamage(){return damage;}
 
@@ -336,5 +373,50 @@ public class Player {
 
     public int getCheckpointsVisited(){return checkpointsVisited;}
 
+    /**
+     * Checks if a player is currently on a ConveyorBeltPiece
+     * @return true if a player is on a conveyorBelt, false otherwise.
+     */
+    public boolean isOnConveyorBelt(){
+        if (currentBoardPiece instanceof ConveyorBeltPiece) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a player is currently on an ExpressBeltPiece
+     * @return true if a player is on an ExpressBelt, false otherwise.
+     */
+    public boolean isOnExpressBelt(){
+        if (currentBoardPiece instanceof ExpressBeltPiece) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a player is currently on a CogPiece
+     * @return true if a player is on a cog, false otherwise.
+     */
+    public boolean isOnCog(){
+       if(currentBoardPiece instanceof CogPiece){
+           return true;
+       }
+       return false;
+    }
+
+    public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
+
+    public ArrayList<ProgramCard> getLockedCards(){return lockedCards;}
+
+    /*
+    Removes all cards from the players selected cards
+     */
+    public void removeSelectedCards(){
+        for (int i = 0; i < selectedCards.length ; i++) {
+            selectedCards[i] = null;
+        }
+    }
 
 }

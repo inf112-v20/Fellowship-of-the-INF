@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import inf112.skeleton.app.Move;
+import inf112.skeleton.app.BoardElementsMove;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.grid.Direction;
@@ -24,6 +25,7 @@ import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * Game screen at the moment only shows a board with a playerLayer, and a player
@@ -46,7 +48,7 @@ public class GameScreen implements Screen {
     private Player player;
     private Game game;
     private boolean currentMoveIsExecuted;
-
+    private ScoreBoardScreen scoreBoardScreen;
 
     public GameScreen(String mapName) {
         mapLoader = new TmxMapLoader();
@@ -69,7 +71,7 @@ public class GameScreen implements Screen {
         initializePlayers();
         currentMoveIsExecuted = true;
         //UI gets game deck from game class
-        uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game, this);
+        uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game);
     }
 
     /**
@@ -86,6 +88,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        scoreBoardScreen = uiScreen.getScoreBoardScreen();
         stage = uiScreen.getStage();
         Gdx.input.setInputProcessor(stage);
     }
@@ -159,9 +162,20 @@ public class GameScreen implements Screen {
     /**
      * Changes the coordinates of the player based on user input
      */
+
     public void handleKeyboardInput() {
+        if(Gdx.input.isKeyPressed(Input.Keys.TAB)){
+            stage = scoreBoardScreen.getStage();
+            stage.setViewport(gridPort);
+        }
+        else {
+            stage = uiScreen.getStage();
+            stage.setViewport(gridPort);
+        }
+
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         game.handleKeyBoardInput();
+        uiScreen.handleInput();
         playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.graphics.setWindowedMode(600, 600);
