@@ -20,6 +20,19 @@ public class Move {
         this.newDir = newDir;
     }
 
+    /**
+     * Constructor for initiating a move, before the player has executed it.
+     * Since the player hasn't done anything yet, oldDir = newDir, and oldPos = newPos
+     * @param player that is going to execute a move
+     */
+    public Move(Player player) {
+        this.player = player;
+        this.oldPos = player.getPos();
+        this.newPos = player.getPos();
+        this.oldDir = player.getPlayerPiece().getDir();
+        this.newDir = player.getPlayerPiece().getDir();
+    }
+
     public Player getPlayer() {
         return player;
     }
@@ -48,5 +61,23 @@ public class Move {
                 ") to (" + newPos +
                 ", "+ newDir +
                 ')';
+    }
+
+    /**
+     *
+     * @return true if the move changes either position or rotation
+     */
+    public boolean isNotStandStill() {
+        return !(oldPos.equals(newPos) && oldDir == newDir);
+    }
+
+    /**
+     * updates the move object with the players new position and direction
+     * @param playerPostMove the player after it has executed a move
+     */
+    public void updateMove(Player playerPostMove) {
+        this.player = playerPostMove;
+        newPos = playerPostMove.getPlayerPiece().getPos();
+        newDir = playerPostMove.getPlayerPiece().getDir();
     }
 }
