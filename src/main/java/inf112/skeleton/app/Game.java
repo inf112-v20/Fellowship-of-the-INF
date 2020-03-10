@@ -3,8 +3,6 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Map;
@@ -14,9 +12,7 @@ import inf112.skeleton.app.screens.GameScreen;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.TimeUnit;
 
 public class Game {
     private Map map;
@@ -50,11 +46,12 @@ public class Game {
         }
     }
 
-    public void performMove(ArrayList<Move> moves) {
+    public void performMoves(ArrayList<Move> moves) {
         for (Move move : moves) {
             Position oldPos = move.getOldPos();
             Position newPos = move.getNewPos();
-            map.movePlayerToNewPosition(oldPos, newPos);
+            if (!oldPos.equals(newPos)) //if the positions are not the same, then move the player on the board
+                map.movePlayerToNewPosition(oldPos, newPos);
         }
     }
 
@@ -86,6 +83,7 @@ public class Game {
      * Handles keyboard input
      */
     public void handleKeyBoardInput() {
+        Move move = new Move(player1); //initiate move to be done
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.tryToGo(player1.getPlayerPiece().getDir());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -108,6 +106,11 @@ public class Game {
             player1.visitedCheckpoint();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
             player1.removeCheckpoint();
+        }
+        move.updateMove(player1); //complete move object
+        if (move.isNotStandStill()) {
+            performMoves(move.toArrayList()); //execute move if there is one
+            gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
         }
     }
 
@@ -183,7 +186,7 @@ public class Game {
      * @param moves to execute
      */
     public void executeMoves(ArrayList<Move> moves) {
-        performMove(moves); //backend execution
+        performMoves(moves); //backend execution
         this.moves.add(moves);//add to list of things to do in frontend
        // gameScreen.executeMove(move); //frontend execution
     }

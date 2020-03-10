@@ -4,6 +4,8 @@ import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
 
+import java.util.ArrayList;
+
 public class Move {
 
     private Player player;
@@ -79,5 +81,15 @@ public class Move {
         this.player = playerPostMove;
         newPos = playerPostMove.getPlayerPiece().getPos();
         newDir = playerPostMove.getPlayerPiece().getDir();
+    }
+
+    /**
+     *
+     * @return an ArrayList containing only this move
+     */
+    public ArrayList<Move> toArrayList() {
+        ArrayList<Move> listWithSingleMove = new ArrayList<>();
+        listWithSingleMove.add(this);
+        return listWithSingleMove;
     }
 }

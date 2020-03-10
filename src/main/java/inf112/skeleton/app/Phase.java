@@ -83,11 +83,9 @@ public class Phase {
         Move move = new Move(player);
         player.executeCardAction(cardThisPhase); //updates the state of the player, not the board
         move.updateMove(player);
-        ArrayList<Move> movesToExecuteTogether = new ArrayList<>();
-        movesToExecuteTogether.add(move);
         System.out.println("Player " + player.getPlayerNumber() + " played card "
                 + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
-        return movesToExecuteTogether;
+        return move.toArrayList();
     }
 
     private void touchCheckPoints() {
@@ -112,9 +110,7 @@ public class Phase {
                 Move move = new Move(player);
                 BoardElementsMove.moveExpressBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
                 move.updateMove(player);
-                ArrayList<Move> movesToExecuteTogether = new ArrayList<>();
-                movesToExecuteTogether.add(move);
-                game.executeMoves(movesToExecuteTogether);
+                game.executeMoves(move.toArrayList());
             }
         }
     }
@@ -130,9 +126,7 @@ public class Phase {
                 Move move = new Move(player);
                 BoardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
                 move.updateMove(player);
-                ArrayList<Move> movesToExecuteTogether = new ArrayList<>();
-                movesToExecuteTogether.add(move);
-                game.executeMoves(movesToExecuteTogether);
+                game.executeMoves(move.toArrayList());
             }
         }
     }
@@ -148,9 +142,7 @@ public class Phase {
                 Move move = new Move(player);
                 BoardElementsMove.rotateCog(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
                 move.updateMove(player);
-                ArrayList<Move> movesToExecuteTogether = new ArrayList<>();
-                movesToExecuteTogether.add(move);
-                game.executeMoves(movesToExecuteTogether);
+                game.executeMoves(move.toArrayList());
             }
         }
     }

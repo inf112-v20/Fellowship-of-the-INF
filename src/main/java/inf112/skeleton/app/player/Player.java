@@ -113,9 +113,11 @@ public class Player {
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it
+        /*
         else if (lives >= 0 && isDead()) {
             respawnPlayer();
         }
+        */
         //TODO Add what happens when a player runs out of lives
         //Handle what happens if the player runs out of lives
         else {

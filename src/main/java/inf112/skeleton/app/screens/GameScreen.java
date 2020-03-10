@@ -118,9 +118,7 @@ public class GameScreen implements Screen {
     public void update() {
         //only handle keyboard inpuut if there are no moves to execute
         if (!movesToExecute()) {
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
             handleKeyboardInput();
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
         }
         //only execute moves if there are any, the the current one hasn't been executed yet
         if (movesToExecute() && currentMoveIsExecuted) {
@@ -139,22 +137,13 @@ public class GameScreen implements Screen {
 
     /**
      * This method executed the list of moves in the front end of the movesToExecute queue.
-     * It has a delay so that moves can be shown one by one
      */
     public void executeMove() {
         ArrayList<Move> firstSetOfMoves = game.getMoves().peek();
         for (Move currentMove : firstSetOfMoves) {
-            Player playerToUpdate = currentMove.getPlayer();
-            Position oldPos = currentMove.getOldPos();
-            Position newPos = currentMove.getNewPos();
-            Direction newDir = currentMove.getNewDir();
-            playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the correct direction
-            playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
-            playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
-            System.out.println("Frontend executing: " + currentMove);
+            redrawPlayer(currentMove);
         }
-
-        game.getMoves().poll(); //remove move once executed
+        game.getMoves().poll(); //remove set of moves once they have been executed
         currentMoveIsExecuted = true;
     }
 
@@ -172,11 +161,8 @@ public class GameScreen implements Screen {
             stage = uiScreen.getStage();
             stage.setViewport(gridPort);
         }
-
-        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
         game.handleKeyBoardInput();
         uiScreen.handleInput();
-        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.graphics.setWindowedMode(600, 600);
         }
@@ -249,5 +235,20 @@ public class GameScreen implements Screen {
         } catch (InterruptedException e) {
             System.out.println("Timer was interrupted");
         }
+    }
+
+    /**
+     * Erases the player currently on the board, and redraws it in it's state after having executed the move
+     * @param move that the player performed
+     */
+    public void redrawPlayer(Move move) {
+        Player playerToUpdate = move.getPlayer();
+        Position oldPos = move.getOldPos();
+        Position newPos = move.getNewPos();
+        Direction newDir = move.getNewDir();
+        playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the correct direction
+        playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
+        playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
+        System.out.println("Frontend executing: " + move);
     }
 }
