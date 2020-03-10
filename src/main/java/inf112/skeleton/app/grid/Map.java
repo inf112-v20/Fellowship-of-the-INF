@@ -196,9 +196,8 @@ public class Map {
                 grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
                 //add piece to new position
                 grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
-                //perhaps delete due to overlap in GameScreen
-                playerLayer.setCell(oldPosition.getX(), oldPosition.getY(), null);
-                playerLayer.setCell(newPosition.getX(), newPosition.getY(), ((PlayerPiece) playerPiece).getCurrentCell());
+                //playerLayer.setCell(oldPosition.getX(), oldPosition.getY(), null);
+                //playerLayer.setCell(newPosition.getX(), newPosition.getY(), ((PlayerPiece) playerPiece).getCurrentCell());
 
             } else {
                 System.out.println(newPosition.toString() + " is not available for " + playerPiece.toString());

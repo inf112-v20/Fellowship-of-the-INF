@@ -41,7 +41,7 @@ public class PlayerPiece extends DirectionedPiece {
      */
     public void turnAround() {
       turnPieceInOppositeDirection();
-        turnCellInDirection(dir);
+      turnCellInDirection(dir);
       /*int newDir = currentCell.getRotation() + 2;
       if (newDir > 3){ newDir -= 4;}
       currentCell.setRotation(newDir);*/

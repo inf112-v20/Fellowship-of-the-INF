@@ -110,7 +110,16 @@ public class Phase {
     public void moveExpressBelts(){
         for (int i = 0; i < listOfPlayers.length ; i++) {
             if(listOfPlayers[i].isOnExpressBelt()){
+                Player player = listOfPlayers[i];
+                Position oldPos = player.getPos();
+                Direction oldDir = player.getPlayerPiece().getDir();
                 BoardElementsMove.moveExpressBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+                Direction newDir = player.getPlayerPiece().getDir();
+                Position newPos = player.getPos();
+                Move move = new Move(player, oldPos, newPos, oldDir, newDir);
+                ArrayList<Move> movesToExecuteTogether = new ArrayList<>();
+                movesToExecuteTogether.add(move);
+                game.executeMoves(movesToExecuteTogether);
             }
         }
     }
@@ -122,7 +131,16 @@ public class Phase {
     public void moveConveyorBelts(){
         for (int i = 0; i < listOfPlayers.length ; i++) {
             if(listOfPlayers[i].isOnConveyorBelt()){
+                Player player = listOfPlayers[i];
+                Position oldPos = player.getPos();
+                Direction oldDir = player.getPlayerPiece().getDir();
                 BoardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+                Direction newDir = player.getPlayerPiece().getDir();
+                Position newPos = player.getPos();
+                Move move = new Move(player, oldPos, newPos, oldDir, newDir);
+                ArrayList<Move> movesToExecuteTogether = new ArrayList<>();
+                movesToExecuteTogether.add(move);
+                game.executeMoves(movesToExecuteTogether);
             }
         }
     }
@@ -134,7 +152,15 @@ public class Phase {
     public void rotateCogs(){
         for (int i = 0; i < listOfPlayers.length ; i++) {
             if(listOfPlayers[i].isOnCog()){
+                Player player = listOfPlayers[i];
+                Position oldPos = player.getPos();
+                Direction oldDir = player.getPlayerPiece().getDir();
                 BoardElementsMove.rotateCog(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+                Direction newDir = player.getPlayerPiece().getDir();
+                Position newPos = player.getPos();
+                Move move = new Move(player, oldPos, newPos, oldDir, newDir);
+                ArrayList<Move> movesToExecuteTogether = generateMovesToExecuteTogether(player);
+                game.executeMoves(movesToExecuteTogether);
             }
         }
     }
