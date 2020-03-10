@@ -40,8 +40,7 @@ public class PlayerPiece extends DirectionedPiece {
      * A cells rotation is an integer between 0 and 3, where 0 = North, 1 = West, 2 = South, 3 = East.
      */
     public void turnAround() {
-      turnPieceInOppositeDirection();
-      turnCellInDirection(dir);
+        turnPieceInOppositeDirection();
       /*int newDir = currentCell.getRotation() + 2;
       if (newDir > 3){ newDir -= 4;}
       currentCell.setRotation(newDir);*/
@@ -49,7 +48,6 @@ public class PlayerPiece extends DirectionedPiece {
 
     public void turnLeft() {
         rotatePieceLeft();
-        turnCellInDirection(dir);
        /* int newDir = currentCell.getRotation() + 1;
         if (newDir > 3){ newDir -= 4;}
         currentCell.setRotation(newDir);*/
@@ -57,7 +55,6 @@ public class PlayerPiece extends DirectionedPiece {
 
     public void turnRight() {
         rotatePieceRight();
-        turnCellInDirection(dir);
         /*
         int newDir = currentCell.getRotation() + 3;
         if (newDir > 3){ newDir -= 4;}
@@ -65,19 +62,19 @@ public class PlayerPiece extends DirectionedPiece {
     }
 
     public void turnCellInDirection(Direction newDir) {
-        switch (newDir){
-                case NORTH:
-                    currentCell.setRotation(0);
-                    break;
-                case SOUTH:
-                    currentCell.setRotation(2);
-                    break;
-                case WEST:
-                    currentCell.setRotation(1);
-                    break;
-                case EAST:
-                    currentCell.setRotation(3);
-                    break;
+        switch (newDir) {
+            case NORTH:
+                currentCell.setRotation(0);
+                break;
+            case SOUTH:
+                currentCell.setRotation(2);
+                break;
+            case WEST:
+                currentCell.setRotation(1);
+                break;
+            case EAST:
+                currentCell.setRotation(3);
+                break;
         }
 
     }
@@ -93,5 +90,7 @@ public class PlayerPiece extends DirectionedPiece {
                 '}';
     }
 
-    public void showAlivePlayer() { currentCell = playerCell; }
+    public void showAlivePlayer() {
+        currentCell = playerCell;
+    }
 }
