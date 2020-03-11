@@ -101,11 +101,8 @@ public class Phase {
                 Player player = listOfPlayers[i];
                 Move move = new Move(player);
                 // TEST TODO remove @Henrik
-                if (player.isOnLaser()) {
-                    System.out.printf("LASER TEST: Phase nr. %d | Player[%d] is standing on a laser.%n", phaseNumber+1, player.getPlayerNumber());
-                    // TODO intercept lasers
-
-                }
+                System.out.printf("LASER TEST: Phase nr. %d | Player[%d] is standing on a laser.%n", phaseNumber+1, player.getPlayerNumber());
+                // Intercept TODO get pieceTypes from the tile the player is standing on
             }
         }
 
