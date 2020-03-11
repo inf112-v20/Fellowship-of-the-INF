@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import inf112.skeleton.app.Move;
+import inf112.skeleton.app.BoardElementsMove;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.grid.Direction;
@@ -24,6 +25,7 @@ import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * Game screen at the moment only shows a board with a playerLayer, and a player
@@ -46,7 +48,7 @@ public class GameScreen implements Screen {
     private Player player;
     private Game game;
     private boolean currentMoveIsExecuted;
-
+    private ScoreBoardScreen scoreBoardScreen;
 
     public GameScreen(String mapName) {
         mapLoader = new TmxMapLoader();
@@ -69,7 +71,7 @@ public class GameScreen implements Screen {
         initializePlayers();
         currentMoveIsExecuted = true;
         //UI gets game deck from game class
-        uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game, this);
+        uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game);
     }
 
     /**
@@ -86,6 +88,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        scoreBoardScreen = uiScreen.getScoreBoardScreen();
         stage = uiScreen.getStage();
         Gdx.input.setInputProcessor(stage);
     }
@@ -115,9 +118,7 @@ public class GameScreen implements Screen {
     public void update() {
         //only handle keyboard inpuut if there are no moves to execute
         if (!movesToExecute()) {
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
             handleKeyboardInput();
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
         }
         //only execute moves if there are any, the the current one hasn't been executed yet
         if (movesToExecute() && currentMoveIsExecuted) {
@@ -136,22 +137,13 @@ public class GameScreen implements Screen {
 
     /**
      * This method executed the list of moves in the front end of the movesToExecute queue.
-     * It has a delay so that moves can be shown one by one
      */
     public void executeMove() {
         ArrayList<Move> firstSetOfMoves = game.getMoves().peek();
         for (Move currentMove : firstSetOfMoves) {
-            Player playerToUpdate = currentMove.getPlayer();
-            Position oldPos = currentMove.getOldPos();
-            Position newPos = currentMove.getNewPos();
-            Direction newDir = currentMove.getNewDir();
-            playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the correct direction
-            playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
-            playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
-            System.out.println("Frontend executing: " + currentMove);
+            redrawPlayer(currentMove);
         }
-
-        game.getMoves().poll(); //remove move once executed
+        game.getMoves().poll(); //remove set of moves once they have been executed
         currentMoveIsExecuted = true;
     }
 
@@ -159,10 +151,18 @@ public class GameScreen implements Screen {
     /**
      * Changes the coordinates of the player based on user input
      */
+
     public void handleKeyboardInput() {
-        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
+        if(Gdx.input.isKeyPressed(Input.Keys.TAB)){
+            stage = scoreBoardScreen.getStage();
+            stage.setViewport(gridPort);
+        }
+        else {
+            stage = uiScreen.getStage();
+            stage.setViewport(gridPort);
+        }
         game.handleKeyBoardInput();
-        playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
+        uiScreen.handleInput();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.graphics.setWindowedMode(600, 600);
         }
@@ -203,6 +203,7 @@ public class GameScreen implements Screen {
      *
      * @param programCards to execute
      */
+    /*
     public void executeLockIn(ArrayList<ProgramCard> programCards) {
         if (programCards != null) {
             game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
@@ -210,6 +211,8 @@ public class GameScreen implements Screen {
             uiScreen.updateGameLog();
         }
     }
+
+     */
 
     public void erasePlayers() {
         for (Player player : game.getListOfPlayers()) {
@@ -232,5 +235,21 @@ public class GameScreen implements Screen {
         } catch (InterruptedException e) {
             System.out.println("Timer was interrupted");
         }
+    }
+
+    /**
+     * Erases the player currently on the board, and redraws it in it's state after having executed the move
+     * @param move that the player performed
+     */
+    public void redrawPlayer(Move move) {
+        Player playerToUpdate = move.getPlayer();
+        Position oldPos = move.getOldPos();
+        Position newPos = move.getNewPos();
+        Direction newDir = move.getNewDir();
+        playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the correct direction
+        playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
+        playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the new direction
+        playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
+        System.out.println("Frontend executing: " + move);
     }
 }
