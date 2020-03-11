@@ -350,30 +350,45 @@ public class Player {
     /**
      * Remove a life from the life counter, and turn the player cell into a dead player cell
      */
-    public void loseLife(){
+    public void loseLife() {
         lives--;
         isDead = true;
         playerPiece.showDeadPlayer();
         System.out.println("Lives: " + lives);
     }
 
-    //Get the spawn point position from a list of spawn points
+    /**
+     * Get the spawn point position from a list of spawn points
+     */
     public void findFirstSpawnPoint() {
         ArrayList<Position> spawns = map.getSpawnPointPositions();
-        spawnPoint = new Position(spawns.get(playerNumber-1).getX(), spawns.get(playerNumber-1).getY());
+        spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
     }
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
-    public void gainLife(){lives++; System.out.println("Lives: " + lives);}
+    public void gainLife() {
+        lives++;
+        System.out.println("Lives: " + lives);
+    }
 
-    public int getLives(){return lives;}
+    public int getLives() {
+        return lives;
+    }
 
-    public void visitedCheckpoint(){checkpointsVisited++; System.out.println("Checkpoints: " + checkpointsVisited);}
+    public void visitedCheckpoint() {
+        checkpointsVisited++;
+        System.out.println("Checkpoints: " + checkpointsVisited);
+    }
 
     //TODO remove this later since it is not possible to undo a checkpoint/flag. This is for testing purposes only.
-    public void removeCheckpoint(){checkpointsVisited--; System.out.println("Checkpoints: " + checkpointsVisited);}
+    public void removeCheckpoint() {
+        checkpointsVisited--;
+        System.out.println("Checkpoints: " + checkpointsVisited);
+    }
 
-    public int getCheckpointsVisited(){return checkpointsVisited;}
+    public int getCheckpointsVisited() {
+        return checkpointsVisited;
+    }
 
     /**
      * Checks if a player is currently on a ConveyorBeltPiece
