@@ -91,7 +91,24 @@ public class Phase {
     private void touchCheckPoints() {
     }
 
+    /**
+     * // TODO first wall-lasers fire, then robots? @Henrik
+     */
     private void lasersFire() {
+        // Static lasers (from walls)
+        for (int i = 0; i < listOfPlayers.length; i++) {
+            if (listOfPlayers[i].isOnLaser()) {
+                Player player = listOfPlayers[i];
+                Move move = new Move(player);
+                // TEST TODO remove @Henrik
+                if (player.isOnLaser()) {
+                    System.out.printf("LASER TEST: Phase nr. %d | Player[%d] is standing on a laser.%n", phaseNumber+1, player.getPlayerNumber());
+                    // TODO intercept lasers
+
+                }
+            }
+        }
+
     }
 
 
