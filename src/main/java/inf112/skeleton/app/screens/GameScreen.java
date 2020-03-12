@@ -15,11 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import inf112.skeleton.app.Move;
-import inf112.skeleton.app.BoardElementsMove;
-import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.grid.Direction;
-import inf112.skeleton.app.grid.Map;
+import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
 
@@ -66,8 +64,8 @@ public class GameScreen implements Screen {
         mapRenderer = new OrthogonalTiledMapRenderer(this.map);
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) this.map.getLayers().get("Player");
-        Map map = new Map(MAP_WIDTH, MAP_HEIGHT, this.map);
-        game = new Game(map, this);
+        LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, this.map);
+        game = new Game(logicGrid, this);
         initializePlayers();
         currentMoveIsExecuted = true;
         //UI gets game deck from game class

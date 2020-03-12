@@ -1,13 +1,11 @@
 package inf112.skeleton.app.player;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.Game;
-import inf112.skeleton.app.Move;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
-import inf112.skeleton.app.grid.Map;
+import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
 
@@ -19,7 +17,7 @@ import java.util.ArrayList;
 public class Player {
 
     private boolean isDead;
-    private Map map;
+    private LogicGrid logicGrid;
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
     private Game game;
@@ -36,8 +34,8 @@ public class Player {
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
-        this.map = game.getMap();
-        this.pieceGrid = map.getGrid();
+        this.logicGrid = game.getLogicGrid();
+        this.pieceGrid = logicGrid.getGrid();
         this.game = game;
         this.damage = 0;
         this.checkpointsVisited = 0;
@@ -198,8 +196,8 @@ public class Player {
      * @return whether the move results in death
      */
     private boolean isDeadMove(int x, int y) {
-        int MAP_WIDTH = game.getMap().getWidth();
-        int MAP_HEIGHT = game.getMap().getHeight();
+        int MAP_WIDTH = game.getLogicGrid().getWidth();
+        int MAP_HEIGHT = game.getLogicGrid().getHeight();
         BoardPiece currPiece;
         if (x > MAP_WIDTH - 1 || x < 0 || y < 0 || y > MAP_HEIGHT - 1) {
             return true;
@@ -301,7 +299,7 @@ public class Player {
         isDead = false;
         playerPiece.showAlivePlayer();
         playerPiece.setPos(new Position(spawnPoint.getX(), spawnPoint.getY()));
-        map.movePlayerToNewPosition(playerPiece.getPos(), new Position(spawnPoint.getX(), spawnPoint.getY()));
+        logicGrid.movePlayerToNewPosition(playerPiece.getPos(), new Position(spawnPoint.getX(), spawnPoint.getY()));
         setPos(spawnPoint.getX(), spawnPoint.getY());
     }
 
@@ -362,7 +360,7 @@ public class Player {
      * Get the spawn point position from a list of spawn points
      */
     public void findFirstSpawnPoint() {
-        ArrayList<Position> spawns = map.getSpawnPointPositions();
+        ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
         spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
     }
 

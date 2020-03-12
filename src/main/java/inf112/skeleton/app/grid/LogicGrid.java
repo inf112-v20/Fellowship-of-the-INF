@@ -6,7 +6,7 @@ import inf112.skeleton.app.grid_objects.*;
 
 import java.util.ArrayList;
 
-public class Map {
+public class LogicGrid {
     //dimensions of grid
     private int width;
     private int height;
@@ -54,7 +54,7 @@ public class Map {
     private ArrayList<BoardPiece>[][] grid;
     private BoardPieceGenerator boardPieceGenerator;
 
-    public Map(int width, int height, TiledMap map) {
+    public LogicGrid(int width, int height, TiledMap map) {
         grid = new ArrayList[width][height];
         this.width = grid[0].length;
         this.height = grid.length;

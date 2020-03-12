@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
-import inf112.skeleton.app.grid.Map;
+import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Game {
-    private Map map;
+    private LogicGrid logicGrid;
     private GameDeck gameDeck;
     private Player player1;
     private Player[] playerList;
@@ -26,14 +26,14 @@ public class Game {
     private GameScreen gameScreen;
 
 
-    public Game(Map map, GameScreen gameScreen) {
-        this.map = map;
+    public Game(LogicGrid logicGrid, GameScreen gameScreen) {
+        this.logicGrid = logicGrid;
         this.gameScreen = gameScreen;
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player1 = new Player(1, this);
         this.playerList = new Player[NUMBER_OF_PLAYERS];
         playerList[0] = player1;
-        map.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
+        logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
         this.moves = new LinkedList<>();
     }
@@ -42,7 +42,7 @@ public class Game {
         for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
             Player playerToBeInitiated = new Player(playerNumber, this);
             playerList[playerNumber - 1] = playerToBeInitiated;
-            map.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
+            logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
     }
 
@@ -51,16 +51,16 @@ public class Game {
             Position oldPos = move.getOldPos();
             Position newPos = move.getNewPos();
             if (!oldPos.equals(newPos)) //if the positions are not the same, then move the player on the board
-                map.movePlayerToNewPosition(oldPos, newPos);
+                logicGrid.movePlayerToNewPosition(oldPos, newPos);
         }
     }
 
-    public Map getMap() {
-        return map;
+    public LogicGrid getLogicGrid() {
+        return logicGrid;
     }
 
-    public void setMap(Map map) {
-        this.map = map;
+    public void setLogicGrid(LogicGrid logicGrid) {
+        this.logicGrid = logicGrid;
     }
 
     public GameDeck getGameDeck() { return gameDeck; }

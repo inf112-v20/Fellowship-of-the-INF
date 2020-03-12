@@ -54,7 +54,7 @@ __Summary__:
 __Work for next time:__
 * Take a closer look at the hand outs
 * Lena: Implement Cards, ProgramCard, and ENUM ProgramCardType
-* Martin: Implement playerPiece interaction with the board, ex. collision and falling off map
+* Martin: Implement playerPiece interaction with the board, ex. collision and falling off logicGrid
 * Johanna: Work on Map class
 
 #### 20.02.2020
@@ -81,7 +81,7 @@ __Attendence__: Everyone
 
 __Summary__:
 * Erlend and Lena cooperated regarding the use of the Card and Deck classes.
-* Martin and Johanna pairprogrammed to connect different backends, connect player movement to map
+* Martin and Johanna pairprogrammed to connect different backends, connect player movement to logicGrid
 
 __Work for next time:__
 * Lena: Start looking at tests for card and decks, and work on MarkDown file
