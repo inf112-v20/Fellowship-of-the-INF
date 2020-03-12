@@ -4,8 +4,8 @@ import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
 
 public class LaserPiece extends DirectionedPiece {
-    boolean doubleLaser;
-    boolean crossingLasers;
+    private boolean doubleLaser;
+    private boolean crossingLasers;
 
     /**
      *

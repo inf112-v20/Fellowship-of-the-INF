@@ -1,6 +1,9 @@
 package inf112.skeleton.app;
 
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.BoardPiece;
+import inf112.skeleton.app.grid_objects.LaserPiece;
 import inf112.skeleton.app.player.Player;
 
 import java.util.*;
@@ -99,10 +102,15 @@ public class Phase {
         for (int i = 0; i < listOfPlayers.length; i++) {
             if (listOfPlayers[i].isOnLaser()) {
                 Player player = listOfPlayers[i];
-                Move move = new Move(player);
-                // TEST TODO remove @Henrik
-                System.out.printf("LASER TEST: Phase nr. %d | Player[%d] is standing on a laser.%n", phaseNumber+1, player.getPlayerNumber());
+                int damage = 1;
+                LaserPiece laser;
+                if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
+                    laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
+                    if (laser.isDoubleLaser() || laser.isCrossingLasers()) damage += 1;
+                }
+                player.takeDamage(damage);
                 // Intercept TODO get pieceTypes from the tile the player is standing on
+
             }
         }
 
