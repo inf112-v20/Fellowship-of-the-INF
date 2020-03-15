@@ -63,7 +63,9 @@ public class Game {
         this.logicGrid = logicGrid;
     }
 
-    public GameDeck getGameDeck() { return gameDeck; }
+    public GameDeck getGameDeck() {
+        return gameDeck;
+    }
 
     public void setGameDeck(GameDeck gameDeck) {
         this.gameDeck = gameDeck;
@@ -77,14 +79,16 @@ public class Game {
         this.player1 = player;
     }
 
-    public Round getRound(){return round;}
+    public Round getRound() {
+        return round;
+    }
 
     /**
      * Handles keyboard input
      */
     public void handleKeyBoardInput() {
-        Move move = new Move(player1); //initiate move to be done
-        ArrayList<Move> moves = new ArrayList<>();
+        Move rotateMove = new Move(player1); //initiate possible rotateMove to be done
+        ArrayList<Move> moves = new ArrayList<>();//initiate moves to be done
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -93,7 +97,7 @@ public class Game {
             player1.turnPlayerLeft();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             player1.turnPlayerRight();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             player1.turnPlayerAround();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             player1.takeDamage(1);
@@ -108,11 +112,15 @@ public class Game {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
             player1.removeCheckpoint();
         }
-        move.updateMove(player1); //complete move object
-        if (move.isNotStandStill()) {
-            performMoves(move.toArrayList()); //execute move if there is one
+        rotateMove.updateMove(player1); //complete rotateMove object
+        if (rotateMove.isNotStandStill()) {
+            moves.add(rotateMove);
+        }
+        performMoves(moves); //execute moves if there are any
+        for (Move move : moves) {
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
         }
+        moves.clear();
     }
 
     /* no longer used
@@ -163,7 +171,9 @@ public class Game {
     }
 
     */
-    public Player[] getListOfPlayers() { return playerList; }
+    public Player[] getListOfPlayers() {
+        return playerList;
+    }
 
     public void executeRound() {
         // If there are moves to execute, then don't start new round
@@ -186,11 +196,12 @@ public class Game {
 
     /**
      * Executes both the backend and frontend version of the move
+     *
      * @param moves to execute
      */
     public void executeMoves(ArrayList<Move> moves) {
         performMoves(moves); //backend execution
         this.moves.add(moves);//add to list of things to do in frontend
-       // gameScreen.executeMove(move); //frontend execution
+        // gameScreen.executeMove(move); //frontend execution
     }
 }

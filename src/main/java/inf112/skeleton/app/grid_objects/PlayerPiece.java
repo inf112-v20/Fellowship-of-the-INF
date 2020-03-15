@@ -4,19 +4,22 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.player.TextureMaker;
 
 public class PlayerPiece extends DirectionedPiece {
 
+    private Player player; //player who owns this piece
     private int playerNumber;
     private TiledMapTileLayer.Cell currentCell; //Cell for the current state of the player
     private TiledMapTileLayer.Cell playerCell; //cell for normal player
     private TiledMapTileLayer.Cell deadPlayerCell; //cell for dead player looks
     private TiledMapTileLayer.Cell wonPlayerCell; //cell for player who has won looks
 
-    public PlayerPiece(Position pos, int id, Direction dir, int playerNumber) {
+    public PlayerPiece(Position pos, int id, Direction dir, Player player) {
         super(pos, id, dir);
-        this.playerNumber = playerNumber;
+        this.player = player;
+        this.playerNumber = player.getPlayerNumber();
 
         initiatePlayerPieceCells();
     }
@@ -95,4 +98,8 @@ public class PlayerPiece extends DirectionedPiece {
     }
 
     public int getPlayerNumber() {return playerNumber;}
+
+    public Player getPlayer() {
+        return player;
+    }
 }

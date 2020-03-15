@@ -49,7 +49,7 @@ public class Player {
         //Find the spawn point of the player, and set spawnPoint position to the first spawn
         findFirstSpawnPoint();
 
-        this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, playerNumber);
+        this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, this);
         this.isDead = false;
     }
 
@@ -90,6 +90,7 @@ public class Player {
      * @param newDirection new direction to move the player
      */
     public void tryToGo(Direction newDirection, ArrayList<Move> moves) {
+        Move move = new Move(this);
         Position pos = playerPiece.getPos();
         int newX = playerPiece.getPos().getX();
         int newY = playerPiece.getPos().getY();
@@ -121,7 +122,10 @@ public class Player {
             // map.movePlayerToNewPosition(pos, new Position(newX, newY));
             setCurrentBoardPiece(newX, newY);
             setPos(newX, newY);
-            //addMovesForPushedRobots(this, newDirection, moves);
+            //if the move results in pushing robots, add the resulting moves to the moves list
+            addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
+            move.updateMove(this);
+            moves.add(move);
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it
@@ -137,12 +141,32 @@ public class Player {
         }
     }
 
-    private void addMovesForPushedRobots(Player player, Direction dir, ArrayList<Move> moves) {
-        Position targetPosition = player.getPos().getPositionIn(dir);
-        PlayerPiece possiblePlayerPiece = logicGrid.getPieceType(targetPosition, PlayerPiece.class);
-        if (possiblePlayerPiece != null) {
-            return; //TODO
+    /**
+     * If there is a player to be pushed, call tryToGo for the player laying there
+     * TryToGo will call addMovesForPushedRobots, and add moves to the list, in order.
+     * @param playerPiece playerPiece that is pushing other players
+     * @param dir direction being pushed
+     * @param moves list of moves
+     */
+    private void addMovesForPushedRobots(PlayerPiece playerPiece, Direction dir, ArrayList<Move> moves) {
+        PlayerPiece possiblePlayerPiece = getPlayerPieceToPush(playerPiece, dir);
+        if (possiblePlayerPiece != null) { //if there is a player to push, push it
+            Player playertoPush = possiblePlayerPiece.getPlayer();
+            playertoPush.tryToGo(dir, moves);
         }
+    }
+
+    /**
+     * Finds a player piece that is pushed by a move in direction dir
+     * @param playerPiece playerPiece doing the pushing
+     * @param dir direction in which a robot may be pushed
+     * @return null if there is no player piece to push, otherwise return player piece to push
+     */
+    private PlayerPiece getPlayerPieceToPush(PlayerPiece playerPiece, Direction dir) {
+        Position targetPosition = playerPiece.getPos().getPositionIn(dir);
+        if (logicGrid.isWithinMap(targetPosition))
+            return logicGrid.getPieceType(targetPosition, PlayerPiece.class);
+        return null; //return null if target position is not within grid
     }
 
     /**
@@ -199,9 +223,9 @@ public class Player {
      */
     private boolean isLegalMove(int x, int y, Direction dir) {
         //int xPosIn2dArray = MAP_WIDTH - 1 - x;
-        BoardPiece currPiece;
-        BoardPiece pieceInFront;
+        BoardPiece currPiece;;
         if (isDead()) return false;
+        //TODO: refactor, there is no need to search through all the layers like this here.
         for (int i = 0; i < pieceGrid[x][y].size(); i++) {
             currPiece = pieceGrid[x][y].get(i);
             switch (dir) {

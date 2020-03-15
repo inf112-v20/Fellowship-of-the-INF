@@ -266,4 +266,15 @@ public class LogicGrid {
     }
 
     public ArrayList<Position> getSpawnPointPositions() { return spawnPointPositions; }
+
+    /**
+     * Checks if a position is within the bounds of the logic grid
+     * @param pos position to be checked if it is in the logic grid
+     * @return true if the position is not outside of the logic grid
+     */
+    public boolean isWithinMap(Position pos) {
+        boolean YValueIsWithinBounds = pos.getY() >= 0 && pos.getY() < height;
+        boolean XValueIsWithinBounds = pos.getX() >= 0 && pos.getX() < width;
+        return YValueIsWithinBounds && XValueIsWithinBounds;
+    }
 }
