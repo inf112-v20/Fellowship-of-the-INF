@@ -81,7 +81,8 @@ public class Phase {
     private ArrayList<Move> generateMovesToExecuteTogether(Player player) {
         ProgramCard cardThisPhase = player.getSelectedCards()[phaseNumber];
         Move move = new Move(player);
-        player.executeCardAction(cardThisPhase); //updates the state of the player, not the board
+        ArrayList<Move> moves = new ArrayList<>();
+        player.executeCardAction(cardThisPhase, moves); //updates the state of the player, not the board
         move.updateMove(player);
         System.out.println("Player " + player.getPlayerNumber() + " played card "
                 + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());

@@ -22,7 +22,7 @@ public class BoardElementsMove {
                 player.turnPlayerLeft();
             }
         }
-        player.tryToGo(((ExpressBeltPiece) boardPiece).getDir());
+        player.moveOnConveyorBelt(((ExpressBeltPiece) boardPiece).getDir());
     }
 
     /**
@@ -41,7 +41,7 @@ public class BoardElementsMove {
                 player.turnPlayerLeft();
             }
         }
-        player.tryToGo(((ConveyorBeltPiece) boardPiece).getDir());
+        player.moveOnConveyorBelt(((ConveyorBeltPiece) boardPiece).getDir());
     }
 
     /**

@@ -84,10 +84,11 @@ public class Game {
      */
     public void handleKeyBoardInput() {
         Move move = new Move(player1); //initiate move to be done
+        ArrayList<Move> moves = new ArrayList<>();
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player1.tryToGo(player1.getPlayerPiece().getDir());
+            player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection());
+            player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             player1.turnPlayerLeft();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
@@ -114,6 +115,7 @@ public class Game {
         }
     }
 
+    /* no longer used
     public void executePlayerHand(ArrayList<ProgramCard> hand) {
         for (ProgramCard programCard : hand) {
             convertCardToPlayerMove(programCard);
@@ -126,6 +128,7 @@ public class Game {
      *
      * @param programCard to convert to player move
      */
+    /*
     public void convertCardToPlayerMove(ProgramCard programCard) {
         switch (programCard.getCommand()) {
             case MOVE1:
@@ -155,11 +158,11 @@ public class Game {
                 player1.turnPlayerRight();
                 break;
             default:
-                //TODO error handling as default maybe?
                 break;
         }
     }
 
+    */
     public Player[] getListOfPlayers() { return playerList; }
 
     public void executeRound() {
