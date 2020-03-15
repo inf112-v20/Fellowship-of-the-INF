@@ -118,12 +118,10 @@ public class Player {
 
         //if position has changed and player isn't dead, update logic grid
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
-            playerPiece.setPos(new Position(newX, newY));
-            // map.movePlayerToNewPosition(pos, new Position(newX, newY));
-            setCurrentBoardPiece(newX, newY);
-            setPos(newX, newY);
             //if the move results in pushing robots, add the resulting moves to the moves list
             addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
+            setCurrentBoardPiece(newX, newY); //update currentBoardPiece
+            setPos(newX, newY);
             move.updateMove(this);
             moves.add(move);
         }
