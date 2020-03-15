@@ -19,6 +19,7 @@ import inf112.skeleton.app.Game;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
@@ -199,7 +200,6 @@ public class GameScreen implements Screen {
     /**
      * Executes the cards that have been chosen
      *
-     * @param programCards to execute
      */
     /*
     public void executeLockIn(ArrayList<ProgramCard> programCards) {
@@ -240,14 +240,13 @@ public class GameScreen implements Screen {
      * @param move that the player performed
      */
     public void redrawPlayer(Move move) {
-        Player playerToUpdate = move.getPlayer();
+        PlayerPiece playerPieceToUpdate = move.getPlayerPiece();
         Position oldPos = move.getOldPos();
         Position newPos = move.getNewPos();
         Direction newDir = move.getNewDir();
-        playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the correct direction
         playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
-        playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the new direction
-        playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
+        playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
+        playerLayer.setCell(newPos.getX(), newPos.getY(), playerPieceToUpdate.getPlayerCell()); //repaint at new position
         System.out.println("Frontend executing: " + move);
     }
 }

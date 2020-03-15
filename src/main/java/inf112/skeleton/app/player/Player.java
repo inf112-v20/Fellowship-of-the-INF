@@ -121,7 +121,7 @@ public class Player {
             // map.movePlayerToNewPosition(pos, new Position(newX, newY));
             setCurrentBoardPiece(newX, newY);
             setPos(newX, newY);
-            addMovesForPushedRobots(this, newDirection, moves);
+            //addMovesForPushedRobots(this, newDirection, moves);
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it
@@ -138,7 +138,11 @@ public class Player {
     }
 
     private void addMovesForPushedRobots(Player player, Direction dir, ArrayList<Move> moves) {
-        player.getPos().getPositionIn(dir);
+        Position targetPosition = player.getPos().getPositionIn(dir);
+        PlayerPiece possiblePlayerPiece = logicGrid.getPieceType(targetPosition, PlayerPiece.class);
+        if (possiblePlayerPiece != null) {
+            return; //TODO
+        }
     }
 
     /**
