@@ -67,6 +67,10 @@ public class Player {
         playerPiece.setPos(new Position(x, y));
     }
 
+    private void setPos(Position positionIn) {
+        playerPiece.setPos(positionIn);
+    }
+
     /**
      * Getter for player
      *
@@ -104,6 +108,8 @@ public class Player {
                 if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX += 1;
                 break;
         }
+
+
         //check if the move kills the player, if so lose a life
         if (isDeadMove(newX, newY)) {
             loseLife();
@@ -115,6 +121,7 @@ public class Player {
             // map.movePlayerToNewPosition(pos, new Position(newX, newY));
             setCurrentBoardPiece(newX, newY);
             setPos(newX, newY);
+            addMovesForPushedRobots(this, newDirection, moves);
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it
@@ -128,65 +135,29 @@ public class Player {
         else {
             setPos(newX, newY);
         }
+    }
+
+    private void addMovesForPushedRobots(Player player, Direction dir, ArrayList<Move> moves) {
+        player.getPos().getPositionIn(dir);
     }
 
     /**
      * Does not check if move is legal, moves player in direction regardless
      * This method is only used when moving a player on a conveyor belt, as it removes the aspect of pushing
      * TODO: find a better solution for moving robots on a conveyor belt
+     *
      * @param newDirection
      */
     public void moveOnConveyorBelt(Direction newDirection) {
         Position pos = playerPiece.getPos();
-        int newX = playerPiece.getPos().getX();
-        int newY = playerPiece.getPos().getY();
-        updatePosition(newX, newY, newDirection);
-
+        //set position of player to be one cell further down the conveyorbelt
+        setPos(pos.getPositionIn(newDirection));
+        int newX = pos.getX();
+        int newY = pos.getY();
+        setCurrentBoardPiece(newX, newY); //set the new current board piece
         //check if the move kills the player, if so lose a life
         if (isDeadMove(newX, newY)) {
             loseLife();
-        }
-        //if the player isn't dead, update position of player piece
-        if (!isDead()) {
-            playerPiece.setPos(new Position(newX, newY));
-            setCurrentBoardPiece(newX, newY); //set the new current board piece
-            setPos(newX, newY);
-        }
-
-        //TODO This should probably only happen when the round is over, and we are about to start a new round
-        //If the player still have lives left, respawn it
-        /*
-        else if (lives >= 0 && isDead()) {
-            respawnPlayer();
-        }
-        */
-        //TODO Add what happens when a player runs out of lives
-        //Handle what happens if the player runs out of lives
-        else {
-            setPos(newX, newY);
-        }
-    }
-
-    /**
-     * Updates the x or y coordinate depending on the direction being moved toward
-     * @param newX x-value to update
-     * @param newY y-value to update
-     * @param newDirection direction being moved toward
-     */
-    public void updatePosition(int newX, int newY, Direction newDirection) {
-        switch (newDirection) {
-            case NORTH:
-                newY += 1;
-                break;
-            case SOUTH:
-                newY -= 1;
-                break;
-            case WEST:
-                newX -= 1;
-                break;
-            case EAST:
-                newX += 1;
-                break;
         }
     }
 
