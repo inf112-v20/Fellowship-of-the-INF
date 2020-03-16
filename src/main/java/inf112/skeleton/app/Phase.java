@@ -89,6 +89,17 @@ public class Phase {
     }
 
     private void touchCheckPoints() {
+        for(int i=0; i<listOfPlayers.length; i++) {
+            if(listOfPlayers[i].isOnFlag()) {
+                Player player = listOfPlayers[i];
+                int flagNumber = player.getFlagNumber();
+
+                if (flagNumber-1 == player.getCheckpointsVisited()) {
+                    player.visitedCheckpoint();
+                    player.setSpawnPoint(player.getPos().getX(), player.getPos().getY());
+                }
+            }
+        }
     }
 
     private void lasersFire() {
