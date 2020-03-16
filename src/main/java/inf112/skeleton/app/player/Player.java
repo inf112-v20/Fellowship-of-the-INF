@@ -1,6 +1,7 @@
 package inf112.skeleton.app.player;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.sun.codemodel.internal.JCatchBlock;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
@@ -359,8 +360,12 @@ public class Player {
      * Get the spawn point position from a list of spawn points
      */
     public void findFirstSpawnPoint() {
-        ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
-        spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
+        try {
+            ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
+            spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
+        } catch (Exception spawnNotFound) {
+            setSpawnPoint(0,0+playerNumber);
+        }
     }
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
