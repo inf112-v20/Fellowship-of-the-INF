@@ -116,6 +116,7 @@ public class Player {
             respawnPlayer();
         }
         */
+
         //TODO Add what happens when a player runs out of lives
         //Handle what happens if the player runs out of lives
         else {
@@ -419,6 +420,28 @@ public class Player {
            return true;
        }
        return false;
+    }
+
+    /**
+     * Checks if a player is currently on a FlagPiece
+     * @return true if a player is on a flag, false if otherwise.
+     */
+    public boolean isOnFlag() {
+        if(currentBoardPiece instanceof FlagPiece) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * If the player is on a flag, get the number. Else return 0
+     * @return The number of the flag, if there is no flag, return 0
+     */
+    public int getFlagNumber() {
+        if(currentBoardPiece instanceof FlagPiece) {
+            return ((FlagPiece) currentBoardPiece).getFlagNumber();
+        }
+        return 0;
     }
 
     public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
