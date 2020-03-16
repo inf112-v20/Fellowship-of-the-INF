@@ -3,44 +3,38 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
-import inf112.skeleton.app.grid.Direction;
-import inf112.skeleton.app.grid.Map;
+import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.TimeUnit;
 
 public class Game {
-    private Map map;
+    private LogicGrid logicGrid;
     private GameDeck gameDeck;
     private Player player1;
     private Player[] playerList;
+    private int roundNumber = 0;
     private Round round;
     private final int NUMBER_OF_PLAYERS = 4;
     private Queue<ArrayList<Move>> moves;
     private GameScreen gameScreen;
 
 
-    public Game(Map map, GameScreen gameScreen) {
-        this.map = map;
+    public Game(LogicGrid logicGrid, GameScreen gameScreen) {
+        this.logicGrid = logicGrid;
         this.gameScreen = gameScreen;
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player1 = new Player(1, this);
         this.playerList = new Player[NUMBER_OF_PLAYERS];
         playerList[0] = player1;
-        map.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
+        logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
-        this.round = new Round(this);
         this.moves = new LinkedList<>();
     }
 
@@ -48,29 +42,28 @@ public class Game {
         for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
             Player playerToBeInitiated = new Player(playerNumber, this);
             playerList[playerNumber - 1] = playerToBeInitiated;
-            map.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
+            logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
     }
 
-    public void performMove(ArrayList<Move> moves) {
+    public void performMoves(ArrayList<Move> moves) {
         for (Move move : moves) {
             Position oldPos = move.getOldPos();
             Position newPos = move.getNewPos();
-            map.movePlayerToNewPosition(oldPos, newPos);
+            if (!oldPos.equals(newPos)) //if the positions are not the same, then move the player on the board
+                logicGrid.movePlayerToNewPosition(oldPos, newPos);
         }
     }
 
-    public Map getMap() {
-        return map;
+    public LogicGrid getLogicGrid() {
+        return logicGrid;
     }
 
-    public void setMap(Map map) {
-        this.map = map;
+    public void setLogicGrid(LogicGrid logicGrid) {
+        this.logicGrid = logicGrid;
     }
 
-    public GameDeck getGameDeck() {
-        return gameDeck;
-    }
+    public GameDeck getGameDeck() { return gameDeck; }
 
     public void setGameDeck(GameDeck gameDeck) {
         this.gameDeck = gameDeck;
@@ -90,12 +83,11 @@ public class Game {
      * Handles keyboard input
      */
     public void handleKeyBoardInput() {
+        Move move = new Move(player1); //initiate move to be done
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.tryToGo(player1.getPlayerPiece().getDir());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            player1.turnPlayerAround();
-            player1.tryToGo(player1.getPlayerPiece().getDir());
-            player1.turnPlayerAround();
+            player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection());
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             player1.turnPlayerLeft();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
@@ -114,6 +106,11 @@ public class Game {
             player1.visitedCheckpoint();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
             player1.removeCheckpoint();
+        }
+        move.updateMove(player1); //complete move object
+        if (move.isNotStandStill()) {
+            performMoves(move.toArrayList()); //execute move if there is one
+            gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
         }
     }
 
@@ -163,18 +160,19 @@ public class Game {
         }
     }
 
-    public Player[] getListOfPlayers() {
-        return playerList;
-    }
+    public Player[] getListOfPlayers() { return playerList; }
 
     public void executeRound() {
         // If there are moves to execute, then don't start new round
+        this.round = new Round(this);
         if (!moves.isEmpty())
             return;
         //let computer players pick the first five cards as their selected
         for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
             playerList[playerNumber - 1].pickFirstFiveCards();
         }
+        roundNumber++;
+        round.setRoundNumber(roundNumber);
         //check all players have hand
         round.startRound();
     }
@@ -188,7 +186,7 @@ public class Game {
      * @param moves to execute
      */
     public void executeMoves(ArrayList<Move> moves) {
-        performMove(moves); //backend execution
+        performMoves(moves); //backend execution
         this.moves.add(moves);//add to list of things to do in frontend
        // gameScreen.executeMove(move); //frontend execution
     }

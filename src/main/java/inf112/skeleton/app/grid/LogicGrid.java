@@ -6,7 +6,7 @@ import inf112.skeleton.app.grid_objects.*;
 
 import java.util.ArrayList;
 
-public class Map {
+public class LogicGrid {
     //dimensions of grid
     private int width;
     private int height;
@@ -54,7 +54,7 @@ public class Map {
     private ArrayList<BoardPiece>[][] grid;
     private BoardPieceGenerator boardPieceGenerator;
 
-    public Map(int width, int height, TiledMap map) {
+    public LogicGrid(int width, int height, TiledMap map) {
         grid = new ArrayList[width][height];
         this.width = grid[0].length;
         this.height = grid.length;
@@ -196,11 +196,16 @@ public class Map {
                 grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
                 //add piece to new position
                 grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
+
+                System.out.println("Moved " + playerPiece.toString() + "from " + oldPosition.toString() + " to " + newPosition.toString());
+                //playerLayer.setCell(oldPosition.getX(), oldPosition.getY(), null);
+                //playerLayer.setCell(newPosition.getX(), newPosition.getY(), ((PlayerPiece) playerPiece).getCurrentCell());
+
             } else {
                 System.out.println(newPosition.toString() + " is not available for " + playerPiece.toString());
             }
         } else {
-            System.out.println("Cannot move nonplayer object" + playerPiece.toString() + " to new position");
+            System.out.println("Cannot move nonplayer object" + playerPiece.toString() + "from " + oldPosition.toString() + " to " + newPosition.toString());
         }
     }
 
