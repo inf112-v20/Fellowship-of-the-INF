@@ -69,7 +69,7 @@ public class ScoreBoardScreen {
         table.row();
 
 
-        String headLabelText  = "Name       Lifes       Damage      Flags";
+        String headLabelText  = "Name       Lives       Damage      Flags";
         Label headLabel = new Label(headLabelText, oddRowStyle);
         headLabel.setFontScale(10);
         Image headFiller = new Image(whiteTRD);
