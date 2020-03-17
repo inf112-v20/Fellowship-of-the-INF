@@ -1,7 +1,6 @@
 package inf112.skeleton.app.player;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.sun.codemodel.internal.JCatchBlock;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
@@ -33,6 +32,7 @@ public class Player {
     private int checkpointsVisited;
     private BoardPiece currentBoardPiece;
     private Direction latestMoveDirection;
+    private boolean conveyorBeltMove = false;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -43,7 +43,7 @@ public class Player {
         this.checkpointsVisited = 0;
         GameDeck gameDeck = game.getGameDeck();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
-         this.selectedCards = new ProgramCard[5];
+        this.selectedCards = new ProgramCard[5];
         this.lockedCards = new ArrayList<>();
 
 
@@ -111,6 +111,8 @@ public class Player {
             setCurrentBoardPiece(newX, newY);
             setPos(newX, newY);
             latestMoveDirection = newDirection;
+            this.conveyorBeltMove = false;
+
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it
@@ -443,6 +445,14 @@ public class Player {
 
     public Direction latestMoveDirection(){
         return latestMoveDirection;
+    }
+
+
+    public void setConveyorBeltMove(boolean move){
+        conveyorBeltMove = move;
+    }
+    public boolean isLatestMoveConveyorBelt(){
+        return conveyorBeltMove;
     }
 
 }

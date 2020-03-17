@@ -111,6 +111,7 @@ public class Phase {
                 BoardElementsMove.moveExpressBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
                 move.updateMove(player);
                 game.executeMoves(move.toArrayList());
+                player.setConveyorBeltMove(true);
             }
         }
     }
@@ -127,6 +128,7 @@ public class Phase {
                 BoardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
                 move.updateMove(player);
                 game.executeMoves(move.toArrayList());
+                player.setConveyorBeltMove(true);
             }
         }
     }

@@ -14,7 +14,7 @@ public class BoardElementsMove {
      * @param player The player that is currently standing on the BoardPiece.
      */
     public static void moveExpressBelt(BoardPiece boardPiece, Player player){
-        if(((ExpressBeltPiece) boardPiece).isTurn()) {
+        if(((ExpressBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt()) {
             if (((ExpressBeltPiece) boardPiece).isTurnRight()) {
                 player.turnPlayerRight();
             }
@@ -33,7 +33,7 @@ public class BoardElementsMove {
      */
     public static void moveConveyorBelt(BoardPiece boardPiece, Player player){
 
-        if(((ConveyorBeltPiece) boardPiece).isTurn()) {
+        if(((ConveyorBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt()) {
             if (((ConveyorBeltPiece) boardPiece).isTurnRight()) {
                 player.turnPlayerRight();
             }
