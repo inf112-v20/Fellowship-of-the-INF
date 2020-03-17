@@ -112,7 +112,6 @@ public class Player {
             setPos(newX, newY);
             latestMoveDirection = newDirection;
             this.conveyorBeltMove = false;
-
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it

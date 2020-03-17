@@ -14,11 +14,11 @@ public class BoardElementsMove {
      * @param player The player that is currently standing on the BoardPiece.
      */
     public static void moveExpressBelt(BoardPiece boardPiece, Player player){
-        if(((ExpressBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt()) {
-            if (((ExpressBeltPiece) boardPiece).isTurnRight()) {
+        if(((ExpressBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt() && player.latestMoveDirection() != ((ExpressBeltPiece) boardPiece).getDir()) {
+            if(player.latestMoveDirection().getRightTurnDirection() == ((ExpressBeltPiece) boardPiece).getDir()) {
                 player.turnPlayerRight();
             }
-            else {
+            else if(player.latestMoveDirection().getLeftTurnDirection() == ((ExpressBeltPiece) boardPiece).getDir()){
                 player.turnPlayerLeft();
             }
         }
@@ -33,11 +33,11 @@ public class BoardElementsMove {
      */
     public static void moveConveyorBelt(BoardPiece boardPiece, Player player){
 
-        if(((ConveyorBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt()) {
-            if (((ConveyorBeltPiece) boardPiece).isTurnRight()) {
+        if(((ConveyorBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt()&& player.latestMoveDirection() != ((ConveyorBeltPiece) boardPiece).getDir()) {
+            if(player.latestMoveDirection().getRightTurnDirection() == ((ConveyorBeltPiece) boardPiece).getDir()) {
                 player.turnPlayerRight();
             }
-            else {
+            else if(player.latestMoveDirection().getLeftTurnDirection() == ((ConveyorBeltPiece) boardPiece).getDir()){
                 player.turnPlayerLeft();
             }
         }

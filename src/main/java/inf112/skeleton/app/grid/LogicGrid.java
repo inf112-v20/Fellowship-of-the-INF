@@ -217,6 +217,8 @@ public class LogicGrid {
      * @return true if there is a NullPiece in the position you are checking
      */
     private boolean positionIsFree(Position position, int layerIndex) {
+        //TODO maybe remove this if statement, was added to stop out of bounds exceptions
+        if(position.getY() < 0 || position.getY() > 11 || position.getX() < 0 || position.getX() > 11){return false;}
         return (grid[position.getX()][position.getY()].get(layerIndex) instanceof NullPiece);
     }
 

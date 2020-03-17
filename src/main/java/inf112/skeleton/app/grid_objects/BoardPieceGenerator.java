@@ -54,6 +54,30 @@ public class BoardPieceGenerator {
                 return new ConveyorBeltPiece(pos, id, Direction.NORTH, true, true);
             case (44):
                 return new ConveyorBeltPiece(pos, id, Direction.WEST, true, true);
+            case (57):
+                return new ConveyorBeltPiece(pos, id, Direction.NORTH, true, false);
+            case (58):
+                return new ConveyorBeltPiece(pos, id, Direction.EAST, true, false);
+            case (59):
+                return new ConveyorBeltPiece(pos, id, Direction.SOUTH, true, false);
+            case (60):
+                return new ConveyorBeltPiece(pos, id, Direction.WEST, true, false);
+            case (61):
+                return new ConveyorBeltPiece(pos, id, Direction.EAST, true, true);
+            case (62):
+                return new ConveyorBeltPiece(pos, id, Direction.SOUTH, true, true);
+            case (65):
+                return new ConveyorBeltPiece(pos, id, Direction.NORTH, true, true);
+            case (66):
+                return new ConveyorBeltPiece(pos, id, Direction.EAST, true, true);
+            case (67):
+                return new ConveyorBeltPiece(pos, id, Direction.SOUTH, true, true);
+            case (68):
+                return new ConveyorBeltPiece(pos, id, Direction.WEST, true, true);
+            case (69):
+                return new ConveyorBeltPiece(pos, id, Direction.NORTH, true, true);
+            case (70):
+                return new ConveyorBeltPiece(pos, id, Direction.WEST, true, true);
             case (13):
                 return new ExpressBeltPiece(pos, id, Direction.NORTH, false, false);
             case (14):
@@ -77,6 +101,30 @@ public class BoardPieceGenerator {
             case (19):
                 return new ExpressBeltPiece(pos, id, Direction.EAST, true, true);
             case (20):
+                return new ExpressBeltPiece(pos, id, Direction.SOUTH, true, true);
+            case (73):
+                return new ExpressBeltPiece(pos, id, Direction.NORTH, true, false);
+            case (74):
+                return new ExpressBeltPiece(pos, id, Direction.EAST, true, false);
+            case (75):
+                return new ExpressBeltPiece(pos, id, Direction.SOUTH, true, false);
+            case (76):
+                return new ExpressBeltPiece(pos, id, Direction.WEST, true, false);
+            case (77):
+                return new ExpressBeltPiece(pos, id, Direction.NORTH, true, true);
+            case (78):
+                return new ExpressBeltPiece(pos, id, Direction.EAST, true, true);
+            case (81):
+                return new ExpressBeltPiece(pos, id, Direction.EAST, true, true);
+            case (82):
+                return new ExpressBeltPiece(pos, id, Direction.SOUTH, true, true);
+            case (83):
+                return new ExpressBeltPiece(pos, id, Direction.WEST, true, true);
+            case (84):
+                return new ExpressBeltPiece(pos, id, Direction.NORTH, true, true);
+            case (85):
+                return new ExpressBeltPiece(pos, id, Direction.WEST, true, true);
+            case (86):
                 return new ExpressBeltPiece(pos, id, Direction.SOUTH, true, true);
             case (53):
                 return new CogPiece(pos, id, false);
