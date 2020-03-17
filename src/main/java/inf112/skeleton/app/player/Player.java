@@ -31,6 +31,7 @@ public class Player {
     private int lives = 3;
     private int checkpointsVisited;
     private BoardPiece currentBoardPiece;
+    private Direction latestMoveDirection;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -108,6 +109,7 @@ public class Player {
             // map.movePlayerToNewPosition(pos, new Position(newX, newY));
             setCurrentBoardPiece(newX, newY);
             setPos(newX, newY);
+            latestMoveDirection = newDirection;
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it
@@ -432,6 +434,10 @@ public class Player {
         for (int i = 0; i < selectedCards.length ; i++) {
             selectedCards[i] = null;
         }
+    }
+
+    public Direction latestMoveDirection(){
+        return latestMoveDirection;
     }
 
 }
