@@ -108,7 +108,7 @@ public class Phase {
             if (listOfPlayers[i].isOnExpressBelt()) {
                 Player player = listOfPlayers[i];
                 Move move = new Move(player);
-                BoardElementsMove.moveExpressBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+                BoardElementsMove.moveExpressBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i], game.getLogicGrid());
                 move.updateMove(player);
                 game.executeMoves(move.toArrayList());
                 player.setConveyorBeltMove(true);
@@ -125,7 +125,7 @@ public class Phase {
             if (listOfPlayers[i].isOnConveyorBelt()) {
                 Player player = listOfPlayers[i];
                 Move move = new Move(player);
-                BoardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+                BoardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i], game.getLogicGrid());
                 move.updateMove(player);
                 game.executeMoves(move.toArrayList());
                 player.setConveyorBeltMove(true);

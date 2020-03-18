@@ -107,11 +107,42 @@ public class Game {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
             player1.removeCheckpoint();
         }
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+            if(player1.isOnConveyorBelt()) {
+                BoardElementsMove.moveConveyorBelt(player1.getCurrentBoardPiece(), player1, logicGrid);
+                player1.setConveyorBeltMove(true);
+            }
+            else if(player1.isOnExpressBelt()){
+                BoardElementsMove.moveExpressBelt(player1.getCurrentBoardPiece(), player1, logicGrid);
+                player1.setConveyorBeltMove(true);
+            }
+        }
         move.updateMove(player1); //complete move object
         if (move.isNotStandStill()) {
             performMoves(move.toArrayList()); //execute move if there is one
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
         }
+
+        Player player2 = playerList[1];
+        Move move2 = new Move(player2);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            player2.tryToGo(player2.getPlayerPiece().getDir());
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection());
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            player2.turnPlayerLeft();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            player2.turnPlayerRight();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            player2.turnPlayerAround();
+        }
+        move2.updateMove(player2); //complete move object
+        if (move2.isNotStandStill()) {
+            performMoves(move2.toArrayList()); //execute move if there is one
+            gameScreen.redrawPlayer(move2); //redraw player if it needs to be redrawn
+        }
+
+
     }
 
     public void executePlayerHand(ArrayList<ProgramCard> hand) {

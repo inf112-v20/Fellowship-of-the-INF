@@ -446,12 +446,34 @@ public class Player {
         return latestMoveDirection;
     }
 
-
     public void setConveyorBeltMove(boolean move){
         conveyorBeltMove = move;
     }
+
     public boolean isLatestMoveConveyorBelt(){
         return conveyorBeltMove;
     }
 
+    public Position getNewPosition(Direction newDirection) {
+        Position pos = playerPiece.getPos();
+        int newX = playerPiece.getPos().getX();
+        int newY = playerPiece.getPos().getY();
+
+        switch (newDirection) {
+            case NORTH:
+                newY += 1;
+                break;
+            case SOUTH:
+                newY -= 1;
+                break;
+            case WEST:
+                newX -= 1;
+                break;
+            case EAST:
+                newX += 1;
+                break;
+        }
+        Position newPos = new Position(newX, newY);
+        return newPos;
+    }
 }

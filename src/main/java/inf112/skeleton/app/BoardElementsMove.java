@@ -1,5 +1,6 @@
 package inf112.skeleton.app;
 
+import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid_objects.*;
 import inf112.skeleton.app.player.Player;
 
@@ -13,7 +14,10 @@ public class BoardElementsMove {
      * @param boardPiece The BoardPiece that a player is currently standing on(should always be an ExpressBeltPiece!).
      * @param player The player that is currently standing on the BoardPiece.
      */
-    public static void moveExpressBelt(BoardPiece boardPiece, Player player){
+    public static void moveExpressBelt(BoardPiece boardPiece, Player player, LogicGrid logicGrid){
+        if(!logicGrid.positionIsFree(player.getNewPosition(((ExpressBeltPiece) boardPiece).getDir()), 12)){
+            return;
+        }
         if(((ExpressBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt() && player.latestMoveDirection() != ((ExpressBeltPiece) boardPiece).getDir()) {
             if(player.latestMoveDirection().getRightTurnDirection() == ((ExpressBeltPiece) boardPiece).getDir()) {
                 player.turnPlayerRight();
@@ -31,8 +35,10 @@ public class BoardElementsMove {
      * @param boardPiece The BoardPiece that a player is currently standing on(should always be a ConveyorBeltPiece!).
      * @param player The player that is currently standing on the BoardPiece.
      */
-    public static void moveConveyorBelt(BoardPiece boardPiece, Player player){
-
+    public static void moveConveyorBelt(BoardPiece boardPiece, Player player,LogicGrid logicGrid){
+        if(!logicGrid.positionIsFree(player.getNewPosition(((ConveyorBeltPiece) boardPiece).getDir()), 12)){
+            return;
+        }
         if(((ConveyorBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt()&& player.latestMoveDirection() != ((ConveyorBeltPiece) boardPiece).getDir()) {
             if(player.latestMoveDirection().getRightTurnDirection() == ((ConveyorBeltPiece) boardPiece).getDir()) {
                 player.turnPlayerRight();
