@@ -54,7 +54,9 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen("RoborallyBoard_debugged.tmx"));
+                //Original map: RoborallyBoard_debugged.tmx
+                //Test map for conveyorbelts: conveyorBeltTestMap.tmx
+                game.setScreen(new GameScreen("conveyorBeltTestMap.tmx"));
             }
         });
         stage.addActor(playButton);

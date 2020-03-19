@@ -1,8 +1,12 @@
 package inf112.skeleton.app;
 
 import inf112.skeleton.app.grid.LogicGrid;
+import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
 import inf112.skeleton.app.player.Player;
+
+
+import static inf112.skeleton.app.grid.Direction.*;
 
 public class BoardElementsMove {
 
@@ -15,9 +19,6 @@ public class BoardElementsMove {
      * @param player The player that is currently standing on the BoardPiece.
      */
     public static void moveExpressBelt(BoardPiece boardPiece, Player player, LogicGrid logicGrid){
-        if(!logicGrid.positionIsFree(player.getNewPosition(((ExpressBeltPiece) boardPiece).getDir()), 12)){
-            return;
-        }
         if(((ExpressBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt() && player.latestMoveDirection() != ((ExpressBeltPiece) boardPiece).getDir()) {
             if(player.latestMoveDirection().getRightTurnDirection() == ((ExpressBeltPiece) boardPiece).getDir()) {
                 player.turnPlayerRight();
@@ -36,7 +37,8 @@ public class BoardElementsMove {
      * @param player The player that is currently standing on the BoardPiece.
      */
     public static void moveConveyorBelt(BoardPiece boardPiece, Player player,LogicGrid logicGrid){
-        if(!logicGrid.positionIsFree(player.getNewPosition(((ConveyorBeltPiece) boardPiece).getDir()), 12)){
+        Position newPos = player.getNewPosition(player.getPos(),((ConveyorBeltPiece) boardPiece).getDir());
+        if(!logicGrid.positionIsFree(newPos, 12)){
             return;
         }
         if(((ConveyorBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt()&& player.latestMoveDirection() != ((ConveyorBeltPiece) boardPiece).getDir()) {
@@ -63,4 +65,42 @@ public class BoardElementsMove {
             player.turnPlayerLeft();
         }
     }
+
+    public static boolean isPlayerInFront(BoardPiece boardPiece, Player player, LogicGrid logicGrid){
+        Position newPos = player.getNewPosition(player.getPos(),((ConveyorBeltPiece) boardPiece).getDir());
+        if(!logicGrid.positionIsFree(newPos, 12) && !logicGrid.positionIsFree(newPos, 4)){
+            BoardPiece piece = logicGrid.getPieceType(newPos, boardPiece.getClass());
+            if(((ConveyorBeltPiece) piece).getDir().getOppositeDirection() != ((ConveyorBeltPiece) boardPiece).getDir()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isPlayerGoingToCrash(BoardPiece boardPiece, Player player, LogicGrid logicGrid){
+        Position newPos = player.getNewPosition(player.getPos(),((ConveyorBeltPiece) boardPiece).getDir());
+        if(!logicGrid.positionIsFree(newPos, 12) && !logicGrid.positionIsFree(newPos, 4)){
+            BoardPiece piece = logicGrid.getPieceType(newPos, boardPiece.getClass());
+            if(((ConveyorBeltPiece) piece).getDir().getOppositeDirection() == ((ConveyorBeltPiece) boardPiece).getDir()){ return true;
+            }
+        }
+        for (int i = 0; i <4 ; i++) {
+            Position orthoPos;
+            if (i == 0) { orthoPos = player.getNewPosition(newPos, NORTH); }
+            else if (i == 1) { orthoPos = player.getNewPosition(newPos, EAST); }
+            else if (i == 2) { orthoPos = player.getNewPosition(newPos, SOUTH); }
+            else{ orthoPos = player.getNewPosition(newPos, WEST); }
+            if (!logicGrid.positionIsFree(orthoPos, 12) && !logicGrid.positionIsFree(orthoPos, 4)) {
+                if(orthoPos.getX() == player.getPos().getX() && orthoPos.getY() == player.getPos().getY()){continue;}
+                BoardPiece piece = logicGrid.getPieceType(orthoPos, boardPiece.getClass());
+                Position orthoPosDir = player.getNewPosition(orthoPos, ((ConveyorBeltPiece) piece).getDir());
+                if(orthoPosDir.getX() == newPos.getX() && orthoPosDir.getY() == newPos.getY()){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 }

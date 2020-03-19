@@ -454,10 +454,10 @@ public class Player {
         return conveyorBeltMove;
     }
 
-    public Position getNewPosition(Direction newDirection) {
-        Position pos = playerPiece.getPos();
-        int newX = playerPiece.getPos().getX();
-        int newY = playerPiece.getPos().getY();
+    public Position getNewPosition(Position position, Direction newDirection) {
+        Position pos = position;
+        int newX = position.getX();
+        int newY = position.getY();
 
         switch (newDirection) {
             case NORTH:

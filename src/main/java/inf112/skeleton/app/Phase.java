@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.player.Player;
+import org.lwjgl.Sys;
 
 import java.util.*;
 
@@ -12,6 +13,7 @@ public class Phase {
     private int phaseNumber;
     HashMap<Player, Integer> playerAndPriority;
     private Game game;
+    private ArrayList<Player> copyOfPlayers;
 
     public Phase(Game game) {
         this.game = game;
@@ -30,6 +32,8 @@ public class Phase {
      * @param phaseNumber the current phase number
      */
     public void executePhase(int phaseNumber) {
+        this.copyOfPlayers = new ArrayList<>();
+        Collections.addAll(copyOfPlayers, listOfPlayers);
         this.phaseNumber = phaseNumber;
         moveRobots();
         moveExpressBelts();
@@ -65,7 +69,7 @@ public class Phase {
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
-            System.out.println("PLayer: " + player.toString() + " pos: " + player.getPos().toString());
+            //System.out.println("PLayer: " + player.toString() + " pos: " + player.getPos().toString());
             ArrayList<Move> movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
         }
@@ -83,8 +87,8 @@ public class Phase {
         Move move = new Move(player);
         player.executeCardAction(cardThisPhase); //updates the state of the player, not the board
         move.updateMove(player);
-        System.out.println("Player " + player.getPlayerNumber() + " played card "
-                + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
+        //System.out.println("Player " + player.getPlayerNumber() + " played card "
+          //      + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
         return move.toArrayList();
     }
 
@@ -121,15 +125,31 @@ public class Phase {
      * and will move them accordingly if true.
      */
     public void moveConveyorBelts() {
-        for (int i = 0; i < listOfPlayers.length; i++) {
-            if (listOfPlayers[i].isOnConveyorBelt()) {
-                Player player = listOfPlayers[i];
+        boolean morePlayersToMove = false;
+        for (int i = 0; i < copyOfPlayers.size(); i++) {
+            System.out.println(copyOfPlayers.size());
+            if (copyOfPlayers.get(i).isOnConveyorBelt()) {
+                Player player = copyOfPlayers.get(i);
+                if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid())){
+                    morePlayersToMove = true;
+                    continue;
+                }
+                if(BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid())){
+                    copyOfPlayers.remove(i);
+                    i--;
+                    continue;
+                }
                 Move move = new Move(player);
-                BoardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i], game.getLogicGrid());
+                BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(),player, game.getLogicGrid());
                 move.updateMove(player);
                 game.executeMoves(move.toArrayList());
                 player.setConveyorBeltMove(true);
+                copyOfPlayers.remove(i);
+                i--;
             }
+        }
+        if(morePlayersToMove){
+            moveConveyorBelts();
         }
     }
 

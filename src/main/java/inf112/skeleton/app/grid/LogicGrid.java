@@ -197,7 +197,7 @@ public class LogicGrid {
                 //add piece to new position
                 grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
 
-                System.out.println("Moved " + playerPiece.toString() + "from " + oldPosition.toString() + " to " + newPosition.toString());
+                //System.out.println("Moved " + playerPiece.toString() + "from " + oldPosition.toString() + " to " + newPosition.toString());
                 //playerLayer.setCell(oldPosition.getX(), oldPosition.getY(), null);
                 //playerLayer.setCell(newPosition.getX(), newPosition.getY(), ((PlayerPiece) playerPiece).getCurrentCell());
 
