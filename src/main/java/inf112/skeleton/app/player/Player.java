@@ -429,7 +429,6 @@ public class Player {
        return false;
     }
 
-    public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
 
     public ArrayList<ProgramCard> getLockedCards(){return lockedCards;}
 
@@ -442,38 +441,30 @@ public class Player {
         }
     }
 
+    public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
+
+    /**
+     * Gets the last playermove direction
+     * @return the direction of the last movement of the player (movement can be from cards or map objects)
+     */
     public Direction latestMoveDirection(){
         return latestMoveDirection;
     }
 
+    /**
+     *
+     * @param move true if the last movement of the player was by a conveyorbelt/expressbelt, false otherwise
+     */
     public void setConveyorBeltMove(boolean move){
         conveyorBeltMove = move;
     }
 
+    /**
+     *
+     * @return true if the last last movement of the player was by a conveyorbelt/expressbelt, false otherwise
+     */
     public boolean isLatestMoveConveyorBelt(){
         return conveyorBeltMove;
     }
 
-    public Position getNewPosition(Position position, Direction newDirection) {
-        Position pos = position;
-        int newX = position.getX();
-        int newY = position.getY();
-
-        switch (newDirection) {
-            case NORTH:
-                newY += 1;
-                break;
-            case SOUTH:
-                newY -= 1;
-                break;
-            case WEST:
-                newX -= 1;
-                break;
-            case EAST:
-                newX += 1;
-                break;
-        }
-        Position newPos = new Position(newX, newY);
-        return newPos;
-    }
 }

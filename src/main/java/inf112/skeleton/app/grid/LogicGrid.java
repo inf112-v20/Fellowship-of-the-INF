@@ -268,4 +268,32 @@ public class LogicGrid {
     }
 
     public ArrayList<Position> getSpawnPointPositions() { return spawnPointPositions; }
+
+    /**
+     * Finds a new neighbor position from a given position
+     * @param position the starting position
+     * @param newDirection the direction from the starting position
+     * @return the neighbor position from the the starting position in the direction that is given
+     */
+    public Position getNewPosition(Position position, Direction newDirection) {
+        Position pos = position;
+        int newX = position.getX();
+        int newY = position.getY();
+        switch (newDirection) {
+            case NORTH:
+                newY += 1;
+                break;
+            case SOUTH:
+                newY -= 1;
+                break;
+            case WEST:
+                newX -= 1;
+                break;
+            case EAST:
+                newX += 1;
+                break;
+        }
+        Position newPos = new Position(newX, newY);
+        return newPos;
+    }
 }

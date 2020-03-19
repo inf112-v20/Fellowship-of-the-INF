@@ -32,6 +32,7 @@ public class Phase {
      * @param phaseNumber the current phase number
      */
     public void executePhase(int phaseNumber) {
+        //List copy of the players in the game
         this.copyOfPlayers = new ArrayList<>();
         Collections.addAll(copyOfPlayers, listOfPlayers);
         this.phaseNumber = phaseNumber;
@@ -121,17 +122,23 @@ public class Phase {
     }
 
     /**
-     * Checks if any player is on a conveyorbelt,
-     * and will move them accordingly if true.
+     * Checks if any player is on a conveyorbelt
+     * If true, check if there is player in front (in the direction of the conveyorbelt) on a conveyorbelt and that
+     * conveyorbelt is not facing towards the first conveyorbelt.
+     * If true, move the first player later by a recursive call so that the other player standing in the way can be
+     * moved by the conveyorbelt first.
+     * If two players are standing on different conveyorbelts pointing directly into eachother, none of them will move
+     * If two players are standing on different conveyorbelts that will put both players in the same tile, none of
+     * them will move.
      */
     public void moveConveyorBelts() {
         boolean morePlayersToMove = false;
         for (int i = 0; i < copyOfPlayers.size(); i++) {
+            System.out.println(copyOfPlayers.get(i).toString());
             if (copyOfPlayers.get(i).isOnConveyorBelt()) {
                 Player player = copyOfPlayers.get(i);
                 if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid())){
                     morePlayersToMove = true;
-                    i--;
                     continue;
                 }
                 if(BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid())){
@@ -145,6 +152,7 @@ public class Phase {
                 game.executeMoves(move.toArrayList());
                 player.setConveyorBeltMove(true);
                 copyOfPlayers.remove(i);
+                i--;
             }
         }
         if(morePlayersToMove){
