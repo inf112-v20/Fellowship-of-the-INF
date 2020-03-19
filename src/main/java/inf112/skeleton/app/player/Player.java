@@ -111,11 +111,12 @@ public class Player {
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it
-        /*
+
         else if (lives >= 0 && isDead()) {
             respawnPlayer();
         }
-        */
+
+
         //TODO Add what happens when a player runs out of lives
         //Handle what happens if the player runs out of lives
         else {
@@ -360,8 +361,12 @@ public class Player {
      * Get the spawn point position from a list of spawn points
      */
     public void findFirstSpawnPoint() {
-        ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
-        spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
+        try {
+            ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
+            spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
+        } catch (Exception spawnNotFound) {
+            setSpawnPoint(0,0+playerNumber);
+        }
     }
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
