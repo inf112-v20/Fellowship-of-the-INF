@@ -1,7 +1,6 @@
 package inf112.skeleton.app.player;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.sun.codemodel.internal.JCatchBlock;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;

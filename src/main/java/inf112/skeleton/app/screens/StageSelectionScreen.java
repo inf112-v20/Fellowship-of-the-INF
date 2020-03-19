@@ -73,7 +73,7 @@ public class StageSelectionScreen implements Screen {
         stage2Button.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen("RoborallyBoard.tmx"));
+                game.setScreen(new GameScreen("RoborallyBoard_Vault_Assault.tmx"));
             }
         });
         stage.addActor(stage2Button);
