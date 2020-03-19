@@ -135,9 +135,7 @@ public class Player {
             else if(currPiece instanceof ConveyorBeltPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof CogPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof PusherPiece){currentBoardPiece = currPiece;}
-            else if(currPiece instanceof FlagPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof AbyssPiece){currentBoardPiece = currPiece;}
-            else if(currPiece instanceof SpawnPointPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof FloorPiece){currentBoardPiece = currPiece;}
         }
     }

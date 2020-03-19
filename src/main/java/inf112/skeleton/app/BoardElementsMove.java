@@ -10,26 +10,6 @@ import static inf112.skeleton.app.grid.Direction.*;
 
 public class BoardElementsMove {
     /**
-     * Moves a player standing on an expressBelt one tile in the direction of the expressBelt.
-     * Will also rotate the player if the expressBelt is a turn and the last movement of the player was by a expressbelt.
-     * Will not move a player if there is another player standing in the way.
-     * @param boardPiece The BoardPiece that a player is currently standing on(should always be a ExpressBeltPiece!).
-     * @param player The player that is currently standing on the BoardPiece.
-     * @param logicGrid the logicgrid of the game
-     */
-    public static void moveExpressBelt(BoardPiece boardPiece, Player player, LogicGrid logicGrid){
-        if(((ExpressBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt() && player.latestMoveDirection() != ((ExpressBeltPiece) boardPiece).getDir()) {
-            if(player.latestMoveDirection().getRightTurnDirection() == ((ExpressBeltPiece) boardPiece).getDir()) {
-                player.turnPlayerRight();
-            }
-            else if(player.latestMoveDirection().getLeftTurnDirection() == ((ExpressBeltPiece) boardPiece).getDir()){
-                player.turnPlayerLeft();
-            }
-        }
-        player.tryToGo(((ExpressBeltPiece) boardPiece).getDir());
-    }
-
-    /**
      * Moves a player standing on an conveyorBelt one tile in the direction of the conveyorBelt.
      * Will also rotate the player if the conveyorBelt is a turn and the last movement of the player was by a conveyorbelt.
      * Will not move a player if there is another player standing in the way.
@@ -38,19 +18,20 @@ public class BoardElementsMove {
      * @param logicGrid the logicgrid of the game
      */
     public static void moveConveyorBelt(BoardPiece boardPiece, Player player,LogicGrid logicGrid){
-        Position newPos = logicGrid.getNewPosition(player.getPos(),((ConveyorBeltPiece) boardPiece).getDir());
+        ConveyorBeltPiece conveyorBeltPiece = (ConveyorBeltPiece) logicGrid.getPieceType(player.getPos(), boardPiece.getClass());
+        Position newPos = logicGrid.getNewPosition(player.getPos(),conveyorBeltPiece.getDir());
         if(!logicGrid.positionIsFree(newPos, 12)){
             return;
         }
-        if(((ConveyorBeltPiece) boardPiece).isTurn() && player.isLatestMoveConveyorBelt()&& player.latestMoveDirection() != ((ConveyorBeltPiece) boardPiece).getDir()) {
-            if(player.latestMoveDirection().getRightTurnDirection() == ((ConveyorBeltPiece) boardPiece).getDir()) {
+        if((conveyorBeltPiece.isTurn() && player.isLatestMoveConveyorBelt()&& player.latestMoveDirection() != conveyorBeltPiece.getDir())) {
+            if(player.latestMoveDirection().getRightTurnDirection() == conveyorBeltPiece.getDir()) {
                 player.turnPlayerRight();
             }
-            else if(player.latestMoveDirection().getLeftTurnDirection() == ((ConveyorBeltPiece) boardPiece).getDir()){
+            else if(player.latestMoveDirection().getLeftTurnDirection() == conveyorBeltPiece.getDir()){
                 player.turnPlayerLeft();
             }
         }
-        player.tryToGo(((ConveyorBeltPiece) boardPiece).getDir());
+        player.tryToGo(conveyorBeltPiece.getDir());
     }
 
     /**
@@ -78,8 +59,9 @@ public class BoardElementsMove {
     public static boolean isPlayerInFront(BoardPiece boardPiece, Player player, LogicGrid logicGrid){
         Position newPos = logicGrid.getNewPosition(player.getPos(),((ConveyorBeltPiece) boardPiece).getDir());
         if(!logicGrid.isInBounds(newPos)){return false;}
-        //12 = playerindex, 4 = conveyorbeltindex
-        if(!logicGrid.positionIsFree(newPos, 12) && !logicGrid.positionIsFree(newPos, 4)){
+        //12 = playerindex, 4 = conveyorbeltindex, 5 = expressbeltindex
+        if(!logicGrid.positionIsFree(newPos, 12) &&
+                (!logicGrid.positionIsFree(newPos, 4)||!logicGrid.positionIsFree(newPos, 5))){
             BoardPiece piece = logicGrid.getPieceType(newPos, boardPiece.getClass());
             if(((ConveyorBeltPiece) piece).getDir().getOppositeDirection() != ((ConveyorBeltPiece) boardPiece).getDir()) {
                 return true;
@@ -97,10 +79,11 @@ public class BoardElementsMove {
      */
     public static boolean isPlayerGoingToCrash(BoardPiece boardPiece, Player player, LogicGrid logicGrid){
         Position newPos = logicGrid.getNewPosition(player.getPos(),((ConveyorBeltPiece) boardPiece).getDir());
+        ConveyorBeltPiece beltpiece = (ConveyorBeltPiece) logicGrid.getPieceType(newPos, boardPiece.getClass());
         if(!logicGrid.isInBounds(newPos)){return false;}
-        if(!logicGrid.positionIsFree(newPos, 12) && !logicGrid.positionIsFree(newPos, 4)){
-            BoardPiece piece = logicGrid.getPieceType(newPos, boardPiece.getClass());
-            if(((ConveyorBeltPiece) piece).getDir().getOppositeDirection() == ((ConveyorBeltPiece) boardPiece).getDir()){ return true;
+        if(!logicGrid.positionIsFree(newPos, 12) &&
+                (!logicGrid.positionIsFree(newPos, 4)||!logicGrid.positionIsFree(newPos, 5))){
+            if(beltpiece.getDir().getOppositeDirection() == ((ConveyorBeltPiece) boardPiece).getDir()){ return true;
             }
         }
         for (int i = 0; i <4 ; i++) {
@@ -110,7 +93,8 @@ public class BoardElementsMove {
             else if (i == 2) { orthoPos = logicGrid.getNewPosition(newPos, SOUTH); }
             else{ orthoPos = logicGrid.getNewPosition(newPos, WEST); }
             if(!logicGrid.isInBounds(orthoPos)){continue;}
-            if (!logicGrid.positionIsFree(orthoPos, 12) && !logicGrid.positionIsFree(orthoPos, 4)) {
+            if (!logicGrid.positionIsFree(orthoPos, 12) &&
+                    (!logicGrid.positionIsFree(orthoPos, 4)||!logicGrid.positionIsFree(orthoPos, 5))) {
                 if(orthoPos.getX() == player.getPos().getX() && orthoPos.getY() == player.getPos().getY()){continue;}
                 BoardPiece piece = logicGrid.getPieceType(orthoPos, boardPiece.getClass());
                 Position orthoPosDir = logicGrid.getNewPosition(orthoPos, ((ConveyorBeltPiece) piece).getDir());
@@ -121,4 +105,5 @@ public class BoardElementsMove {
         }
         return false;
     }
+
 }

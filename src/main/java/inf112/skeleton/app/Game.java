@@ -112,10 +112,6 @@ public class Game {
                 BoardElementsMove.moveConveyorBelt(player1.getCurrentBoardPiece(), player1, logicGrid);
                 player1.setConveyorBeltMove(true);
             }
-            else if(player1.isOnExpressBelt()){
-                BoardElementsMove.moveExpressBelt(player1.getCurrentBoardPiece(), player1, logicGrid);
-                player1.setConveyorBeltMove(true);
-            }
         }
         move.updateMove(player1); //complete move object
         if (move.isNotStandStill()) {
