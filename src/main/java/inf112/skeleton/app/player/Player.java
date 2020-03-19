@@ -121,6 +121,7 @@ public class Player {
             respawnPlayer();
         }
         */
+
         //TODO Add what happens when a player runs out of lives
         //Handle what happens if the player runs out of lives
         else {

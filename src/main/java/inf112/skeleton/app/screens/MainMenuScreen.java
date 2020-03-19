@@ -26,8 +26,8 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen (RoboRallyDemo game) {
         this.game = game;
-        this.width = 1200; // width and height from Main.java
-        this.height = 1200;
+        this.width = Gdx.graphics.getWidth(); // width and height from Main.java
+        this.height = Gdx.graphics.getHeight();
     }
 
     @Override
@@ -35,34 +35,39 @@ public class MainMenuScreen implements Screen {
         stage = new Stage();
 
         // picture = all actors on stage
-        Sprite picture = new Sprite(new Texture("menu_background.png"));
+        // Background
+        Sprite picture = new Sprite(new Texture("MainMenuBackground.png"));
         background = new Image(new SpriteDrawable(picture));
         background.setSize(width, height);
         background.setPosition(0, 0);
         stage.addActor(background);
 
+        // Logo
+        int yPadding = 50;
         picture = new Sprite(new Texture("RoboRally_logo.png"));
         logo = new Image(new SpriteDrawable(picture));
         logo.setSize(logo.getWidth()*1.5f, logo.getHeight()*2);
-        logo.setPosition((width-logo.getWidth())/2, height-475);
+        logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));
         stage.addActor(logo);
 
         // Play button
-        picture = new Sprite(new Texture("play_button_up.png"));
+        yPadding = 100;
+        int xPadding = 100;
+        picture = new Sprite(new Texture("assets/PlayButton.png"));
         playButton = new ImageButton(new SpriteDrawable(picture));
-        playButton.setPosition(125,150);
+        playButton.setPosition(xPadding, yPadding);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen("RoborallyBoard_debugged.tmx"));
+                game.setScreen(new StageSelectionScreen(game));
             }
         });
         stage.addActor(playButton);
 
         // Exit button
-        picture = new Sprite(new Texture("exit_button_up.png"));
+        picture = new Sprite(new Texture("assets/ExitButton.png"));
         exitButton = new ImageButton(new SpriteDrawable(picture));
-        exitButton.setPosition((width-exitButton.getWidth())-125,150);
+        exitButton.setPosition((width-xPadding)-exitButton.getWidth(), yPadding);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {

@@ -1,6 +1,7 @@
 package inf112.skeleton.app;
 
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.grid_objects.FlagPiece;
 import inf112.skeleton.app.player.Player;
 
 import java.util.*;
@@ -89,6 +90,17 @@ public class Phase {
     }
 
     private void touchCheckPoints() {
+        for(int i=0; i<listOfPlayers.length; i++) {
+            if (listOfPlayers[i].getCurrentBoardPiece() instanceof FlagPiece) {
+                Player player = listOfPlayers[i];
+                FlagPiece flag = (FlagPiece) player.getCurrentBoardPiece();
+
+                if (player.getCheckpointsVisited() == flag.getFlagNumber()-1) {
+                    player.visitedCheckpoint();
+                    player.setSpawnPoint(player.getPos().getX(), player.getPos().getY());
+                }
+            }
+        }
     }
 
     private void lasersFire() {
