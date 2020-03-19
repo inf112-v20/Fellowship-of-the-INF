@@ -10,8 +10,6 @@ import static inf112.skeleton.app.grid.Direction.*;
 
 public class BoardElementsMove {
 
-    //TODO Implement conflict solution for when robots collide on conveyor belts, and implement solutions for merging turns
-
     /**
      * Moves a player standing on an expressBelt one tile in the direction of the expressBelt.
      * Will also rotate the player if the expressBelt is a turn.
@@ -99,7 +97,6 @@ public class BoardElementsMove {
                 }
             }
         }
-
         return false;
     }
 

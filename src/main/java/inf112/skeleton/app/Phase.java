@@ -127,11 +127,11 @@ public class Phase {
     public void moveConveyorBelts() {
         boolean morePlayersToMove = false;
         for (int i = 0; i < copyOfPlayers.size(); i++) {
-            System.out.println(copyOfPlayers.size());
             if (copyOfPlayers.get(i).isOnConveyorBelt()) {
                 Player player = copyOfPlayers.get(i);
                 if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid())){
                     morePlayersToMove = true;
+                    i--;
                     continue;
                 }
                 if(BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid())){
@@ -145,7 +145,6 @@ public class Phase {
                 game.executeMoves(move.toArrayList());
                 player.setConveyorBeltMove(true);
                 copyOfPlayers.remove(i);
-                i--;
             }
         }
         if(morePlayersToMove){
