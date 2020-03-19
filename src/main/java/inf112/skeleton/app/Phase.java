@@ -146,7 +146,6 @@ public class Phase {
     public void moveConveyorBelts() {
         boolean morePlayersToMove = false;
         for (int i = 0; i < copyOfPlayers.size(); i++) {
-            System.out.println(copyOfPlayers.get(i).toString());
             if (copyOfPlayers.get(i).isOnConveyorBelt()) {
                 Player player = copyOfPlayers.get(i);
                 if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid())){

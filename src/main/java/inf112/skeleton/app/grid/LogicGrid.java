@@ -296,4 +296,16 @@ public class LogicGrid {
         Position newPos = new Position(newX, newY);
         return newPos;
     }
+
+    /**
+     * Checks if a position is inbounds
+     * @param pos the position to check
+     * @return true if the position is inside the map, false otherwise
+     */
+    public boolean isInBounds(Position pos){
+        if(pos.getY() >= height || pos.getY() < 0 || pos.getX() >= width || pos.getX() < 0){
+            return false;
+        }
+        return true;
+    }
 }
