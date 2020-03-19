@@ -112,7 +112,6 @@ public class Player {
             setPos(newX, newY);
             latestMoveDirection = newDirection;
             this.conveyorBeltMove = false;
-
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it
@@ -431,7 +430,6 @@ public class Player {
        return false;
     }
 
-    public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
 
     public ArrayList<ProgramCard> getLockedCards(){return lockedCards;}
 
@@ -444,14 +442,28 @@ public class Player {
         }
     }
 
+    public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
+
+    /**
+     * Gets the last playermove direction
+     * @return the direction of the last movement of the player (movement can be from cards or map objects)
+     */
     public Direction latestMoveDirection(){
         return latestMoveDirection;
     }
 
-
+    /**
+     *
+     * @param move true if the last movement of the player was by a conveyorbelt/expressbelt, false otherwise
+     */
     public void setConveyorBeltMove(boolean move){
         conveyorBeltMove = move;
     }
+
+    /**
+     *
+     * @return true if the last last movement of the player was by a conveyorbelt/expressbelt, false otherwise
+     */
     public boolean isLatestMoveConveyorBelt(){
         return conveyorBeltMove;
     }

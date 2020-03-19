@@ -197,7 +197,7 @@ public class LogicGrid {
                 //add piece to new position
                 grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
 
-                System.out.println("Moved " + playerPiece.toString() + "from " + oldPosition.toString() + " to " + newPosition.toString());
+                //System.out.println("Moved " + playerPiece.toString() + "from " + oldPosition.toString() + " to " + newPosition.toString());
                 //playerLayer.setCell(oldPosition.getX(), oldPosition.getY(), null);
                 //playerLayer.setCell(newPosition.getX(), newPosition.getY(), ((PlayerPiece) playerPiece).getCurrentCell());
 
@@ -216,7 +216,9 @@ public class LogicGrid {
      * @param layerIndex
      * @return true if there is a NullPiece in the position you are checking
      */
-    private boolean positionIsFree(Position position, int layerIndex) {
+    public boolean positionIsFree(Position position, int layerIndex) {
+        //TODO maybe remove this if statement, was added to stop out of bounds exceptions
+        if(position.getY() < 0 || position.getY() > 11 || position.getX() < 0 || position.getX() > 11){return false;}
         return (grid[position.getX()][position.getY()].get(layerIndex) instanceof NullPiece);
     }
 
@@ -266,4 +268,32 @@ public class LogicGrid {
     }
 
     public ArrayList<Position> getSpawnPointPositions() { return spawnPointPositions; }
+
+    /**
+     * Finds a new neighbor position from a given position
+     * @param position the starting position
+     * @param newDirection the direction from the starting position
+     * @return the neighbor position from the the starting position in the direction that is given
+     */
+    public Position getNewPosition(Position position, Direction newDirection) {
+        Position pos = position;
+        int newX = position.getX();
+        int newY = position.getY();
+        switch (newDirection) {
+            case NORTH:
+                newY += 1;
+                break;
+            case SOUTH:
+                newY -= 1;
+                break;
+            case WEST:
+                newX -= 1;
+                break;
+            case EAST:
+                newX += 1;
+                break;
+        }
+        Position newPos = new Position(newX, newY);
+        return newPos;
+    }
 }

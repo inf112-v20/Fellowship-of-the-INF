@@ -248,6 +248,6 @@ public class GameScreen implements Screen {
         playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
         playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the new direction
         playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
-        System.out.println("Frontend executing: " + move);
+        //System.out.println("Frontend executing: " + move);
     }
 }
