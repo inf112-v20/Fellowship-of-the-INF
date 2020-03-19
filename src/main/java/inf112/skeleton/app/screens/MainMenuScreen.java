@@ -36,7 +36,7 @@ public class MainMenuScreen implements Screen {
 
         // picture = all actors on stage
         // Background
-        Sprite picture = new Sprite(new Texture("menu_background.png"));
+        Sprite picture = new Sprite(new Texture("MainMenuBackground.png"));
         background = new Image(new SpriteDrawable(picture));
         background.setSize(width, height);
         background.setPosition(0, 0);
