@@ -33,6 +33,7 @@ public class Player {
     private BoardPiece currentBoardPiece;
     private Direction latestMoveDirection;
     private boolean conveyorBeltMove = false;
+    private boolean hasBeenMovedThisPhase = false;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -464,6 +465,14 @@ public class Player {
      */
     public boolean isLatestMoveConveyorBelt(){
         return conveyorBeltMove;
+    }
+
+    public void setHasBeenMovedThisPhase(boolean bool){
+        hasBeenMovedThisPhase = bool;
+    }
+
+    public Boolean hasBeenMovedThisPhase(){
+        return hasBeenMovedThisPhase;
     }
 
 }

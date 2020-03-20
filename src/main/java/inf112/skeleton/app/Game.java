@@ -217,4 +217,19 @@ public class Game {
         this.moves.add(moves);//add to list of things to do in frontend
        // gameScreen.executeMove(move); //frontend execution
     }
+
+    /**
+     * Gets a player at a given position
+     * @param pos the position of a player
+     * @return the player at that position
+     */
+    public Player getPlayerAt(Position pos){
+        Player player = null;
+        for (int i = 0; i < playerList.length ; i++) {
+            if(playerList[i].getPos().getX() == pos.getX() && playerList[i].getPos().getY() == pos.getY()){
+                player = playerList[i];
+            }
+        }
+        return player;
+    }
 }

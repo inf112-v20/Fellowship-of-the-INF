@@ -35,12 +35,11 @@ public class Phase {
     public void executePhase(int phaseNumber) {
         //List copy of the players in the game
         this.copyOfPlayers = new ArrayList<>();
-        Collections.addAll(copyOfPlayers, listOfPlayers);
         this.phaseNumber = phaseNumber;
         moveRobots();
+        setUpConveyorBelts();
         moveConveyorBelts(true);
-        copyOfPlayers.clear();
-        Collections.addAll(copyOfPlayers, listOfPlayers);
+        setUpConveyorBelts();
         moveConveyorBelts(false);
         rotateCogs();
         lasersFire();
@@ -126,38 +125,33 @@ public class Phase {
      * If two players are standing on different conveyorbelts pointing directly into eachother, none of them will move
      * If two players are standing on different conveyorbelts that will put both players in the same tile, none of
      * them will move.
+     * @param moveOnlyExpressBelts true if only expressbelts should move
      */
     public void moveConveyorBelts(boolean moveOnlyExpressBelts) {
-        System.out.println(copyOfPlayers.size());
         boolean morePlayersToMove = false;
         for (int i = 0; i < copyOfPlayers.size(); i++) {
             Player player = copyOfPlayers.get(i);
-            System.out.println(player.toString());
             if(player.isOnConveyorBelt()) {
-                System.out.println(player.toString() + " IS ON CONVEYORBELT");
                 if(moveOnlyExpressBelts && !player.isOnExpressBelt()){
-                    System.out.println("Only expressbelts should move");
                     copyOfPlayers.remove(i);
                     i--;
                     continue;
                 }
-                if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid())){
-                    System.out.println("Player is in front of " + player.toString());
+                if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid(), moveOnlyExpressBelts)){
                     morePlayersToMove = true;
                     continue;
                 }
-                if(BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid())){
-                    System.out.println(player.toString() + " is going to crash");
+                if(BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid(), game, moveOnlyExpressBelts)){
                     copyOfPlayers.remove(i);
                     i--;
                     continue;
                 }
                 Move move = new Move(player);
-                System.out.println("MOVING" + player.toString());
                 BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(),player, game.getLogicGrid());
                 move.updateMove(player);
                 game.executeMoves(move.toArrayList());
                 player.setConveyorBeltMove(true);
+                player.setHasBeenMovedThisPhase(true);
                 copyOfPlayers.remove(i);
                 i--;
             }
@@ -189,5 +183,13 @@ public class Phase {
 
     public int getPhaseNumber() {
         return phaseNumber;
+    }
+
+    private void setUpConveyorBelts(){
+        copyOfPlayers.clear();
+        Collections.addAll(copyOfPlayers, listOfPlayers);
+        for (int i = 0; i < listOfPlayers.length; i++) {
+            listOfPlayers[i].setHasBeenMovedThisPhase(false);
+        }
     }
 }
