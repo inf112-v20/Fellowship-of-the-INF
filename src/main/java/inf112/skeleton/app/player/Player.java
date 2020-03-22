@@ -291,17 +291,15 @@ public class Player {
     }
 
     public boolean isLegalMoveInDirection(int newX, int newY, BoardPiece currentPiece, Direction dir, int layerLevel) {
-        if (isDeadMove(newX, newY)) {
-            if (currentPiece instanceof WallPiece) {
-                return ((WallPiece) currentPiece).canLeave(dir);
-            }
-        } else {
+        if (currentPiece instanceof WallPiece) {
+            //cannot leave if the WallPiece player is standing on has a wall in the direction
+            if  (!((WallPiece) currentPiece).canLeave(dir)) return false;
+        }
+        if (!isDeadMove(newX, newY)){ //TODO if there is an abyss with a wallPiece on it, the wall won't work
             BoardPiece pieceInFront = pieceGrid[newX][newY].get(layerLevel);
-            if (currentPiece instanceof WallPiece) {
-                return ((WallPiece) currentPiece).canLeave(dir);
-            }
             if (pieceInFront instanceof WallPiece) {
-                return ((WallPiece) pieceInFront).canGo(dir);
+                //cannot go if WallPiece in front has a wall facing player
+                if  (!((WallPiece) pieceInFront).canGo(dir)) return false;
             }
             //If there is a player in the way of where you want to move, check that you can push that player
             PlayerPiece possiblePlayer = logicGrid.getPieceType(new Position(newX, newY), PlayerPiece.class);
@@ -374,9 +372,7 @@ public class Player {
                 break;
         }
         rotateMove.updateMove(this); //complete rotateMove object
-        if (rotateMove.isNotStandStill()) {
-            moves.add(rotateMove); //TODO refactor
-        }
+        moves.add(rotateMove);
     }
 
     public int getPlayerNumber() { return playerNumber; }
