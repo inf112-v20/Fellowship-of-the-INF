@@ -218,7 +218,7 @@ public class Player {
      */
     private PlayerPiece getPlayerPieceToPush(PlayerPiece playerPiece, Direction dir) {
         Position targetPosition = playerPiece.getPos().getPositionIn(dir);
-        if (logicGrid.isWithinMap(targetPosition))
+        if (logicGrid.isInBounds(targetPosition))
             return logicGrid.getPieceType(targetPosition, PlayerPiece.class);
         return null; //return null if target position is not within grid
     }
@@ -295,7 +295,8 @@ public class Player {
             //cannot leave if the WallPiece player is standing on has a wall in the direction
             if  (!((WallPiece) currentPiece).canLeave(dir)) return false;
         }
-        if (!isDeadMove(newX, newY)){ //TODO if there is an abyss with a wallPiece on it, the wall won't work
+        //if the piece in front is within the bounds, check what is there
+        if (logicGrid.isInBounds(new Position(newX, newY))) {
             BoardPiece pieceInFront = pieceGrid[newX][newY].get(layerLevel);
             if (pieceInFront instanceof WallPiece) {
                 //cannot go if WallPiece in front has a wall facing player
@@ -318,18 +319,17 @@ public class Player {
      * @return whether the move results in death
      */
     private boolean isDeadMove(int x, int y) {
-        int MAP_WIDTH = game.getLogicGrid().getWidth();
-        int MAP_HEIGHT = game.getLogicGrid().getHeight();
         BoardPiece currPiece;
-        if (x > MAP_WIDTH - 1 || x < 0 || y < 0 || y > MAP_HEIGHT - 1) {
-            return true;
-        } else {
+        //if move is within bounds, check if move is to AbyssPiece
+        if (logicGrid.isInBounds(new Position(x, y))) {
             for (int i = 0; i < pieceGrid[x][y].size(); i++) {
                 currPiece = pieceGrid[x][y].get(i);
                 if (currPiece instanceof AbyssPiece) {
                     return true;
                 }
             }
+        } else {
+            return true;
         }
         return false;
     }
