@@ -222,7 +222,6 @@ public class LogicGrid {
         if(!isInBounds(position)){
             return false;
         }
-        System.out.println("YOO");
         return (grid[position.getX()][position.getY()].get(layerIndex) instanceof NullPiece);
     }
 
@@ -273,12 +272,15 @@ public class LogicGrid {
 
     public ArrayList<Position> getSpawnPointPositions() { return spawnPointPositions; }
 
+
     /**
      * Finds a new neighbor position from a given position
      * @param position the starting position
      * @param newDirection the direction from the starting position
      * @return the neighbor position from the the starting position in the direction that is given
      */
+    /*
+    DUPLICATE CODE. getPositionIn in Position does the same thing
     public Position getNewPosition(Position position, Direction newDirection) {
         Position pos = position;
         int newX = position.getX();
@@ -300,6 +302,7 @@ public class LogicGrid {
         Position newPos = new Position(newX, newY);
         return newPos;
     }
+    */
 
     /**
      * Checks if a position is inbounds
@@ -307,7 +310,6 @@ public class LogicGrid {
      * @return true if the position is inside the map, false otherwise
      */
     public boolean isInBounds(Position pos){
-        System.out.println("x: " + pos.getX() + " y: " + pos.getY());
         if(pos.getY() >= height || pos.getY() < 0 || pos.getX() >= width || pos.getX() < 0){
             return false;
         }

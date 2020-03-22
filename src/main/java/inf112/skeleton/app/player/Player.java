@@ -338,7 +338,7 @@ public class Player {
      * Player executes the move on the given card
      *
      * @param programCard to convert to player move
-     * @param moves
+     * @param moves list of moves to add move objects to
      */
     public void executeCardAction(ProgramCard programCard, MovesToExecuteSimultaneously moves) {
         Move rotateMove = new Move(this); //initiate possible rotateMove to be done
@@ -526,10 +526,7 @@ public class Player {
      * @return true if a player is on a conveyorBelt, false otherwise.
      */
     public boolean isOnConveyorBelt() {
-        if (currentBoardPiece instanceof ConveyorBeltPiece) {
-            return true;
-        }
-        return false;
+        return (currentBoardPiece instanceof ConveyorBeltPiece); //TODO @Erlend these methods are unnecessary, as they are only one line
     }
 
     /**
@@ -538,10 +535,7 @@ public class Player {
      * @return true if a player is on an ExpressBelt, false otherwise.
      */
     public boolean isOnExpressBelt() {
-        if (currentBoardPiece instanceof ExpressBeltPiece) {
-            return true;
-        }
-        return false;
+        return (currentBoardPiece instanceof ExpressBeltPiece);
     }
 
     /**
