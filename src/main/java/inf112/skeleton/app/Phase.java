@@ -36,7 +36,6 @@ public class Phase {
         this.copyOfPlayers = new ArrayList<>();
         this.phaseNumber = phaseNumber;
         moveRobots();
-        setUpConveyorBelts();
         moveConveyorBelts(true);
         setUpConveyorBelts();
         moveConveyorBelts(false);
@@ -55,8 +54,7 @@ public class Phase {
     public void moveRobots() {
         playerAndPriority = new HashMap<>();
         orderedListOfPlayers = new ArrayList<>();
-        for (int i = 0; i < listOfPlayers.length; i++) {
-            Player player = listOfPlayers[i];
+        for (Player player : listOfPlayers) {
             ProgramCard programCardThisPhase = player.getSelectedCards()[phaseNumber];
             Integer cardPriority = programCardThisPhase.getPriority();
             playerAndPriority.put(player, cardPriority);
@@ -94,18 +92,17 @@ public class Phase {
     }
 
     private void touchCheckPoints() {
-        for(int i=0; i<listOfPlayers.length; i++) {
-            if (listOfPlayers[i].getCurrentBoardPiece() instanceof FlagPiece) {
-                Player player = listOfPlayers[i];
+        for (Player player : listOfPlayers) {
+            if (player.getCurrentBoardPiece() instanceof FlagPiece) {
                 FlagPiece flag = (FlagPiece) player.getCurrentBoardPiece();
 
-                if (player.getCheckpointsVisited() == flag.getFlagNumber()-1) {
+                if (player.getCheckpointsVisited() == flag.getFlagNumber() - 1) {
                     player.visitedCheckpoint();
                     player.setSpawnPoint(player.getPos().getX(), player.getPos().getY());
                 }
             }
-        }
     }
+}
 
     private void lasersFire() {
     }
@@ -123,29 +120,30 @@ public class Phase {
      * If two players are standing on different conveyorbelts pointing directly into eachother, none of them will move
      * If two players are standing on different conveyorbelts that will put both players in the same tile, none of
      * them will move.
+     *
      * @param moveOnlyExpressBelts true if only expressbelts should move
      */
     public void moveConveyorBelts(boolean moveOnlyExpressBelts) {
         boolean morePlayersToMove = false;
         for (int i = 0; i < copyOfPlayers.size(); i++) {
             Player player = copyOfPlayers.get(i);
-            if(player.isOnConveyorBelt()) {
-                if(moveOnlyExpressBelts && !player.isOnExpressBelt()){
+            if (player.isOnConveyorBelt()) {
+                if (moveOnlyExpressBelts && !player.isOnExpressBelt()) {
                     copyOfPlayers.remove(i);
                     i--;
                     continue;
                 }
-                if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid(), moveOnlyExpressBelts)){
+                if (BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid(), moveOnlyExpressBelts)) {
                     morePlayersToMove = true;
                     continue;
                 }
-                if(BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid(), game, moveOnlyExpressBelts)){
+                if (BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid(), game, moveOnlyExpressBelts)) {
                     copyOfPlayers.remove(i);
                     i--;
                     continue;
                 }
                 Move move = new Move(player);
-                BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(),player, game.getLogicGrid());
+                BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(), player, game.getLogicGrid());
                 move.updateMove(player);
                 game.executeMoves(move.toMovesList());
                 player.setConveyorBeltMove(true);
@@ -154,7 +152,7 @@ public class Phase {
                 i--;
             }
         }
-        if(morePlayersToMove){
+        if (morePlayersToMove) {
             moveConveyorBelts(moveOnlyExpressBelts);
         }
     }
@@ -164,11 +162,10 @@ public class Phase {
      * and will rotate them accordingly if true.
      */
     public void rotateCogs() {
-        for (int i = 0; i < listOfPlayers.length; i++) {
-            if (listOfPlayers[i].isOnCog()) {
-                Player player = listOfPlayers[i];
+        for (Player player : listOfPlayers) {
+            if (player.isOnCog()) {
                 Move move = new Move(player);
-                BoardElementsMove.rotateCog(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+                BoardElementsMove.rotateCog(player.getCurrentBoardPiece(), player);
                 move.updateMove(player);
                 game.executeMoves(move.toMovesList());
             }
@@ -183,11 +180,12 @@ public class Phase {
         return phaseNumber;
     }
 
-    private void setUpConveyorBelts(){
+    //TODO @Erlend needs comments
+    private void setUpConveyorBelts() {
         copyOfPlayers.clear();
         Collections.addAll(copyOfPlayers, listOfPlayers);
-        for (int i = 0; i < listOfPlayers.length; i++) {
-            listOfPlayers[i].setHasBeenMovedThisPhase(false);
+        for (Player player : listOfPlayers) {
+            player.setHasBeenMovedThisPhase(false);
         }
     }
 }
