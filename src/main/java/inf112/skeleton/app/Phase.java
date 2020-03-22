@@ -36,6 +36,7 @@ public class Phase {
         this.copyOfPlayers = new ArrayList<>();
         this.phaseNumber = phaseNumber;
         moveRobots();
+        setUpConveyorBelts();
         moveConveyorBelts(true);
         setUpConveyorBelts();
         moveConveyorBelts(false);
@@ -120,28 +121,32 @@ public class Phase {
      * If two players are standing on different conveyorbelts pointing directly into eachother, none of them will move
      * If two players are standing on different conveyorbelts that will put both players in the same tile, none of
      * them will move.
-     *
      * @param moveOnlyExpressBelts true if only expressbelts should move
      */
     public void moveConveyorBelts(boolean moveOnlyExpressBelts) {
         boolean morePlayersToMove = false;
         for (int i = 0; i < copyOfPlayers.size(); i++) {
             Player player = copyOfPlayers.get(i);
-            if (player.isOnConveyorBelt()) {
-                if (moveOnlyExpressBelts && !player.isOnExpressBelt()) {
+            if(player.isOnConveyorBelt()) {
+                if(moveOnlyExpressBelts && !player.isOnExpressBelt()){
+
                     copyOfPlayers.remove(i);
                     i--;
                     continue;
                 }
-                if (BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid(), moveOnlyExpressBelts)) {
+                if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid(), moveOnlyExpressBelts)){
+                    System.out.println("Player is in front of " + player.toString());
                     morePlayersToMove = true;
                     continue;
                 }
-                if (BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid(), game, moveOnlyExpressBelts)) {
+                if(BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid(), game, moveOnlyExpressBelts)){
+                    System.out.println(player.toString() + " is going to crash");
+
                     copyOfPlayers.remove(i);
                     i--;
                     continue;
                 }
+                System.out.println("Move " + player.toString());
                 Move move = new Move(player);
                 BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(), player, game.getLogicGrid());
                 move.updateMove(player);

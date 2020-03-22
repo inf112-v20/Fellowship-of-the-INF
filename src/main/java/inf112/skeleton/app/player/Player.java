@@ -114,6 +114,9 @@ public class Player {
         }
         //check if the move kills the player, if so lose a life
         if (isDeadMove(newX, newY)) {
+            currentBoardPiece = pieceGrid[spawnPoint.getX()][spawnPoint.getY()].get(0);
+            latestMoveDirection = newDirection;
+            this.conveyorBeltMove = false;
             loseLife();
         }
 
@@ -171,7 +174,13 @@ public class Player {
         }
         //check if the move kills the player, if so lose a life
         if (isDeadMove(newX, newY)) {
+            currentBoardPiece = pieceGrid[spawnPoint.getX()][spawnPoint.getY()].get(0);
+            latestMoveDirection = newDirection;
+            this.conveyorBeltMove = false;
             loseLife();
+
+            //game.getLogicGrid().removePlayerFromMap(playerPiece.getPos());
+            //return;
         }
 
         //if position has changed and player isn't dead, update logic grid
