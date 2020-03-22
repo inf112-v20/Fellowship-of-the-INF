@@ -3,7 +3,6 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
@@ -22,7 +21,7 @@ public class Game {
     private int roundNumber = 0;
     private Round round;
     private final int NUMBER_OF_PLAYERS = 4;
-    private Queue<ArrayList<Move>> moves;
+    private Queue<MovesToExecuteSimultaneously> moves;
     private GameScreen gameScreen;
 
 
@@ -46,7 +45,7 @@ public class Game {
         }
     }
 
-    public void performMoves(ArrayList<Move> moves) {
+    public void performMoves(MovesToExecuteSimultaneously moves) {
         for (Move move : moves) {
             Position oldPos = move.getOldPos();
             Position newPos = move.getNewPos();
@@ -84,7 +83,7 @@ public class Game {
      */
     public void handleKeyBoardInput() {
         Move rotateMove = new Move(player1); //initiate possible rotateMove to be done
-        ArrayList<Move> moves = new ArrayList<>();//initiate moves to be done
+        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();//initiate moves to be done
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -114,9 +113,7 @@ public class Game {
             }
         }
         rotateMove.updateMove(player1); //complete rotateMove object
-        if (rotateMove.isNotStandStill()) {
-            moves.add(rotateMove);
-        }
+        moves.add(rotateMove);
         //first player moves get executed
         performMoves(moves); //execute moves if there are any
         for (Move move : moves) {
@@ -139,9 +136,7 @@ public class Game {
             player2.turnPlayerAround();
         }
         move2.updateMove(player2); //complete move object
-        if (move2.isNotStandStill()) {
-          moves.add(move2);
-        }
+        moves.add(move2);
         //execution of player 2 moves
         performMoves(moves); //execute moves if there are any
         for (Move move : moves) {
@@ -217,7 +212,7 @@ public class Game {
         round.startRound();
     }
 
-    public Queue<ArrayList<Move>> getMoves() {
+    public Queue<MovesToExecuteSimultaneously> getMoves() {
         return moves;
     }
 
@@ -226,7 +221,7 @@ public class Game {
      *
      * @param moves to execute
      */
-    public void executeMoves(ArrayList<Move> moves) {
+    public void executeMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //backend execution
         this.moves.add(moves);//add to list of things to do in frontend
         // gameScreen.executeMove(move); //frontend execution

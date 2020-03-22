@@ -104,8 +104,8 @@ public class Move {
      *
      * @return an ArrayList containing only this move
      */
-    public ArrayList<Move> toArrayList() {
-        ArrayList<Move> listWithSingleMove = new ArrayList<>();
+    public MovesToExecuteSimultaneously toMovesList() {
+        MovesToExecuteSimultaneously listWithSingleMove = new MovesToExecuteSimultaneously();
         listWithSingleMove.add(this);
         return listWithSingleMove;
     }

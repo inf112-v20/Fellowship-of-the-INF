@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import inf112.skeleton.app.Move;
 import inf112.skeleton.app.Game;
+import inf112.skeleton.app.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
@@ -138,7 +139,7 @@ public class GameScreen implements Screen {
      * This method executed the list of moves in the front end of the movesToExecute queue.
      */
     public void executeMove() {
-        ArrayList<Move> firstSetOfMoves = game.getMoves().peek();
+        MovesToExecuteSimultaneously firstSetOfMoves = game.getMoves().peek();
         for (Move currentMove : firstSetOfMoves) {
             redrawPlayer(currentMove);
         }

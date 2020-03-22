@@ -72,7 +72,7 @@ public class Phase {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
             System.out.println("PLayer: " + player.toString() + " pos: " + player.getPos().toString());
-            ArrayList<Move> movesToExecuteTogether = generateMovesToExecuteTogether(player);
+            MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
         }
     }
@@ -84,9 +84,9 @@ public class Phase {
      * @param player that is executing a move
      * @return list of moves to execute together, in the other they should be executed
      */
-    private ArrayList<Move> generateMovesToExecuteTogether(Player player) {
+    private MovesToExecuteSimultaneously generateMovesToExecuteTogether(Player player) {
         ProgramCard cardThisPhase = player.getSelectedCards()[phaseNumber];
-        ArrayList<Move> moves = new ArrayList<>();
+        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         player.executeCardAction(cardThisPhase, moves); //updates the state of the player, not the board
         System.out.println("Player " + player.getPlayerNumber() + " played card "
                 + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
@@ -147,7 +147,7 @@ public class Phase {
                 Move move = new Move(player);
                 BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(),player, game.getLogicGrid());
                 move.updateMove(player);
-                game.executeMoves(move.toArrayList());
+                game.executeMoves(move.toMovesList());
                 player.setConveyorBeltMove(true);
                 player.setHasBeenMovedThisPhase(true);
                 copyOfPlayers.remove(i);
@@ -170,7 +170,7 @@ public class Phase {
                 Move move = new Move(player);
                 BoardElementsMove.rotateCog(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
                 move.updateMove(player);
-                game.executeMoves(move.toArrayList());
+                game.executeMoves(move.toMovesList());
             }
         }
     }

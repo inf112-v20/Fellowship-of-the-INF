@@ -3,6 +3,7 @@ package inf112.skeleton.app.player;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.Game;
 import inf112.skeleton.app.Move;
+import inf112.skeleton.app.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
@@ -90,7 +91,7 @@ public class Player {
      *
      * @param newDirection new direction to move the player
      */
-    public void tryToGo(Direction newDirection, ArrayList<Move> moves) {
+    public void tryToGo(Direction newDirection, MovesToExecuteSimultaneously moves) {
         Move move = new Move(this);
         Position pos = playerPiece.getPos();
         int newX = playerPiece.getPos().getX();
@@ -201,7 +202,7 @@ public class Player {
      * @param dir direction being pushed
      * @param moves list of moves
      */
-    private void addMovesForPushedRobots(PlayerPiece playerPiece, Direction dir, ArrayList<Move> moves) {
+    private void addMovesForPushedRobots(PlayerPiece playerPiece, Direction dir, MovesToExecuteSimultaneously moves) {
         PlayerPiece possiblePlayerPiece = getPlayerPieceToPush(playerPiece, dir);
         if (possiblePlayerPiece != null) { //if there is a player to push, push it
             Player playertoPush = possiblePlayerPiece.getPlayer();
@@ -341,7 +342,7 @@ public class Player {
      * @param programCard to convert to player move
      * @param moves
      */
-    public void executeCardAction(ProgramCard programCard, ArrayList<Move> moves) {
+    public void executeCardAction(ProgramCard programCard, MovesToExecuteSimultaneously moves) {
         Move rotateMove = new Move(this); //initiate possible rotateMove to be done
         switch (programCard.getCommand()) {
             case MOVE1:
