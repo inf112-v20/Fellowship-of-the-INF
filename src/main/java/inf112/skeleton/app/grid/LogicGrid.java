@@ -216,7 +216,9 @@ public class LogicGrid {
      * @param layerIndex
      * @return true if there is a NullPiece in the position you are checking
      */
-    private boolean positionIsFree(Position position, int layerIndex) {
+    public boolean positionIsFree(Position position, int layerIndex) {
+        //TODO maybe remove this if statement, was added to stop out of bounds exceptions
+        if(position.getY() < 0 || position.getY() > 11 || position.getX() < 0 || position.getX() > 11){return false;}
         return (grid[position.getX()][position.getY()].get(layerIndex) instanceof NullPiece);
     }
 
@@ -266,6 +268,46 @@ public class LogicGrid {
     }
 
     public ArrayList<Position> getSpawnPointPositions() { return spawnPointPositions; }
+
+    /**
+     * Finds a new neighbor position from a given position
+     * @param position the starting position
+     * @param newDirection the direction from the starting position
+     * @return the neighbor position from the the starting position in the direction that is given
+     */
+    public Position getNewPosition(Position position, Direction newDirection) {
+        Position pos = position;
+        int newX = position.getX();
+        int newY = position.getY();
+        switch (newDirection) {
+            case NORTH:
+                newY += 1;
+                break;
+            case SOUTH:
+                newY -= 1;
+                break;
+            case WEST:
+                newX -= 1;
+                break;
+            case EAST:
+                newX += 1;
+                break;
+        }
+        Position newPos = new Position(newX, newY);
+        return newPos;
+    }
+
+    /**
+     * Checks if a position is inbounds
+     * @param pos the position to check
+     * @return true if the position is inside the map, false otherwise
+     */
+    public boolean isInBounds(Position pos){
+        if(pos.getY() >= height || pos.getY() < 0 || pos.getX() >= width || pos.getX() < 0){
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Checks if a position is within the bounds of the logic grid

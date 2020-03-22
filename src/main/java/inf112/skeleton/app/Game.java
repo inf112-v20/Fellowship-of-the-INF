@@ -63,9 +63,7 @@ public class Game {
         this.logicGrid = logicGrid;
     }
 
-    public GameDeck getGameDeck() {
-        return gameDeck;
-    }
+    public GameDeck getGameDeck() { return gameDeck; }
 
     public void setGameDeck(GameDeck gameDeck) {
         this.gameDeck = gameDeck;
@@ -79,9 +77,7 @@ public class Game {
         this.player1 = player;
     }
 
-    public Round getRound() {
-        return round;
-    }
+    public Round getRound(){return round;}
 
     /**
      * Handles keyboard input
@@ -111,11 +107,42 @@ public class Game {
             player1.visitedCheckpoint();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
             player1.removeCheckpoint();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+            if(player1.isOnConveyorBelt()) {
+                BoardElementsMove.moveConveyorBelt(player1.getCurrentBoardPiece(), player1, logicGrid);
+                player1.setConveyorBeltMove(true);
+            }
         }
         rotateMove.updateMove(player1); //complete rotateMove object
         if (rotateMove.isNotStandStill()) {
             moves.add(rotateMove);
         }
+        //first player moves get executed
+        performMoves(moves); //execute moves if there are any
+        for (Move move : moves) {
+            gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
+        }
+        moves.clear();
+
+        //second player moves get handled
+        Player player2 = playerList[1];
+        Move move2 = new Move(player2);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            player2.turnPlayerLeft();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            player2.turnPlayerRight();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            player2.turnPlayerAround();
+        }
+        move2.updateMove(player2); //complete move object
+        if (move2.isNotStandStill()) {
+          moves.add(move2);
+        }
+        //execution of player 2 moves
         performMoves(moves); //execute moves if there are any
         for (Move move : moves) {
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
@@ -203,5 +230,20 @@ public class Game {
         performMoves(moves); //backend execution
         this.moves.add(moves);//add to list of things to do in frontend
         // gameScreen.executeMove(move); //frontend execution
+    }
+
+    /**
+     * Gets a player at a given position
+     * @param pos the position of a player
+     * @return the player at that position
+     */
+    public Player getPlayerAt(Position pos){
+        Player player = null;
+        for (int i = 0; i < playerList.length ; i++) {
+            if(playerList[i].getPos().getX() == pos.getX() && playerList[i].getPos().getY() == pos.getY()){
+                player = playerList[i];
+            }
+        }
+        return player;
     }
 }
