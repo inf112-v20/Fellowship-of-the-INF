@@ -142,6 +142,59 @@ public class Player {
     }
 
     /**
+     * This class is identical to the other tryToGo, but does not handle a moves object.
+     * This is used when tryToGo is used on a conveyor belt, as conveyor belts deal with collision differently.
+     *
+     * @param newDirection new direction to move the player
+     */
+    public void tryToGo(Direction newDirection) {
+        //TODO: duplicate code, refactor
+        Position pos = playerPiece.getPos();
+        int newX = playerPiece.getPos().getX();
+        int newY = playerPiece.getPos().getY();
+
+        switch (newDirection) {
+            case NORTH:
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
+                break;
+            case SOUTH:
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY -= 1;
+                break;
+            case WEST:
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX -= 1;
+                break;
+            case EAST:
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX += 1;
+                break;
+        }
+        //check if the move kills the player, if so lose a life
+        if (isDeadMove(newX, newY)) {
+            loseLife();
+        }
+
+        //if position has changed and player isn't dead, update logic grid
+        if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
+            setCurrentBoardPiece(newX, newY); //update currentBoardPiece
+            setPos(newX, newY);
+            latestMoveDirection = newDirection;
+            this.conveyorBeltMove = false;
+        }
+        //TODO This should probably only happen when the round is over, and we are about to start a new round
+        //If the player still have lives left, respawn it
+        /*
+        else if (lives >= 0 && isDead()) {
+            respawnPlayer();
+        }
+        */
+
+        //TODO Add what happens when a player runs out of lives
+        //Handle what happens if the player runs out of lives
+        else {
+            setPos(newX, newY);
+        }
+    }
+
+    /**
      * If there is a player to be pushed, call tryToGo for the player laying there
      * TryToGo will call addMovesForPushedRobots, and add moves to the list, in order.
      * @param playerPiece playerPiece that is pushing other players
@@ -289,6 +342,7 @@ public class Player {
      * @param moves
      */
     public void executeCardAction(ProgramCard programCard, ArrayList<Move> moves) {
+        Move rotateMove = new Move(this); //initiate possible rotateMove to be done
         switch (programCard.getCommand()) {
             case MOVE1:
                 tryToGo(getPlayerPiece().getDir(), moves);
@@ -317,6 +371,10 @@ public class Player {
             default:
                 //TODO error handling as default maybe?
                 break;
+        }
+        rotateMove.updateMove(this); //complete rotateMove object
+        if (rotateMove.isNotStandStill()) {
+            moves.add(rotateMove); //TODO refactor
         }
     }
 
