@@ -9,7 +9,6 @@ import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -233,12 +232,11 @@ public class Game {
      * @return the player at that position
      */
     public Player getPlayerAt(Position pos){
-        Player player = null;
         for (int i = 0; i < playerList.length ; i++) {
             if(playerList[i].getPos().getX() == pos.getX() && playerList[i].getPos().getY() == pos.getY()){
-                player = playerList[i];
+                return playerList[i];
             }
         }
-        return player;
+        return null; //no player in position
     }
 }

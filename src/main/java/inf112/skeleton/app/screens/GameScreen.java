@@ -23,7 +23,6 @@ import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.Player;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 
@@ -40,6 +39,7 @@ public class GameScreen implements Screen {
     private int MAP_HEIGHT;
     private int TILE_WIDTH_DPI; //pixel width per cell
     private int MAP_WIDTH_DPI; //total width of map in pixels
+    private int MAP_HEIGHT_DPI; //total height of map in pixels
     private TiledMapTileLayer playerLayer;
     private TmxMapLoader mapLoader;
     private MapProperties mapProperties;
@@ -58,10 +58,11 @@ public class GameScreen implements Screen {
         MAP_HEIGHT = mapProperties.get("height", Integer.class);
         TILE_WIDTH_DPI = mapProperties.get("tilewidth", Integer.class);
         MAP_WIDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI;
+        MAP_HEIGHT_DPI = MAP_HEIGHT * TILE_WIDTH_DPI;
 
         tiles = this.map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
-        gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_WIDTH_DPI, camera);
+        gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_HEIGHT_DPI, camera);
         camera.translate(MAP_WIDTH_DPI, MAP_WIDTH_DPI / 2);
         mapRenderer = new OrthogonalTiledMapRenderer(this.map);
         // Layers, add more later
@@ -140,6 +141,7 @@ public class GameScreen implements Screen {
      */
     public void executeMove() {
         MovesToExecuteSimultaneously firstSetOfMoves = game.getMoves().peek();
+        assert firstSetOfMoves != null;
         for (Move currentMove : firstSetOfMoves) {
             redrawPlayer(currentMove);
         }

@@ -12,6 +12,7 @@ import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Class representing a player.
@@ -491,7 +492,7 @@ public class Player {
             ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
             spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
         } catch (Exception spawnNotFound) {
-            setSpawnPoint(0,0+playerNumber);
+            setSpawnPoint(0,0+playerNumber); //TODO @Lena remove 0+??
         }
     }
 
@@ -543,22 +544,17 @@ public class Player {
      * @return true if a player is on a cog, false otherwise.
      */
     public boolean isOnCog(){
-       if(currentBoardPiece instanceof CogPiece){
-           return true;
-       }
-       return false;
+        return currentBoardPiece instanceof CogPiece;
     }
 
 
     public ArrayList<ProgramCard> getLockedCards(){return lockedCards;}
 
-    /*
-    Removes all cards from the players selected cards
+    /**
+     * Removes all cards from the players selected cards
      */
     public void removeSelectedCards(){
-        for (int i = 0; i < selectedCards.length ; i++) {
-            selectedCards[i] = null;
-        }
+        Arrays.fill(selectedCards, null);
     }
 
     public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}

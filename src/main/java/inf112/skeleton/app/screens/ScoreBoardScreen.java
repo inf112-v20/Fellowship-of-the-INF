@@ -56,7 +56,7 @@ public class ScoreBoardScreen {
         table.setPosition(4000,500);
 
         TextureRegion whiteTR = new TextureRegion(whiteTexture);
-        TextureRegionDrawable whiteTRD =  new TextureRegionDrawable(whiteTR);;
+        TextureRegionDrawable whiteTRD =  new TextureRegionDrawable(whiteTR);
 
         String headLabelText  = "Name";
         Label headLabel = new Label(headLabelText, oddRowStyle);
@@ -143,8 +143,7 @@ public class ScoreBoardScreen {
     public Image createImage(Texture texture){
         TextureRegion textureRegion = new TextureRegion(texture);
         TextureRegionDrawable textureRegionDrawable = new TextureRegionDrawable(textureRegion);
-        Image image = new Image(textureRegionDrawable);
-        return image;
+        return new Image(textureRegionDrawable);
     }
 
     public Stage getStage(){

@@ -5,8 +5,6 @@ import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.Player;
 
-import java.util.ArrayList;
-
 public class Move {
 
     private PlayerPiece playerPiece;

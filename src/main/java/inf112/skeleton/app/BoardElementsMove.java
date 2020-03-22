@@ -65,7 +65,7 @@ public class BoardElementsMove {
         //12 = playerindex, 4 = conveyorbeltindex, 5 = expressbeltindex
         if(!logicGrid.positionIsFree(newPos, 12) &&
                 (!logicGrid.positionIsFree(newPos, 4)||!logicGrid.positionIsFree(newPos, 5))){
-            BoardPiece piece = logicGrid.getPieceType(newPos, ConveyorBeltPiece.class);
+            ConveyorBeltPiece piece = logicGrid.getPieceType(newPos, ConveyorBeltPiece.class);
             if(!logicGrid.positionIsFree(newPos, 5)){
                 piece = logicGrid.getPieceType(newPos, ExpressBeltPiece.class);
             }
@@ -73,9 +73,7 @@ public class BoardElementsMove {
                 return false;
             }
 
-            if(((ConveyorBeltPiece) piece).getDir().getOppositeDirection() != ((ConveyorBeltPiece) boardPiece).getDir()) {
-                return true;
-            }
+            return piece.getDir().getOppositeDirection() != ((ConveyorBeltPiece) boardPiece).getDir();
         }
         return false;
     }
