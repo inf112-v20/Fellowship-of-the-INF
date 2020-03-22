@@ -217,8 +217,12 @@ public class LogicGrid {
      * @return true if there is a NullPiece in the position you are checking
      */
     public boolean positionIsFree(Position position, int layerIndex) {
-        //TODO maybe remove this if statement, was added to stop out of bounds exceptions
-        if(position.getY() < 0 || position.getY() > 11 || position.getX() < 0 || position.getX() > 11){return false;}
+        //conveyor belts cannot move players off board as it causes error
+        //TODO, allow conveyorBelt to push player to death.
+        if(!isInBounds(position)){
+            return false;
+        }
+        System.out.println("YOO");
         return (grid[position.getX()][position.getY()].get(layerIndex) instanceof NullPiece);
     }
 
@@ -303,6 +307,7 @@ public class LogicGrid {
      * @return true if the position is inside the map, false otherwise
      */
     public boolean isInBounds(Position pos){
+        System.out.println("x: " + pos.getX() + " y: " + pos.getY());
         if(pos.getY() >= height || pos.getY() < 0 || pos.getX() >= width || pos.getX() < 0){
             return false;
         }
