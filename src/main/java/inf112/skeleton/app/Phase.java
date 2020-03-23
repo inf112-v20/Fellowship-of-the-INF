@@ -37,7 +37,7 @@ public class Phase {
      * @param phaseNumber the current phase number
      */
     public void executePhase(int phaseNumber) {
-        startPhase();
+        startPhase(phaseNumber);
         moveRobots();
         setUpConveyorBelts();
         moveConveyorBelts(true);
@@ -53,8 +53,9 @@ public class Phase {
 
     /**
      * Things that need to be done at the beginning of each phase
+     * @param phaseNumber which phase out of five it is
      */
-    public void startPhase() {
+    public void startPhase(int phaseNumber) {
         this.phaseNumber = phaseNumber;
         this.copyOfPlayers = new ArrayList<>();
     }
