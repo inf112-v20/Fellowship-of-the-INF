@@ -1,7 +1,6 @@
 package inf112.skeleton.app;
 
 import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.grid_objects.FlagPiece;
 import inf112.skeleton.app.player.Player;
 
 import java.util.*;
@@ -13,7 +12,6 @@ public class Phase {
     private int phaseNumber;
     HashMap<Player, Integer> playerAndPriority;
     private Game game;
-    private ArrayList<Player> copyOfPlayers;
 
     public Phase(Game game) {
         this.game = game;
@@ -32,14 +30,10 @@ public class Phase {
      * @param phaseNumber the current phase number
      */
     public void executePhase(int phaseNumber) {
-        //List copy of the players in the game
-        this.copyOfPlayers = new ArrayList<>();
         this.phaseNumber = phaseNumber;
         moveRobots();
-        setUpConveyorBelts();
-        moveConveyorBelts(true);
-        setUpConveyorBelts();
-        moveConveyorBelts(false);
+        moveExpressBelts();
+        moveConveyorBelts();
         rotateCogs();
         lasersFire();
         touchCheckPoints();
@@ -55,7 +49,8 @@ public class Phase {
     public void moveRobots() {
         playerAndPriority = new HashMap<>();
         orderedListOfPlayers = new ArrayList<>();
-        for (Player player : listOfPlayers) {
+        for (int i = 0; i < listOfPlayers.length; i++) {
+            Player player = listOfPlayers[i];
             ProgramCard programCardThisPhase = player.getSelectedCards()[phaseNumber];
             Integer cardPriority = programCardThisPhase.getPriority();
             playerAndPriority.put(player, cardPriority);
@@ -71,7 +66,7 @@ public class Phase {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
             System.out.println("PLayer: " + player.toString() + " pos: " + player.getPos().toString());
-            MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
+            ArrayList<Move> movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
         }
     }
@@ -83,27 +78,18 @@ public class Phase {
      * @param player that is executing a move
      * @return list of moves to execute together, in the other they should be executed
      */
-    private MovesToExecuteSimultaneously generateMovesToExecuteTogether(Player player) {
+    private ArrayList<Move> generateMovesToExecuteTogether(Player player) {
         ProgramCard cardThisPhase = player.getSelectedCards()[phaseNumber];
-        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
-        player.executeCardAction(cardThisPhase, moves); //updates the state of the player, not the board
+        Move move = new Move(player);
+        player.executeCardAction(cardThisPhase); //updates the state of the player, not the board
+        move.updateMove(player);
         System.out.println("Player " + player.getPlayerNumber() + " played card "
                 + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
-        return moves;
+        return move.toArrayList();
     }
 
     private void touchCheckPoints() {
-        for (Player player : listOfPlayers) {
-            if (player.getCurrentBoardPiece() instanceof FlagPiece) {
-                FlagPiece flag = (FlagPiece) player.getCurrentBoardPiece();
-
-                if (player.getCheckpointsVisited() == flag.getFlagNumber() - 1) {
-                    player.visitedCheckpoint();
-                    player.setSpawnPoint(player.getPos().getX(), player.getPos().getY());
-                }
-            }
     }
-}
 
     private void lasersFire() {
     }
@@ -113,52 +99,35 @@ public class Phase {
     }
 
     /**
-     * Checks if any player is on a conveyorbelt
-     * If true, check if there is player in front (in the direction of the conveyorbelt) on a conveyorbelt and that
-     * conveyorbelt is not facing towards the first conveyorbelt.
-     * If true, move the first player later by a recursive call so that the other player standing in the way can be
-     * moved by the conveyorbelt first.
-     * If two players are standing on different conveyorbelts pointing directly into eachother, none of them will move
-     * If two players are standing on different conveyorbelts that will put both players in the same tile, none of
-     * them will move.
-     * @param moveOnlyExpressBelts true if only expressbelts should move
+     * Checks if any player is on an expressbelt,
+     * and will move them accordingly if true.
      */
-    public void moveConveyorBelts(boolean moveOnlyExpressBelts) {
-        boolean morePlayersToMove = false;
-        for (int i = 0; i < copyOfPlayers.size(); i++) {
-            Player player = copyOfPlayers.get(i);
-            if(player.isOnConveyorBelt()) {
-                if(moveOnlyExpressBelts && !player.isOnExpressBelt()){
 
-                    copyOfPlayers.remove(i);
-                    i--;
-                    continue;
-                }
-                if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid(), moveOnlyExpressBelts)){
-                    System.out.println("Player is in front of " + player.toString());
-                    morePlayersToMove = true;
-                    continue;
-                }
-                if(BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid(), game, moveOnlyExpressBelts)){
-                    System.out.println(player.toString() + " is going to crash");
-
-                    copyOfPlayers.remove(i);
-                    i--;
-                    continue;
-                }
-                System.out.println("Move " + player.toString());
+    public void moveExpressBelts() {
+        for (int i = 0; i < listOfPlayers.length; i++) {
+            if (listOfPlayers[i].isOnExpressBelt()) {
+                Player player = listOfPlayers[i];
                 Move move = new Move(player);
-                BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(), player, game.getLogicGrid());
+                BoardElementsMove.moveExpressBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
                 move.updateMove(player);
-                game.executeMoves(move.toMovesList());
-                player.setConveyorBeltMove(true);
-                player.setHasBeenMovedThisPhase(true);
-                copyOfPlayers.remove(i);
-                i--;
+                game.executeMoves(move.toArrayList());
             }
         }
-        if (morePlayersToMove) {
-            moveConveyorBelts(moveOnlyExpressBelts);
+    }
+
+    /**
+     * Checks if any player is on a conveyorbelt,
+     * and will move them accordingly if true.
+     */
+    public void moveConveyorBelts() {
+        for (int i = 0; i < listOfPlayers.length; i++) {
+            if (listOfPlayers[i].isOnConveyorBelt()) {
+                Player player = listOfPlayers[i];
+                Move move = new Move(player);
+                BoardElementsMove.moveConveyorBelt(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
+                move.updateMove(player);
+                game.executeMoves(move.toArrayList());
+            }
         }
     }
 
@@ -167,12 +136,13 @@ public class Phase {
      * and will rotate them accordingly if true.
      */
     public void rotateCogs() {
-        for (Player player : listOfPlayers) {
-            if (player.isOnCog()) {
+        for (int i = 0; i < listOfPlayers.length; i++) {
+            if (listOfPlayers[i].isOnCog()) {
+                Player player = listOfPlayers[i];
                 Move move = new Move(player);
-                BoardElementsMove.rotateCog(player.getCurrentBoardPiece(), player);
+                BoardElementsMove.rotateCog(listOfPlayers[i].getCurrentBoardPiece(), listOfPlayers[i]);
                 move.updateMove(player);
-                game.executeMoves(move.toMovesList());
+                game.executeMoves(move.toArrayList());
             }
         }
     }
@@ -183,14 +153,5 @@ public class Phase {
 
     public int getPhaseNumber() {
         return phaseNumber;
-    }
-
-    //TODO @Erlend needs comments
-    private void setUpConveyorBelts() {
-        copyOfPlayers.clear();
-        Collections.addAll(copyOfPlayers, listOfPlayers);
-        for (Player player : listOfPlayers) {
-            player.setHasBeenMovedThisPhase(false);
-        }
     }
 }
