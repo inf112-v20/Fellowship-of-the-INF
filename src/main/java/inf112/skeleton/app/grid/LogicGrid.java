@@ -107,7 +107,7 @@ public class LogicGrid {
     public void readTiledMapToPieceGrid() {
         for (int y = width - 1; y >= 0; y--) {
             for (int x = 0; x < height; x++) {
-                grid[x][y] = new ArrayList<BoardPiece>();
+                grid[x][y] = new ArrayList<>();
                 //create new boardpieceGenerator for appropriate coordinate
                 boardPieceGenerator = new BoardPieceGenerator(x, y);
                 setPieceInGrid(floorLayer, floorLayerIndex, x, y);
@@ -143,14 +143,12 @@ public class LogicGrid {
             //if cell in layer is not empty, generate the corresponding BoardPiece and add to grid
             BoardPiece piece = boardPieceGenerator.generate(id);
 
-            isThisASpawnPoint(id, piece, x, y);
+            isThisASpawnPoint(piece, x, y);
 
             //check returned piece isn't a null
             int size = grid[x][y].size();
-            if (piece != null) {
-                grid[x][y].add(layerIndex, piece);
-                return;
-            }
+            grid[x][y].add(layerIndex, piece);
+            return;
         }
         //add a NullPiece if there is nothing to add
         grid[x][y].add(new NullPiece(new Position(x, y), -1));
@@ -171,7 +169,7 @@ public class LogicGrid {
     /**
      * Adds a new PlayerPiece to the logic grid
      *
-     * @param playerPiece
+     * @param playerPiece playerPiece to place
      */
     public void placeNewPlayerPieceOnMap(PlayerPiece playerPiece) {
         if (positionIsFree(playerPiece.getPos(), playerLayerIndex)) {
@@ -184,8 +182,8 @@ public class LogicGrid {
     /**
      * If possible, move a player piece to a new position
      *
-     * @param oldPosition
-     * @param newPosition
+     * @param oldPosition the position player is moving from
+     * @param newPosition the position player is moving to
      */
     public void movePlayerToNewPosition(Position oldPosition, Position newPosition) {
         BoardPiece playerPiece = grid[oldPosition.getX()][oldPosition.getY()].get(playerLayerIndex);
@@ -212,11 +210,16 @@ public class LogicGrid {
     /**
      * Checks if the position is available in the logic grid
      *
-     * @param position
-     * @param layerIndex
+     * @param position position to check if it is free
+     * @param layerIndex layer we are checking position in
      * @return true if there is a NullPiece in the position you are checking
      */
-    private boolean positionIsFree(Position position, int layerIndex) {
+    public boolean positionIsFree(Position position, int layerIndex) {
+        //conveyor belts cannot move players off board as it causes error
+        //TODO, allow conveyorBelt to push player to death.
+        if(!isInBounds(position)){
+            return false;
+        }
         return (grid[position.getX()][position.getY()].get(layerIndex) instanceof NullPiece);
     }
 
@@ -232,7 +235,7 @@ public class LogicGrid {
      * Remember to check that this method does not return null
      * @param pos position of piece
      * @param type piece type
-     * @param <T>
+     * @param <T> piece class
      * @return piece if it is there, null otherwise
      */
     public <T extends BoardPiece> T getPieceType(Position pos, Class<T> type) {
@@ -251,19 +254,60 @@ public class LogicGrid {
 
     /**
      * TODO add comments @Lena
-     * @param id
      * @param piece
      * @param x
      * @param y
      */
-    private void isThisASpawnPoint(int id, BoardPiece piece, int x, int y) {
+    private void isThisASpawnPoint(BoardPiece piece, int x, int y) {
         //If it is a spawnPoint tile, add it to a list of start positions
         int MIN_SPAWNPOINT_NUMBER = 121;
         int MAX_SPAWNPOINT_NUMBER = 132;
+        int id = piece.getId();
         if (id >= MIN_SPAWNPOINT_NUMBER && id <= MAX_SPAWNPOINT_NUMBER) {
             spawnPointPositions.set(((SpawnPointPiece) piece).getSpawnNumber()-1, new Position(x,y));
         }
     }
 
     public ArrayList<Position> getSpawnPointPositions() { return spawnPointPositions; }
+
+
+    /**
+     * Finds a new neighbor position from a given position
+     * @param position the starting position
+     * @param newDirection the direction from the starting position
+     * @return the neighbor position from the the starting position in the direction that is given
+     */
+    /*
+    DUPLICATE CODE. getPositionIn in Position does the same thing
+    public Position getNewPosition(Position position, Direction newDirection) {
+        Position pos = position;
+        int newX = position.getX();
+        int newY = position.getY();
+        switch (newDirection) {
+            case NORTH:
+                newY += 1;
+                break;
+            case SOUTH:
+                newY -= 1;
+                break;
+            case WEST:
+                newX -= 1;
+                break;
+            case EAST:
+                newX += 1;
+                break;
+        }
+        Position newPos = new Position(newX, newY);
+        return newPos;
+    }
+    */
+
+    /**
+     * Checks if a position is inbounds
+     * @param pos the position to check
+     * @return true if the position is inside the map, false otherwise
+     */
+    public boolean isInBounds(Position pos){
+        return pos.getY() < height && pos.getY() >= 0 && pos.getX() < width && pos.getX() >= 0;
+    }
 }

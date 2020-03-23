@@ -22,7 +22,6 @@ public class MainMenuScreen implements Screen {
     private Image background;
     private Image logo;
     private ImageButton playButton;
-    private ImageButton testButton;
     private ImageButton exitButton;
 
     public MainMenuScreen (RoboRallyDemo game) {
@@ -37,7 +36,7 @@ public class MainMenuScreen implements Screen {
 
         // picture = all actors on stage
         // Background
-        Sprite picture = new Sprite(new Texture("menu_background.png"));
+        Sprite picture = new Sprite(new Texture("MainMenuBackground.png"));
         background = new Image(new SpriteDrawable(picture));
         background.setSize(width, height);
         background.setPosition(0, 0);
@@ -51,23 +50,22 @@ public class MainMenuScreen implements Screen {
         logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));
         stage.addActor(logo);
 
-        // TODO dispose of Play/Exit button, add new buttons to stage (choose maps)
         // Play button
         yPadding = 100;
         int xPadding = 100;
-        picture = new Sprite(new Texture("play_button_up.png"));
+        picture = new Sprite(new Texture("assets/PlayButton.png"));
         playButton = new ImageButton(new SpriteDrawable(picture));
         playButton.setPosition(xPadding, yPadding);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen("RoborallyBoard_debugged.tmx"));
+                game.setScreen(new StageSelectionScreen(game));
             }
         });
         stage.addActor(playButton);
 
         // Exit button
-        picture = new Sprite(new Texture("exit_button_up.png"));
+        picture = new Sprite(new Texture("assets/ExitButton.png"));
         exitButton = new ImageButton(new SpriteDrawable(picture));
         exitButton.setPosition((width-xPadding)-exitButton.getWidth(), yPadding);
         exitButton.addListener(new ClickListener() {

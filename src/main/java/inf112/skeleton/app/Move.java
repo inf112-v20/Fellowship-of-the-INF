@@ -2,20 +2,19 @@ package inf112.skeleton.app;
 
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.Player;
-
-import java.util.ArrayList;
 
 public class Move {
 
-    private Player player;
+    private PlayerPiece playerPiece;
     private Position oldPos;
     private Position newPos;
     private Direction oldDir;
     private Direction newDir;
 
-    public Move(Player player, Position oldPos, Position newPos, Direction oldDir, Direction newDir) {
-        this.player = player;
+    public Move(PlayerPiece playerPiece, Position oldPos, Position newPos, Direction oldDir, Direction newDir) {
+        this.playerPiece = playerPiece;
         this.oldPos = oldPos;
         this.newPos = newPos;
         this.oldDir = oldDir;
@@ -28,15 +27,23 @@ public class Move {
      * @param player that is going to execute a move
      */
     public Move(Player player) {
-        this.player = player;
-        this.oldPos = player.getPos();
-        this.newPos = player.getPos();
-        this.oldDir = player.getPlayerPiece().getDir();
-        this.newDir = player.getPlayerPiece().getDir();
+        this.playerPiece = player.getPlayerPiece();
+        this.oldPos = playerPiece.getPos();
+        this.newPos = playerPiece.getPos();
+        this.oldDir = playerPiece.getDir();
+        this.newDir = playerPiece.getDir();
     }
 
-    public Player getPlayer() {
-        return player;
+    public Move(PlayerPiece playerPiece) {
+        this.playerPiece = playerPiece;
+        this.oldPos = playerPiece.getPos();
+        this.newPos = playerPiece.getPos();
+        this.oldDir = playerPiece.getDir();
+        this.newDir = playerPiece.getDir();
+    }
+
+    public PlayerPiece getPlayerPiece() {
+        return playerPiece;
     }
 
     public Position getOldPos() {
@@ -57,8 +64,8 @@ public class Move {
 
     @Override
     public String toString() {
-        return "Move " +  player +
-                ",  ("+ oldPos +
+        return "Move player " +  playerPiece.getPlayerNumber() +
+                " ("+ oldPos +
                 ", " + oldDir +
                 ") to (" + newPos +
                 ", "+ newDir +
@@ -75,20 +82,28 @@ public class Move {
 
     /**
      * updates the move object with the players new position and direction
-     * @param playerPostMove the player after it has executed a move
+     * @param player the player after it has executed a move
      */
-    public void updateMove(Player playerPostMove) {
-        this.player = playerPostMove;
-        newPos = playerPostMove.getPlayerPiece().getPos();
-        newDir = playerPostMove.getPlayerPiece().getDir();
+    public void updateMove(Player player) {
+        newPos = playerPiece.getPos();
+        newDir = playerPiece.getDir();
+    }
+
+    /**
+     * updates the move object with the players new position and direction
+     * @param updatePlayerPiece the PlayerPiece after its player has executed a move
+     */
+    public void updateMove(PlayerPiece updatePlayerPiece) {
+        newPos = playerPiece.getPos();
+        newDir = playerPiece.getDir();
     }
 
     /**
      *
      * @return an ArrayList containing only this move
      */
-    public ArrayList<Move> toArrayList() {
-        ArrayList<Move> listWithSingleMove = new ArrayList<>();
+    public MovesToExecuteSimultaneously toMovesList() {
+        MovesToExecuteSimultaneously listWithSingleMove = new MovesToExecuteSimultaneously();
         listWithSingleMove.add(this);
         return listWithSingleMove;
     }

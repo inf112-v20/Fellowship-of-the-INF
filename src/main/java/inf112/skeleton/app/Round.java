@@ -1,9 +1,6 @@
 package inf112.skeleton.app;
 
-import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.player.Player;
-
-import java.util.ArrayList;
 
 public class Round {
 
@@ -38,6 +35,9 @@ public class Round {
         }
         for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
             game.getListOfPlayers()[playerNumber - 1].pickFirstFiveCards();
+        }
+        for (int i = 0; i < 5 ; i++) {
+            System.out.println(game.getListOfPlayers()[1].getSelectedCards()[i].toString());
         }
     }
 
