@@ -46,8 +46,6 @@ public class Phase {
         rotateCogs();
         lasersFire();
         touchCheckPoints();
-        //TODO add lasers
-        //TODO add touching flags/checkpoints
         //TODO add updating of respawn point (flag or repair site)
     }
 
