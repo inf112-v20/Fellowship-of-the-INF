@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import inf112.skeleton.app.RoboRallyDemo;
 
-public class StageSelectionScreen implements Screen {
+public class PlayerSelectionScreen implements Screen {
     private RoboRallyDemo game;
     private float width;
     private float height;
@@ -21,12 +21,9 @@ public class StageSelectionScreen implements Screen {
     private Stage stage;
     private Image background;
     private Image logo;
-    private ImageButton stage1Button;
-    private ImageButton stageTestButton;
-    private ImageButton stage2Button;
-    private ImageButton backButton;
+    private ImageButton player1Button, player2Button, player3Button, player4Button, backButton;
 
-    public StageSelectionScreen (RoboRallyDemo game, int playerCount) {
+    public PlayerSelectionScreen(RoboRallyDemo game) {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
@@ -56,9 +53,9 @@ public class StageSelectionScreen implements Screen {
         yPadding = 400;
         int xPadding = 100;
         picture = new Sprite(new Texture("Stage1Button.png"));
-        stage1Button = new ImageButton(new SpriteDrawable(picture));
-        stage1Button.setPosition(xPadding, yPadding);
-        stage1Button.addListener(new ClickListener() {
+        player1Button = new ImageButton(new SpriteDrawable(picture));
+        player1Button.setPosition(xPadding, yPadding);
+        player1Button.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
                 //Original map: RoborallyBoard_debugged.tmx
@@ -66,31 +63,31 @@ public class StageSelectionScreen implements Screen {
                 game.setScreen(new GameScreen("RoborallyBoard_debugged.tmx"));
             }
         });
-        stage.addActor(stage1Button);
+        stage.addActor(player1Button);
 
         // Stage2 button
         picture = new Sprite(new Texture("Stage2Button.png"));
-        stage2Button = new ImageButton(new SpriteDrawable(picture));
-        stage2Button.setPosition((width - xPadding)-stage2Button.getWidth(), yPadding);
-        stage2Button.addListener(new ClickListener() {
+        player2Button = new ImageButton(new SpriteDrawable(picture));
+        player2Button.setPosition((width - xPadding)-player2Button.getWidth(), yPadding);
+        player2Button.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen("RoborallyBoard_Vault_Assault.tmx"));
             }
         });
-        stage.addActor(stage2Button);
+        stage.addActor(player2Button);
 
         // testStage button
         picture = new Sprite(new Texture("TestStageButton.png"));
-        stageTestButton = new ImageButton(new SpriteDrawable(picture));
-        stageTestButton.setPosition(width/2 - stageTestButton.getWidth()/2, yPadding);
-        stageTestButton.addListener(new ClickListener() {
+        player3Button = new ImageButton(new SpriteDrawable(picture));
+        player3Button.setPosition(width/2 - player3Button.getWidth()/2, yPadding);
+        player3Button.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen("TestMap.tmx"));
             }
         });
-        stage.addActor(stageTestButton);
+        stage.addActor(player3Button);
 
 
 
