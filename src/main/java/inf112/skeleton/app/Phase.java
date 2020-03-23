@@ -1,7 +1,6 @@
 package inf112.skeleton.app;
 
 import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.grid_objects.FlagPiece;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.BoardPiece;
