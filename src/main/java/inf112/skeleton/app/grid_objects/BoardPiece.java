@@ -30,4 +30,7 @@ public abstract class BoardPiece {
     }
 
 
+    public  int getId(){
+        return id;
+    }
 }

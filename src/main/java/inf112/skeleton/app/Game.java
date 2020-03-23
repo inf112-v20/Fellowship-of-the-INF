@@ -3,14 +3,12 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -22,7 +20,7 @@ public class Game {
     private int roundNumber = 0;
     private Round round;
     private final int NUMBER_OF_PLAYERS = 4;
-    private Queue<ArrayList<Move>> moves;
+    private Queue<MovesToExecuteSimultaneously> moves;
     private GameScreen gameScreen;
 
 
@@ -46,7 +44,7 @@ public class Game {
         }
     }
 
-    public void performMoves(ArrayList<Move> moves) {
+    public void performMoves(MovesToExecuteSimultaneously moves) {
         for (Move move : moves) {
             Position oldPos = move.getOldPos();
             Position newPos = move.getNewPos();
@@ -83,16 +81,17 @@ public class Game {
      * Handles keyboard input
      */
     public void handleKeyBoardInput() {
-        Move move = new Move(player1); //initiate move to be done
+        Move rotateMove = new Move(player1); //initiate possible rotateMove to be done
+        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();//initiate moves to be done
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player1.tryToGo(player1.getPlayerPiece().getDir());
+            player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection());
+            player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             player1.turnPlayerLeft();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             player1.turnPlayerRight();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             player1.turnPlayerAround();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             player1.takeDamage(1);
@@ -106,14 +105,46 @@ public class Game {
             player1.visitedCheckpoint();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
             player1.removeCheckpoint();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+            if(player1.isOnConveyorBelt()) {
+                BoardElementsMove.moveConveyorBelt(player1.getCurrentBoardPiece(), player1, logicGrid);
+                player1.setConveyorBeltMove(true);
+            }
         }
-        move.updateMove(player1); //complete move object
-        if (move.isNotStandStill()) {
-            performMoves(move.toArrayList()); //execute move if there is one
+        rotateMove.updateMove(player1); //complete rotateMove object
+        moves.add(rotateMove);
+        //first player moves get executed
+        performMoves(moves); //execute moves if there are any
+        for (Move move : moves) {
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
         }
+        moves.clear();
+
+        //second player moves get handled
+        Player player2 = playerList[1];
+        Move move2 = new Move(player2);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            player2.turnPlayerLeft();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            player2.turnPlayerRight();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            player2.turnPlayerAround();
+        }
+        move2.updateMove(player2); //complete move object
+        moves.add(move2);
+        //execution of player 2 moves
+        performMoves(moves); //execute moves if there are any
+        for (Move move : moves) {
+            gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
+        }
+        moves.clear();
     }
 
+    /* no longer used
     public void executePlayerHand(ArrayList<ProgramCard> hand) {
         for (ProgramCard programCard : hand) {
             convertCardToPlayerMove(programCard);
@@ -126,6 +157,7 @@ public class Game {
      *
      * @param programCard to convert to player move
      */
+    /*
     public void convertCardToPlayerMove(ProgramCard programCard) {
         switch (programCard.getCommand()) {
             case MOVE1:
@@ -155,12 +187,14 @@ public class Game {
                 player1.turnPlayerRight();
                 break;
             default:
-                //TODO error handling as default maybe?
                 break;
         }
     }
 
-    public Player[] getListOfPlayers() { return playerList; }
+    */
+    public Player[] getListOfPlayers() {
+        return playerList;
+    }
 
     public void executeRound() {
         // If there are moves to execute, then don't start new round
@@ -177,17 +211,32 @@ public class Game {
         round.startRound();
     }
 
-    public Queue<ArrayList<Move>> getMoves() {
+    public Queue<MovesToExecuteSimultaneously> getMoves() {
         return moves;
     }
 
     /**
      * Executes both the backend and frontend version of the move
+     *
      * @param moves to execute
      */
-    public void executeMoves(ArrayList<Move> moves) {
+    public void executeMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //backend execution
         this.moves.add(moves);//add to list of things to do in frontend
-       // gameScreen.executeMove(move); //frontend execution
+        // gameScreen.executeMove(move); //frontend execution
+    }
+
+    /**
+     * Gets a player at a given position
+     * @param pos the position of a player
+     * @return the player at that position
+     */
+    public Player getPlayerAt(Position pos){
+        for (int i = 0; i < playerList.length ; i++) {
+            if(playerList[i].getPos().getX() == pos.getX() && playerList[i].getPos().getY() == pos.getY()){
+                return playerList[i];
+            }
+        }
+        return null; //no player in position
     }
 }

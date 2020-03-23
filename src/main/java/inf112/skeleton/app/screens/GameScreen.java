@@ -16,12 +16,13 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import inf112.skeleton.app.Move;
 import inf112.skeleton.app.Game;
+import inf112.skeleton.app.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.Player;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 
@@ -38,6 +39,7 @@ public class GameScreen implements Screen {
     private int MAP_HEIGHT;
     private int TILE_WIDTH_DPI; //pixel width per cell
     private int MAP_WIDTH_DPI; //total width of map in pixels
+    private int MAP_HEIGHT_DPI; //total height of map in pixels
     private TiledMapTileLayer playerLayer;
     private TmxMapLoader mapLoader;
     private MapProperties mapProperties;
@@ -56,10 +58,11 @@ public class GameScreen implements Screen {
         MAP_HEIGHT = mapProperties.get("height", Integer.class);
         TILE_WIDTH_DPI = mapProperties.get("tilewidth", Integer.class);
         MAP_WIDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI;
+        MAP_HEIGHT_DPI = MAP_HEIGHT * TILE_WIDTH_DPI;
 
         tiles = this.map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
-        gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_WIDTH_DPI, camera);
+        gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_HEIGHT_DPI, camera);
         camera.translate(MAP_WIDTH_DPI, MAP_WIDTH_DPI / 2);
         mapRenderer = new OrthogonalTiledMapRenderer(this.map);
         // Layers, add more later
@@ -137,7 +140,8 @@ public class GameScreen implements Screen {
      * This method executed the list of moves in the front end of the movesToExecute queue.
      */
     public void executeMove() {
-        ArrayList<Move> firstSetOfMoves = game.getMoves().peek();
+        MovesToExecuteSimultaneously firstSetOfMoves = game.getMoves().peek();
+        assert firstSetOfMoves != null;
         for (Move currentMove : firstSetOfMoves) {
             redrawPlayer(currentMove);
         }
@@ -199,7 +203,6 @@ public class GameScreen implements Screen {
     /**
      * Executes the cards that have been chosen
      *
-     * @param programCards to execute
      */
     /*
     public void executeLockIn(ArrayList<ProgramCard> programCards) {
@@ -240,14 +243,13 @@ public class GameScreen implements Screen {
      * @param move that the player performed
      */
     public void redrawPlayer(Move move) {
-        Player playerToUpdate = move.getPlayer();
+        PlayerPiece playerPieceToUpdate = move.getPlayerPiece();
         Position oldPos = move.getOldPos();
         Position newPos = move.getNewPos();
         Direction newDir = move.getNewDir();
-        playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the correct direction
         playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
-        playerToUpdate.getPlayerPiece().turnCellInDirection(newDir); //turn the cell in the new direction
-        playerLayer.setCell(newPos.getX(), newPos.getY(), playerToUpdate.getPlayerCell()); //repaint at new position
+        playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
+        playerLayer.setCell(newPos.getX(), newPos.getY(), playerPieceToUpdate.getPlayerCell()); //repaint at new position
         System.out.println("Frontend executing: " + move);
     }
 }

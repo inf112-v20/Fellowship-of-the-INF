@@ -2,6 +2,8 @@ package inf112.skeleton.app.player;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.Game;
+import inf112.skeleton.app.Move;
+import inf112.skeleton.app.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
@@ -10,6 +12,7 @@ import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Class representing a player.
@@ -31,6 +34,9 @@ public class Player {
     private int lives = 3;
     private int checkpointsVisited;
     private BoardPiece currentBoardPiece;
+    private Direction latestMoveDirection;
+    private boolean conveyorBeltMove = false;
+    private boolean hasBeenMovedThisPhase = false;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -41,30 +47,38 @@ public class Player {
         this.checkpointsVisited = 0;
         GameDeck gameDeck = game.getGameDeck();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
-         this.selectedCards = new ProgramCard[5];
+        this.selectedCards = new ProgramCard[5];
         this.lockedCards = new ArrayList<>();
 
 
         //Find the spawn point of the player, and set spawnPoint position to the first spawn
         findFirstSpawnPoint();
 
-        this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, playerNumber);
+        this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, this);
         this.isDead = false;
     }
 
 
     /**
      * Getter for position
+     *
      * @return position of player
      */
     public Position getPos() {
         return playerPiece.getPos();
     }
 
-    public void setPos(int x, int y) { playerPiece.setPos(new Position(x, y)); }
+    public void setPos(int x, int y) {
+        playerPiece.setPos(new Position(x, y));
+    }
+
+    private void setPos(Position positionIn) {
+        playerPiece.setPos(positionIn);
+    }
 
     /**
      * Getter for player
+     *
      * @return player
      */
     public TiledMapTileLayer.Cell getPlayerCell() {
@@ -78,7 +92,8 @@ public class Player {
      *
      * @param newDirection new direction to move the player
      */
-    public void tryToGo(Direction newDirection) {
+    public void tryToGo(Direction newDirection, MovesToExecuteSimultaneously moves) {
+        Move move = new Move(this);
         Position pos = playerPiece.getPos();
         int newX = playerPiece.getPos().getX();
         int newY = playerPiece.getPos().getY();
@@ -99,15 +114,22 @@ public class Player {
         }
         //check if the move kills the player, if so lose a life
         if (isDeadMove(newX, newY)) {
+            currentBoardPiece = pieceGrid[spawnPoint.getX()][spawnPoint.getY()].get(0);
+            latestMoveDirection = newDirection;
+            this.conveyorBeltMove = false;
             loseLife();
         }
 
         //if position has changed and player isn't dead, update logic grid
         if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
-            playerPiece.setPos(new Position(newX, newY));
-            // map.movePlayerToNewPosition(pos, new Position(newX, newY));
-            setCurrentBoardPiece(newX, newY);
+            //if the move results in pushing robots, add the resulting moves to the moves list
+            addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
+            setCurrentBoardPiece(newX, newY); //update currentBoardPiece
             setPos(newX, newY);
+            move.updateMove(this);
+            moves.add(move);
+            latestMoveDirection = newDirection;
+            this.conveyorBeltMove = false;
         }
         //TODO This should probably only happen when the round is over, and we are about to start a new round
         //If the player still have lives left, respawn it
@@ -116,13 +138,122 @@ public class Player {
             respawnPlayer();
         }
         */
+
         //TODO Add what happens when a player runs out of lives
         //Handle what happens if the player runs out of lives
         else {
             setPos(newX, newY);
         }
     }
-    public void setCurrentBoardPiece(int newX, int newY){
+
+    /**
+     * This class is identical to the other tryToGo, but does not handle a moves object.
+     * This is used when tryToGo is used on a conveyor belt, as conveyor belts deal with collision differently.
+     *
+     * @param newDirection new direction to move the player
+     */
+    public void tryToGo(Direction newDirection) {
+        //TODO: duplicate code, refactor
+        Position pos = playerPiece.getPos();
+        int newX = playerPiece.getPos().getX();
+        int newY = playerPiece.getPos().getY();
+
+        switch (newDirection) {
+            case NORTH:
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
+                break;
+            case SOUTH:
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY -= 1;
+                break;
+            case WEST:
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX -= 1;
+                break;
+            case EAST:
+                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX += 1;
+                break;
+        }
+        //check if the move kills the player, if so lose a life
+        if (isDeadMove(newX, newY)) {
+            currentBoardPiece = pieceGrid[spawnPoint.getX()][spawnPoint.getY()].get(0);
+            latestMoveDirection = newDirection;
+            this.conveyorBeltMove = false;
+            loseLife();
+
+            //game.getLogicGrid().removePlayerFromMap(playerPiece.getPos());
+            //return;
+        }
+
+        //if position has changed and player isn't dead, update logic grid
+        if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
+            setCurrentBoardPiece(newX, newY); //update currentBoardPiece
+            setPos(newX, newY);
+            latestMoveDirection = newDirection;
+            this.conveyorBeltMove = false;
+        }
+        //TODO This should probably only happen when the round is over, and we are about to start a new round
+        //If the player still have lives left, respawn it
+        /*
+        else if (lives >= 0 && isDead()) {
+            respawnPlayer();
+        }
+        */
+
+        //TODO Add what happens when a player runs out of lives
+        //Handle what happens if the player runs out of lives
+        else {
+            setPos(newX, newY);
+        }
+    }
+
+    /**
+     * If there is a player to be pushed, call tryToGo for the player laying there
+     * TryToGo will call addMovesForPushedRobots, and add moves to the list, in order.
+     * @param playerPiece playerPiece that is pushing other players
+     * @param dir direction being pushed
+     * @param moves list of moves
+     */
+    private void addMovesForPushedRobots(PlayerPiece playerPiece, Direction dir, MovesToExecuteSimultaneously moves) {
+        PlayerPiece possiblePlayerPiece = getPlayerPieceToPush(playerPiece, dir);
+        if (possiblePlayerPiece != null) { //if there is a player to push, push it
+            Player playertoPush = possiblePlayerPiece.getPlayer();
+            playertoPush.tryToGo(dir, moves);
+        }
+    }
+
+    /**
+     * Finds a player piece that is pushed by a move in direction dir
+     * @param playerPiece playerPiece doing the pushing
+     * @param dir direction in which a robot may be pushed
+     * @return null if there is no player piece to push, otherwise return player piece to push
+     */
+    private PlayerPiece getPlayerPieceToPush(PlayerPiece playerPiece, Direction dir) {
+        Position targetPosition = playerPiece.getPos().getPositionIn(dir);
+        if (logicGrid.isInBounds(targetPosition))
+            return logicGrid.getPieceType(targetPosition, PlayerPiece.class);
+        return null; //return null if target position is not within grid
+    }
+
+    /**
+     * Does not check if move is legal, moves player in direction regardless
+     * This method is only used when moving a player on a conveyor belt, as it removes the aspect of pushing
+     * TODO: find a better solution for moving robots on a conveyor belt
+     *
+     * @param newDirection
+     */
+    public void moveOnConveyorBelt(Direction newDirection) {
+        Position pos = playerPiece.getPos();
+        //set position of player to be one cell further down the conveyorbelt
+        setPos(pos.getPositionIn(newDirection));
+        int newX = pos.getX();
+        int newY = pos.getY();
+        setCurrentBoardPiece(newX, newY); //set the new current board piece
+        //check if the move kills the player, if so lose a life
+        if (isDeadMove(newX, newY)) {
+            loseLife();
+        }
+    }
+
+    public void setCurrentBoardPiece(int newX, int newY) {
         BoardPiece currPiece;
         for (int i = 0; i < pieceGrid[newX][newY].size(); i++) {
             currPiece = pieceGrid[newX][newY].get(i);
@@ -130,9 +261,7 @@ public class Player {
             else if(currPiece instanceof ConveyorBeltPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof CogPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof PusherPiece){currentBoardPiece = currPiece;}
-            else if(currPiece instanceof FlagPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof AbyssPiece){currentBoardPiece = currPiece;}
-            else if(currPiece instanceof SpawnPointPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof FloorPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof LaserPiece){currentBoardPiece = currPiece;}
         }
@@ -151,6 +280,7 @@ public class Player {
         BoardPiece currPiece;
         BoardPiece pieceInFront;
         if (isDead()) return false;
+        //TODO: refactor, there is no need to search through all the layers like this here.
         for (int i = 0; i < pieceGrid[x][y].size(); i++) {
             currPiece = pieceGrid[x][y].get(i);
             switch (dir) {
@@ -172,17 +302,21 @@ public class Player {
     }
 
     public boolean isLegalMoveInDirection(int newX, int newY, BoardPiece currentPiece, Direction dir, int layerLevel) {
-        if (isDeadMove(newX, newY)) {
-            if (currentPiece instanceof WallPiece) {
-                return ((WallPiece) currentPiece).canLeave(dir);
-            }
-        } else {
+        if (currentPiece instanceof WallPiece) {
+            //cannot leave if the WallPiece player is standing on has a wall in the direction
+            if  (!((WallPiece) currentPiece).canLeave(dir)) return false;
+        }
+        //if the piece in front is within the bounds, check what is there
+        if (logicGrid.isInBounds(new Position(newX, newY))) {
             BoardPiece pieceInFront = pieceGrid[newX][newY].get(layerLevel);
-            if (currentPiece instanceof WallPiece) {
-                return ((WallPiece) currentPiece).canLeave(dir);
-            }
             if (pieceInFront instanceof WallPiece) {
-                return ((WallPiece) pieceInFront).canGo(dir);
+                //cannot go if WallPiece in front has a wall facing player
+                if  (!((WallPiece) pieceInFront).canGo(dir)) return false;
+            }
+            //If there is a player in the way of where you want to move, check that you can push that player
+            PlayerPiece possiblePlayer = logicGrid.getPieceType(new Position(newX, newY), PlayerPiece.class);
+            if (possiblePlayer != null) {
+                return isLegalMove(newX, newY, dir);
             }
         }
         return true;
@@ -196,45 +330,47 @@ public class Player {
      * @return whether the move results in death
      */
     private boolean isDeadMove(int x, int y) {
-        int MAP_WIDTH = game.getLogicGrid().getWidth();
-        int MAP_HEIGHT = game.getLogicGrid().getHeight();
         BoardPiece currPiece;
-        if (x > MAP_WIDTH - 1 || x < 0 || y < 0 || y > MAP_HEIGHT - 1) {
-            return true;
-        } else {
+        //if move is within bounds, check if move is to AbyssPiece
+        if (logicGrid.isInBounds(new Position(x, y))) {
             for (int i = 0; i < pieceGrid[x][y].size(); i++) {
                 currPiece = pieceGrid[x][y].get(i);
                 if (currPiece instanceof AbyssPiece) {
                     return true;
                 }
             }
+        } else {
+            return true;
         }
         return false;
     }
 
     /**
      * Player executes the move on the given card
+     *
      * @param programCard to convert to player move
+     * @param moves list of moves to add move objects to
      */
-    public void executeCardAction(ProgramCard programCard) {
+    public void executeCardAction(ProgramCard programCard, MovesToExecuteSimultaneously moves) {
+        Move rotateMove = new Move(this); //initiate possible rotateMove to be done
         switch (programCard.getCommand()) {
             case MOVE1:
-                tryToGo(getPlayerPiece().getDir());
+                tryToGo(getPlayerPiece().getDir(), moves);
                 break;
             case MOVE2:
-                tryToGo(getPlayerPiece().getDir());
-                tryToGo(getPlayerPiece().getDir());
+                tryToGo(getPlayerPiece().getDir(), moves);
+                tryToGo(getPlayerPiece().getDir(), moves);
                 break;
             case MOVE3:
-                tryToGo(getPlayerPiece().getDir());
-                tryToGo(getPlayerPiece().getDir());
-                tryToGo(getPlayerPiece().getDir());
+                tryToGo(getPlayerPiece().getDir(), moves);
+                tryToGo(getPlayerPiece().getDir(), moves);
+                tryToGo(getPlayerPiece().getDir(), moves);
                 break;
             case UTURN:
                 turnPlayerAround();
                 break;
             case BACKUP:
-                tryToGo(getPlayerPiece().getDir().getOppositeDirection());
+                tryToGo(getPlayerPiece().getDir().getOppositeDirection(), moves);
                 break;
             case ROTATELEFT:
                 turnPlayerLeft();
@@ -246,6 +382,8 @@ public class Player {
                 //TODO error handling as default maybe?
                 break;
         }
+        rotateMove.updateMove(this); //complete rotateMove object
+        moves.add(rotateMove);
     }
 
     public int getPlayerNumber() { return playerNumber; }
@@ -360,8 +498,12 @@ public class Player {
      * Get the spawn point position from a list of spawn points
      */
     public void findFirstSpawnPoint() {
-        ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
-        spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
+        try {
+            ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
+            spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
+        } catch (Exception spawnNotFound) {
+            setSpawnPoint(0,0+playerNumber); //TODO @Lena remove 0+??
+        }
     }
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
@@ -391,24 +533,20 @@ public class Player {
 
     /**
      * Checks if a player is currently on a ConveyorBeltPiece
+     *
      * @return true if a player is on a conveyorBelt, false otherwise.
      */
-    public boolean isOnConveyorBelt(){
-        if (currentBoardPiece instanceof ConveyorBeltPiece) {
-            return true;
-        }
-        return false;
+    public boolean isOnConveyorBelt() {
+        return (currentBoardPiece instanceof ConveyorBeltPiece); //TODO @Erlend these methods are unnecessary, as they are only one line
     }
 
     /**
      * Checks if a player is currently on an ExpressBeltPiece
+     *
      * @return true if a player is on an ExpressBelt, false otherwise.
      */
-    public boolean isOnExpressBelt(){
-        if (currentBoardPiece instanceof ExpressBeltPiece) {
-            return true;
-        }
-        return false;
+    public boolean isOnExpressBelt() {
+        return (currentBoardPiece instanceof ExpressBeltPiece);
     }
 
     /**
@@ -416,10 +554,7 @@ public class Player {
      * @return true if a player is on a cog, false otherwise.
      */
     public boolean isOnCog(){
-       if(currentBoardPiece instanceof CogPiece){
-           return true;
-       }
-       return false;
+        return currentBoardPiece instanceof CogPiece;
     }
 
     /**
@@ -432,17 +567,48 @@ public class Player {
         return false;
     }
 
-    public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
 
     public ArrayList<ProgramCard> getLockedCards(){return lockedCards;}
 
-    /*
-    Removes all cards from the players selected cards
+    /**
+     * Removes all cards from the players selected cards
      */
     public void removeSelectedCards(){
-        for (int i = 0; i < selectedCards.length ; i++) {
-            selectedCards[i] = null;
-        }
+        Arrays.fill(selectedCards, null);
+    }
+
+    public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
+
+    /**
+     * Gets the last playermove direction
+     * @return the direction of the last movement of the player (movement can be from cards or map objects)
+     */
+    public Direction latestMoveDirection(){
+        return latestMoveDirection;
+    }
+
+    /**
+     *
+     * @param move true if the last movement of the player was by a conveyorbelt/expressbelt, false otherwise
+     */
+    public void setConveyorBeltMove(boolean move){
+        conveyorBeltMove = move;
+    }
+
+    /**
+     *
+     * @return true if the last last movement of the player was by a conveyorbelt/expressbelt, false otherwise
+     */
+    public boolean isLatestMoveConveyorBelt(){
+        return conveyorBeltMove;
+    }
+
+    public void setHasBeenMovedThisPhase(boolean bool){
+        hasBeenMovedThisPhase = bool;
+    }
+
+    public Boolean hasBeenMovedThisPhase(){
+        return hasBeenMovedThisPhase;
     }
 
 }
