@@ -27,77 +27,7 @@ Meeting logs can be found in a seperate MD file called MeeintLogsIteration3.
 * Death when falling off board
 
 ### How to reach these requirements:
-First, we need to represent the board and the pieces on the board.
-* Map
-  * Data structure that encompasses the requirement for a game board
-  * 2D grid with lists of BoardPieces in each position
-  * Height and Width
-* BoardPiece
-  * An abstract class that all objects on the board extend
-  * Position (make class)
-  * ID (tmx file id)
-* DirectionedPiece
-  * Extends BoardPiece
-  * Has a direction
-  * Can change direction
-* PlayerPiece
-  * Extends MoveablePiece
-  * Appearance changes based on player state
-* WallPiece
-  * Prevents a moveable piece from moving across cell
-_Sidenote: all “board objects”, ie things that lie on the board are called SomethingPiece to underline the fact that they are pieces on the board._
 
-Then, we need to represent the role of the player (note, Player /= PlayerPiece). This is of course not a complete description of the requirements for Player, just the requirements for this iteration.
-* Player
-  * The class that represents the “programmer” in the game
-  * Must take movement input, and move PlayerPiece accordingly.
-  * Check for valid input
-  * Variables: 
-  PlayerPiece, 
-  PlayerNumber, 
-  A type of player state (dead, alive etc), 
-
-* Card
-  * Abstract class that represents a single card
-  * CardImage (visual representation of card)
-* ProgramCard
-  * Class representing a program card
-  * CardType (enum class)
-  * CardPriority
-* CardType
-  * ENUM class
-  * MOVE1
-  * MOVE2
-  * etc.
-* Deck
-  * Abstract class for a set of cards
-  * Ability to add cards
-  * Ability to shuffle cards
-  * Ability to deal cards
-  * Ability to move all card from a different deck into this one
-* GameDeck
-  * A collection of a drawDeck and discardDeck
-  * Ability to create a deck according to the rules of the game
-  * Method to draw a hand of cards from the drawDeck 
-  
- Finally, we need a way to show all this to the user.
-* Game
-  * The "bridge" between frontend and backend
-  * Has the Map object corresponding to the state of the game
-  * Has the Player object representing the player in the game
-  * Can recieve input from GameScreen
-  * Can make the player execute input
-
-* Menu Screen
-  * The first screen that the user sees when running the program
-  * Has an EXIT buttton that closes the program
-  * Has a play button, which closes the menu screen, and opens the game screen
- 
-* Game Screen
-  * Shows the board, with objects on it
-  * Shows the cards available to the player
-  * Allows the user to select 5 cards, and execute them
-  * Also allows the user to move around the board with UP, DOWN, LEFT, RIGHT
 
 ### Known bugs
 * When you press enter instead og clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
