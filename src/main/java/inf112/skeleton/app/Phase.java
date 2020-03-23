@@ -1,7 +1,10 @@
 package inf112.skeleton.app;
 
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.grid.Direction;
+import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.FlagPiece;
+import inf112.skeleton.app.grid_objects.LaserPiece;
 import inf112.skeleton.app.player.Player;
 
 import java.util.*;
@@ -105,7 +108,46 @@ public class Phase {
     }
 }
 
+    /**
+     * // TODO first wall-lasers fire, then robots? @Henrik
+     * Checks if a player is currently on a laser.
+     * If so, the player receives damage, and the laser is intercepted.
+     */
     private void lasersFire() {
+        // Static lasers (from walls)
+        for (Player player : listOfPlayers) {
+            if (player.getCurrentBoardPiece() instanceof LaserPiece) {
+
+                // TEST TODO fjern
+                System.out.println("\nLASER TEST | " + player + " is standing on a laser.\n");
+
+                int damage = 1;
+                LaserPiece laser;
+                if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
+                    laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
+                    if (laser.isDoubleLaser() || laser.isCrossingLasers()) damage += 1;
+                    // Intercepting laser after it hits a robot
+                    interceptLaser(laser.getPos(), laser.getDir());
+                }
+                player.takeDamage(damage);
+            }
+        }
+
+    }
+
+    /**
+     *
+     * @param pos
+     * @param dir
+     */
+    private void interceptLaser(Position pos, Direction dir) {
+        int xDir = 0;
+        int yDir = 0;
+        if (dir == Direction.NORTH || dir == Direction.SOUTH) yDir = 1;
+        else xDir = 1;
+
+
+
     }
 
 

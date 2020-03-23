@@ -263,6 +263,7 @@ public class Player {
             else if(currPiece instanceof PusherPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof AbyssPiece){currentBoardPiece = currPiece;}
             else if(currPiece instanceof FloorPiece){currentBoardPiece = currPiece;}
+            else if(currPiece instanceof LaserPiece){currentBoardPiece = currPiece;}
         }
     }
 
@@ -555,6 +556,8 @@ public class Player {
     public boolean isOnCog(){
         return currentBoardPiece instanceof CogPiece;
     }
+
+    public boolean isOnLaser() { return (currentBoardPiece instanceof LaserPiece); }
 
 
     public ArrayList<ProgramCard> getLockedCards(){return lockedCards;}
