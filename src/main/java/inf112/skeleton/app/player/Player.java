@@ -276,46 +276,50 @@ public class Player {
      * @return whether moving one tile in a given direction is legal
      */
     private boolean isLegalMove(int x, int y, Direction dir) {
-        //int xPosIn2dArray = MAP_WIDTH - 1 - x;
-        BoardPiece currPiece;
-        BoardPiece pieceInFront;
         if (isDead()) return false;
-        //TODO: refactor, there is no need to search through all the layers like this here.
-        for (int i = 0; i < pieceGrid[x][y].size(); i++) {
-            currPiece = pieceGrid[x][y].get(i);
             switch (dir) {
                 case EAST:
-                    if (!isLegalMoveInDirection(x+1, y, currPiece, dir, i)) { return false; }
+                    if (isLegalMoveInDirection(x+1, y, dir)) { return true; }
                     break;
                 case WEST:
-                    if (!isLegalMoveInDirection(x-1, y, currPiece, dir, i)) { return false; }
+                    if (isLegalMoveInDirection(x-1, y, dir)) { return true; }
                     break;
                 case NORTH:
-                    if (!isLegalMoveInDirection(x, y+1, currPiece, dir, i)) { return false; }
+                    if (isLegalMoveInDirection(x, y+1, dir)) { return true; }
                     break;
                 case SOUTH:
-                    if (!isLegalMoveInDirection(x, y-1, currPiece, dir, i)) { return false; }
+                    if (isLegalMoveInDirection(x, y-1, dir)) { return true; }
                     break;
-            }
         }
-        return true;
+        return false;
     }
 
-    public boolean isLegalMoveInDirection(int newX, int newY, BoardPiece currentPiece, Direction dir, int layerLevel) {
-        if (currentPiece instanceof WallPiece) {
+    /**
+     * Checks if a move in a certian direction is legal.
+     * Checks if walls are blocking the way.
+     * Checks if players that cannot be pushed are blocking the way.
+     * @param newX x-coordinate of current position
+     * @param newY y-coordinate of current position
+     * @param dir direction we are checking if a move is legal in
+     * @return true if move is legal
+     */
+    public boolean isLegalMoveInDirection(int newX, int newY, Direction dir) {
+        WallPiece possibleWallPiece = logicGrid.getPieceType(new Position(newX, newY), WallPiece.class);
+        if (possibleWallPiece != null) {
             //cannot leave if the WallPiece player is standing on has a wall in the direction
-            if  (!((WallPiece) currentPiece).canLeave(dir)) return false;
+            if  (!(possibleWallPiece).canLeave(dir)) return false;
         }
         //if the piece in front is within the bounds, check what is there
         if (logicGrid.isInBounds(new Position(newX, newY))) {
-            BoardPiece pieceInFront = pieceGrid[newX][newY].get(layerLevel);
-            if (pieceInFront instanceof WallPiece) {
+            if (possibleWallPiece != null) {
                 //cannot go if WallPiece in front has a wall facing player
-                if  (!((WallPiece) pieceInFront).canGo(dir)) return false;
+                if  (!(possibleWallPiece).canGo(dir)) return false;
             }
             //If there is a player in the way of where you want to move, check that you can push that player
             PlayerPiece possiblePlayer = logicGrid.getPieceType(new Position(newX, newY), PlayerPiece.class);
             if (possiblePlayer != null) {
+                System.out.println("Possible player: " + possiblePlayer.toString());
+                System.out.println("X: " + newX + " Y: " + newY);
                 return isLegalMove(newX, newY, dir);
             }
         }
