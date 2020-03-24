@@ -153,8 +153,7 @@ These are the MVP's we picked to complete in this iteration:
 * Restructure how backend changes to the board are made. A robot pushing another cannot occupy the position of the robot being pushed until that robot has been moved to it's next position.
 * Resturcture how frontend changes to the board are made. The pushing robot and the pushed robot need to move at the same time so that it is clear that one is pushing the other.
 
-**Known related bugs**
-When moving near a player that has died, a stack overflow error occurs. This bug can be recreated pressing the UP once key after completing the "Test for pushing robot into abyss" in the maunal tests for robot pushing.
+**Known related bugs**: When moving near a player that has died, a stack overflow error occurs. This bug can be recreated by pressing the UP key once after completing the "Test for pushing robot into abyss" in the maunal tests for robot pushing.
 
 
 
@@ -203,7 +202,7 @@ When moving near a player that has died, a stack overflow error occurs. This bug
 ### How to reach these requirements:
 
 
-### Known bugs
+### Other known bugs
 * When you press enter instead og clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
 * Pieces on the conveyorbelt do not move simlutaneously.
 
@@ -211,12 +210,17 @@ When moving near a player that has died, a stack overflow error occurs. This bug
 ## Deloppgave3: Code
 
 ### How to run the program
-* Ensure maven install and build is complete. Then, run Main. A Menu Screen will pop up. Press the play button to start the game.
-* You can select cards by left clicking them, and move them back by right clicking them. Once you have selected five cards, you can execute them by pressing the lock in button.
-* You can also move the player around using UP, DOWN, LEFT RIGHT. 
+* Ensure maven install and build is complete. Then, run Main. A Menu Screen will pop up. Press the play button to start the game, and then the Stage 1 button from the stage selection screen.
+
+### How to use the game
+* You can select cards by left clicking them, and move them back by right clicking them. Once you have selected five cards, you can start a round by pressing the lock in button.
+* For the next phase to execute, press ENTER.
+* You can move robot 1 around using UP, DOWN, LEFT RIGHT. LEFT and RIGHT rotate the rovot to the left and right, and UP and DOWN move the robot forward and backward.
+* You can move robot 2 around by using W, S, A, D. They function in the same way as UP, DOWN, LEFT, RIGHT, respectively.
+* You can hold down TAB to see stats of all the players in the game.
+* @Erlend, legg til tastetrykk som mangler.
+
 * Things to note:
-  * The player has a direction (facing north at start), but the game screen does not show it.
-  * When using the arrow keys, you always turn in the direction you move. This is not the case when using the cards (for example the MoveBack card)
   * You die if you go off the board or if you walk into an abyss
   * If you die you need to restart the program to play again
 
@@ -224,4 +228,4 @@ When moving near a player that has died, a stack overflow error occurs. This bug
 * Go the tests package, sideclick on the java package and select /Run 'All Tests'/
 
 ### How to run manual tests
-* Read the md file in the ManualTests package in Test for instructions.
+* Read the md files in the ManualTests package in Test for instructions.
