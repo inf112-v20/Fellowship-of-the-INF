@@ -1,6 +1,6 @@
 # Meeting Logs for the Third Iteration
 
-#### 03.03.2020
+## 03.03.2020
 __Attendence__: Martin, Erlend, Johanna, Lena
 
 __Summary__: 
@@ -21,7 +21,7 @@ __Work for next time:__
 * Continue developing the game UI (Erlend)
 
 
-#### 05.03.2020
+## 05.03.2020
 __Attendence__: Everyone
 
 __Summary__: 
@@ -54,7 +54,7 @@ __Work for next time:__
 * Implement damage from lasers (Henrik)
 
 
-#### 12.03.2020
+## 12.03.2020
 __Attendence__: Everyone
 
 __Summary__: 
@@ -70,7 +70,7 @@ __Work for next time:__
 * Finish implementing damage from lasers (Henrik)
 
 
-#### 19.03.2020
+## 19.03.2020
 __Attendence__: Everyone
 
 __Summary__: 
@@ -89,7 +89,7 @@ __Work for next time:__
 * Generally work on debugging and cleaning up their code (Everyone)
 
 
-#### 23.03.2020
+## 23.03.2020
 __Attendence__: Martin, Erlend, Johanna, Lena
 
 __Summary__: 
@@ -104,7 +104,7 @@ __Work for next time:__
 * Check if necessary tests have been made. (Erlend)
 
 
-#### 26.03.2020
+## 26.03.2020
 __Attendence__: Everyone
 
 __Summary__: 
