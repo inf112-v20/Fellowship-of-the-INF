@@ -34,6 +34,8 @@ Meeting logs can be found in a seperate MD file called MeetingLogsIteration3.
 ### Requirements for Third Iteration
 These are the MVP's we picked to complete in this iteration:
 
+---
+
 #### Have computer controlled robots moving around on the board
 **Usecase**: The user of the game would like to have computer controlled robots in the game, so that they have something to play against.
 
@@ -53,6 +55,7 @@ These are the MVP's we picked to complete in this iteration:
 * Implement selection of cards for the computer-robots.
 * Implement the section of a phase in which the robots move.
 
+---
 
 #### Lock cards based on damage obtained
 **Usecase**: The user of the game wants the selected cards of a player to be locked based on obtained damage in accordance with the rules of Roborally.
@@ -67,6 +70,7 @@ These are the MVP's we picked to complete in this iteration:
 
 * TODO @Erlend what tasks had to be completed?
 
+---
 
 ####  Robots are moved when standing on a conveyor belt at the end of a phase
 **Usecase**: The user of the game would like the robots standing on conveyor belts to be moved in accordance of the rules of Roborally.
@@ -85,6 +89,7 @@ These are the MVP's we picked to complete in this iteration:
 
 * TODO @Erlend what tasks were required to complete this MVP?
 
+---
 
 #### Robots are rotated when standing on cogs at the end of a phase
 **Usecase**: The user of the game would like the robots standing on cogs to be rotated in accordance of the rules of Roborally.
@@ -103,6 +108,7 @@ These are the MVP's we picked to complete in this iteration:
 
 * TODO @Erlend what tasks were required to complete this MVP?
 
+---
 
 #### Have functional lasers on the board
 **Usecase**: The user of the game would like robots to obtain one damage, in accordance to the rules of Roborally, when standing in the path of lasers.
@@ -120,6 +126,7 @@ These are the MVP's we picked to complete in this iteration:
 
 * TODO @Henrik what tasks have to be done to complete this MVP?
 
+---
 
 #### Robots can push eachother
 **Usecase**: When the user of the board programms their robot to move into the position of another robot, the other robot should be pushed to the neighbouring cell.
@@ -146,6 +153,7 @@ These are the MVP's we picked to complete in this iteration:
 * Restructure how backend changes to the board are made. A robot pushing another cannot occupy the position of the robot being pushed until that robot has been moved to it's next position.
 * Resturcture how frontend changes to the board are made. The pushing robot and the pushed robot need to move at the same time so that it is clear that one is pushing the other.
 
+---
 
 #### Delay between moves being executed by robots
 **Usecase**: The user would like to see the moves done by the robots happen one after the other, so that it is clear what order the moves were done in.
@@ -168,6 +176,7 @@ These are the MVP's we picked to complete in this iteration:
 * Add a delay when executing the front-end moves.
 * Integrate this new way to show moves with the existing system for showing keyboard controlled moves.
 
+---
 
 #### MVP...
 **Usecase**: 
