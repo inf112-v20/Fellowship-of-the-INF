@@ -85,7 +85,9 @@ public class Player {
         return playerPiece.getCurrentCell();
     }
 
-    public TiledMapTileLayer.Cell getStandardPlayerCell() { return playerPiece.getPlayerCell(); }
+    public TiledMapTileLayer.Cell getStandardPlayerCell() {
+        return playerPiece.getPlayerCell();
+    }
 
     /**
      * Tries to move the player in a new direction
@@ -208,9 +210,10 @@ public class Player {
     /**
      * If there is a player to be pushed, call tryToGo for the player laying there
      * TryToGo will call addMovesForPushedRobots, and add moves to the list, in order.
+     *
      * @param playerPiece playerPiece that is pushing other players
-     * @param dir direction being pushed
-     * @param moves list of moves
+     * @param dir         direction being pushed
+     * @param moves       list of moves
      */
     private void addMovesForPushedRobots(PlayerPiece playerPiece, Direction dir, MovesToExecuteSimultaneously moves) {
         PlayerPiece possiblePlayerPiece = getPlayerPieceToPush(playerPiece, dir);
@@ -222,8 +225,9 @@ public class Player {
 
     /**
      * Finds a player piece that is pushed by a move in direction dir
+     *
      * @param playerPiece playerPiece doing the pushing
-     * @param dir direction in which a robot may be pushed
+     * @param dir         direction in which a robot may be pushed
      * @return null if there is no player piece to push, otherwise return player piece to push
      */
     private PlayerPiece getPlayerPieceToPush(PlayerPiece playerPiece, Direction dir) {
@@ -257,13 +261,21 @@ public class Player {
         BoardPiece currPiece;
         for (int i = 0; i < pieceGrid[newX][newY].size(); i++) {
             currPiece = pieceGrid[newX][newY].get(i);
-            if(currPiece instanceof ExpressBeltPiece){currentBoardPiece = currPiece;}
-            else if(currPiece instanceof ConveyorBeltPiece){currentBoardPiece = currPiece;}
-            else if(currPiece instanceof CogPiece){currentBoardPiece = currPiece;}
-            else if(currPiece instanceof PusherPiece){currentBoardPiece = currPiece;}
-            else if(currPiece instanceof AbyssPiece){currentBoardPiece = currPiece;}
-            else if(currPiece instanceof FloorPiece){currentBoardPiece = currPiece;}
-            else if(currPiece instanceof LaserPiece){currentBoardPiece = currPiece;}
+            if (currPiece instanceof ExpressBeltPiece) {
+                currentBoardPiece = currPiece;
+            } else if (currPiece instanceof ConveyorBeltPiece) {
+                currentBoardPiece = currPiece;
+            } else if (currPiece instanceof CogPiece) {
+                currentBoardPiece = currPiece;
+            } else if (currPiece instanceof PusherPiece) {
+                currentBoardPiece = currPiece;
+            } else if (currPiece instanceof AbyssPiece) {
+                currentBoardPiece = currPiece;
+            } else if (currPiece instanceof FloorPiece) {
+                currentBoardPiece = currPiece;
+            } else if (currPiece instanceof LaserPiece) {
+                currentBoardPiece = currPiece;
+            }
         }
     }
 
@@ -276,55 +288,61 @@ public class Player {
      * @return whether moving one tile in a given direction is legal
      */
     private boolean isLegalMove(int x, int y, Direction dir) {
-        if (isDead()) return false;
-            switch (dir) {
-                case EAST:
-                    if (isLegalMoveInDirection(x+1, y, dir)) { return true; }
-                    break;
-                case WEST:
-                    if (isLegalMoveInDirection(x-1, y, dir)) { return true; }
-                    break;
-                case NORTH:
-                    if (isLegalMoveInDirection(x, y+1, dir)) { return true; }
-                    break;
-                case SOUTH:
-                    if (isLegalMoveInDirection(x, y-1, dir)) { return true; }
-                    break;
+        if (isDead()) {
+            return false;
+        }
+        switch (dir) {
+            case EAST:
+                if (isLegalMoveInDirection(x + 1, y, new Position(x, y), dir)) {
+                    return true;
+                }
+                break;
+            case WEST:
+                if (isLegalMoveInDirection(x - 1, y, new Position(x, y), dir)) {
+                    return true;
+                }
+                break;
+            case NORTH:
+                if (isLegalMoveInDirection(x, y + 1, new Position(x, y), dir)) {
+                    return true;
+                }
+                break;
+            case SOUTH:
+                if (isLegalMoveInDirection(x, y - 1, new Position(x, y), dir)) {
+                    return true;
+                }
+                break;
         }
         return false;
     }
 
     /**
      * Checks if a move in a certian direction is legal.
-     * Checks if walls are blocking the way.
-     * Checks if players that cannot be pushed are blocking the way.
-     * @param newX x-coordinate of current position
-     * @param newY y-coordinate of current position
-     * @param dir direction we are checking if a move is legal in
+     * The robot must be allowed to exit it's current cell.
+     * The robot must be allowed to enter the destination cell.
+     * There must not be a robot that cannot be pushed in the way.
+     *
+     * @param newX            x-coordinate of new position
+     * @param newY            y-coordinate of new position
+     * @param currentPosition position you are moving from
+     * @param dir             direction we are checking if a move is legal in
      * @return true if move is legal
      */
-    public boolean isLegalMoveInDirection(int newX, int newY, Direction dir) {
-        WallPiece possibleWallPiece = logicGrid.getPieceType(new Position(newX, newY), WallPiece.class);
-        if (possibleWallPiece != null) {
-            //cannot leave if the WallPiece player is standing on has a wall in the direction
-            if  (!(possibleWallPiece).canLeave(dir)) return false;
+    public boolean isLegalMoveInDirection(int newX, int newY, Position currentPosition, Direction dir) {
+        Position positionInFront = new Position(newX, newY);
+        if (logicGrid.canLeavePosition(currentPosition, dir) && logicGrid.canEnterNewPosition(positionInFront, dir)) {
+            //if the position in front is in bounds, check if there is a player there that can be pushed
+            if (logicGrid.isInBounds(positionInFront)) {
+                //If there is a player in the way of where you want to move, check that you can push that player
+                PlayerPiece possiblePlayer = logicGrid.getPieceType(positionInFront, PlayerPiece.class);
+                if (possiblePlayer != null) {
+                    return isLegalMove(positionInFront.getX(), positionInFront.getY(), dir);
+                } else return true;
+            } else return true;
         }
-        //if the piece in front is within the bounds, check what is there
-        if (logicGrid.isInBounds(new Position(newX, newY))) {
-            if (possibleWallPiece != null) {
-                //cannot go if WallPiece in front has a wall facing player
-                if  (!(possibleWallPiece).canGo(dir)) return false;
-            }
-            //If there is a player in the way of where you want to move, check that you can push that player
-            PlayerPiece possiblePlayer = logicGrid.getPieceType(new Position(newX, newY), PlayerPiece.class);
-            if (possiblePlayer != null) {
-                System.out.println("Possible player: " + possiblePlayer.toString());
-                System.out.println("X: " + newX + " Y: " + newY);
-                return isLegalMove(newX, newY, dir);
-            }
-        }
-        return true;
+        return false;
     }
+
 
     /**
      * Method for checking if a move results in death
@@ -353,7 +371,7 @@ public class Player {
      * Player executes the move on the given card
      *
      * @param programCard to convert to player move
-     * @param moves list of moves to add move objects to
+     * @param moves       list of moves to add move objects to
      */
     public void executeCardAction(ProgramCard programCard, MovesToExecuteSimultaneously moves) {
         Move rotateMove = new Move(this); //initiate possible rotateMove to be done
@@ -390,30 +408,50 @@ public class Player {
         moves.add(rotateMove);
     }
 
-    public int getPlayerNumber() { return playerNumber; }
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
 
-    public boolean isDead() { return isDead; }
+    public boolean isDead() {
+        return isDead;
+    }
 
-    public PlayerPiece getPlayerPiece() { return playerPiece; }
+    public PlayerPiece getPlayerPiece() {
+        return playerPiece;
+    }
 
-    public void turnPlayerAround() { playerPiece.turnAround(); }
+    public void turnPlayerAround() {
+        playerPiece.turnAround();
+    }
 
-    public void turnPlayerLeft() { playerPiece.turnLeft(); }
+    public void turnPlayerLeft() {
+        playerPiece.turnLeft();
+    }
 
-    public void turnPlayerRight() { playerPiece.turnRight(); }
+    public void turnPlayerRight() {
+        playerPiece.turnRight();
+    }
 
-    public ArrayList<ProgramCard> getPlayerHandDeck() { return playerHandDeck; }
+    public ArrayList<ProgramCard> getPlayerHandDeck() {
+        return playerHandDeck;
+    }
 
-    public ProgramCard[] getSelectedCards() { return selectedCards; }
+    public ProgramCard[] getSelectedCards() {
+        return selectedCards;
+    }
 
-    public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) { this.playerHandDeck = playerHandDeck; }
+    public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) {
+        this.playerHandDeck = playerHandDeck;
+    }
 
-    public void setSelectedCards(ProgramCard[] selectedCards) { this.selectedCards = selectedCards; }
+    public void setSelectedCards(ProgramCard[] selectedCards) {
+        this.selectedCards = selectedCards;
+    }
 
     /**
      * Sets the first five cards in the given hand of nine cards, to be the chosen five cards in a round
      */
-   public void pickFirstFiveCards() {
+    public void pickFirstFiveCards() {
         int NUMBER_OF_CARDS_TO_CHOOSE = 5;
         ProgramCard[] firstFiveCards = new ProgramCard[NUMBER_OF_CARDS_TO_CHOOSE];
         if (playerHandDeck.size() >= NUMBER_OF_CARDS_TO_CHOOSE) {
@@ -430,9 +468,14 @@ public class Player {
                 "playerNumber=" + playerNumber +
                 '}';
     }
-    public Position getSpawnPoint() { return spawnPoint; }
 
-    public void setSpawnPoint(int x, int y) { spawnPoint = new Position(x, y); }
+    public Position getSpawnPoint() {
+        return spawnPoint;
+    }
+
+    public void setSpawnPoint(int x, int y) {
+        spawnPoint = new Position(x, y);
+    }
 
     /**
      * Put the player back to it's respawn position and update all maps
@@ -450,41 +493,47 @@ public class Player {
      * A player loses a life if its damage is 10 or higher
      * Starts locking a players selected cards (from right to left)
      * when a players current damage is 5 or higher.
+     *
      * @param amountOfDamage the number of damage the player takes
      */
-    public void takeDamage(int amountOfDamage){
-       damage += amountOfDamage;
-        if(damage >= 10){
+    public void takeDamage(int amountOfDamage) {
+        damage += amountOfDamage;
+        if (damage >= 10) {
             lives--;
             damage = 10;
         }
-        if(damage >= 5 && damage <= 9){
-           for (int i = damage-amountOfDamage-4; i < damage-4; i++) {
-               lockedCards.add(0, selectedCards[4-i]);
-               playerHandDeck.remove(lockedCards.get(0));
-           }
-       }
-   }
+        if (damage >= 5 && damage <= 9) {
+            for (int i = damage - amountOfDamage - 4; i < damage - 4; i++) {
+                lockedCards.add(0, selectedCards[4 - i]);
+                playerHandDeck.remove(lockedCards.get(0));
+            }
+        }
+    }
 
     /**
      * Heals a player a given amount.
      * Will unlock a players selected cards (from left to right)
      * if the player already have locked cards.
+     *
      * @param amountOfRepairs the number of damage to remove from the player
      */
-    public void repairDamage(int amountOfRepairs){
-       damage -= amountOfRepairs;
-       if(damage < 0){ damage = 0; }
-       int numberOfCardsToUnlock =  lockedCards.size()-(damage - 4);
-       if (numberOfCardsToUnlock > 0 && lockedCards.size() > 0) {
-           for (int i = 0; i < numberOfCardsToUnlock; i++) {
-               playerHandDeck.add(lockedCards.get(0));
-               lockedCards.remove(0);
+    public void repairDamage(int amountOfRepairs) {
+        damage -= amountOfRepairs;
+        if (damage < 0) {
+            damage = 0;
+        }
+        int numberOfCardsToUnlock = lockedCards.size() - (damage - 4);
+        if (numberOfCardsToUnlock > 0 && lockedCards.size() > 0) {
+            for (int i = 0; i < numberOfCardsToUnlock; i++) {
+                playerHandDeck.add(lockedCards.get(0));
+                lockedCards.remove(0);
             }
         }
-   }
+    }
 
-    public int getDamage(){return damage;}
+    public int getDamage() {
+        return damage;
+    }
 
     /**
      * Remove a life from the life counter, and turn the player cell into a dead player cell
@@ -503,7 +552,7 @@ public class Player {
             ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
             spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
         } catch (Exception spawnNotFound) {
-            setSpawnPoint(0,0+playerNumber); //TODO @Lena remove 0+??
+            setSpawnPoint(0, 0 + playerNumber); //TODO @Lena remove 0+??
         }
     }
 
@@ -549,63 +598,67 @@ public class Player {
 
     /**
      * Checks if a player is currently on a CogPiece
+     *
      * @return true if a player is on a cog, false otherwise.
      */
-    public boolean isOnCog(){
+    public boolean isOnCog() {
         return currentBoardPiece instanceof CogPiece;
     }
 
     /**
      * @return true if a player is on a laser
      */
-    public boolean isOnLaser(){
-        if (currentBoardPiece instanceof LaserPiece){
+    public boolean isOnLaser() {
+        if (currentBoardPiece instanceof LaserPiece) {
             return true;
         }
         return false;
     }
 
 
-    public ArrayList<ProgramCard> getLockedCards(){return lockedCards;}
+    public ArrayList<ProgramCard> getLockedCards() {
+        return lockedCards;
+    }
 
     /**
      * Removes all cards from the players selected cards
      */
-    public void removeSelectedCards(){
+    public void removeSelectedCards() {
         Arrays.fill(selectedCards, null);
     }
 
-    public BoardPiece getCurrentBoardPiece(){return currentBoardPiece;}
+    public BoardPiece getCurrentBoardPiece() {
+        return currentBoardPiece;
+    }
 
     /**
      * Gets the last playermove direction
+     *
      * @return the direction of the last movement of the player (movement can be from cards or map objects)
      */
-    public Direction latestMoveDirection(){
+    public Direction latestMoveDirection() {
         return latestMoveDirection;
     }
 
     /**
-     *
      * @param move true if the last movement of the player was by a conveyorbelt/expressbelt, false otherwise
      */
-    public void setConveyorBeltMove(boolean move){
+    public void setConveyorBeltMove(boolean move) {
         conveyorBeltMove = move;
     }
 
     /**
-     *
      * @return true if the last last movement of the player was by a conveyorbelt/expressbelt, false otherwise
      */
-    public boolean isLatestMoveConveyorBelt(){
+    public boolean isLatestMoveConveyorBelt() {
         return conveyorBeltMove;
     }
 
-    public void setHasBeenMovedThisPhase(boolean bool){
+    public void setHasBeenMovedThisPhase(boolean bool) {
         hasBeenMovedThisPhase = bool;
     }
 
-    public Boolean hasBeenMovedThisPhase(){
+    public Boolean hasBeenMovedThisPhase() {
         return hasBeenMovedThisPhase;
     }
 

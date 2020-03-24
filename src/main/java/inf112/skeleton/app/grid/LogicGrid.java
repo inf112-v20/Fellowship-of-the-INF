@@ -265,37 +265,51 @@ public class LogicGrid {
 
     public ArrayList<Position> getSpawnPointPositions() { return spawnPointPositions; }
 
+    /**
+     * Checks if robot is allowed to leave its current position in a certain direction.
+     * Checks if walls are blocking the way.
+     * @param currentPosition position player is in now
+     * @param dir direction we would like to leave piece from
+     * @return true if robot can leave it's current position.
+     */
+    public boolean canLeavePosition(Position currentPosition, Direction dir) {
+        WallPiece possibleWallPiece = getPieceType(currentPosition, WallPiece.class);
+        if (possibleWallPiece != null && possibleWallPiece instanceof WallPiece) {
+            //cannot leave if the WallPiece player is standing on has a wall in the direction
+            if (!(possibleWallPiece).canLeave(dir)) return false;
+        }
+        LaserSourcePiece possibleLaserSourcePiece = getPieceType(currentPosition, LaserSourcePiece.class);
+        if (possibleLaserSourcePiece != null && possibleLaserSourcePiece instanceof WallPiece) {
+            //cannot leave if the laserSourcePiece player is standing on has a wall in the direction
+            if (!(possibleLaserSourcePiece).canLeave(dir)) return false;
+        }
+        return true;
+    }
 
     /**
-     * Finds a new neighbor position from a given position
-     * @param position the starting position
-     * @param newDirection the direction from the starting position
-     * @return the neighbor position from the the starting position in the direction that is given
+     * Checks if a robot is allowed to enter the position in from from a certain direction.
+     * Checks if walls are blocking the way.
+     * Checks if players that cannot be pushed are blocking the way.
+     * @param positionInFront position we are checking if the robot can enter
+     * @param dir direction we are entering the new position from
+     * @return true if it is legal to enter position from direction
      */
-    /*
-    DUPLICATE CODE. getPositionIn in Position does the same thing
-    public Position getNewPosition(Position position, Direction newDirection) {
-        Position pos = position;
-        int newX = position.getX();
-        int newY = position.getY();
-        switch (newDirection) {
-            case NORTH:
-                newY += 1;
-                break;
-            case SOUTH:
-                newY -= 1;
-                break;
-            case WEST:
-                newX -= 1;
-                break;
-            case EAST:
-                newX += 1;
-                break;
+    public boolean canEnterNewPosition(Position positionInFront, Direction dir) {
+        //if the piece in front is within the bounds, check what is there
+        if (isInBounds(positionInFront)) {
+            WallPiece possibleWallPiece = getPieceType(positionInFront, WallPiece.class);
+            if (possibleWallPiece != null && possibleWallPiece instanceof WallPiece) {
+                //cannot go if WallPiece in front has a wall facing player
+                if (!(possibleWallPiece).canGo(dir)) return false;
+            }
+            LaserSourcePiece possibleLaserSourcePiece = getPieceType(positionInFront, LaserSourcePiece.class);
+            if (possibleLaserSourcePiece != null && possibleLaserSourcePiece instanceof WallPiece) {
+                //cannot go if WallPiece in front has a wall facing player
+                if (!(possibleLaserSourcePiece).canGo(dir)) return false;
+            }
         }
-        Position newPos = new Position(newX, newY);
-        return newPos;
+        return true;
     }
-    */
 
     /**
      * Checks if a position is inbounds
