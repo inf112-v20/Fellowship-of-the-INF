@@ -29,6 +29,7 @@ public class PlayerSelectionScreen implements Screen {
         this.height = Gdx.graphics.getHeight();
     }
 
+    //TODO Lots of repeated code, maybe make button construction into methods?
     @Override
     public void show() {
         stage = new Stage();
@@ -49,47 +50,55 @@ public class PlayerSelectionScreen implements Screen {
         logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));
         stage.addActor(logo);
 
-        // Stage1 button
+        //1 Players button
         yPadding = 400;
-        int xPadding = 100;
-        picture = new Sprite(new Texture("Stage1Button.png"));
+        int xPadding = 80;
+        picture = new Sprite(new Texture("1Player.png"));
         player1Button = new ImageButton(new SpriteDrawable(picture));
         player1Button.setPosition(xPadding, yPadding);
         player1Button.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                //Original map: RoborallyBoard_debugged.tmx
-                //Test map for conveyorbelts: conveyorBeltTestMap.tmx
-                game.setScreen(new GameScreen("RoborallyBoard_debugged.tmx"));
+                game.setScreen(new StageSelectionScreen(game, 1));
             }
         });
         stage.addActor(player1Button);
 
-        // Stage2 button
-        picture = new Sprite(new Texture("Stage2Button.png"));
+        //2 Players button
+        picture = new Sprite(new Texture("2Players.png"));
         player2Button = new ImageButton(new SpriteDrawable(picture));
-        player2Button.setPosition((width - xPadding)-player2Button.getWidth(), yPadding);
+        player2Button.setPosition(2*xPadding+player1Button.getWidth(), yPadding);
         player2Button.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen("RoborallyBoard_Vault_Assault.tmx"));
+                game.setScreen(new StageSelectionScreen(game, 2));
             }
         });
         stage.addActor(player2Button);
 
-        // testStage button
-        picture = new Sprite(new Texture("TestStageButton.png"));
+        //3 Players button
+        picture = new Sprite(new Texture("3Players.png"));
         player3Button = new ImageButton(new SpriteDrawable(picture));
-        player3Button.setPosition(width/2 - player3Button.getWidth()/2, yPadding);
+        player3Button.setPosition(3*xPadding+player1Button.getWidth()+player2Button.getWidth(), yPadding);
         player3Button.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen("TestMap.tmx"));
+                game.setScreen(new StageSelectionScreen(game, 3));
             }
         });
         stage.addActor(player3Button);
 
-
+        //4 Players button
+        picture = new Sprite(new Texture("4Players.png"));
+        player4Button = new ImageButton(new SpriteDrawable(picture));
+        player4Button.setPosition(width-xPadding - player4Button.getWidth(), yPadding);
+        player4Button.addListener(new ClickListener() {
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                game.setScreen(new StageSelectionScreen(game, 4));
+            }
+        });
+        stage.addActor(player4Button);
 
         // Back button
         picture = new Sprite(new Texture("BackButton.png"));
