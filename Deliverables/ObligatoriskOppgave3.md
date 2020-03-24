@@ -34,52 +34,156 @@ Meeting logs can be found in a seperate MD file called MeetingLogsIteration3.
 ### Requirements for Third Iteration
 These are the MVP's we picked to complete in this iteration:
 
-####Show muliple robots on the board
-**Usecase**
-hihih
+#### Have computer controlled robots moving around on the board
+**Usecase**: The user of the game would like to have computer controlled robots in the game, so that they have something to play against.
+
 
 **Acceptance cirteria**
-sddsd
+
+* The user must be able to see the other robots on the board.
+* The user must be able to differentiate the robots on the board.
+* The computer-robots must use the first five cards of the hand they are handed each round. 
+* Robots cannot occupy the same position on the board.
+
+
 **Tasks to complete**
-sds
+
+* Implement graphics for the robots
+* Implement spawn points for the computer-robots.
+* Implement selection of cards for the computer-robots.
+* Implement the section of a phase in which the robots move.
+
+
+#### Lock cards based on damage obtained
+**Usecase**: The user of the game wants the selected cards of a player to be locked based on obtained damage in accordance with the rules of Roborally.
+
+
+**Acceptance cirteria**
+
+* TODO @Erlend not quite sure what the acceptance criteria for this rule were.
+
+
+**Tasks to complete**
+
+* TODO @Erlend what tasks had to be completed?
+
+
+####  Robots are moved when standing on a conveyor belt at the end of a phase
+**Usecase**: The user of the game would like the robots standing on conveyor belts to be moved in accordance of the rules of Roborally.
+
+
+**Acceptance cirteria**
+
+* A robot standing on a normal conveyor belt during the *"conveor belts move"* part of the phase, will be moved one cell in the direction of the conveyor belt.
+* A robot standing on an express conveyor belt during the *"conveor belts move"* part of the phase, will be moved two cells in the direction of the conveyor belt.
+* A robot standing on a corner piece of a conveyor belt, will be rotated in addition to being moved.
+* The user can see the robots being moved by the conveyor belts.
+* TODO @Erlend anything else that should be added here?
+
+
+**Tasks to complete**
+
+* TODO @Erlend what tasks were required to complete this MVP?
+
+
+#### Robots are rotated when standing on cogs at the end of a phase
+**Usecase**: The user of the game would like the robots standing on cogs to be rotated in accordance of the rules of Roborally.
+
+
+**Acceptance cirteria**
+
+* A robot standing on a clockwise cog during the *"cogs rotate"* part of the phase, will be rotated clockwise.
+* A robot standing on an anti-clockwise cog during the *"cogs rotate"* part of the phase, will be rotated anti-clockwise.
+* The user needs to see that the robot has been rotated.
+* TODO @Erlend anything else to be added here?
 
 
 
-    Vise spillbrett
-    Vise en spiller på brettet
-        Spiller vises bare posisjonen den skal være på, når den skal være der
-    Vise flere spillere
-        Det er mulig å se forskjell på spillere
-        Spillere skal ikke vises hvis de ikke er med i spillet
-    Kunne programmere robot
-        Man kan velge fra tildelt kort
-    Ha “gjenstander” på brettet
-    Ha en roborally kortstokk
-    Dele ut kort
-        Et kort kan ikke deles ut til flere spillere samtidig
-        Spillere for utdelt færre kort om de har tilsvarende skade
-    Låse kort
-    Win / lose condition
-        Spillet avsluttes hvis noen har besøkt alle flaggene i riktig rekkefølge
-        Spillet avsluttes hvis alle spillerne har mistet alle livene sine
-    Funksjonelle lasere
-        Vise lasere på slutten av hver fase
-        Stoppe lasere ved vegger
-        Gi skade til roboter som blir truffet av laser
-    La roboter skyte laser
-        Laser skal skytes fra “hodet” til roboten i retning roboten står
-        Laser skytes fra roboten på slutten av hver fase
-    Plassere flagg
-        Roboter kan flytte andre roboter hvis de står i veien
-        Men ikke hvis vegger vil forhindre det
-    Låse kort ut i fra skade tatt
-    Oppdatering av backup/respawnplass
-    Besøke flagg
-        Må besøkes i riktig rekkefølge
-    Powerdown
-        Mulighet for å annonsere powerdown
-        Være i powerdown
-        Komme tilbake igjen fra powerdown
+**Tasks to complete**
+
+* TODO @Erlend what tasks were required to complete this MVP?
+
+
+#### Have functional lasers on the board
+**Usecase**: The user of the game would like robots to obtain one damage, in accordance to the rules of Roborally, when standing in the path of lasers.
+
+
+**Acceptance cirteria**
+
+* Give one damage to a robot when it is standing in the way of a single-rayed laser during the *"lasers fire"* part of the phase. 
+*  Give two damage to a robot when it is standing in the way of a double-rayed laser during the *"lasers fire"* part of the phase. 
+* Laser rays should be stopped by a wall or a player standing in the way.
+* TODO @Henrik are there any other criteria for lasers in the game?
+
+
+**Tasks to complete**
+
+* TODO @Henrik what tasks have to be done to complete this MVP?
+
+
+#### Robots can push eachother
+**Usecase**: When the user of the board programms their robot to move into the position of another robot, the other robot should be pushed to the neighbouring cell.
+
+
+**Acceptance cirteria**
+
+* It should not be possible to push a player that is being prevented from being moved in a direction by a wall.
+* The pushed robot should be pushed in the direction the pushing robot is moving.
+* A robot can only be pushed by another robot that is directly next to it, without any hindering barriers inbetween.
+* A robot that is pushed into the position of another robot, should push that next robot too. Ie if many robots are lined up, then is a robot is pushed on one end of the line, all the robots in the path of the push are pushed too.
+* It should be possible to push a robot 
+    * off the board.
+    * into an abyss.
+    * in power down mode. (Power down mode will be implemented in the next iteration).
+    * onto, and off, a conveyor belt.
+    * across multiple cells, ie if the pusher uses a MOVE3 card, then it should be possible to push another robot three spaces.
+
+
+**Tasks to complete**
+
+* Implement a type of recursive function that pushes all robot standing in the way of a pushed robot until there are no more robots in the chain to push.
+* Implement the graphics of the push so that the user can see that a robot is being pushed.
+* Restructure how backend changes to the board are made. A robot pushing another cannot occupy the position of the robot being pushed until that robot has been moved to it's next position.
+* Resturcture how frontend changes to the board are made. The pushing robot and the pushed robot need to move at the same time so that it is clear that one is pushing the other.
+
+
+#### Delay between moves being executed by robots
+**Usecase**: The user would like to see the moves done by the robots happen one after the other, so that it is clear what order the moves were done in.
+
+
+**Acceptance cirteria**
+
+* The moves shown should correspond to the moves that were executed in the backend.
+* The moves should be shown in correct order.
+* The delay between moves should be about one second.
+* Moves that happen simultaneously should be shown simultaneously.
+
+
+**Tasks to complete**
+
+* Create a system that generates a list of moves that need to be shown graphically.
+    * A Move object that contains information about a robot before and after a move is executed:
+    * A MovesToExetuteSimultaneously object, which is a type of Array List that contains Move objects that have to be executed simultaneously in the frontend.
+    * A type of Queue that ensures the MovesToExetuteSimultaneously objects are executed in the order they are generated.
+* Add a delay when executing the front-end moves.
+* Integrate this new way to show moves with the existing system for showing keyboard controlled moves.
+
+
+#### MVP...
+**Usecase**: 
+
+
+**Acceptance cirteria**
+
+* 
+
+
+**Tasks to complete**
+
+* 
+
+
+
 
 
 ### How to reach these requirements:
