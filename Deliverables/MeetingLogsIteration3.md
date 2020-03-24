@@ -38,7 +38,7 @@ __Work for next time:__
 * Learn about Codacy, and integrate it into the project (Martin)
 
 
-#### 09.03.2020
+## 09.03.2020
 __Attendence__: Everyone
 
 __Summary__: 
