@@ -66,7 +66,7 @@ __Work for next time:__
 * Implement pushing of robots (Johanna)
 * Fix the wall-bug discussed during the meeting (Martin)
 * Implement more types of conveyorbelts and add conflict solution when robots push other robots on conveyorbelts. (Erlend)
-* Fix bugs in LogicGrid and Flag.
+* Fix bugs in LogicGrid and Flag. (Lena)
 * Finish implementing damage from lasers (Henrik)
 
 
@@ -85,7 +85,7 @@ __Work for next time:__
 * Implement ability to choose the number of players in the menu screen. (Martin)
 * Finish implementing pushing (Johanna)
 * Implement respawn after death, and fix problemns in her map. (Lena)
-* Clean up the remaing bugs to do with the conveyorbelt and implement express belts.
+* Clean up the remaing bugs to do with the conveyorbelt and implement express belts. (Erlend)
 * Generally work on debugging and cleaning up their code (Everyone)
 
 
