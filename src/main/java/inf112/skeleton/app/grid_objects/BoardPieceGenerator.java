@@ -188,6 +188,8 @@ public class BoardPieceGenerator {
                 return new FlagPiece(pos, id, 2);
             case (71):
                 return new FlagPiece(pos, id, 3);
+            case (79):
+                return new FlagPiece(pos, id, 4);
             case (121):
                 return new SpawnPointPiece(pos, id, 1);
             case (122):

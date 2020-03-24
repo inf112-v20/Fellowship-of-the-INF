@@ -1,5 +1,7 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.game_logic;
 
+import inf112.skeleton.app.game_logic.Game;
+import inf112.skeleton.app.game_logic.Phase;
 import inf112.skeleton.app.player.Player;
 
 public class Round {
@@ -23,7 +25,6 @@ public class Round {
      * Computer players pick the first five cards they are given.
      */
     public void startRound(){
-        System.out.println("ROUND " + (roundNumber) + " START!");
         for (int i = 0; i < game.getListOfPlayers().length ; i++) {
             Player player = game.getListOfPlayers()[i];
             player.setPlayerHandDeck(game.getGameDeck().drawHand(player.getPlayerHandDeck(), player.getDamage()));
@@ -36,9 +37,6 @@ public class Round {
         for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
             game.getListOfPlayers()[playerNumber - 1].pickFirstFiveCards();
         }
-        for (int i = 0; i < 5 ; i++) {
-            System.out.println(game.getListOfPlayers()[1].getSelectedCards()[i].toString());
-        }
     }
 
     /**
@@ -46,7 +44,6 @@ public class Round {
      */
     public void nextPhase(){
         if(phaseNr > 4){ return; }
-        System.out.println("PHASE " + (phaseNr+1) + " START!");
         phase.executePhase(phaseNr);
         phaseNr++;
     }

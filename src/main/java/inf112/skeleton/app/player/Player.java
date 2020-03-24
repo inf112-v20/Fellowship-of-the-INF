@@ -1,9 +1,9 @@
 package inf112.skeleton.app.player;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import inf112.skeleton.app.Game;
-import inf112.skeleton.app.Move;
-import inf112.skeleton.app.MovesToExecuteSimultaneously;
+import inf112.skeleton.app.game_logic.Game;
+import inf112.skeleton.app.game_logic.Move;
+import inf112.skeleton.app.game_logic.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
@@ -454,7 +454,6 @@ public class Player {
             lives--;
             damage = 10;
         }
-       System.out.println("Damage: " + damage);
         if(damage >= 5 && damage <= 9){
            for (int i = damage-amountOfDamage-4; i < damage-4; i++) {
                lockedCards.add(0, selectedCards[4-i]);
@@ -472,7 +471,6 @@ public class Player {
     public void repairDamage(int amountOfRepairs){
        damage -= amountOfRepairs;
        if(damage < 0){ damage = 0; }
-       System.out.println("Damage: " + damage);
        int numberOfCardsToUnlock =  lockedCards.size()-(damage - 4);
        if (numberOfCardsToUnlock > 0 && lockedCards.size() > 0) {
            for (int i = 0; i < numberOfCardsToUnlock; i++) {
@@ -491,7 +489,6 @@ public class Player {
         lives--;
         isDead = true;
         playerPiece.showDeadPlayer();
-        System.out.println("Lives: " + lives);
     }
 
     /**
@@ -509,7 +506,6 @@ public class Player {
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
     public void gainLife() {
         lives++;
-        System.out.println("Lives: " + lives);
     }
 
     public int getLives() {
@@ -518,13 +514,11 @@ public class Player {
 
     public void visitedCheckpoint() {
         checkpointsVisited++;
-        System.out.println("Checkpoints: " + checkpointsVisited);
     }
 
     //TODO remove this later since it is not possible to undo a checkpoint/flag. This is for testing purposes only.
     public void removeCheckpoint() {
         checkpointsVisited--;
-        System.out.println("Checkpoints: " + checkpointsVisited);
     }
 
     public int getCheckpointsVisited() {
