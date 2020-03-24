@@ -153,6 +153,11 @@ These are the MVP's we picked to complete in this iteration:
 * Restructure how backend changes to the board are made. A robot pushing another cannot occupy the position of the robot being pushed until that robot has been moved to it's next position.
 * Resturcture how frontend changes to the board are made. The pushing robot and the pushed robot need to move at the same time so that it is clear that one is pushing the other.
 
+**Known related bugs**
+When moving near a player that has died, a stack overflow error occurs. This bug can be recreated pressing the UP once key after completing the "Test for pushing robot into abyss" in the maunal tests for robot pushing.
+
+
+
 ---
 
 ### Delay between moves being executed by robots
@@ -200,7 +205,7 @@ These are the MVP's we picked to complete in this iteration:
 
 ### Known bugs
 * When you press enter instead og clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
-* Pieces on the conveyorbelt do not move simlutaneously
+* Pieces on the conveyorbelt do not move simlutaneously.
 
 
 ## Deloppgave3: Code
