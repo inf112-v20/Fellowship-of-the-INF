@@ -15,18 +15,72 @@ In the first iteration we decided to use XP, with an emphasis on good communicat
 * **Communication is key** - We have from the beginnig emphasised the importance of good communication, and this has of course been affected by the closing of the university. See further comments in the "Communicaton" section.
 
 ### Points of improvement
+HERE WE ARE SUPPOSED TO CHOOSE THREE POINTS OF IMPROVEMENT MENTIONED IN THE RETROSPECTIVE. THESE NEED TO BE AGREED UPON IN THE MEETING ON THURSDAY.
+* Start doing pair programming again, remote of course
+* Get better at using the project board
+* Actually reflect upon the previous iteration before planning the next one.
+* Plan meetings better, so that everyone is available at the agreed upon time.
+* Testing should be done either before or immediately after implementation, not toward the end of an iteration.
 
-### Kommunication
+### Communication and group dynamics
+Since we no longer have physical meetings the quality of the communication has decreased, but the meetings have become somewhat more focused. During online meetings people make more of an effort to make the communication clear and consise as only one person can make themselves hear at a time. It is also harder for memebers to branch off into their own conversation, so everyone is part of the same conversation during the entire meeting. Unfortunately some members have problems with the internet quality in their home, and therefore sometimes have difficulties in participating in the online meetings.
+
 
 ### Meeting logs
-Meeting logs can be found in a seperate MD file called MeeintLogsIteration3.
+Meeting logs can be found in a seperate MD file called MeetingLogsIteration3.
 
 
 ## Part 2: Requirements
-### Requirements for Second Iteration
-* Move player by choosing cards
-* Collision with walls
-* Death when falling off board
+### Requirements for Third Iteration
+These are the MVP's we picked to complete in this iteration:
+
+####Show muliple robots on the board
+**Usecase**
+hihih
+
+**Acceptance cirteria**
+sddsd
+**Tasks to complete**
+sds
+
+
+
+    Vise spillbrett
+    Vise en spiller på brettet
+        Spiller vises bare posisjonen den skal være på, når den skal være der
+    Vise flere spillere
+        Det er mulig å se forskjell på spillere
+        Spillere skal ikke vises hvis de ikke er med i spillet
+    Kunne programmere robot
+        Man kan velge fra tildelt kort
+    Ha “gjenstander” på brettet
+    Ha en roborally kortstokk
+    Dele ut kort
+        Et kort kan ikke deles ut til flere spillere samtidig
+        Spillere for utdelt færre kort om de har tilsvarende skade
+    Låse kort
+    Win / lose condition
+        Spillet avsluttes hvis noen har besøkt alle flaggene i riktig rekkefølge
+        Spillet avsluttes hvis alle spillerne har mistet alle livene sine
+    Funksjonelle lasere
+        Vise lasere på slutten av hver fase
+        Stoppe lasere ved vegger
+        Gi skade til roboter som blir truffet av laser
+    La roboter skyte laser
+        Laser skal skytes fra “hodet” til roboten i retning roboten står
+        Laser skytes fra roboten på slutten av hver fase
+    Plassere flagg
+        Roboter kan flytte andre roboter hvis de står i veien
+        Men ikke hvis vegger vil forhindre det
+    Låse kort ut i fra skade tatt
+    Oppdatering av backup/respawnplass
+    Besøke flagg
+        Må besøkes i riktig rekkefølge
+    Powerdown
+        Mulighet for å annonsere powerdown
+        Være i powerdown
+        Komme tilbake igjen fra powerdown
+
 
 ### How to reach these requirements:
 
