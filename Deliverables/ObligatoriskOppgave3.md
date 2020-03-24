@@ -36,7 +36,7 @@ These are the MVP's we picked to complete in this iteration:
 
 ---
 
-#### Have computer controlled robots moving around on the board
+### Have computer controlled robots moving around on the board
 **Usecase**: The user of the game would like to have computer controlled robots in the game, so that they have something to play against.
 
 
@@ -57,7 +57,7 @@ These are the MVP's we picked to complete in this iteration:
 
 ---
 
-#### Lock cards based on damage obtained
+### Lock cards based on damage obtained
 **Usecase**: The user of the game wants the selected cards of a player to be locked based on obtained damage in accordance with the rules of Roborally.
 
 
@@ -72,7 +72,7 @@ These are the MVP's we picked to complete in this iteration:
 
 ---
 
-####  Robots are moved when standing on a conveyor belt at the end of a phase
+###  Robots are moved when standing on a conveyor belt at the end of a phase
 **Usecase**: The user of the game would like the robots standing on conveyor belts to be moved in accordance of the rules of Roborally.
 
 
@@ -91,7 +91,7 @@ These are the MVP's we picked to complete in this iteration:
 
 ---
 
-#### Robots are rotated when standing on cogs at the end of a phase
+### Robots are rotated when standing on cogs at the end of a phase
 **Usecase**: The user of the game would like the robots standing on cogs to be rotated in accordance of the rules of Roborally.
 
 
@@ -110,7 +110,7 @@ These are the MVP's we picked to complete in this iteration:
 
 ---
 
-#### Have functional lasers on the board
+### Have functional lasers on the board
 **Usecase**: The user of the game would like robots to obtain one damage, in accordance to the rules of Roborally, when standing in the path of lasers.
 
 
@@ -128,7 +128,7 @@ These are the MVP's we picked to complete in this iteration:
 
 ---
 
-#### Robots can push eachother
+### Robots can push eachother
 **Usecase**: When the user of the board programms their robot to move into the position of another robot, the other robot should be pushed to the neighbouring cell.
 
 
@@ -155,7 +155,7 @@ These are the MVP's we picked to complete in this iteration:
 
 ---
 
-#### Delay between moves being executed by robots
+### Delay between moves being executed by robots
 **Usecase**: The user would like to see the moves done by the robots happen one after the other, so that it is clear what order the moves were done in.
 
 
@@ -178,7 +178,7 @@ These are the MVP's we picked to complete in this iteration:
 
 ---
 
-#### MVP...
+### MVP...
 **Usecase**: 
 
 
