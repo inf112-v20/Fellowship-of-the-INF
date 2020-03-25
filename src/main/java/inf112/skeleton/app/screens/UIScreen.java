@@ -108,7 +108,7 @@ public class UIScreen{
             float textPosX = cardPicture.getRegionWidth()*0.65f;
             float textPosY = cardPicture.getRegionHeight();
             gamelogActors.add(drawText(priorityText, 4, posX + textPosX, height*0.4f + textPosY, Color.GREEN));
-            TextureRegion playerPicture = player.getStandardPlayerCell().getTile().getTextureRegion();
+            TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
             posX = (width * 0.515f) + (i * gap);
             gamelogActors.add(createImage(playerPicture, 0.01f, posX, height*0.55f, 1));
             posX = (width * 0.53f) + (i * gap);

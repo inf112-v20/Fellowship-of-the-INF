@@ -85,10 +85,6 @@ public class Player {
         return playerPiece.getCurrentCell();
     }
 
-    public TiledMapTileLayer.Cell getStandardPlayerCell() {
-        return playerPiece.getPlayerCell();
-    }
-
     /**
      * Tries to move the player in a new direction
      *

@@ -220,7 +220,11 @@ public class Phase {
         return phaseNumber;
     }
 
-    //TODO @Erlend needs comments
+
+    /**
+     * This needs to be outside moveConveyorBelts since it has a possible recursive call
+     * Adds all players to a list
+     */
     private void setUpConveyorBelts() {
         copyOfPlayers.clear();
         Collections.addAll(copyOfPlayers, listOfPlayers);

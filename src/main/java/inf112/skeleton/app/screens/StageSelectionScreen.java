@@ -61,8 +61,6 @@ public class StageSelectionScreen implements Screen {
         stage1Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //Original map: RoborallyBoard_debugged.tmx
-                //Test map for conveyorbelts: conveyorBeltTestMap.tmx TODO @Erlend this map should be opened when using the test button
                 game.setScreen(new GameScreen("RoborallyBoard_debugged.tmx"));
             }
         });
@@ -94,6 +92,8 @@ public class StageSelectionScreen implements Screen {
                 //game.setScreen(new GameScreen("robot_pushing_test_map_2.tmx"));
                 // Test map 3 for robot pushing: robot_pushing_test_map_3.tmx
                 //game.setScreen(new GameScreen("robot_pushing_test_map_3.tmx"));
+                // Test map for conveyorbelts: conveyorBeltTestMap.tmx
+                //game.setScreen(new GameScreen("conveyorBeltTestMap.tmx"));
             }
         });
         stage.addActor(stageTestButton);
