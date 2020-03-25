@@ -448,13 +448,8 @@ public class Player {
      * Sets the first five cards in the given hand of nine cards, to be the chosen five cards in a round
      */
     public void pickFirstFiveCards() {
-        int NUMBER_OF_CARDS_TO_CHOOSE = 5;
-        ProgramCard[] firstFiveCards = new ProgramCard[NUMBER_OF_CARDS_TO_CHOOSE];
-        if (playerHandDeck.size() >= NUMBER_OF_CARDS_TO_CHOOSE) {
-            for (int i = 0; i < NUMBER_OF_CARDS_TO_CHOOSE; i++) {
-                firstFiveCards[i] = (playerHandDeck.get(i));
-            }
-            selectedCards = firstFiveCards;
+        for (int i = 0; i < 5 - lockedCards.size() ; i++) {
+            selectedCards[i] = playerHandDeck.get(i);
         }
     }
 

@@ -22,6 +22,7 @@ import inf112.skeleton.app.player.Player;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class UIScreen{
     private ScoreBoardScreen scoreBoardScreen;
@@ -81,6 +82,11 @@ public class UIScreen{
     public void newRound(){
         game.executeRound();
         lockInButton.setTouchable(Touchable.disabled);
+        if(player.getLockedCards().size() == 5){
+            lockInButton.setTouchable(Touchable.enabled);
+            Color c = lockInButton.getColor();
+            lockInButton.setColor(c.r, c.g, c.b, 1);
+        }
         removeGameLog();
         cardButton = new CardButton(player, width, height, stage, lockInButton);
     }
@@ -337,8 +343,7 @@ public class UIScreen{
                 cardButton.getLeftOverCardButtons().get(i).remove();
             }
         }
-        player.setSelectedCards(cardButton.getSelectedCards());
-        game.getRound().nextPhase();
+        player.setSelectedCards(cardButton.getSelectedCards());game.getRound().nextPhase();
         //updateGameLog();
     }
 

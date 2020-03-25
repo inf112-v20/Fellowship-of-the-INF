@@ -4,6 +4,8 @@ import inf112.skeleton.app.game_logic.Game;
 import inf112.skeleton.app.game_logic.Phase;
 import inf112.skeleton.app.player.Player;
 
+import java.util.Arrays;
+
 public class Round {
 
     final int NUMBER_OF_PHASES = 5;
@@ -31,7 +33,8 @@ public class Round {
             player.removeSelectedCards();
             int numberOfLockedCards = player.getLockedCards().size();
             for (int j = 0; j < numberOfLockedCards; j++) {
-                player.getSelectedCards()[4-j] = (player.getLockedCards().get(j));
+                int number = 5 - numberOfLockedCards;
+                player.getSelectedCards()[number + j] = (player.getLockedCards().get(j));
             }
         }
         for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
