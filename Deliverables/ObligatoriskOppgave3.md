@@ -128,17 +128,23 @@ These are the MVP's we picked to complete in this iteration:
 **Usecase**: The user of the game would like robots to obtain one damage, in accordance to the rules of Roborally, when standing in the path of lasers.
 
 
-**Acceptance cirteria**
+**Acceptance criteria**
 
 * Give one damage to a robot when it is standing in the way of a single-rayed laser during the *"lasers fire"* part of the phase. 
 *  Give two damage to a robot when it is standing in the way of a double-rayed laser during the *"lasers fire"* part of the phase. 
-* Laser rays should be stopped by a wall or a player standing in the way.
-* TODO @Henrik are there any other criteria for lasers in the game?
+* Laser rays should be stopped by a wall or a player standing in the way, so that multiple robots cannot be
+damaged by the same laser.
+* Laser rays should only be visible during the *"lasers fire"* part of the phase, i.e. that the lasers are 
+not activated during any other sequence.
 
 
 **Tasks to complete**
 
-* TODO @Henrik what tasks have to be done to complete this MVP?
+* Register when a robot is standing in the path of a laser
+* Robots that are standing in the path of a laser takes damage accordingly, and UI is updated accordingly (in regards
+to damage tokens).
+* Intercept/"cut off" the rest of the laser when it hits a robot or wall.
+* Implement visual queues for lasers during laser sequence in a phase.
 
 ---
 
