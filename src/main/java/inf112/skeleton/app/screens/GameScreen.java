@@ -14,9 +14,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import inf112.skeleton.app.Move;
-import inf112.skeleton.app.Game;
-import inf112.skeleton.app.MovesToExecuteSimultaneously;
+import inf112.skeleton.app.game_logic.Move;
+import inf112.skeleton.app.game_logic.Game;
+import inf112.skeleton.app.game_logic.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
@@ -250,6 +250,5 @@ public class GameScreen implements Screen {
         playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
         playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
         playerLayer.setCell(newPos.getX(), newPos.getY(), playerPieceToUpdate.getPlayerCell()); //repaint at new position
-        System.out.println("Frontend executing: " + move);
     }
 }

@@ -26,7 +26,7 @@ public class StageSelectionScreen implements Screen {
     private ImageButton stage2Button;
     private ImageButton backButton;
 
-    public StageSelectionScreen (RoboRallyDemo game) {
+    public StageSelectionScreen(RoboRallyDemo game) {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
@@ -48,8 +48,8 @@ public class StageSelectionScreen implements Screen {
         int yPadding = 50;
         picture = new Sprite(new Texture("RoboRally_logo.png"));
         logo = new Image(new SpriteDrawable(picture));
-        logo.setSize(logo.getWidth()*1.5f, logo.getHeight()*2);
-        logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));
+        logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
+        logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
         // Stage1 button
@@ -60,9 +60,9 @@ public class StageSelectionScreen implements Screen {
         stage1Button.setPosition(xPadding, yPadding);
         stage1Button.addListener(new ClickListener() {
             @Override
-            public void clicked (InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 //Original map: RoborallyBoard_debugged.tmx
-                //Test map for conveyorbelts: conveyorBeltTestMap.tmx
+                //Test map for conveyorbelts: conveyorBeltTestMap.tmx TODO @Erlend this map should be opened when using the test button
                 game.setScreen(new GameScreen("RoborallyBoard_debugged.tmx"));
             }
         });
@@ -71,10 +71,10 @@ public class StageSelectionScreen implements Screen {
         // Stage2 button
         picture = new Sprite(new Texture("Stage2Button.png"));
         stage2Button = new ImageButton(new SpriteDrawable(picture));
-        stage2Button.setPosition((width - xPadding)-stage2Button.getWidth(), yPadding);
+        stage2Button.setPosition((width - xPadding) - stage2Button.getWidth(), yPadding);
         stage2Button.addListener(new ClickListener() {
             @Override
-            public void clicked (InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen("RoborallyBoard_Vault_Assault.tmx"));
             }
         });
@@ -83,24 +83,29 @@ public class StageSelectionScreen implements Screen {
         // testStage button
         picture = new Sprite(new Texture("TestStageButton.png"));
         stageTestButton = new ImageButton(new SpriteDrawable(picture));
-        stageTestButton.setPosition(width/2 - stageTestButton.getWidth()/2, yPadding);
+        stageTestButton.setPosition(width / 2 - stageTestButton.getWidth() / 2, yPadding);
         stageTestButton.addListener(new ClickListener() {
             @Override
-            public void clicked (InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen("TestMap.tmx"));
+                // Test map 1 for robot pushing: robot_pushing_test_map_1.tmx
+                //game.setScreen(new GameScreen("robot_pushing_test_map_1.tmx"));
+                // Test map 2 for robot pushing: robot_pushing_test_map_2.tmx
+                //game.setScreen(new GameScreen("robot_pushing_test_map_2.tmx"));
+                // Test map 3 for robot pushing: robot_pushing_test_map_3.tmx
+                //game.setScreen(new GameScreen("robot_pushing_test_map_3.tmx"));
             }
         });
         stage.addActor(stageTestButton);
 
 
-
         // Back button
         picture = new Sprite(new Texture("BackButton.png"));
         backButton = new ImageButton(new SpriteDrawable(picture));
-        backButton.setPosition((width-xPadding)- backButton.getWidth(), 100);
+        backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
         backButton.addListener(new ClickListener() {
             @Override
-            public void clicked (InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
             }
         });

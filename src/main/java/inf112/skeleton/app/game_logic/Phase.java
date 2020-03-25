@@ -1,9 +1,8 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.game_logic;
 
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.grid_objects.BoardPiece;
 import inf112.skeleton.app.grid_objects.FlagPiece;
 import inf112.skeleton.app.grid_objects.LaserPiece;
 import inf112.skeleton.app.player.Player;
@@ -80,7 +79,6 @@ public class Phase {
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
-            System.out.println("PLayer: " + player.toString() + " pos: " + player.getPos().toString());
             MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
         }
@@ -97,11 +95,12 @@ public class Phase {
         ProgramCard cardThisPhase = player.getSelectedCards()[phaseNumber];
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         player.executeCardAction(cardThisPhase, moves); //updates the state of the player, not the board
-        System.out.println("Player " + player.getPlayerNumber() + " played card "
-                + cardThisPhase.getCommand() + ", Priority: " + cardThisPhase.getPriority());
         return moves;
     }
 
+    /**
+     * TODO @Lena needs comments
+     */
     private void touchCheckPoints() {
         for (Player player : listOfPlayers) {
             if (player.getCurrentBoardPiece() instanceof FlagPiece) {
@@ -140,7 +139,7 @@ public class Phase {
     }
 
     /**
-     *
+     * TODO @Henrik needs comments
      * @param pos
      * @param dir
      */
@@ -149,14 +148,8 @@ public class Phase {
         int yDir = 0;
         if (dir == Direction.NORTH || dir == Direction.SOUTH) yDir = 1;
         else xDir = 1;
-
-
-
     }
 
-
-    private void pushersPush() {
-    }
 
     /**
      * Checks if any player is on a conveyorbelt
@@ -181,18 +174,14 @@ public class Phase {
                     continue;
                 }
                 if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid(), moveOnlyExpressBelts)){
-                    System.out.println("Player is in front of " + player.toString());
                     morePlayersToMove = true;
                     continue;
                 }
                 if(BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid(), game, moveOnlyExpressBelts)){
-                    System.out.println(player.toString() + " is going to crash");
-
                     copyOfPlayers.remove(i);
                     i--;
                     continue;
                 }
-                System.out.println("Move " + player.toString());
                 Move move = new Move(player);
                 BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(), player, game.getLogicGrid());
                 move.updateMove(player);

@@ -15,8 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import inf112.skeleton.app.Game;
-import inf112.skeleton.app.Phase;
+import inf112.skeleton.app.game_logic.Game;
+import inf112.skeleton.app.game_logic.Phase;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.player.Player;
 
@@ -324,7 +324,7 @@ public class UIScreen{
      */
     public void executeLockInButton(){
         for (int i = 0; i < 5 ; i++) {
-            if(cardButton.getSelectedCards()[i] == null){System.out.println("Not enough cards");return;}
+            if(cardButton.getSelectedCards()[i] == null){System.out.println("Not enough cards"); return;}
         }
         for (int i = 0; i < 5 ; i++) {
             cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
