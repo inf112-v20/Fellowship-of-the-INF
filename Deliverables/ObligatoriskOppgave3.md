@@ -61,33 +61,44 @@ These are the MVP's we picked to complete in this iteration:
 **Usecase**: The user of the game wants the selected cards of a player to be locked based on obtained damage in accordance with the rules of Roborally.
 
 
-**Acceptance cirteria**
+**Acceptance criteria**
 
-* TODO @Erlend not quite sure what the acceptance criteria for this rule were.
+* Lock cards from right to left only after taking 5 or more damage.
+* The user must be able to see which cards are locked.
+* The user must be unable to remove or unselect the locked cards.
+* Cards can be unlocked if damage is removed. 
 
 
 **Tasks to complete**
 
-* TODO @Erlend what tasks had to be completed?
-
+* Implement graphics for locked cards. 
+* Disable buttons for locked cards at round start.
+* Prevent locked cards from being sent back to the gamedeck at round end. 
 ---
 
 ###  Robots are moved when standing on a conveyor belt at the end of a phase
 **Usecase**: The user of the game would like the robots standing on conveyor belts to be moved in accordance of the rules of Roborally.
 
 
-**Acceptance cirteria**
-
-* A robot standing on a normal conveyor belt during the *"conveor belts move"* part of the phase, will be moved one cell in the direction of the conveyor belt.
-* A robot standing on an express conveyor belt during the *"conveor belts move"* part of the phase, will be moved two cells in the direction of the conveyor belt.
-* A robot standing on a corner piece of a conveyor belt, will be rotated in addition to being moved.
+**Acceptance criteria**
+* Robots standing on an express conveyor belt during the *"conveyor belts move"* part of the phase, will be moved one cell in the direction of the conveyor belt.
+* Robots still standing on an express conveyor belt will once again be moved one cell, and at the same time robots standing on normal conveyor belt will move one cell in the direction of the conveyor belt. 
+* A robot standing on a corner piece of a conveyor belt, will be rotated 90* in addition to being moved.
 * The user can see the robots being moved by the conveyor belts.
-* TODO @Erlend anything else that should be added here?
+* Conveyorbelts should not move a robot if it will crash into another robot.
 
 
 **Tasks to complete**
 
-* TODO @Erlend what tasks were required to complete this MVP?
+* Create a case for every type of conveyorbelt in the tileset file so that every type can be used.
+* Determine if a player is standing on a conveyorbelt.
+* Determine for some types of conveyorbelts if it should turn a robot left or right.
+* Implement a way to check if a robot is going to end up in the same cell as an other robot from the movement of the conveyorbelt.
+   * Don't move any robots that will do this
+* Create a recursive call for moving robots standing in front of a robot on a conveyorbelt, but only if the robot in front is moving on the same path. Prevents the robot in the back crashing into the robot in front before that robot has had a chanced to be moved. 
+* Update visually everytime someone is moved by a conveyorbelt (should change to be updated simultaneously).
+
+
 
 ---
 
@@ -95,10 +106,10 @@ These are the MVP's we picked to complete in this iteration:
 **Usecase**: The user of the game would like the robots standing on cogs to be rotated in accordance of the rules of Roborally.
 
 
-**Acceptance cirteria**
+**Acceptance criteria**
 
-* A robot standing on a clockwise cog during the *"cogs rotate"* part of the phase, will be rotated clockwise.
-* A robot standing on an anti-clockwise cog during the *"cogs rotate"* part of the phase, will be rotated anti-clockwise.
+* A robot standing on a clockwise cog during the *"cogs rotate"* part of the phase, will be rotated 90* clockwise.
+* A robot standing on an anti-clockwise cog during the *"cogs rotate"* part of the phase, will be rotated 90* anti-clockwise.
 * The user needs to see that the robot has been rotated.
 * TODO @Erlend anything else to be added here?
 
@@ -106,7 +117,10 @@ These are the MVP's we picked to complete in this iteration:
 
 **Tasks to complete**
 
-* TODO @Erlend what tasks were required to complete this MVP?
+* Determine if a robot is standing on a cog
+* Rotate player in the correct direction
+* Update visually everytime someone is rotated by cog (should change to be updated simultaneously).
+
 
 ---
 
@@ -203,8 +217,9 @@ These are the MVP's we picked to complete in this iteration:
 
 
 ### Other known bugs
-* When you press enter instead og clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
+* When you press enter instead of clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
 * Pieces on the conveyorbelt do not move simlutaneously.
+* A robot standing on a conveyorbeltpiece that is also a laserpiece will not be moved by the conveyorbelt.
 
 
 ## Deloppgave3: Code
@@ -215,17 +230,26 @@ These are the MVP's we picked to complete in this iteration:
 ### How to use the game
 * You can select cards by left clicking them, and move them back by right clicking them. Once you have selected five cards, you can start a round by pressing the lock in button.
 * For the next phase to execute, press ENTER.
-* You can move robot 1 around using UP, DOWN, LEFT RIGHT. LEFT and RIGHT rotate the rovot to the left and right, and UP and DOWN move the robot forward and backward.
-* You can move robot 2 around by using W, S, A, D. They function in the same way as UP, DOWN, LEFT, RIGHT, respectively.
+* You can move robot 1 around using UP, DOWN, LEFT RIGHT, SPACEBAR. LEFT and RIGHT rotate the robot to the left and right, while SPACEBAR rotates the robot 180*.  UP and DOWN move the robot forward and backward.
+* You can move robot 2 around by using W, S, A, D, Z. They function in the same way as UP, DOWN, LEFT, RIGHT, SPACEBAR respectively.
+* If robot 1 is on a conveyorbelt (not express) you can move it 1 cell in the direction of the conveyorbelt by pressing BACKSPACE.
+   * Will not handle collision from the conveyorbelt move. 
 * You can hold down TAB to see stats of all the players in the game.
-* @Erlend, legg til tastetrykk som mangler.
+* You can press ESC to quickly resize the game to a small window. 
+* Pressing the buttons 1-6 changes some values of the player (unsure if NUMPAD numbers works):
+   * 1: Add 1 damage
+   * 2: Remove 1 damage
+   * 3: Add 1 life
+   * 4: Remove 1 life
+   * 5: Add 1 flag
+   * 6: Remove 1 flag 
 
 * Things to note:
   * You die if you go off the board or if you walk into an abyss
   * If you die you need to restart the program to play again
 
 ### How to run automatic tests
-* Go the tests package, sideclick on the java package and select /Run 'All Tests'/
+* Go to the tests package, sideclick on the java package and select /Run 'All Tests'/
 
 ### How to run manual tests
 * Read the md files in the ManualTests package in Test for instructions.
