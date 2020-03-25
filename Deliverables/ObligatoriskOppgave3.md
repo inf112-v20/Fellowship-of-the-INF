@@ -40,7 +40,7 @@ These are the MVP's we picked to complete in this iteration:
 **Usecase**: The user of the game would like to have computer controlled robots in the game, so that they have something to play against.
 
 
-**Acceptance cirteria**
+**Acceptance criteria**
 
 * The user must be able to see the other robots on the board.
 * The user must be able to differentiate the robots on the board.
@@ -64,9 +64,9 @@ These are the MVP's we picked to complete in this iteration:
 **Acceptance criteria**
 
 * Lock cards from right to left only after taking 5 or more damage.
+* Unlock cards from left to right when removing damage. 
 * The user must be able to see which cards are locked.
 * The user must be unable to remove or unselect the locked cards.
-* Cards can be unlocked if damage is removed. 
 
 
 **Tasks to complete**
@@ -111,8 +111,6 @@ These are the MVP's we picked to complete in this iteration:
 * A robot standing on a clockwise cog during the *"cogs rotate"* part of the phase, will be rotated 90* clockwise.
 * A robot standing on an anti-clockwise cog during the *"cogs rotate"* part of the phase, will be rotated 90* anti-clockwise.
 * The user needs to see that the robot has been rotated.
-* TODO @Erlend anything else to be added here?
-
 
 
 **Tasks to complete**
@@ -152,7 +150,7 @@ to damage tokens).
 **Usecase**: When the user of the board programms their robot to move into the position of another robot, the other robot should be pushed to the neighbouring cell.
 
 
-**Acceptance cirteria**
+**Acceptance criteria**
 
 * It should not be possible to push a player that is being prevented from being moved in a direction by a wall.
 * The pushed robot should be pushed in the direction the pushing robot is moving.
@@ -183,7 +181,7 @@ to damage tokens).
 **Usecase**: The user would like to see the moves done by the robots happen one after the other, so that it is clear what order the moves were done in.
 
 
-**Acceptance cirteria**
+**Acceptance criteria**
 
 * The moves shown should correspond to the moves that were executed in the backend.
 * The moves should be shown in correct order.
@@ -206,7 +204,7 @@ to damage tokens).
 **Usecase**: 
 
 
-**Acceptance cirteria**
+**Acceptance criteria**
 
 * 
 
