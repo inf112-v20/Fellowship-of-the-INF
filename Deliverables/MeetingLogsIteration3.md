@@ -1,7 +1,7 @@
 # Meeting Logs for the Third Iteration
 
 ## 03.03.2020
-__Attendence__: Martin, Erlend, Johanna, Lena
+__Attendence__: Martin, Erlend, Johanna, Lena, Henrik
 
 __Summary__: 
 * Discussed how we should distribute the remaining MVP's over this iteration and the next.
@@ -36,6 +36,7 @@ __Work for next time:__
 * Implement spawn points and flags (Lena)
 * Implement delay, so that all the robots don't move simultaneously (Johanna)
 * Learn about Codacy, and integrate it into the project (Martin)
+* Implement lasers (Henrik)
 
 
 ## 09.03.2020
