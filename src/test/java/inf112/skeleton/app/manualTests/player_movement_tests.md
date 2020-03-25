@@ -29,4 +29,4 @@ How to test:
 2. Choose Stage 1
 3. Move to coordinates (2, 3).
 4. Try to move through both walls<br>
-   The player should not be able to move through any of them.
+   The player should not be able to move through any of them. 
