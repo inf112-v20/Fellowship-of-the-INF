@@ -89,6 +89,7 @@ public class Player {
      * Tries to move the player in a new direction
      *
      * @param newDirection new direction to move the player
+     * @param moves
      */
     public void tryToGo(Direction newDirection, MovesToExecuteSimultaneously moves) {
         Move move = new Move(this);
@@ -178,6 +179,11 @@ public class Player {
         return null; //return null if target position is not within grid
     }
 
+    /**
+     * Updates currentBoardPiece based on what type of tile the player is standing on.
+     *
+     * @param newX, newY new position for Player
+     */
     public void setCurrentBoardPiece(int newX, int newY) {
         BoardPiece currPiece;
         for (int i = 0; i < pieceGrid[newX][newY].size(); i++) {
@@ -238,7 +244,7 @@ public class Player {
     }
 
     /**
-     * Checks if a move in a certian direction is legal.
+     * Checks if a move in a certain direction is legal.
      * The robot must be allowed to exit it's current cell.
      * The robot must be allowed to enter the destination cell.
      * There must not be a robot that cannot be pushed in the way.
@@ -322,7 +328,6 @@ public class Player {
                 turnPlayerRight();
                 break;
             default:
-                //TODO error handling as default maybe?
                 break;
         }
         rotateMove.updateMove(this); //complete rotateMove object
@@ -476,7 +481,9 @@ public class Player {
         spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
     }
 
-    //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
+    /**
+     * Method for testing.
+     */
     public void gainLife() {
         lives++;
     }
@@ -489,7 +496,9 @@ public class Player {
         checkpointsVisited++;
     }
 
-    //TODO remove this later since it is not possible to undo a checkpoint/flag. This is for testing purposes only.
+    /**
+     * Method for testing.
+     */
     public void removeCheckpoint() {
         checkpointsVisited--;
     }
@@ -504,7 +513,7 @@ public class Player {
      * @return true if a player is on a conveyorBelt, false otherwise.
      */
     public boolean isOnConveyorBelt() {
-        return (currentBoardPiece instanceof ConveyorBeltPiece); //TODO @Erlend these methods are unnecessary, as they are only one line
+        return (currentBoardPiece instanceof ConveyorBeltPiece);
     }
 
     /**

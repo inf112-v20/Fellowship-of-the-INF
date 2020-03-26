@@ -39,29 +39,16 @@ public class PlayerPiece extends DirectionedPiece {
         return playerCell;
     }
 
-    /**
-     * A cells rotation is an integer between 0 and 3, where 0 = North, 1 = West, 2 = South, 3 = East.
-     */
     public void turnAround() {
         turnPieceInOppositeDirection();
-      /*int newDir = currentCell.getRotation() + 2;
-      if (newDir > 3){ newDir -= 4;}
-      currentCell.setRotation(newDir);*/
     }
 
     public void turnLeft() {
         rotatePieceLeft();
-       /* int newDir = currentCell.getRotation() + 1;
-        if (newDir > 3){ newDir -= 4;}
-        currentCell.setRotation(newDir);*/
     }
 
     public void turnRight() {
         rotatePieceRight();
-        /*
-        int newDir = currentCell.getRotation() + 3;
-        if (newDir > 3){ newDir -= 4;}
-        currentCell.setRotation(newDir);*/
     }
 
     public void turnCellInDirection(Direction newDir) {
