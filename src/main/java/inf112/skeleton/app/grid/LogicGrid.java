@@ -248,7 +248,11 @@ public class LogicGrid {
     }
 
     /**
-     * TODO add comments @Lena
+     * Check if the piece is a spawn point.
+     * If so, then add it's position to the list spawnPointPosition,
+     * at the location in the list corresponding to the spawnNumber of the piece.
+     *
+     * This list is used by the players to find their first spawn point.
      * @param piece
      * @param x
      * @param y
