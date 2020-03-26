@@ -17,7 +17,6 @@ public class BoardElementsMove {
      * @param game The current game
      */
     public static void rotateCog(Player player, Game game){
-        Move move = new Move(player);
         BoardPiece boardPiece = player.getCurrentBoardPiece();
         if(((CogPiece) boardPiece).isRotateClockwise()){
             player.turnPlayerRight();
@@ -25,9 +24,7 @@ public class BoardElementsMove {
         else{
             player.turnPlayerLeft();
         }
-        move.updateMove(player);
-        game.executeMoves(move.toMovesList());
-    }
+}
 
     /**
      * Moves a player standing on an conveyorBelt one tile in the direction of the conveyorBelt.
@@ -39,15 +36,16 @@ public class BoardElementsMove {
      * @param game the current game
      * @param onlyExpressBelt true if only expressbelt are moving at this point in the phase
      */
-    public static void moveConveyorBelt(Player player, Game game, boolean onlyExpressBelt){
+    public static void moveConveyorBelt(Player player, Game game, boolean onlyExpressBelt, MovesToExecuteSimultaneously moves){
+        if(player == null || player.getCurrentBoardPiece() == null){System.out.println("Error: couldn't move player on conveyorbelt"); return;}
         BoardPiece boardPiece = player.getCurrentBoardPiece();
         LogicGrid logicGrid = game.getLogicGrid();
         ConveyorBeltPiece conveyorBeltPiece = (ConveyorBeltPiece) logicGrid.getPieceType(player.getPos(), boardPiece.getClass());
-        if(conveyorBeltPiece == null){System.out.println("Error, couldn't move " + player.toString()); return;}
         Direction conveyorBeltDirection = conveyorBeltPiece.getDir();
         Position newPos = player.getPos().getPositionIn(conveyorBeltDirection);
         if(isPlayerInFront(player, game, onlyExpressBelt)) {
-            moveConveyorBelt(game.getPlayerAt(newPos), game, onlyExpressBelt);
+            moveConveyorBelt(game.getPlayerAt(newPos), game, onlyExpressBelt, moves);
+            game.performMoves(moves);
         }
         if(isPlayerGoingToCrash(player, game, onlyExpressBelt)){ return; }
         if((conveyorBeltPiece.isTurn() && player.isLatestMoveConveyorBelt()
@@ -59,9 +57,7 @@ public class BoardElementsMove {
                 player.turnPlayerLeft();
             }
         }
-        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         player.tryToGo(conveyorBeltDirection, moves);
-        game.executeMoves(moves);
         player.setConveyorBeltMove(true);
         player.setHasBeenMovedThisPhase(true);
     }
