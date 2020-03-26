@@ -222,7 +222,7 @@ to damage tokens).
 
 ### Other known bugs
 * When you press enter instead of clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
-* Pieces on the conveyorbelt do not move simlutaneously.
+* Moving a robot into a wall causes it to respawn.
 
 
 
