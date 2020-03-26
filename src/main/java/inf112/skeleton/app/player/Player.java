@@ -38,7 +38,6 @@ public class Player {
     private Direction latestMoveDirection;
     private boolean conveyorBeltMove = false;
     private boolean hasBeenMovedThisPhase = false;
-    private boolean isOnLaser = false;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;

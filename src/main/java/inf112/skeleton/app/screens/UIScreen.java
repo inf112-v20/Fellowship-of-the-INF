@@ -22,7 +22,7 @@ import inf112.skeleton.app.player.Player;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class UIScreen{
     private ScoreBoardScreen scoreBoardScreen;
@@ -63,11 +63,11 @@ public class UIScreen{
      */
     public void handleInput(){
          if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-             if(!cardButton.hasSelectedFiveCards()){return;}
              if(game.getRound().getPhaseNr() > 4){
                  this.newRound();
              }
              else {
+                 if(game.getRound().getPhaseNr() == 0){executeLockInButton(); return;}
                  game.getRound().nextPhase();
                  updateGameLog();
              }
@@ -96,7 +96,7 @@ public class UIScreen{
      * and creates a new gamelog for this phase.
      * The gamelog shows current round, current phase
      * the order of the cards for this phase and which player
-     * played that card.
+     * played which card.
      */
     public void updateGameLog() {
         removeGameLog();
@@ -225,7 +225,6 @@ public class UIScreen{
         }
     }
 
-    //TODO Change powerDown from image to button
     /**
      * Creates the powerdown image
      */
@@ -296,7 +295,6 @@ public class UIScreen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 executeLockInButton();
-                updateGameLog();
             }
         });
     }
@@ -344,7 +342,7 @@ public class UIScreen{
             }
         }
         player.setSelectedCards(cardButton.getSelectedCards());game.getRound().nextPhase();
-        //updateGameLog();
+        updateGameLog();
     }
 
     public Stage getStage() {

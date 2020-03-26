@@ -128,18 +128,18 @@ public class Phase {
     private void lasersFire() {
         // Static lasers (from walls)
         for (int i = 0; i < listOfPlayers.length; i++) {
-                Player player = listOfPlayers[i];
-                if(game.getLogicGrid().isInBounds(player.getPos())) {
-                    int damage = 1;
-                    LaserPiece laser;
-                    if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
-                        laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
-                        if (laser.isDoubleLaser() || laser.isCrossingLasers()) damage += 1;
-                        // Intercepting laser after it hits a robot
-                        interceptLaser(laser.getPos(), laser.getDir());
-                        player.takeDamage(damage);
-                    }
+            Player player = listOfPlayers[i];
+            if(game.getLogicGrid().isInBounds(player.getPos())) {
+                int damage = 1;
+                LaserPiece laser;
+                if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
+                    laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
+                    if (laser.isDoubleLaser() || laser.isCrossingLasers()) damage += 1;
+                    // Intercepting laser after it hits a robot
+                    interceptLaser(laser.getPos(), laser.getDir());
+                    player.takeDamage(damage);
                 }
+            }
         }
 
     }
@@ -174,7 +174,6 @@ public class Phase {
             Player player = copyOfPlayers.get(i);
             if(player.isOnConveyorBelt()) {
                 if(moveOnlyExpressBelts && !player.isOnExpressBelt()){
-
                     copyOfPlayers.remove(i);
                     i--;
                     continue;
@@ -189,6 +188,7 @@ public class Phase {
                     continue;
                 }
                 Move move = new Move(player);
+                System.out.println("MOVING " + player.toString());
                 BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(), player, game.getLogicGrid());
                 move.updateMove(player);
                 game.executeMoves(move.toMovesList());
