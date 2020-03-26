@@ -85,7 +85,7 @@ public class StageSelectionScreen implements Screen {
         stageTestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-               // game.setScreen(new GameScreen("TestMap.tmx"));
+                game.setScreen(new GameScreen("TestMap.tmx"));
                 // Test map 1 for robot pushing: robot_pushing_test_map_1.tmx
                 //game.setScreen(new GameScreen("robot_pushing_test_map_1.tmx"));
                 // Test map 2 for robot pushing: robot_pushing_test_map_2.tmx
@@ -93,7 +93,7 @@ public class StageSelectionScreen implements Screen {
                 // Test map 3 for robot pushing: robot_pushing_test_map_3.tmx
                 //game.setScreen(new GameScreen("robot_pushing_test_map_3.tmx"));
                 // Test map for conveyorbelts: conveyorBeltTestMap.tmx
-                game.setScreen(new GameScreen("conveyorBeltTestMap.tmx"));
+                //game.setScreen(new GameScreen("conveyorBeltTestMap.tmx"));
             }
         });
         stage.addActor(stageTestButton);
