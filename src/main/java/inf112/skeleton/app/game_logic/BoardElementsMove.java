@@ -114,13 +114,10 @@ public class BoardElementsMove {
             else if (i == 1) { orthoPos = newPos.getPositionIn(EAST); }
             else if (i == 2) { orthoPos = newPos.getPositionIn(SOUTH); }
             else{ orthoPos = newPos.getPositionIn(WEST); }
-            if(!logicGrid.isInBounds(orthoPos)){continue;}
+            if(!logicGrid.isInBounds(orthoPos) || orthoPos.equals(player.getPos())){continue;}
             if (!logicGrid.positionIsFree(orthoPos, 12) &&
                     (!logicGrid.positionIsFree(orthoPos, 4)||!logicGrid.positionIsFree(orthoPos, 5))) {
                 if (!game.getPlayerAt(orthoPos).hasBeenMovedThisPhase()) {
-                    if (orthoPos.getX() == player.getPos().getX() && orthoPos.getY() == player.getPos().getY()) {
-                        continue;
-                    }
                     if(onlyExpressBelt && boardPiece instanceof ExpressBeltPiece && !logicGrid.positionIsFree(orthoPos, 4)){
                         return false;
                     }
@@ -129,9 +126,7 @@ public class BoardElementsMove {
                         piece = logicGrid.getPieceType(orthoPos, ExpressBeltPiece.class);
                     }
                     Position orthoPosDir = orthoPos.getPositionIn(piece.getDir());
-                    if (orthoPosDir.getX() == newPos.getX() && orthoPosDir.getY() == newPos.getY()) {
-                        return true;
-                    }
+                    if (orthoPosDir.equals(newPos)) { return true;}
                 }
             }
         }
