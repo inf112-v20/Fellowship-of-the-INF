@@ -51,6 +51,19 @@ public class Round {
         phaseNr++;
     }
 
+    /**
+     * When the round is done, check if there are any players in power down mode.
+     * If there are any, and they still have lives left, then take them out of power down mode.
+     */
+    public void finnishRound(){
+        for (int i=0; i<game.getListOfPlayers().length; i++) {
+            Player player = game.getListOfPlayers()[i];
+            if (player.isPowerDownMode() && player.getLives()>=0) {
+                player.setPowerDownMode(false);
+            }
+        }
+    }
+
     public Phase getPhase(){return phase;}
 
     public void setRoundNumber(int number){ this.roundNumber = number;}
