@@ -10,11 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import inf112.skeleton.app.RoboRallyDemo;
+import inf112.skeleton.app.RoboRallyGame;
 
 public class MainMenuScreen implements Screen {
 
-    private RoboRallyDemo game;
+    private RoboRallyGame game;
     private float width;
     private float height;
 
@@ -24,7 +24,7 @@ public class MainMenuScreen implements Screen {
     private ImageButton playButton;
     private ImageButton exitButton;
 
-    public MainMenuScreen (RoboRallyDemo game) {
+    public MainMenuScreen (RoboRallyGame game) {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
