@@ -37,6 +37,7 @@ public class Player {
     private Direction latestMoveDirection;
     private boolean conveyorBeltMove = false;
     private boolean hasBeenMovedThisPhase = false;
+    private boolean isOnLaser = false;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -268,8 +269,6 @@ public class Player {
             } else if (currPiece instanceof AbyssPiece) {
                 currentBoardPiece = currPiece;
             } else if (currPiece instanceof FloorPiece) {
-                currentBoardPiece = currPiece;
-            } else if (currPiece instanceof LaserPiece) {
                 currentBoardPiece = currPiece;
             }
         }
@@ -594,16 +593,6 @@ public class Player {
      */
     public boolean isOnCog() {
         return currentBoardPiece instanceof CogPiece;
-    }
-
-    /**
-     * @return true if a player is on a laser
-     */
-    public boolean isOnLaser() {
-        if (currentBoardPiece instanceof LaserPiece) {
-            return true;
-        }
-        return false;
     }
 
 

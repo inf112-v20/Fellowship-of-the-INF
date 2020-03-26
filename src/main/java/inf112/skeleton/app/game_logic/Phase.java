@@ -123,18 +123,18 @@ public class Phase {
     private void lasersFire() {
         // Static lasers (from walls)
         for (int i = 0; i < listOfPlayers.length; i++) {
-            if (listOfPlayers[i].isOnLaser()) {
                 Player player = listOfPlayers[i];
-                int damage = 1;
-                LaserPiece laser;
-                if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
-                    laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
-                    if (laser.isDoubleLaser() || laser.isCrossingLasers()) damage += 1;
-                    // Intercepting laser after it hits a robot
-                    interceptLaser(laser.getPos(), laser.getDir());
+                if(game.getLogicGrid().isInBounds(player.getPos())) {
+                    int damage = 1;
+                    LaserPiece laser;
+                    if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
+                        laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
+                        if (laser.isDoubleLaser() || laser.isCrossingLasers()) damage += 1;
+                        // Intercepting laser after it hits a robot
+                        interceptLaser(laser.getPos(), laser.getDir());
+                        player.takeDamage(damage);
+                    }
                 }
-                player.takeDamage(damage);
-            }
         }
 
     }
