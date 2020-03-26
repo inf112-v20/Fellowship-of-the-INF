@@ -1,7 +1,7 @@
 package inf112.skeleton.app.gridObjectTests;
 
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.gridObjects.FlagPiece;
+import inf112.skeleton.app.grid_objects.FlagPiece;
 import org.junit.Before;
 import org.junit.Test;
 

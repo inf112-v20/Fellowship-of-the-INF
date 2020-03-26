@@ -28,10 +28,9 @@ public class Position {
 
     @Override
     public String toString() {
-        return "Position{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "Pos(" + x +
+                ", "+ y +
+                ')';
     }
 
     @Override
@@ -41,5 +40,30 @@ public class Position {
         Position position = (Position) o;
         return x == position.x &&
                 y == position.y;
+    }
+
+    /**
+     * Returns a new Position object positioned in the direction dir from this position
+     * @param dir direction from this position that the current position lies.
+     * @return new Posiiton object
+     */
+    public Position getPositionIn(Direction dir) {
+        int newX = x;
+        int newY = y;
+        switch (dir) {
+            case NORTH:
+                newY += 1;
+                break;
+            case SOUTH:
+                newY -= 1;
+                break;
+            case WEST:
+                newX -= 1;
+                break;
+            case EAST:
+                newX += 1;
+                break;
+        }
+        return new Position(newX, newY);
     }
 }
