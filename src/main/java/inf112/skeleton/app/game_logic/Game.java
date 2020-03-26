@@ -192,7 +192,7 @@ public class Game {
      */
     public Player getPlayerAt(Position pos){
         for (int i = 0; i < playerList.length ; i++) {
-            if(playerList[i].getPos().getX() == pos.getX() && playerList[i].getPos().getY() == pos.getY()){
+            if(playerList[i].getPos().equals(pos)){
                 return playerList[i];
             }
         }
