@@ -275,8 +275,6 @@ public class Player {
                 currentBoardPiece = currPiece;
             } else if (currPiece instanceof FloorPiece) {
                 currentBoardPiece = currPiece;
-            } else if (currPiece instanceof LaserPiece) {
-                currentBoardPiece = currPiece;
             } else if (currPiece instanceof FlagPiece) {
                 currentBoardPiece = currPiece;
             }
