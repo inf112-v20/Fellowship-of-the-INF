@@ -16,14 +16,12 @@ public class Phase {
     private int phaseNumber;
     HashMap<Player, Integer> playerAndPriority;
     private Game game;
-    private ArrayList<Player> copyOfPlayers;
 
     public Phase(Game game) {
         this.game = game;
         this.listOfPlayers = game.getListOfPlayers();
         this.playerAndPriority = new HashMap<>();
         this.phaseNumber = 0;
-        this.copyOfPlayers = new ArrayList<>();
     }
 
     /**
@@ -38,9 +36,7 @@ public class Phase {
     public void executePhase(int phaseNumber) {
         startPhase(phaseNumber);
         moveRobots();
-        setUpConveyorBelts();
         moveConveyorBelts(true);
-        setUpConveyorBelts();
         moveConveyorBelts(false);
         rotateCogs();
         lasersFire();
@@ -53,7 +49,6 @@ public class Phase {
      */
     public void startPhase(int phaseNumber) {
         this.phaseNumber = phaseNumber;
-        this.copyOfPlayers = new ArrayList<>();
     }
 
     /**
@@ -157,45 +152,19 @@ public class Phase {
 
 
     /**
-     * Checks if any player is on a conveyorbelt
-     * If true, check if there is player in front (in the direction of the conveyorbelt) on a conveyorbelt and that
-     * conveyorbelt is not facing towards the first conveyorbelt.
-     * If true, move the first player later by a recursive call so that the other player standing in the way can be
-     * moved by the conveyorbelt first.
-     * If two players are standing on different conveyorbelts pointing directly into eachother, none of them will move
-     * If two players are standing on different conveyorbelts that will put both players in the same tile, none of
-     * them will move.
+     * Checks if any player is on a conveyorbelt and will move them if they do
      * @param moveOnlyExpressBelts true if only expressbelts should move
      */
     public void moveConveyorBelts(boolean moveOnlyExpressBelts) {
-        boolean morePlayersToMove = false;
-        for (int i = 0; i < copyOfPlayers.size(); i++) {
-            Player player = copyOfPlayers.get(i);
+        for (Player player : listOfPlayers){
             if(player.isOnConveyorBelt()) {
-                if(moveOnlyExpressBelts && !player.isOnExpressBelt()){
-                    copyOfPlayers.remove(i);
-                    i--;
+                if((moveOnlyExpressBelts && !player.isOnExpressBelt())||player.hasBeenMovedThisPhase()){
                     continue;
                 }
-                if(BoardElementsMove.isPlayerInFront(player, game, moveOnlyExpressBelts)){
-                    morePlayersToMove = true;
-                    continue;
-                }
-                if(BoardElementsMove.isPlayerGoingToCrash(player, game, moveOnlyExpressBelts)){
-                    copyOfPlayers.remove(i);
-                    i--;
-                    continue;
-                }
-                BoardElementsMove.moveConveyorBelt(player, game);
-                player.setConveyorBeltMove(true);
-                player.setHasBeenMovedThisPhase(true);
-                copyOfPlayers.remove(i);
-                i--;
+                BoardElementsMove.moveConveyorBelt(player, game, moveOnlyExpressBelts);
             }
         }
-        if (morePlayersToMove) {
-            moveConveyorBelts(moveOnlyExpressBelts);
-        }
+        for (Player player : listOfPlayers){player.setHasBeenMovedThisPhase(false);}
     }
 
     /**
@@ -218,16 +187,4 @@ public class Phase {
         return phaseNumber;
     }
 
-
-    /**
-     * This needs to be outside moveConveyorBelts since it has a possible recursive call
-     * Adds all players to a list
-     */
-    private void setUpConveyorBelts() {
-        copyOfPlayers.clear();
-        Collections.addAll(copyOfPlayers, listOfPlayers);
-        for (Player player : listOfPlayers) {
-            player.setHasBeenMovedThisPhase(false);
-        }
-    }
 }

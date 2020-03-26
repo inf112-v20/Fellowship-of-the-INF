@@ -107,7 +107,7 @@ public class Game {
             player1.removeCheckpoint();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
             if(player1.isOnConveyorBelt()) {
-                BoardElementsMove.moveConveyorBelt(player1, this);
+                BoardElementsMove.moveConveyorBelt(player1, this, false);
                 player1.setConveyorBeltMove(true);
             }
         }
