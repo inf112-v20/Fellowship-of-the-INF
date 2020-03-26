@@ -58,6 +58,8 @@ public class Phase {
     }
 
     /**
+     * TODO Add in a check to see if players are in power down mode, with player.isPowerDownMode. If they are, then they should not move
+     *
      * Sort all players based on the priority of their cards this phase.
      * Execute all players programcards for this phase in the order of sorting.
      */
