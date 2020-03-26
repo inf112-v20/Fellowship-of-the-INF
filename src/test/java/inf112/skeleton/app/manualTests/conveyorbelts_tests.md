@@ -1,7 +1,7 @@
 # Manual tests for conveyorbelts
 ####Setup 
 * Go to line 88 in the class StageSelectionScreen, it's in the screens package. Comment out line 88 and uncomment line 96.
-* Go to Phase.java and uncomment line 82 to make robot 1 and 2 stand still during the phase to make testing easier. 
+* Go to Phase.java and uncomment line 77 to make robot 1 and 2 stand still during the phase to make testing easier. 
 * Run Main.
 * Press the Play button in the menu screen.
 * Press the Test Stage button in the stage selection screen.
