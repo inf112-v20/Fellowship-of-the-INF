@@ -1,8 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
-
 import inf112.skeleton.app.player.Player;
-
 
 
 public class Round {
@@ -45,7 +43,7 @@ public class Round {
      * Execute the next phase
      */
     public void nextPhase(){
-        if(phaseNr > 4){ return; }
+        if(phaseNr >= NUMBER_OF_PHASES){ return; }
         phase.executePhase(phaseNr);
         phaseNr++;
     }
