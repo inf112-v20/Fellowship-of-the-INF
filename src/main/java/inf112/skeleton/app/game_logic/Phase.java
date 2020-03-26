@@ -29,8 +29,8 @@ public class Phase {
     /**
      * Executes a phase which in order consists of:
      * Executing programcards
-     * Move players on expressbelts
-     * Move players on conveyorbelts
+     * Move players on expressbelts once
+     * Move players on expressbelts once and move players on conveyorbelts once
      * Rotate players on cogs
      *
      * @param phaseNumber the current phase number
@@ -58,7 +58,6 @@ public class Phase {
 
     /**
      * TODO Add in a check to see if players are in power down mode, with player.isPowerDownMode. If they are, then they should not move
-     *
      * Sort all players based on the priority of their cards this phase.
      * Execute all players programcards for this phase in the order of sorting.
      */
@@ -128,18 +127,18 @@ public class Phase {
     private void lasersFire() {
         // Static lasers (from walls)
         for (int i = 0; i < listOfPlayers.length; i++) {
-                Player player = listOfPlayers[i];
-                if(game.getLogicGrid().isInBounds(player.getPos())) {
-                    int damage = 1;
-                    LaserPiece laser;
-                    if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
-                        laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
-                        if (laser.isDoubleLaser() || laser.isCrossingLasers()) damage += 1;
-                        // Intercepting laser after it hits a robot
-                        interceptLaser(laser.getPos(), laser.getDir());
-                        player.takeDamage(damage);
-                    }
+            Player player = listOfPlayers[i];
+            if(game.getLogicGrid().isInBounds(player.getPos())) {
+                int damage = 1;
+                LaserPiece laser;
+                if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
+                    laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
+                    if (laser.isDoubleLaser() || laser.isCrossingLasers()) damage += 1;
+                    // Intercepting laser after it hits a robot
+                    interceptLaser(laser.getPos(), laser.getDir());
+                    player.takeDamage(damage);
                 }
+            }
         }
 
     }
@@ -174,24 +173,20 @@ public class Phase {
             Player player = copyOfPlayers.get(i);
             if(player.isOnConveyorBelt()) {
                 if(moveOnlyExpressBelts && !player.isOnExpressBelt()){
-
                     copyOfPlayers.remove(i);
                     i--;
                     continue;
                 }
-                if(BoardElementsMove.isPlayerInFront(player.getCurrentBoardPiece(), player, game.getLogicGrid(), moveOnlyExpressBelts)){
+                if(BoardElementsMove.isPlayerInFront(player, game, moveOnlyExpressBelts)){
                     morePlayersToMove = true;
                     continue;
                 }
-                if(BoardElementsMove.isPlayerGoingToCrash(player.getCurrentBoardPiece(), player, game.getLogicGrid(), game, moveOnlyExpressBelts)){
+                if(BoardElementsMove.isPlayerGoingToCrash(player, game, moveOnlyExpressBelts)){
                     copyOfPlayers.remove(i);
                     i--;
                     continue;
                 }
-                Move move = new Move(player);
-                BoardElementsMove.moveConveyorBelt(player.getCurrentBoardPiece(), player, game.getLogicGrid());
-                move.updateMove(player);
-                game.executeMoves(move.toMovesList());
+                BoardElementsMove.moveConveyorBelt(player, game);
                 player.setConveyorBeltMove(true);
                 player.setHasBeenMovedThisPhase(true);
                 copyOfPlayers.remove(i);
@@ -210,10 +205,7 @@ public class Phase {
     public void rotateCogs() {
         for (Player player : listOfPlayers) {
             if (player.isOnCog()) {
-                Move move = new Move(player);
-                BoardElementsMove.rotateCog(player.getCurrentBoardPiece(), player);
-                move.updateMove(player);
-                game.executeMoves(move.toMovesList());
+                BoardElementsMove.rotateCog(player, game);
             }
         }
     }
