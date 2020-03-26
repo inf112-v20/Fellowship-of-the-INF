@@ -102,14 +102,18 @@ public class Phase {
     }
 
     /**
-     * TODO @Lena needs comments
+     * Checks if players are currently on a flag.
+     * If so, check if this is the flag the player is currently going for, using the number of checkpoints visited.
+     *
+     * If this is the right checkpoint, then set a new spawnpoint from this location.
      */
     private void touchCheckPoints() {
         for (Player player : listOfPlayers) {
+
             if (player.getCurrentBoardPiece() instanceof FlagPiece) {
                 FlagPiece flag = (FlagPiece) player.getCurrentBoardPiece();
 
-                if (player.getCheckpointsVisited() == flag.getFlagNumber() - 1) {
+                if (player.getCheckpointsVisited() + 1 == flag.getFlagNumber()) {
                     player.visitedCheckpoint();
                     player.setSpawnPoint(player.getPos().getX(), player.getPos().getY());
                 }
