@@ -24,7 +24,6 @@ public class Player {
     private LogicGrid logicGrid;
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
-    private Game game;
     private ArrayList<ProgramCard> playerHandDeck;
     private ProgramCard[] selectedCards;
     private ArrayList<ProgramCard> lockedCards;
@@ -43,7 +42,6 @@ public class Player {
         this.playerNumber = playerNumber;
         this.logicGrid = game.getLogicGrid();
         this.pieceGrid = logicGrid.getGrid();
-        this.game = game;
         this.damage = 0;
         this.checkpointsVisited = 0;
         GameDeck gameDeck = game.getGameDeck();

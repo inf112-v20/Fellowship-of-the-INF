@@ -1,4 +1,4 @@
-# Manual tests for the delayed between movement of robots
+# Manual tests for the delay between movement of robots
 ####Setup
 * Run Main.
 * Press the Play button in the menu screen.

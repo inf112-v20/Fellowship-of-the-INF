@@ -30,44 +30,34 @@ import java.util.concurrent.TimeUnit;
  * Game screen at the moment only shows a board with a playerLayer, and a player
  */
 public class GameScreen implements Screen {
-    private TiledMap map; //roborally board
-    private TiledMapTileSet tiles;
     private OrthogonalTiledMapRenderer mapRenderer;
     private OrthographicCamera camera;
     private Viewport gridPort;
-    private int MAP_WIDTH; //dimensions of board
-    private int MAP_HEIGHT;
-    private int TILE_WIDTH_DPI; //pixel width per cell
-    private int MAP_WIDTH_DPI; //total width of map in pixels
-    private int MAP_HEIGHT_DPI; //total height of map in pixels
     private TiledMapTileLayer playerLayer;
-    private TmxMapLoader mapLoader;
-    private MapProperties mapProperties;
     private Stage stage;
     private UIScreen uiScreen;
-    private Player player;
     private Game game;
     private boolean currentMoveIsExecuted;
     private ScoreBoardScreen scoreBoardScreen;
 
     public GameScreen(String mapName) {
-        mapLoader = new TmxMapLoader();
-        this.map = mapLoader.load(mapName);
-        mapProperties = map.getProperties();
-        MAP_WIDTH = mapProperties.get("width", Integer.class);
-        MAP_HEIGHT = mapProperties.get("height", Integer.class);
-        TILE_WIDTH_DPI = mapProperties.get("tilewidth", Integer.class);
-        MAP_WIDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI;
-        MAP_HEIGHT_DPI = MAP_HEIGHT * TILE_WIDTH_DPI;
+        TmxMapLoader mapLoader = new TmxMapLoader();
+        TiledMap map = mapLoader.load(mapName); //roborally board
+        MapProperties mapProperties = map.getProperties();
+        int MAP_WIDTH = mapProperties.get("width", Integer.class); //dimensions of board
+        int MAP_HEIGHT = mapProperties.get("height", Integer.class);
+        int TILE_WIDTH_DPI = mapProperties.get("tilewidth", Integer.class); //pixel width per cell
+        int MAP_WIDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI; //total width of map in pixels
+        int MAP_HEIGHT_DPI = MAP_HEIGHT * TILE_WIDTH_DPI; //total height of map in pixels
 
-        tiles = this.map.getTileSets().getTileSet("tileset.png");
+        TiledMapTileSet tiles = map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_HEIGHT_DPI, camera);
         camera.translate(MAP_WIDTH_DPI, MAP_WIDTH_DPI / 2);
-        mapRenderer = new OrthogonalTiledMapRenderer(this.map);
+        mapRenderer = new OrthogonalTiledMapRenderer(map);
         // Layers, add more later
-        playerLayer = (TiledMapTileLayer) this.map.getLayers().get("Player");
-        LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, this.map);
+        playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
+        LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, map);
         game = new Game(logicGrid, this);
         initializePlayers();
         currentMoveIsExecuted = true;
@@ -84,7 +74,7 @@ public class GameScreen implements Screen {
             TiledMapTileLayer.Cell playerCell = playerToInitialize.getPlayerCell();
             playerLayer.setCell(playerToInitialize.getPos().getX(), playerToInitialize.getPos().getY(), playerCell);
         }
-        player = game.getPlayer();
+        //player = game.getPlayer();
     }
 
     @Override
