@@ -479,7 +479,6 @@ public class Player {
      * Put the player back to it's respawn position and update all maps
      */
     public void respawnPlayer() {
-        System.out.println("Player " + playerNumber + " has respawned");
         isDead = false;
         playerPiece.showAlivePlayer();
         playerPiece.setPos(new Position(spawnPoint.getX(), spawnPoint.getY()));
