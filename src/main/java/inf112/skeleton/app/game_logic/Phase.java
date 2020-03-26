@@ -74,7 +74,7 @@ public class Phase {
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
-            //if(player.getPlayerNumber() == 1 || player.getPlayerNumber() == 2){continue;}
+            if(player.getPlayerNumber() == 1 || player.getPlayerNumber() == 2){continue;}
             MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
         }
@@ -156,14 +156,16 @@ public class Phase {
      * @param moveOnlyExpressBelts true if only expressbelts should move
      */
     public void moveConveyorBelts(boolean moveOnlyExpressBelts) {
+        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers){
             if(player.isOnConveyorBelt()) {
                 if((moveOnlyExpressBelts && !player.isOnExpressBelt())||player.hasBeenMovedThisPhase()){
                     continue;
                 }
-                BoardElementsMove.moveConveyorBelt(player, game, moveOnlyExpressBelts);
+                BoardElementsMove.moveConveyorBelt(player, game, moveOnlyExpressBelts, moves);
             }
         }
+        game.executeMoves(moves);
         for (Player player : listOfPlayers){player.setHasBeenMovedThisPhase(false);}
     }
 
@@ -172,11 +174,16 @@ public class Phase {
      * and will rotate them accordingly if true.
      */
     public void rotateCogs() {
+        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
             if (player.isOnCog()) {
+                Move move = new Move(player);
                 BoardElementsMove.rotateCog(player, game);
+                move.updateMove(player);
+                moves.add(move);
             }
         }
+        game.executeMoves(moves);
     }
 
     public ArrayList<Player> getOrderedListOfPlayers() {
