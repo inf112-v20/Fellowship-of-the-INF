@@ -20,6 +20,7 @@ import java.util.Arrays;
 public class Player {
 
     private boolean isDead;
+    private boolean powerDownMode;
     private LogicGrid logicGrid;
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
@@ -56,6 +57,7 @@ public class Player {
 
         this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, this);
         this.isDead = false;
+        this.powerDownMode = false;
     }
 
 
@@ -129,18 +131,19 @@ public class Player {
             latestMoveDirection = newDirection;
             this.conveyorBeltMove = false;
         }
-        //TODO This should probably only happen when the round is over, and we are about to start a new round
-        //If the player still have lives left, respawn it
-        /*
+
+        //If the player still have lives left, respawn it, but set it in shutdown mode
         else if (lives >= 0 && isDead()) {
             respawnPlayer();
+            setPowerDownMode(true);
         }
-        */
 
-        //TODO Add what happens when a player runs out of lives
+        //TODO Add what happens when a player runs out of lives? @Johanna
         //Handle what happens if the player runs out of lives
         else {
-            setPos(newX, newY);
+            respawnPlayer();
+            setPowerDownMode(true);
+            isDead = true;
         }
     }
 
@@ -188,18 +191,20 @@ public class Player {
             latestMoveDirection = newDirection;
             this.conveyorBeltMove = false;
         }
-        //TODO This should probably only happen when the round is over, and we are about to start a new round
-        //If the player still have lives left, respawn it
-        /*
+
+        //If the player still have lives left, respawn it, but set it in shutdown mode
         else if (lives >= 0 && isDead()) {
             respawnPlayer();
+            setPowerDownMode(true);
         }
-        */
 
-        //TODO Add what happens when a player runs out of lives
+
+        //TODO Add what happens when a player runs out of lives? @Johanna
         //Handle what happens if the player runs out of lives
         else {
-            setPos(newX, newY);
+            respawnPlayer();
+            setPowerDownMode(true);
+            isDead = true;
         }
     }
 
@@ -472,11 +477,20 @@ public class Player {
      * Put the player back to it's respawn position and update all maps
      */
     public void respawnPlayer() {
+        System.out.println("Player " + playerNumber + " has respawned");
         isDead = false;
         playerPiece.showAlivePlayer();
         playerPiece.setPos(new Position(spawnPoint.getX(), spawnPoint.getY()));
         logicGrid.movePlayerToNewPosition(playerPiece.getPos(), new Position(spawnPoint.getX(), spawnPoint.getY()));
         setPos(spawnPoint.getX(), spawnPoint.getY());
+    }
+
+    public void setPowerDownMode(boolean a){
+        powerDownMode = a;
+    }
+
+    public boolean isPowerDownMode() {
+        return powerDownMode;
     }
 
     /**
@@ -539,12 +553,8 @@ public class Player {
      * Get the spawn point position from a list of spawn points
      */
     public void findFirstSpawnPoint() {
-        try {
-            ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
-            spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
-        } catch (Exception spawnNotFound) {
-            setSpawnPoint(0, 0 + playerNumber); //TODO @Lena remove 0+??
-        }
+        ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
+        spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
     }
 
     //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
