@@ -141,8 +141,8 @@ not activated during any other sequence.
 * Register when a robot is standing in the path of a laser
 * Robots that are standing in the path of a laser takes damage accordingly, and UI is updated accordingly (in regards
 to damage tokens).
-* Intercept/"cut off" the rest of the laser when it hits a robot or wall.
-* Implement visual queues for lasers during laser sequence in a phase.
+* Intercept/"cut off" the rest of the laser when it hits a robot or wall. (Not implemented yet)
+* Implement visual queues for lasers during laser sequence in a phase. (Not implemented yet)
 
 ---
 
