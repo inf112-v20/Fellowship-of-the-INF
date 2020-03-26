@@ -476,7 +476,6 @@ public class Player {
         spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
     }
 
-    //TODO remove this later since it is not possible to gain a life. This is for testing purposes only.
     public void gainLife() {
         lives++;
     }
@@ -489,7 +488,6 @@ public class Player {
         checkpointsVisited++;
     }
 
-    //TODO remove this later since it is not possible to undo a checkpoint/flag. This is for testing purposes only.
     public void removeCheckpoint() {
         checkpointsVisited--;
     }
@@ -504,7 +502,7 @@ public class Player {
      * @return true if a player is on a conveyorBelt, false otherwise.
      */
     public boolean isOnConveyorBelt() {
-        return (currentBoardPiece instanceof ConveyorBeltPiece); //TODO @Erlend these methods are unnecessary, as they are only one line
+        return (currentBoardPiece instanceof ConveyorBeltPiece);
     }
 
     /**

@@ -23,7 +23,6 @@ public class ScoreBoardScreen {
     private Texture whiteTexture = new Texture(Gdx.files.internal("white.png"));
 
     public ScoreBoardScreen(Game game) {
-        //TODO make dimensions and position not hardcoded
         this.game = game;
         this.stage = new Stage();
         this.table = new Table();

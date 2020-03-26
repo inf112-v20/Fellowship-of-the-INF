@@ -188,23 +188,6 @@ public class GameScreen implements Screen {
 
     }
 
-    //TODO This is a logic and should maybe be a method in the Game class?
-
-    /**
-     * Executes the cards that have been chosen
-     *
-     */
-    /*
-    public void executeLockIn(ArrayList<ProgramCard> programCards) {
-        if (programCards != null) {
-            game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
-            game.executeRound();
-            uiScreen.updateGameLog();
-        }
-    }
-
-     */
-
     public void erasePlayers() {
         for (Player player : game.getListOfPlayers()) {
             playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
