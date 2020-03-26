@@ -1,19 +1,19 @@
 # Manual tests for the *robots pushing robots* functionality
 ###Setups
 ####Setup nr. 1
-* Go to line 90 in the class StageSelectionScreen, it's in the screens package. Comment out line 90 and uncomment line 92.
+* Go to line 88 in the class StageSelectionScreen, it's in the screens package. Comment out line 88 and uncomment line 90.
 * Run Main.
 * Press the Play button in the menu screen.
 * Press the Test Stage button in the stage selection screen.
 
 #### Setup nr. 2
-* Go to line 92 in the class StageSelectionScreen, it's in the screens package. Comment out line 92 and uncomment line 94.
+* Go to line 90 in the class StageSelectionScreen, it's in the screens package. Comment out line 90 and uncomment line 92.
 * Run Main.
 * Press the Play button in the menu screen.
 * Press the Test Stage button in the stage selection screen.
 
 #### Setup nr. 3
-* Go to line 94 in the class StageSelectionScreen, it's in the screens package. Comment out line 94 and uncomment line 96.
+* Go to line 92 in the class StageSelectionScreen, it's in the screens package. Comment out line 92 and uncomment line 94.
 * Run Main.
 * Press the Play button in the menu screen.
 * Press the Test Stage button in the stage selection screen.

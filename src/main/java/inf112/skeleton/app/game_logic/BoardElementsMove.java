@@ -1,6 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
-import inf112.skeleton.app.game_logic.Game;
+import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
@@ -14,27 +14,32 @@ public class BoardElementsMove {
 
     /**
      * Rotates a player standing on a cog 90* in the direction of the cog.
-     * @param boardPiece The BoardPiece that a player is currently standing on(should always be a CogPiece!).
      * @param player The player that is currently standing on the BoardPiece.
+     * @param game The current game
      */
-    public static void rotateCog(BoardPiece boardPiece, Player player){
+    public static void rotateCog(Player player, Game game){
+        Move move = new Move(player);
+        BoardPiece boardPiece = player.getCurrentBoardPiece();
         if(((CogPiece) boardPiece).isRotateClockwise()){
             player.turnPlayerRight();
         }
         else{
             player.turnPlayerLeft();
         }
+        move.updateMove(player);
+        game.executeMoves(move.toMovesList());
     }
 
     /**
      * Moves a player standing on an conveyorBelt one tile in the direction of the conveyorBelt.
      * Will also rotate the player if the conveyorBelt is a turn and the last movement of the player was by a conveyorbelt.
      * Will not move a player if there is another player standing in the way.
-     * @param boardPiece The BoardPiece that a player is currently standing on(should always be a ConveyorBeltPiece!).
      * @param player The player that is currently standing on the BoardPiece.
-     * @param logicGrid the logicgrid of the game
+     * @param game the current game
      */
-    public static void moveConveyorBelt(BoardPiece boardPiece, Player player,LogicGrid logicGrid){
+    public static void moveConveyorBelt(Player player, Game game){
+        BoardPiece boardPiece = player.getCurrentBoardPiece();
+        LogicGrid logicGrid = game.getLogicGrid();
         ConveyorBeltPiece conveyorBeltPiece = (ConveyorBeltPiece) logicGrid.getPieceType(player.getPos(), boardPiece.getClass());
         Direction conveyorBeltDirection = conveyorBeltPiece.getDir();
         Position newPos = player.getPos().getPositionIn(conveyorBeltDirection);
@@ -49,18 +54,22 @@ public class BoardElementsMove {
                 player.turnPlayerLeft();
             }
         }
-        player.tryToGo(conveyorBeltDirection);
+        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
+        player.tryToGo(conveyorBeltDirection, moves);
+        game.executeMoves(moves);
     }
 
     /**
      * Checks if there a player standing in front of the conveyorbelt
-     * @param boardPiece the conveyorbelt that is going to be moving the player
      * @param player the player that is going to get moved
-     * @param logicGrid the logicgrid of the game
+     * @param game the current game
+     * @param onlyExpressBelt true if only expressbelt are moving at this point in the phase
      * @return true if there is player in front (in the direction of the conveyorbelt), and that player is standing
      * on a conveyorbelt that is not facing towards the first conveyorbelt, false otherwise
      */
-    public static boolean isPlayerInFront(BoardPiece boardPiece, Player player, LogicGrid logicGrid, boolean onlyExpressBelt){
+    public static boolean isPlayerInFront(Player player, Game game, boolean onlyExpressBelt){
+        BoardPiece boardPiece = player.getCurrentBoardPiece();
+        LogicGrid logicGrid = game.getLogicGrid();
         Position newPos = player.getPos().getPositionIn(((ConveyorBeltPiece) boardPiece).getDir());
         if(!logicGrid.isInBounds(newPos)){return false;}
         //12 = playerindex, 4 = conveyorbeltindex, 5 = expressbeltindex
@@ -81,12 +90,14 @@ public class BoardElementsMove {
 
     /**
      * Checks if a player is going to crash into another player from the movement of the conveyorbelt
-     * @param boardPiece the conveyorbelt that the player is going to get moved by
      * @param player the player that is going to be moved
-     * @param logicGrid the logicgrid of the game
+     * @param game the current game
+     * @param onlyExpressBelt true if only expressbelt are moving at this point in the phase
      * @return true if player is going to end up on the same tile as another player, false otherwise
      */
-    public static boolean isPlayerGoingToCrash(BoardPiece boardPiece, Player player, LogicGrid logicGrid, Game game, boolean onlyExpressBelt){
+    public static boolean isPlayerGoingToCrash(Player player, Game game, boolean onlyExpressBelt){
+        BoardPiece boardPiece = player.getCurrentBoardPiece();
+        LogicGrid logicGrid = game.getLogicGrid();
         Position newPos = player.getPos().getPositionIn(((ConveyorBeltPiece) boardPiece).getDir());
         if(!logicGrid.isInBounds(newPos)){return false;}
         if(!logicGrid.positionIsFree(newPos, 12)){ return true; }

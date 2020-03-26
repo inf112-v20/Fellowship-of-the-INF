@@ -96,19 +96,21 @@ public class Player {
         int newX = playerPiece.getPos().getX();
         int newY = playerPiece.getPos().getY();
 
-        switch (newDirection) {
-            case NORTH:
-                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
-                break;
-            case SOUTH:
-                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY -= 1;
-                break;
-            case WEST:
-                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX -= 1;
-                break;
-            case EAST:
-                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX += 1;
-                break;
+        if (isLegalMove(pos.getX(), pos.getY(), newDirection)) {
+            switch (newDirection) {
+                case NORTH:
+                    newY += 1;
+                    break;
+                case SOUTH:
+                    newY -= 1;
+                    break;
+                case WEST:
+                   newX -= 1;
+                    break;
+                case EAST:
+                    newX += 1;
+                    break;
+            }
         }
         //check if the move kills the player, if so lose a life
         if (isDeadMove(newX, newY)) {
@@ -145,66 +147,6 @@ public class Player {
         }
     }
 
-    /**
-     * This class is identical to the other tryToGo, but does not handle a moves object.
-     * This is used when tryToGo is used on a conveyor belt, as conveyor belts deal with collision differently.
-     *
-     * @param newDirection new direction to move the player
-     */
-    public void tryToGo(Direction newDirection) {
-        //TODO: duplicate code, refactor
-        Position pos = playerPiece.getPos();
-        int newX = playerPiece.getPos().getX();
-        int newY = playerPiece.getPos().getY();
-
-        switch (newDirection) {
-            case NORTH:
-                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY += 1;
-                break;
-            case SOUTH:
-                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newY -= 1;
-                break;
-            case WEST:
-                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX -= 1;
-                break;
-            case EAST:
-                if (isLegalMove(pos.getX(), pos.getY(), newDirection)) newX += 1;
-                break;
-        }
-        //check if the move kills the player, if so lose a life
-        if (isDeadMove(newX, newY)) {
-            currentBoardPiece = pieceGrid[spawnPoint.getX()][spawnPoint.getY()].get(0);
-            latestMoveDirection = newDirection;
-            this.conveyorBeltMove = false;
-            loseLife();
-
-            //game.getLogicGrid().removePlayerFromMap(playerPiece.getPos());
-            //return;
-        }
-
-        //if position has changed and player isn't dead, update logic grid
-        if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
-            setCurrentBoardPiece(newX, newY); //update currentBoardPiece
-            setPos(newX, newY);
-            latestMoveDirection = newDirection;
-            this.conveyorBeltMove = false;
-        }
-
-        //If the player still have lives left, respawn it, but set it in shutdown mode
-        else if (lives >= 0 && isDead()) {
-            respawnPlayer();
-            setPowerDownMode(true);
-        }
-
-
-        //TODO Add what happens when a player runs out of lives? @Johanna
-        //Handle what happens if the player runs out of lives
-        else {
-            respawnPlayer();
-            setPowerDownMode(true);
-            isDead = true;
-        }
-    }
 
     /**
      * If there is a player to be pushed, call tryToGo for the player laying there
@@ -236,26 +178,6 @@ public class Player {
         return null; //return null if target position is not within grid
     }
 
-    /**
-     * Does not check if move is legal, moves player in direction regardless
-     * This method is only used when moving a player on a conveyor belt, as it removes the aspect of pushing
-     * TODO: find a better solution for moving robots on a conveyor belt
-     *
-     * @param newDirection
-     */
-    public void moveOnConveyorBelt(Direction newDirection) {
-        Position pos = playerPiece.getPos();
-        //set position of player to be one cell further down the conveyorbelt
-        setPos(pos.getPositionIn(newDirection));
-        int newX = pos.getX();
-        int newY = pos.getY();
-        setCurrentBoardPiece(newX, newY); //set the new current board piece
-        //check if the move kills the player, if so lose a life
-        if (isDeadMove(newX, newY)) {
-            loseLife();
-        }
-    }
-
     public void setCurrentBoardPiece(int newX, int newY) {
         BoardPiece currPiece;
         for (int i = 0; i < pieceGrid[newX][newY].size(); i++) {
@@ -270,9 +192,9 @@ public class Player {
                 currentBoardPiece = currPiece;
             } else if (currPiece instanceof AbyssPiece) {
                 currentBoardPiece = currPiece;
-            } else if (currPiece instanceof FloorPiece) {
-                currentBoardPiece = currPiece;
             } else if (currPiece instanceof FlagPiece) {
+                currentBoardPiece = currPiece;
+            } else if (currPiece instanceof FloorPiece) {
                 currentBoardPiece = currPiece;
             }
         }
@@ -448,7 +370,7 @@ public class Player {
     }
 
     /**
-     * Sets the first five cards in the given hand of nine cards, to be the chosen five cards in a round
+     * Picks the first cards in the hand so that selectedcards has 5 cards.
      */
     public void pickFirstFiveCards() {
         for (int i = 0; i < 5 - lockedCards.size() ; i++) {

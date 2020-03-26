@@ -1,9 +1,8 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import inf112.skeleton.app.RoboRallyDemo;
-
+        import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+        import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+        import inf112.skeleton.app.RoboRallyDemo;
 
 public class Main {
     public static void main(String[] args) {
