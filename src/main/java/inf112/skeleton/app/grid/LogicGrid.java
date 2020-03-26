@@ -11,9 +11,6 @@ public class LogicGrid {
     private int width;
     private int height;
 
-    //TODO unused atm
-    private int numberOfLayers;
-
     //The number of players i the game
     private int numberOfPlayers;
 
@@ -59,7 +56,6 @@ public class LogicGrid {
         this.width = grid[0].length;
         this.height = grid.length;
         numberOfPlayers = 8;
-        numberOfLayers = map.getLayers().getCount(); //not used right now
 
         //Make a list of what will be the first player spawns
         initializeSpawns();
@@ -146,7 +142,6 @@ public class LogicGrid {
             isThisASpawnPoint(piece, x, y);
 
             //check returned piece isn't a null
-            int size = grid[x][y].size();
             grid[x][y].add(layerIndex, piece);
             return;
         }
@@ -211,7 +206,6 @@ public class LogicGrid {
      */
     public boolean positionIsFree(Position position, int layerIndex) {
         //conveyor belts cannot move players off board as it causes error
-        //TODO, allow conveyorBelt to push player to death.
         if(!isInBounds(position)){
             return false;
         }
@@ -253,9 +247,9 @@ public class LogicGrid {
      * at the location in the list corresponding to the spawnNumber of the piece.
      *
      * This list is used by the players to find their first spawn point.
-     * @param piece
-     * @param x
-     * @param y
+     * @param piece piece to be checked
+     * @param x coordinates for @param piece
+     * @param y coordinates for @param piece
      */
     private void isThisASpawnPoint(BoardPiece piece, int x, int y) {
         //If it is a spawnPoint tile, add it to a list of start positions

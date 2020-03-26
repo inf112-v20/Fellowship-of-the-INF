@@ -4,7 +4,6 @@ public enum Direction {
     NORTH, SOUTH, EAST, WEST;
 
     /**
-     *
      * @return the direction opposite to itself
      */
     public Direction getOppositeDirection() {
@@ -18,7 +17,6 @@ public enum Direction {
     }
 
     /**
-     *
      * @return the direction to the right of itself
      */
     public Direction getRightTurnDirection() {
@@ -32,7 +30,6 @@ public enum Direction {
     }
 
     /**
-     *
      * @return the direction to the left of itself
      */
     public Direction getLeftTurnDirection() {

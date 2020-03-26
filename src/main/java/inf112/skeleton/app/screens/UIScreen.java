@@ -43,7 +43,7 @@ public class UIScreen{
         this.game = game;
         this.scoreBoardScreen = new ScoreBoardScreen(game);
         height = width * 0.5f;
-        player = game.getListOfPlayers()[0]; //Should be made more general
+        player = game.getListOfPlayers()[0];
         stage = new Stage();
         Texture texture = new Texture(Gdx.files.internal("background.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
@@ -92,10 +92,8 @@ public class UIScreen{
     }
 
     /**
-     * Removes the gamelog from the last phase
-     * and creates a new gamelog for this phase.
-     * The gamelog shows current round, current phase
-     * the order of the cards for this phase and which player
+     * Removes the gamelog from the last phase and creates a new gamelog for this phase.
+     * The gamelog shows current round, current phase the order of the cards for this phase and which player
      * played which card.
      */
     public void updateGameLog() {

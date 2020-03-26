@@ -44,6 +44,11 @@ public class Game {
         }
     }
 
+    /**
+     * Perform moves for robots
+     *
+     * @param moves All moves to execute
+     */
     public void performMoves(MovesToExecuteSimultaneously moves) {
         for (Move move : moves) {
             Position oldPos = move.getOldPos();
@@ -78,7 +83,7 @@ public class Game {
     public Round getRound(){return round;}
 
     /**
-     * Handles keyboard input
+     * Handles keyboard input for manually moving Player 1 around.
      */
     public void handleKeyBoardInput() {
         Move rotateMove = new Move(player1); //initiate possible rotateMove to be done

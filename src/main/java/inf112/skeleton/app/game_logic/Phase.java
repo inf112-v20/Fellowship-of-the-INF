@@ -25,11 +25,7 @@ public class Phase {
     }
 
     /**
-     * Executes a phase which in order consists of:
-     * Executing programcards
-     * Move players on expressbelts once
-     * Move players on expressbelts once and move players on conveyorbelts once
-     * Rotate players on cogs
+     * Executes a phase based on RoboRally ruleset.
      *
      * @param phaseNumber the current phase number
      */
@@ -52,7 +48,6 @@ public class Phase {
     }
 
     /**
-     * TODO Add in a check to see if players are in power down mode, with player.isPowerDownMode. If they are, then they should not move
      * Sort all players based on the priority of their cards this phase.
      * Execute all players programcards for this phase in the order of sorting.
      */
@@ -115,39 +110,23 @@ public class Phase {
 }
 
     /**
-     * // TODO first wall-lasers fire, then robots? @Henrik
      * Checks if a player is currently on a laser.
      * If so, the player receives damage, and the laser is intercepted.
      */
     private void lasersFire() {
         // Static lasers (from walls)
-        for (int i = 0; i < listOfPlayers.length; i++) {
-            Player player = listOfPlayers[i];
+        for (Player player : listOfPlayers) {
             if(game.getLogicGrid().isInBounds(player.getPos())) {
                 int damage = 1;
                 LaserPiece laser;
                 if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
                     laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
                     if (laser.isDoubleLaser() || laser.isCrossingLasers()) damage += 1;
-                    // Intercepting laser after it hits a robot
-                    interceptLaser(laser.getPos(), laser.getDir());
                     player.takeDamage(damage);
                 }
             }
         }
 
-    }
-
-    /**
-     * TODO @Henrik needs comments
-     * @param pos
-     * @param dir
-     */
-    private void interceptLaser(Position pos, Direction dir) {
-        int xDir = 0;
-        int yDir = 0;
-        if (dir == Direction.NORTH || dir == Direction.SOUTH) yDir = 1;
-        else xDir = 1;
     }
 
 

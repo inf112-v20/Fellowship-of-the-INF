@@ -11,7 +11,6 @@ public abstract class BoardPiece {
     private int id;
 
     /**
-     *
      * @param pos position of boardPiece
      * @param id number is retrieved from RoborallyBoard.tmx. It essetially tells us which tile image represents this
      *           board piece
