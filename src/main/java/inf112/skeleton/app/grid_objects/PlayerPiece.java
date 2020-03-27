@@ -10,7 +10,7 @@ import inf112.skeleton.app.player.TextureMaker;
 public class PlayerPiece extends DirectionedPiece {
 
     private Player player; //player who owns this piece
-    private int playerNumber;
+    private final int playerNumber;
     private TiledMapTileLayer.Cell currentCell; //Cell for the current state of the player
     private TiledMapTileLayer.Cell playerCell; //cell for normal player
     private TiledMapTileLayer.Cell deadPlayerCell; //cell for dead player looks

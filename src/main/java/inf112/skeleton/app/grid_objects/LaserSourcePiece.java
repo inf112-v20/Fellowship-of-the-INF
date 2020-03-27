@@ -5,7 +5,6 @@ import inf112.skeleton.app.grid.Position;
 
 public class LaserSourcePiece extends WallPiece {
 
-    private boolean doubleLaser;
 
     /**
      *
@@ -16,6 +15,5 @@ public class LaserSourcePiece extends WallPiece {
      */
     public LaserSourcePiece(Position pos, int id, Direction dir, boolean doubleLaser) {
         super(pos, id, dir);
-        doubleLaser = doubleLaser;
     }
 }
