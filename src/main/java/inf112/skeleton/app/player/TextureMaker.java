@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class TextureMaker {
 
     public static TextureRegion getPlayerTextureRegion(int playerNumber, int state) {
-        Texture playerTexture = new Texture("playerSprites.png");
+        Texture playerTexture = new Texture("ui/playerSprites.png");
         TextureRegion region = new TextureRegion(playerTexture);
         //split image into texture regions
         TextureRegion[][] regions = region.split(300,300);

@@ -36,7 +36,7 @@ public class PlayerSelectionScreen implements Screen {
 
         // picture = all actors on stage
         // Background
-        Sprite picture = new Sprite(new Texture("StageSelectBackground.png"));
+        Sprite picture = new Sprite(new Texture("menu/StageSelectBackground.png"));
         background = new Image(new SpriteDrawable(picture));
         background.setSize(width, height);
         background.setPosition(0, 0);
@@ -44,7 +44,7 @@ public class PlayerSelectionScreen implements Screen {
 
         // Logo
         int yPadding = 50;
-        picture = new Sprite(new Texture("RoboRally_logo.png"));
+        picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
         logo = new Image(new SpriteDrawable(picture));
         logo.setSize(logo.getWidth()*1.5f, logo.getHeight()*2);
         logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));
@@ -53,7 +53,7 @@ public class PlayerSelectionScreen implements Screen {
         //1 Players button
         yPadding = 400;
         int xPadding = 80;
-        picture = new Sprite(new Texture("1Player.png"));
+        picture = new Sprite(new Texture("menu/playerbuttons/1Player.png"));
         player1Button = new ImageButton(new SpriteDrawable(picture));
         player1Button.setPosition(xPadding, yPadding);
         player1Button.addListener(new ClickListener() {
@@ -65,7 +65,7 @@ public class PlayerSelectionScreen implements Screen {
         stage.addActor(player1Button);
 
         //2 Players button
-        picture = new Sprite(new Texture("2Players.png"));
+        picture = new Sprite(new Texture("menu/playerbuttons/2Players.png"));
         player2Button = new ImageButton(new SpriteDrawable(picture));
         player2Button.setPosition(2*xPadding+player1Button.getWidth(), yPadding);
         player2Button.addListener(new ClickListener() {
@@ -77,7 +77,7 @@ public class PlayerSelectionScreen implements Screen {
         stage.addActor(player2Button);
 
         //3 Players button
-        picture = new Sprite(new Texture("3Players.png"));
+        picture = new Sprite(new Texture("menu/playerbuttons/3Players.png"));
         player3Button = new ImageButton(new SpriteDrawable(picture));
         player3Button.setPosition(3*xPadding+player1Button.getWidth()+player2Button.getWidth(), yPadding);
         player3Button.addListener(new ClickListener() {
@@ -89,7 +89,7 @@ public class PlayerSelectionScreen implements Screen {
         stage.addActor(player3Button);
 
         //4 Players button
-        picture = new Sprite(new Texture("4Players.png"));
+        picture = new Sprite(new Texture("menu/playerbuttons/4Players.png"));
         player4Button = new ImageButton(new SpriteDrawable(picture));
         player4Button.setPosition(width-xPadding - player4Button.getWidth(), yPadding);
         player4Button.addListener(new ClickListener() {
@@ -101,7 +101,7 @@ public class PlayerSelectionScreen implements Screen {
         stage.addActor(player4Button);
 
         // Back button
-        picture = new Sprite(new Texture("BackButton.png"));
+        picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         backButton = new ImageButton(new SpriteDrawable(picture));
         backButton.setPosition((width-xPadding)- backButton.getWidth(), 100);
         backButton.addListener(new ClickListener() {

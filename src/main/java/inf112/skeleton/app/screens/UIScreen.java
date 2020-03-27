@@ -44,7 +44,7 @@ public class UIScreen{
         height = width * 0.5f;
         player = game.getListOfPlayers()[0]; //Should be made more general
         stage = new Stage();
-        Texture texture = new Texture(Gdx.files.internal("background.png"));
+        Texture texture = new Texture(Gdx.files.internal("ui/background.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         createImage(textureRegion, 1, width*0.5f, 0, 1);
         createLockInButton();
@@ -167,7 +167,7 @@ public class UIScreen{
      * Creates the player picture and the name of the player above it.
      */
     public void createPlayerPicture(){
-        Texture backgroundTexture = new Texture(Gdx.files.internal("profilepicture.png"));
+        Texture backgroundTexture = new Texture(Gdx.files.internal("ui/profilepicture.png"));
         TextureRegion backgroundPicture = new TextureRegion(backgroundTexture);
         createImage(backgroundPicture, 1, width *0.5f, height*0.75f, 0.85f);
         TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
@@ -180,7 +180,7 @@ public class UIScreen{
      * Creates all 3 life tokens.
      */
     public void createLifeTokens(){
-        Texture texture = new Texture(Gdx.files.internal("lifetoken.png"));
+        Texture texture = new Texture(Gdx.files.internal("ui/lifetoken.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         float alpha = 1;
         float posY = height * 0.87f;
@@ -195,7 +195,7 @@ public class UIScreen{
      * Creates all 3 checkpoint tokens
      */
     public void createCheckPointTokens(){
-        Texture texture = new Texture(Gdx.files.internal("checkpointtoken.png"));
+        Texture texture = new Texture(Gdx.files.internal("ui/checkpointtoken.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         float posY = height * 0.75f;
         for (int i = 0; i < 3 ; i++) {
@@ -209,7 +209,7 @@ public class UIScreen{
      * Creates all 10 damagetokens
      */
     public void createDamageTokens(){
-        Texture texture = new Texture(Gdx.files.internal("damagetoken.png"));
+        Texture texture = new Texture(Gdx.files.internal("ui/damagetoken.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         float posY = height * 0.25f;
         for (int i = 0; i < 10 ; i++) {
@@ -224,7 +224,7 @@ public class UIScreen{
      * Creates the powerdown image
      */
     public void createPowerDownImage(){
-        Texture texture = new Texture(Gdx.files.internal("powerdown.png"));
+        Texture texture = new Texture(Gdx.files.internal("ui/powerdown.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         float posY = height * 0.08f;
         float posX = width * 0.9f;
@@ -235,7 +235,7 @@ public class UIScreen{
      * Creates the lockInButton
      */
     public void createLockInButton(){
-        Texture texture = new Texture(Gdx.files.internal("lockinbutton.png"));
+        Texture texture = new Texture(Gdx.files.internal("ui/lockinbutton.png"));
         lockInButton = createButton(texture, 0.75f, width * 0.8f, height*0.08f);
         Color c = lockInButton.getColor();
         lockInButton.setColor(c.r, c.g, c.b, 0.5f);

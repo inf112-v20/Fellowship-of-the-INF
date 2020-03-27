@@ -40,7 +40,7 @@ public class StageSelectionScreen implements Screen {
 
         // picture = all actors on stage
         // Background
-        Sprite picture = new Sprite(new Texture("StageSelectBackground.png"));
+        Sprite picture = new Sprite(new Texture("menu/StageSelectBackground.png"));
         background = new Image(new SpriteDrawable(picture));
         background.setSize(width, height);
         background.setPosition(0, 0);
@@ -48,7 +48,7 @@ public class StageSelectionScreen implements Screen {
 
         // Logo
         int yPadding = 50;
-        picture = new Sprite(new Texture("RoboRally_logo.png"));
+        picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
         logo = new Image(new SpriteDrawable(picture));
         logo.setSize(logo.getWidth()*1.5f, logo.getHeight()*2);
         logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));
@@ -59,7 +59,7 @@ public class StageSelectionScreen implements Screen {
         if (playerCount<5){
             //Stage 1 button
             yPadding = 400;
-            picture = new Sprite(new Texture("Stage1Button.png"));
+            picture = new Sprite(new Texture("menu/navbuttons/Stage1Button.png"));
             stage1Button = new ImageButton(new SpriteDrawable(picture));
             stage1Button.setPosition(xPadding, yPadding);
             stage1Button.addListener(new ClickListener() {
@@ -67,32 +67,32 @@ public class StageSelectionScreen implements Screen {
                 public void clicked (InputEvent event, float x, float y) {
                     //Original map: RoborallyBoard_debugged.tmx
                     //Test map for conveyorbelts: conveyorBeltTestMap.tmx
-                    game.setScreen(new GameScreen("RoborallyBoard_debugged.tmx"));
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_debugged.tmx"));
                 }
             });
 
             stage.addActor(stage1Button);
             // Stage 2 button
-            picture = new Sprite(new Texture("Stage2Button.png"));
+            picture = new Sprite(new Texture("menu/navbuttons/Stage2Button.png"));
             stage2Button = new ImageButton(new SpriteDrawable(picture));
             stage2Button.setPosition((width - xPadding)-stage2Button.getWidth(), yPadding);
             stage2Button.addListener(new ClickListener() {
                 @Override
                 public void clicked (InputEvent event, float x, float y) {
-                    game.setScreen(new GameScreen("RoborallyBoard_Vault_Assault.tmx"));
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx"));
                 }
             });
             stage.addActor(stage2Button);
 
             if (playerCount == 1) {
                 // testStage button
-                picture = new Sprite(new Texture("TestStageButton.png"));
+                picture = new Sprite(new Texture("menu/navbuttons/TestStageButton.png"));
                 stageTestButton = new ImageButton(new SpriteDrawable(picture));
                 stageTestButton.setPosition(width / 2 - stageTestButton.getWidth() / 2, yPadding);
                 stageTestButton.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        game.setScreen(new GameScreen("TestMap.tmx"));
+                        game.setScreen(new GameScreen("maps/TestMap.tmx"));
                     }
                 });
                 stage.addActor(stageTestButton);
@@ -100,7 +100,7 @@ public class StageSelectionScreen implements Screen {
         } else {
             //Stage 1 button
             yPadding = 400;
-            picture = new Sprite(new Texture("Stage1Button.png"));
+            picture = new Sprite(new Texture("menu/navbuttons/Stage1Button.png"));
             stage1Button = new ImageButton(new SpriteDrawable(picture));
             stage1Button.setPosition(xPadding, yPadding);
             stage1Button.addListener(new ClickListener() {
@@ -108,19 +108,19 @@ public class StageSelectionScreen implements Screen {
                 public void clicked (InputEvent event, float x, float y) {
                     //Original map: RoborallyBoard_debugged.tmx
                     //Test map for conveyorbelts: conveyorBeltTestMap.tmx
-                    game.setScreen(new GameScreen("RoborallyBoard_debugged.tmx"));
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_debugged.tmx"));
                 }
             });
 
             stage.addActor(stage1Button);
             // Stage 2 button
-            picture = new Sprite(new Texture("Stage2Button.png"));
+            picture = new Sprite(new Texture("menu/navbuttons/Stage2Button.png"));
             stage2Button = new ImageButton(new SpriteDrawable(picture));
             stage2Button.setPosition((width - xPadding)-stage2Button.getWidth(), yPadding);
             stage2Button.addListener(new ClickListener() {
                 @Override
                 public void clicked (InputEvent event, float x, float y) {
-                    game.setScreen(new GameScreen("RoborallyBoard_Vault_Assault.tmx"));
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx"));
                 }
             });
             stage.addActor(stage2Button);
@@ -132,13 +132,13 @@ public class StageSelectionScreen implements Screen {
 
 
         // testStage button
-        picture = new Sprite(new Texture("TestStageButton.png"));
+        picture = new Sprite(new Texture("menu/navbuttons/TestStageButton.png"));
         stageTestButton = new ImageButton(new SpriteDrawable(picture));
         stageTestButton.setPosition(width/2 - stageTestButton.getWidth()/2, yPadding);
         stageTestButton.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen("TestMap.tmx"));
+                game.setScreen(new GameScreen("maps/TestMap.tmx"));
             }
         });
         stage.addActor(stageTestButton);
@@ -146,7 +146,7 @@ public class StageSelectionScreen implements Screen {
 
 
         // Back button
-        picture = new Sprite(new Texture("BackButton.png"));
+        picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         backButton = new ImageButton(new SpriteDrawable(picture));
         backButton.setPosition((width-xPadding)- backButton.getWidth(), 100);
         backButton.addListener(new ClickListener() {

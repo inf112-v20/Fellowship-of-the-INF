@@ -26,7 +26,7 @@ public class ScoreBoardScreen {
         this.game = game;
         this.stage = new Stage();
         this.table = new Table();
-        Texture texture = new Texture(Gdx.files.internal("background.png"));
+        Texture texture = new Texture(Gdx.files.internal("ui/background.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(textureRegion);
         Image image = new Image(myTexRegionDrawable);
@@ -67,9 +67,9 @@ public class ScoreBoardScreen {
         table.add(headFiller).fill();
         table.add(headLabel).left().fill();
 
-        Image lifeImage = createImage(new Texture((Gdx.files.internal("lifetoken.png"))));
-        Image damageImage = createImage(new Texture((Gdx.files.internal("damagetokentab.png"))));
-        Image checkpointImage = createImage(new Texture((Gdx.files.internal("checkpointtoken.png"))));
+        Image lifeImage = createImage(new Texture((Gdx.files.internal("ui/lifetoken.png"))));
+        Image damageImage = createImage(new Texture((Gdx.files.internal("ui/damagetokentab.png"))));
+        Image checkpointImage = createImage(new Texture((Gdx.files.internal("ui/checkpointtoken.png"))));
         Image backgroundColor1 = new Image(whiteTRD);
         Image backgroundColor2 = new Image(whiteTRD);
         Image backgroundColor3 = new Image(whiteTRD);

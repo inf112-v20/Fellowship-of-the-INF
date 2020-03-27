@@ -36,7 +36,7 @@ public class MainMenuScreen implements Screen {
 
         // picture = all actors on stage
         // Background
-        Sprite picture = new Sprite(new Texture("MainMenuBackground.png"));
+        Sprite picture = new Sprite(new Texture("menu/MainMenuBackground.png"));
         background = new Image(new SpriteDrawable(picture));
         background.setSize(width, height);
         background.setPosition(0, 0);
@@ -44,7 +44,7 @@ public class MainMenuScreen implements Screen {
 
         // Logo
         int yPadding = 50;
-        picture = new Sprite(new Texture("RoboRally_logo.png"));
+        picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
         logo = new Image(new SpriteDrawable(picture));
         logo.setSize(logo.getWidth()*1.5f, logo.getHeight()*2);
         logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));

@@ -95,7 +95,7 @@ public class CardButton {
      */
     public void createSelectedCardsImages(){
         for (int i = 0; i < 5; i++) {
-            Texture texture = new Texture(Gdx.files.internal("cardslot.png"));
+            Texture texture = new Texture(Gdx.files.internal("ui/cards/cardslot.png"));
             TextureRegion myTextureRegion = new TextureRegion(texture);
             TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
             Image selectedCardImage = new Image(myTexRegionDrawable);

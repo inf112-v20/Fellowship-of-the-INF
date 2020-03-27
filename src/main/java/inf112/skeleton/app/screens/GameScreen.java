@@ -60,7 +60,7 @@ public class GameScreen implements Screen {
         MAP_WIDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI;
         MAP_HEIGHT_DPI = MAP_HEIGHT * TILE_WIDTH_DPI;
 
-        tiles = this.map.getTileSets().getTileSet("tileset.png");
+        tiles = this.map.getTileSets().getTileSet("maps/tileset.png");
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_HEIGHT_DPI, camera);
         camera.translate(MAP_WIDTH_DPI, MAP_WIDTH_DPI / 2);
