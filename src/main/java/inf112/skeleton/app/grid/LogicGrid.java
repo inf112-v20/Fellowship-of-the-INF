@@ -2,9 +2,13 @@ package inf112.skeleton.app.grid;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.grid_objects.*;
+import inf112.skeleton.app.player.TextureMaker;
 
 import java.util.ArrayList;
+
+import static inf112.skeleton.app.grid.Direction.WEST;
 
 public class LogicGrid {
     //dimensions of grid
@@ -31,25 +35,28 @@ public class LogicGrid {
     private TiledMapTileLayer wallLayer;
     private TiledMapTileLayer flagLayer;
     private TiledMapTileLayer playerLayer;
+    private TiledMapTileLayer robotLasersLayer;
 
     //The indexes of the layers
     private int floorLayerIndex;
     private int repairLayerIndex;
     private int opCardLayerIndex;
     private int abyssLayerIndex;
-    private int conveyorBeltLayerIndex;
-    private int expressBeltLayerIndex;
+    private int conveyorBeltLayerIndex; //4
+    private int expressBeltLayerIndex; //5
     private int cogLayerIndex;
     private int pusherLayerIndex;
-    private int laserLayerIndex;
-    private int laserSourceLayerIndex;
+    private int laserLayerIndex; //8
+    private int laserSourceLayerIndex; //9
     private int wallLayerIndex;
     private int flagLayerIndex;
-    private int playerLayerIndex;
+    private int playerLayerIndex; //12
+    private int robotLasersLayerIndex;
 
     //private BoardPiece[] [][] grid;
     private ArrayList<BoardPiece>[][] grid;
     private BoardPieceGenerator boardPieceGenerator;
+
 
     public LogicGrid(int width, int height, TiledMap map) {
         grid = new ArrayList[width][height];
@@ -74,6 +81,7 @@ public class LogicGrid {
         wallLayer = (TiledMapTileLayer) map.getLayers().get("Wall");
         flagLayer = (TiledMapTileLayer) map.getLayers().get("Flag");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
+        robotLasersLayer = (TiledMapTileLayer) map.getLayers().get("Robot Lasers");
 
         //extract index of each layer
         floorLayerIndex = map.getLayers().getIndex("Floor");
@@ -89,8 +97,11 @@ public class LogicGrid {
         wallLayerIndex = map.getLayers().getIndex("Wall");
         flagLayerIndex = map.getLayers().getIndex("Flag");
         playerLayerIndex = map.getLayers().getIndex("Player");
+        robotLasersLayerIndex = map.getLayers().getIndex("Robot Lasers");
 
         readTiledMapToPieceGrid();
+
+
     }
 
     /**

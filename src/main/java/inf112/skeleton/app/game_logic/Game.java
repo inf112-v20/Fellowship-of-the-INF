@@ -3,10 +3,16 @@ package inf112.skeleton.app.game_logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.deck.GameDeck;
+import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.BoardPiece;
+import inf112.skeleton.app.grid_objects.LaserPiece;
 import inf112.skeleton.app.player.Player;
+import inf112.skeleton.app.player.TextureMaker;
 import inf112.skeleton.app.screens.GameScreen;
 
 import java.util.LinkedList;
@@ -24,6 +30,7 @@ public class Game {
     private GameScreen gameScreen;
 
 
+
     public Game(LogicGrid logicGrid, GameScreen gameScreen) {
         this.logicGrid = logicGrid;
         this.gameScreen = gameScreen;
@@ -34,6 +41,8 @@ public class Game {
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
         this.moves = new LinkedList<>();
+
+
     }
 
     public void initiateComputerPlayers() {
@@ -196,5 +205,12 @@ public class Game {
             }
         }
         return null; //no player in position
+    }
+
+    public boolean moreLaserToShoot(){
+        for (Player player : playerList) {
+            if(!player.getOldLaserPos().equals(new Position(-1,-1))){return true;}
+        }
+        return false;
     }
 }

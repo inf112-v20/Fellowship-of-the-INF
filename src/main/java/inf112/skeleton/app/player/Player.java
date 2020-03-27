@@ -27,6 +27,7 @@ public class Player {
     private ArrayList<ProgramCard> playerHandDeck;
     private ProgramCard[] selectedCards;
     private ArrayList<ProgramCard> lockedCards;
+    private ArrayList<Position> laserPath;
 
     private Position spawnPoint;
     private int damage;
@@ -37,6 +38,7 @@ public class Player {
     private Direction latestMoveDirection;
     private boolean conveyorBeltMove = false;
     private boolean hasBeenMovedThisPhase = false;
+    private Position oldLaserPos;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -48,7 +50,7 @@ public class Player {
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
         this.selectedCards = new ProgramCard[5];
         this.lockedCards = new ArrayList<>();
-
+        this.laserPath = new ArrayList<>();
 
         //Find the spawn point of the player, and set spawnPoint position to the first spawn
         findFirstSpawnPoint();
@@ -56,6 +58,7 @@ public class Player {
         this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, this);
         this.isDead = false;
         this.powerDownMode = false;
+        this.oldLaserPos = new Position(-1,0);
     }
 
 
@@ -578,6 +581,26 @@ public class Player {
 
     public Boolean hasBeenMovedThisPhase() {
         return hasBeenMovedThisPhase;
+    }
+
+    public ArrayList<Position> getLaserPath(){
+        return laserPath;
+    }
+
+    public void addLaserPath(Position laserPos){
+        laserPath.add(laserPos);
+    }
+
+    public void removeLaserPath(){
+        laserPath.remove(0);
+    }
+
+    public Position getOldLaserPos(){
+        return oldLaserPos;
+    }
+
+    public void setOldLaserPos(Position pos){
+        oldLaserPos = pos;
     }
 
 }

@@ -25,6 +25,9 @@ import inf112.skeleton.app.player.Player;
 
 import java.util.concurrent.TimeUnit;
 
+import static inf112.skeleton.app.grid.Direction.NORTH;
+import static inf112.skeleton.app.grid.Direction.SOUTH;
+
 
 /**
  * Screen for the physical board.
@@ -34,11 +37,16 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera;
     private Viewport gridPort;
     private TiledMapTileLayer playerLayer;
+    private TiledMapTileLayer robotLasersLayer;
     private Stage stage;
     private UIScreen uiScreen;
     private Game game;
     private boolean currentMoveIsExecuted;
     private ScoreBoardScreen scoreBoardScreen;
+    private TiledMapTileLayer.Cell horizontalLaser;
+    private TiledMapTileLayer.Cell verticalLaser;
+
+
 
     public GameScreen(String mapName) {
         TmxMapLoader mapLoader = new TmxMapLoader();
@@ -57,6 +65,9 @@ public class GameScreen implements Screen {
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         // Layers, add more later
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
+        horizontalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(39));
+        verticalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(47));
+        robotLasersLayer = (TiledMapTileLayer) map.getLayers().get("Robot Lasers");
         LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, map);
         game = new Game(logicGrid, this);
         initializePlayers();
@@ -94,7 +105,6 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         mapRenderer.setView(camera);
         update(); //make changes to board, if there are any
-        uiScreen.update();
         mapRenderer.render();
         stage.draw();
     }
@@ -107,14 +117,19 @@ public class GameScreen implements Screen {
      */
     public void update() {
         //only handle keyboard input if there are no moves to execute
-        if (!movesToExecute()) {
+        if (!movesToExecute() && !game.moreLaserToShoot()) {
             handleKeyboardInput();
+            uiScreen.update();
         }
         //only execute moves if there are any, the the current one hasn't been executed yet
         if (movesToExecute() && currentMoveIsExecuted) {
             currentMoveIsExecuted = false;
             executeMove();
-            delayForSeconds(1); //add delay
+            delayForSeconds(1000); //add delay
+        }
+        if(!movesToExecute() && game.moreLaserToShoot()){
+            shootLasers();
+            delayForSeconds(150);
         }
     }
 
@@ -136,6 +151,26 @@ public class GameScreen implements Screen {
         }
         game.getMoves().poll(); //remove set of moves once they have been executed
         currentMoveIsExecuted = true;
+    }
+
+    public void shootLasers(){
+        for (int i = 0; i <game.getListOfPlayers().length; i++) {
+            Player player = game.getListOfPlayers()[i];
+            Position oldLaserPos = player.getOldLaserPos();
+            robotLasersLayer.setCell(oldLaserPos.getX(), oldLaserPos.getY(), null);
+            if(player.getLaserPath().isEmpty()){
+                player.setOldLaserPos(new Position(-1,-1));
+                continue;
+            }
+            TiledMapTileLayer.Cell laser = horizontalLaser;
+            if(player.getPlayerPiece().getDir() == NORTH ||player.getPlayerPiece().getDir() == SOUTH){
+                laser = verticalLaser;
+            }
+            Position newLaserPos = player.getLaserPath().get(0);
+            robotLasersLayer.setCell(newLaserPos.getX(), newLaserPos.getY(), laser);
+            player.removeLaserPath();
+            player.setOldLaserPos(newLaserPos);
+        }
     }
 
 
@@ -187,23 +222,6 @@ public class GameScreen implements Screen {
 
     }
 
-    //TODO This is a logic and should maybe be a method in the Game class?
-
-    /**
-     * Executes the cards that have been chosen
-     *
-     */
-    /*
-    public void executeLockIn(ArrayList<ProgramCard> programCards) {
-        if (programCards != null) {
-            game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
-            game.executeRound();
-            uiScreen.updateGameLog();
-        }
-    }
-
-     */
-
     public void erasePlayers() {
         for (Player player : game.getListOfPlayers()) {
             playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
@@ -217,11 +235,11 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * @param secondsOfDelay number of seconds delay should last
+     * @param milliSecondsOfDelay number of milliseconds delay should last
      */
-    public void delayForSeconds(int secondsOfDelay) {
+    public void delayForSeconds(int milliSecondsOfDelay) {
         try {
-            TimeUnit.SECONDS.sleep(secondsOfDelay);
+            TimeUnit.MILLISECONDS.sleep(milliSecondsOfDelay);
         } catch (InterruptedException e) {
             System.out.println("Timer was interrupted");
         }
