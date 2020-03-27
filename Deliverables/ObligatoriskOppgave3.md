@@ -1,6 +1,6 @@
 # ObligatoriskOppgave3
 
-## Part 1:Team and Project
+## Part 1: Team and Project
 ### Roles
 The roles we delegated at the last iteration have worked quite well. The Code Integrity and Tidiness role has become obsolete as we now use Codacy to improve code quality.
 
@@ -231,7 +231,7 @@ to damage tokens).
 
 
 
-## Deloppgave3: Code
+## Part 3: Code
 
 ### UML
 You can find the UMLs in the UML folder in deliverables. LargeUML.png is the complete UML of the entire project. It is quite large, so there is also a simplifiedUML.png you can take a look at. The simplified UML also reffers to three smaller UML's, which you can also have a look at. These smallet ones describe the structure of the cards, board pieces and screens.
