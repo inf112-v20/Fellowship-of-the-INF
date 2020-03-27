@@ -3,7 +3,6 @@
 ## Part 1:Team and Project
 ### Roles
 The roles we delegated at the last iteration have worked quite well. The Code Integrity and Tidiness role has become obsolete as we now use Codacy to improve code quality.
-In the first iteration de decided to follow a 
 
 ### Project methodology and retrospective
 In the first iteration we decided to use XP, with an emphasis on good communication. These are some of the main points we wanted to implement:
@@ -200,6 +199,28 @@ to damage tokens).
 
 ---
 
+### Respawns
+**Usecase**: When the player loses a life it needs it needs to go back to a spot on the map.
+
+
+**Acceptance criteria**
+
+* The location of the spawnpoint should be saved as a variable in the player class
+* The first spawn points should be based on the map
+* The first spawn points should correspond with the player number
+* When a player dies it respawns at the spawn location
+* When the player achieves a checkpoint, then this location is the new spawn point
+
+
+**Tasks to complete**
+
+* Create a variable in player that saves the spawn point
+* Create a way to generate a list of the spawnpoints positions of the map
+* Create a check to see if the player is standing on a checkpoint at the end of a phase
+  * Check if the checkpoint is the correct one as players need to visit them in order
+
+---
+
 ### MVP...
 **Usecase**: 
 
@@ -212,8 +233,6 @@ to damage tokens).
 **Tasks to complete**
 
 * 
-
-
 
 
 
@@ -240,7 +259,7 @@ to damage tokens).
    * Will not handle collision from the conveyorbelt move. 
 * You can hold down TAB to see stats of all the players in the game.
 * You can press ESC to quickly resize the game to a small window. 
-* Pressing the buttons 1-6 changes some values of the player (unsure if NUMPAD numbers works):
+* Pressing the buttons 1-6 changes some values of the player:
    * 1: Add 1 damage
    * 2: Remove 1 damage
    * 3: Add 1 life
@@ -249,7 +268,8 @@ to damage tokens).
    * 6: Remove 1 flag 
 
 * Things to note:
-  * You die if you go off the board or if you walk into an abyss
+  * You lose lives if you go off the board or if you walk into an abyss
+  * You have 3 lives before you die
   * If you die you need to restart the program to play again
 
 ### How to run automatic tests
