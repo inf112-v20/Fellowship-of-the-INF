@@ -221,23 +221,6 @@ to damage tokens).
 
 ---
 
-### MVP...
-**Usecase**: 
-
-
-**Acceptance criteria**
-
-* 
-
-
-**Tasks to complete**
-
-* 
-
-
-
-### How to reach these requirements:
-
 
 ### Other known bugs
 * When you press enter instead of clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
