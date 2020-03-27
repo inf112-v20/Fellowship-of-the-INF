@@ -346,15 +346,15 @@ public class Player {
     }
 
     public void turnPlayerAround() {
-        playerPiece.turnAround();
+        if (!isDead())  playerPiece.turnAround();
     }
 
     public void turnPlayerLeft() {
-        playerPiece.turnLeft();
+        if (!isDead()) playerPiece.turnLeft();
     }
 
     public void turnPlayerRight() {
-        playerPiece.turnRight();
+        if (!isDead()) playerPiece.turnRight();
     }
 
     public ArrayList<ProgramCard> getPlayerHandDeck() {
