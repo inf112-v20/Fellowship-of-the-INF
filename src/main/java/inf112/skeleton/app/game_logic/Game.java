@@ -167,7 +167,7 @@ public class Game {
         round.setRoundNumber(roundNumber);
         //check all players have hand
         round.startRound();
-        round.finnishRound();
+        round.finishRound();
     }
 
     public Queue<MovesToExecuteSimultaneously> getMoves() {
