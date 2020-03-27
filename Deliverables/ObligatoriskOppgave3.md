@@ -224,11 +224,13 @@ to damage tokens).
 
 ### Other known bugs
 * When you press enter instead of clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
-* Moving a robot into a wall causes it to respawn.
 
 
 
 ## Deloppgave3: Code
+
+### UML
+You can find the UMLs in the UML folder in deliverables. LargeUML.png is the complete UML of the entire project. It is quite large, so there is also a simplifiedUML.png you can take a look at. The simplified UML also reffers to three smaller UML's, which you can also have a look at. These smallet ones describe the structure of the cards, board pieces and screens.
 
 ### How to run the program
 * Ensure maven install and build is complete. Then, run Main. A Menu Screen will pop up. Press the play button to start the game, and then the Stage 1 button from the stage selection screen.
