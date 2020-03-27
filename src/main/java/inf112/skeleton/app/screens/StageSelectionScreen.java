@@ -19,12 +19,6 @@ public class StageSelectionScreen implements Screen {
     private float height;
 
     private Stage stage;
-    private Image background;
-    private Image logo;
-    private ImageButton stage1Button;
-    private ImageButton stageTestButton;
-    private ImageButton stage2Button;
-    private ImageButton backButton;
 
     public StageSelectionScreen(RoboRallyGame game) {
         this.game = game;
@@ -39,7 +33,7 @@ public class StageSelectionScreen implements Screen {
         // picture = all actors on stage
         // Background
         Sprite picture = new Sprite(new Texture("StageSelectBackground.png"));
-        background = new Image(new SpriteDrawable(picture));
+        Image background = new Image(new SpriteDrawable(picture));
         background.setSize(width, height);
         background.setPosition(0, 0);
         stage.addActor(background);
@@ -47,7 +41,7 @@ public class StageSelectionScreen implements Screen {
         // Logo
         int yPadding = 50;
         picture = new Sprite(new Texture("RoboRally_logo.png"));
-        logo = new Image(new SpriteDrawable(picture));
+        Image logo = new Image(new SpriteDrawable(picture));
         logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
@@ -56,7 +50,7 @@ public class StageSelectionScreen implements Screen {
         yPadding = 400;
         int xPadding = 100;
         picture = new Sprite(new Texture("Stage1Button.png"));
-        stage1Button = new ImageButton(new SpriteDrawable(picture));
+        ImageButton stage1Button = new ImageButton(new SpriteDrawable(picture));
         stage1Button.setPosition(xPadding, yPadding);
         stage1Button.addListener(new ClickListener() {
             @Override
@@ -68,7 +62,7 @@ public class StageSelectionScreen implements Screen {
 
         // Stage2 button
         picture = new Sprite(new Texture("Stage2Button.png"));
-        stage2Button = new ImageButton(new SpriteDrawable(picture));
+        ImageButton stage2Button = new ImageButton(new SpriteDrawable(picture));
         stage2Button.setPosition((width - xPadding) - stage2Button.getWidth(), yPadding);
         stage2Button.addListener(new ClickListener() {
             @Override
@@ -80,7 +74,7 @@ public class StageSelectionScreen implements Screen {
 
         // testStage button
         picture = new Sprite(new Texture("TestStageButton.png"));
-        stageTestButton = new ImageButton(new SpriteDrawable(picture));
+        ImageButton stageTestButton = new ImageButton(new SpriteDrawable(picture));
         stageTestButton.setPosition(width / 2 - stageTestButton.getWidth() / 2, yPadding);
         stageTestButton.addListener(new ClickListener() {
             @Override
@@ -101,7 +95,7 @@ public class StageSelectionScreen implements Screen {
 
         // Back button
         picture = new Sprite(new Texture("BackButton.png"));
-        backButton = new ImageButton(new SpriteDrawable(picture));
+        ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
         backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
         backButton.addListener(new ClickListener() {
             @Override

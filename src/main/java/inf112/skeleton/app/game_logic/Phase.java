@@ -1,8 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
 import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.grid.Direction;
-import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.FlagPiece;
 import inf112.skeleton.app.grid_objects.LaserPiece;
 import inf112.skeleton.app.player.Player;

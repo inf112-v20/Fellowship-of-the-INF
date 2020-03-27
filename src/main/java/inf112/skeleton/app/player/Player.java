@@ -89,7 +89,7 @@ public class Player {
      * Tries to move the player in a new direction
      *
      * @param newDirection new direction to move the player
-     * @param moves
+     * @param moves list that moves created can be added to
      */
     public void tryToGo(Direction newDirection, MovesToExecuteSimultaneously moves) {
         Move move = new Move(this);

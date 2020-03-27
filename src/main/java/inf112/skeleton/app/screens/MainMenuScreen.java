@@ -19,10 +19,6 @@ public class MainMenuScreen implements Screen {
     private float height;
 
     private Stage stage;
-    private Image background;
-    private Image logo;
-    private ImageButton playButton;
-    private ImageButton exitButton;
 
     public MainMenuScreen (RoboRallyGame game) {
         this.game = game;
@@ -37,7 +33,7 @@ public class MainMenuScreen implements Screen {
         // picture = all actors on stage
         // Background
         Sprite picture = new Sprite(new Texture("MainMenuBackground.png"));
-        background = new Image(new SpriteDrawable(picture));
+        Image background = new Image(new SpriteDrawable(picture));
         background.setSize(width, height);
         background.setPosition(0, 0);
         stage.addActor(background);
@@ -45,7 +41,7 @@ public class MainMenuScreen implements Screen {
         // Logo
         int yPadding = 50;
         picture = new Sprite(new Texture("RoboRally_logo.png"));
-        logo = new Image(new SpriteDrawable(picture));
+        Image logo = new Image(new SpriteDrawable(picture));
         logo.setSize(logo.getWidth()*1.5f, logo.getHeight()*2);
         logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));
         stage.addActor(logo);
@@ -54,7 +50,7 @@ public class MainMenuScreen implements Screen {
         yPadding = 100;
         int xPadding = 100;
         picture = new Sprite(new Texture("assets/PlayButton.png"));
-        playButton = new ImageButton(new SpriteDrawable(picture));
+        ImageButton playButton = new ImageButton(new SpriteDrawable(picture));
         playButton.setPosition(xPadding, yPadding);
         playButton.addListener(new ClickListener() {
             @Override
@@ -66,7 +62,7 @@ public class MainMenuScreen implements Screen {
 
         // Exit button
         picture = new Sprite(new Texture("assets/ExitButton.png"));
-        exitButton = new ImageButton(new SpriteDrawable(picture));
+        ImageButton exitButton = new ImageButton(new SpriteDrawable(picture));
         exitButton.setPosition((width-xPadding)-exitButton.getWidth(), yPadding);
         exitButton.addListener(new ClickListener() {
             @Override

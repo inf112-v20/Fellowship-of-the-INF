@@ -223,7 +223,7 @@ public class CardButton {
      * only if it is already the list, and places it back to its
      * original position. Removes the programcard that the cardbutton
      * represents from the players list of selected cards.
-     * @param cardButton
+     * @param cardButton list of selected card buttons
      */
     public void removeCard(Stack cardButton){
         for (int i = 0; i < 5; i++) {

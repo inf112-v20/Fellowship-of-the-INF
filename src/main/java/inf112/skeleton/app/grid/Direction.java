@@ -12,7 +12,7 @@ public enum Direction {
             case NORTH: return Direction.SOUTH;
             case EAST: return Direction.WEST;
             case WEST: return Direction.EAST;
-            default: return NORTH;
+            default: throw new IllegalArgumentException("No such direction");
         }
     }
 
@@ -25,8 +25,9 @@ public enum Direction {
             case NORTH: return Direction.EAST;
             case EAST: return Direction.SOUTH;
             case WEST: return Direction.NORTH;
-            default: return null;
+            default: throw new IllegalArgumentException("No such direction");
         }
+
     }
 
     /**
@@ -38,7 +39,7 @@ public enum Direction {
             case NORTH: return Direction.WEST;
             case EAST: return Direction.NORTH;
             case WEST: return Direction.SOUTH;
-            default: return null;
+            default: throw new IllegalArgumentException("No such direction");
         }
     }
 

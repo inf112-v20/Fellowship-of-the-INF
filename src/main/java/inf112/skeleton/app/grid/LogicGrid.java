@@ -272,14 +272,14 @@ public class LogicGrid {
      */
     public boolean canLeavePosition(Position currentPosition, Direction dir) {
         WallPiece possibleWallPiece = getPieceType(currentPosition, WallPiece.class);
-        if (possibleWallPiece != null && possibleWallPiece instanceof WallPiece) {
+        if (possibleWallPiece != null) {
             //cannot leave if the WallPiece player is standing on has a wall in the direction
             if (!(possibleWallPiece).canLeave(dir)) return false;
         }
         LaserSourcePiece possibleLaserSourcePiece = getPieceType(currentPosition, LaserSourcePiece.class);
-        if (possibleLaserSourcePiece != null && possibleLaserSourcePiece instanceof WallPiece) {
+        if (possibleLaserSourcePiece != null) {
             //cannot leave if the laserSourcePiece player is standing on has a wall in the direction
-            if (!(possibleLaserSourcePiece).canLeave(dir)) return false;
+            return (possibleLaserSourcePiece).canLeave(dir);
         }
         return true;
     }
@@ -296,14 +296,14 @@ public class LogicGrid {
         //if the piece in front is within the bounds, check what is there
         if (isInBounds(positionInFront)) {
             WallPiece possibleWallPiece = getPieceType(positionInFront, WallPiece.class);
-            if (possibleWallPiece != null && possibleWallPiece instanceof WallPiece) {
+            if (possibleWallPiece != null) {
                 //cannot go if WallPiece in front has a wall facing player
                 if (!(possibleWallPiece).canGo(dir)) return false;
             }
             LaserSourcePiece possibleLaserSourcePiece = getPieceType(positionInFront, LaserSourcePiece.class);
-            if (possibleLaserSourcePiece != null && possibleLaserSourcePiece instanceof WallPiece) {
+            if (possibleLaserSourcePiece != null) {
                 //cannot go if WallPiece in front has a wall facing player
-                if (!(possibleLaserSourcePiece).canGo(dir)) return false;
+                return (possibleLaserSourcePiece).canGo(dir);
             }
         }
         return true;
