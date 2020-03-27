@@ -98,20 +98,9 @@ public class Player {
         int newY = playerPiece.getPos().getY();
 
         if (isLegalMove(pos.getX(), pos.getY(), newDirection)) {
-            switch (newDirection) {
-                case NORTH:
-                    newY += 1;
-                    break;
-                case SOUTH:
-                    newY -= 1;
-                    break;
-                case WEST:
-                   newX -= 1;
-                    break;
-                case EAST:
-                    newX += 1;
-                    break;
-            }
+            Position newPosition = pos.getPositionIn(newDirection);
+            newX = newPosition.getX();
+            newY = newPosition.getY();
         }
         //check if the move kills the player, if so lose a life
         if (isDeadMove(newX, newY)) {

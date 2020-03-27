@@ -155,7 +155,7 @@ public class Phase {
         for (Player player : listOfPlayers) {
             if (player.isOnCog()) {
                 Move move = new Move(player);
-                BoardElementsMove.rotateCog(player, game);
+                BoardElementsMove.rotateCog(player);
                 move.updateMove(player);
                 moves.add(move);
             }

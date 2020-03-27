@@ -14,9 +14,8 @@ public class BoardElementsMove {
     /**
      * Rotates a player standing on a cog 90* in the direction of the cog.
      * @param player The player that is currently standing on the BoardPiece.
-     * @param game The current game
      */
-    public static void rotateCog(Player player, Game game){
+    public static void rotateCog(Player player){
         BoardPiece boardPiece = player.getCurrentBoardPiece();
         if(((CogPiece) boardPiece).isRotateClockwise()){
             player.turnPlayerRight();
