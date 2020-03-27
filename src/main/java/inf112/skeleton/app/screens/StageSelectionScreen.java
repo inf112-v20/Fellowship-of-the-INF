@@ -56,7 +56,7 @@ public class StageSelectionScreen implements Screen {
 
         int xPadding = 100;
 
-        if (playerCount<5){
+        if (playerCount < 5) {
             //Stage 1 button
             yPadding = 400;
             picture = new Sprite(new Texture("menu/navbuttons/Stage1Button.png"));
@@ -64,7 +64,7 @@ public class StageSelectionScreen implements Screen {
             stage1Button.setPosition(xPadding, yPadding);
             stage1Button.addListener(new ClickListener() {
                 @Override
-                public void clicked (InputEvent event, float x, float y) {
+                public void clicked(InputEvent event, float x, float y) {
                     //Original map: RoborallyBoard_debugged.tmx
                     //Test map for conveyorbelts: conveyorBeltTestMap.tmx
                     game.setScreen(new GameScreen("maps/RoborallyBoard_debugged.tmx"));
@@ -75,10 +75,10 @@ public class StageSelectionScreen implements Screen {
             // Stage 2 button
             picture = new Sprite(new Texture("menu/navbuttons/Stage2Button.png"));
             stage2Button = new ImageButton(new SpriteDrawable(picture));
-            stage2Button.setPosition((width - xPadding)-stage2Button.getWidth(), yPadding);
+            stage2Button.setPosition((width - xPadding) - stage2Button.getWidth(), yPadding);
             stage2Button.addListener(new ClickListener() {
                 @Override
-                public void clicked (InputEvent event, float x, float y) {
+                public void clicked(InputEvent event, float x, float y) {
                     game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx"));
                 }
             });
@@ -105,7 +105,7 @@ public class StageSelectionScreen implements Screen {
             stage1Button.setPosition(xPadding, yPadding);
             stage1Button.addListener(new ClickListener() {
                 @Override
-                public void clicked (InputEvent event, float x, float y) {
+                public void clicked(InputEvent event, float x, float y) {
                     //Original map: RoborallyBoard_debugged.tmx
                     //Test map for conveyorbelts: conveyorBeltTestMap.tmx
                     game.setScreen(new GameScreen("maps/RoborallyBoard_debugged.tmx"));
@@ -116,36 +116,39 @@ public class StageSelectionScreen implements Screen {
             // Stage 2 button
             picture = new Sprite(new Texture("menu/navbuttons/Stage2Button.png"));
             stage2Button = new ImageButton(new SpriteDrawable(picture));
-            stage2Button.setPosition((width - xPadding)-stage2Button.getWidth(), yPadding);
+            stage2Button.setPosition((width - xPadding) - stage2Button.getWidth(), yPadding);
             stage2Button.addListener(new ClickListener() {
                 @Override
-                public void clicked (InputEvent event, float x, float y) {
+                public void clicked(InputEvent event, float x, float y) {
                     game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx"));
                 }
             });
             stage.addActor(stage2Button);
 
-        // testStage button
-        picture = new Sprite(new Texture("menu/navbuttons/TestStageButton.png"));
-        stageTestButton = new ImageButton(new SpriteDrawable(picture));
-        stageTestButton.setPosition(width / 2 - stageTestButton.getWidth() / 2, yPadding);
-        stageTestButton.addListener(new ClickListener() {
-            @Override
-            public void clicked (InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen("maps/TestMap.tmx"));
-                // Test map 1 for robot pushing: robot_pushing_test_map_1.tmx
-                //game.setScreen(new GameScreen("robot_pushing_test_map_1.tmx"));
-                // Test map 2 for robot pushing: robot_pushing_test_map_2.tmx
-                //game.setScreen(new GameScreen("robot_pushing_test_map_2.tmx"));
-                // Test map 3 for robot pushing: robot_pushing_test_map_3.tmx
-                //game.setScreen(new GameScreen("robot_pushing_test_map_3.tmx"));
-                // Test map for conveyorbelts: conveyorBeltTestMap.tmx
-                //game.setScreen(new GameScreen("conveyorBeltTestMap.tmx"));
-            }
-        });
-        stage.addActor(stageTestButton);
+            // testStage button
+            picture = new Sprite(new Texture("menu/navbuttons/TestStageButton.png"));
+            stageTestButton = new ImageButton(new SpriteDrawable(picture));
+            stageTestButton.setPosition(width / 2 - stageTestButton.getWidth() / 2, yPadding);
+            stageTestButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new GameScreen("maps/TestMap.tmx"));
+                    // Test map 1 for robot pushing: robot_pushing_test_map_1.tmx
+                    //game.setScreen(new GameScreen("robot_pushing_test_map_1.tmx"));
+                    // Test map 2 for robot pushing: robot_pushing_test_map_2.tmx
+                    //game.setScreen(new GameScreen("robot_pushing_test_map_2.tmx"));
+                    // Test map 3 for robot pushing: robot_pushing_test_map_3.tmx
+                    //game.setScreen(new GameScreen("robot_pushing_test_map_3.tmx"));
+                    // Test map for conveyorbelts: conveyorBeltTestMap.tmx
+                    //game.setScreen(new GameScreen("conveyorBeltTestMap.tmx"));
+                }
+            });
+            stage.addActor(stageTestButton);
 
 
+
+
+        }
         // Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         backButton = new ImageButton(new SpriteDrawable(picture));
@@ -159,7 +162,6 @@ public class StageSelectionScreen implements Screen {
         stage.addActor(backButton);
 
         Gdx.input.setInputProcessor(stage);
-
     }
 
     @Override
@@ -193,5 +195,4 @@ public class StageSelectionScreen implements Screen {
     public void dispose() {
         stage.dispose();
     }
-
 }

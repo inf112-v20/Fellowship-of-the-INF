@@ -43,7 +43,7 @@ public class CardButton {
         selectedCards = player.getSelectedCards();
         this.playerHand = player.getPlayerHandDeck();
         selectedCardPosY = height / 20;
-        gap = new Texture((Gdx.files.internal("cardtemplate.png"))).getWidth() * 1.3f;
+        gap = new Texture((Gdx.files.internal("ui/cards/cardtemplate.png"))).getWidth() * 1.3f;
         createSelectedCardsImages();
         ArrayList<Stack> listOfCardButtons = createCardButtons(playerHand);
         cardButtons = new ArrayList<>();
