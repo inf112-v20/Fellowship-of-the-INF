@@ -187,19 +187,6 @@ public class GameScreen implements Screen {
 
     }
 
-
-    public void erasePlayers() {
-        for (Player player : game.getListOfPlayers()) {
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
-        }
-    }
-
-    public void repaintPlayers() {
-        for (Player player : game.getListOfPlayers()) {
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
-        }
-    }
-
     /**
      * @param secondsOfDelay number of seconds delay should last
      */

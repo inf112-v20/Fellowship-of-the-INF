@@ -378,10 +378,6 @@ public class Player {
                 '}';
     }
 
-    public Position getSpawnPoint() {
-        return spawnPoint;
-    }
-
     public void setSpawnPoint(int x, int y) {
         spawnPoint = new Position(x, y);
     }
