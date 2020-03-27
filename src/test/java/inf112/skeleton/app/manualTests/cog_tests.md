@@ -1,12 +1,12 @@
 # Manual tests for cogs
-####Setup 
+#### Setup 
 * Go to Phase.java and uncomment line 77 to make robot 1 stand still during the phase to making testing easier
 * Run Main.
 * Press the Play button in the menu screen.
 * Press the Stage 1 button in the stage selection screen.
 
 
-###Tests
+### Tests
 #### Test for rotating robot on a clockwise turning cog
 * Complete setup.
 * Move robot 1 onto a clockwise turning cog (green arrows).
