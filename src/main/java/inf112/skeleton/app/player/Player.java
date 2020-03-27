@@ -117,7 +117,6 @@ public class Player {
         if (isDeadMove(newX, newY)) {
             currentBoardPiece = pieceGrid[spawnPoint.getX()][spawnPoint.getY()].get(0);
             latestMoveDirection = newDirection;
-            this.conveyorBeltMove = false;
             loseLife();
         }
 
@@ -134,7 +133,7 @@ public class Player {
         }
 
         //If the player still have lives left, respawn it, but set it in shutdown mode
-        else if (lives >= 0 && isDead()) {
+        else if  (lives >= 0 && isDead()) {
             respawnPlayer();
             setPowerDownMode(true);
         }
@@ -378,6 +377,7 @@ public class Player {
      */
     public void pickFirstFiveCards() {
         for (int i = 0; i < 5 - lockedCards.size() ; i++) {
+            if(playerHandDeck.size() == 0){continue;}
             selectedCards[i] = playerHandDeck.get(i);
         }
     }

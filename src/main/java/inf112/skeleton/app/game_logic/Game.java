@@ -113,7 +113,6 @@ public class Game {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
             if(player1.isOnConveyorBelt()) {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
-                player1.setConveyorBeltMove(true);
             }
         }
         rotateMove.updateMove(player1); //complete rotateMove object
@@ -191,9 +190,9 @@ public class Game {
      * @return the player at that position
      */
     public Player getPlayerAt(Position pos){
-        for (int i = 0; i < playerList.length ; i++) {
-            if(playerList[i].getPos().equals(pos)){
-                return playerList[i];
+        for (Player player : playerList) {
+            if(player.getPos().equals(pos)){
+                return player;
             }
         }
         return null; //no player in position
