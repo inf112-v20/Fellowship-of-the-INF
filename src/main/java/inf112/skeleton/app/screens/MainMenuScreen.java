@@ -53,7 +53,7 @@ public class MainMenuScreen implements Screen {
         // Play button
         yPadding = 100;
         int xPadding = 100;
-        picture = new Sprite(new Texture("assets/PlayButton.png"));
+        picture = new Sprite(new Texture("menu/navbuttons/PlayButton.png"));
         playButton = new ImageButton(new SpriteDrawable(picture));
         playButton.setPosition(xPadding, yPadding);
         playButton.addListener(new ClickListener() {
@@ -65,7 +65,7 @@ public class MainMenuScreen implements Screen {
         stage.addActor(playButton);
 
         // Exit button
-        picture = new Sprite(new Texture("assets/ExitButton.png"));
+        picture = new Sprite(new Texture("menu/navbuttons/ExitButton.png"));
         exitButton = new ImageButton(new SpriteDrawable(picture));
         exitButton.setPosition((width-xPadding)-exitButton.getWidth(), yPadding);
         exitButton.addListener(new ClickListener() {
