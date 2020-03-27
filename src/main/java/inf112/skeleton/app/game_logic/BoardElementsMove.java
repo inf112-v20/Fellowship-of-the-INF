@@ -103,7 +103,7 @@ public class BoardElementsMove {
         Position newPos = player.getPos().getPositionIn(((ConveyorBeltPiece) boardPiece).getDir());
         if(!logicGrid.isInBounds(newPos)){return false;}
         if(!logicGrid.positionIsFree(newPos, 12)){ return true; }
-        for (int i = 0; i <4 ; i++) {
+        for (int i = 0; i < 4 ; i++) {
             Position orthoPos;
             if (i == 0) { orthoPos = newPos.getPositionIn(NORTH); }
             else if (i == 1) { orthoPos = newPos.getPositionIn(EAST); }

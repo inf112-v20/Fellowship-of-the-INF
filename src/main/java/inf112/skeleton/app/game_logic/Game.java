@@ -14,13 +14,13 @@ import java.util.Queue;
 
 public class Game {
     private LogicGrid logicGrid;
+    private final int NUMBER_OF_PLAYERS = 4;
     private GameDeck gameDeck;
     private Player player1;
-    private Player[] playerList;
+    private Player[] playerList = new Player[NUMBER_OF_PLAYERS];;
     private int roundNumber = 0;
     private Round round;
-    private final int NUMBER_OF_PLAYERS = 4;
-    private Queue<MovesToExecuteSimultaneously> moves;
+    private Queue<MovesToExecuteSimultaneously> moves = new LinkedList<>();
     private GameScreen gameScreen;
 
 
@@ -29,11 +29,9 @@ public class Game {
         this.gameScreen = gameScreen;
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player1 = new Player(1, this);
-        this.playerList = new Player[NUMBER_OF_PLAYERS];
         playerList[0] = player1;
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
-        this.moves = new LinkedList<>();
     }
 
     public void initiateComputerPlayers() {
@@ -67,10 +65,6 @@ public class Game {
     }
 
     public GameDeck getGameDeck() { return gameDeck; }
-
-    public void setGameDeck(GameDeck gameDeck) {
-        this.gameDeck = gameDeck;
-    }
 
     public Player getPlayer() {
         return player1;
@@ -153,6 +147,7 @@ public class Game {
         return playerList;
     }
 
+
     public void executeRound() {
         // If there are moves to execute, then don't start new round
         this.round = new Round(this);
@@ -181,7 +176,6 @@ public class Game {
     public void executeMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //backend execution
         this.moves.add(moves);//add to list of things to do in frontend
-        // gameScreen.executeMove(move); //frontend execution
     }
 
     /**

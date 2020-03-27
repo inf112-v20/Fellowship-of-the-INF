@@ -55,14 +55,12 @@ public class Player {
         Move move = new Move(this);
         Position oldPosition = playerPiece.getPos();
         Position newPosition = oldPosition.getPositionIn(newDirection);
-
         //check if the move kills the player, if so lose a life
         if (isLegalMoveInDirection(oldPosition, newDirection) && isDeadMove(newPosition)) {
             currentBoardPiece = pieceGrid[spawnPoint.getX()][spawnPoint.getY()].get(0);
             latestMoveDirection = newDirection;
             loseLife();
         }
-
         //if move is legal and player isn't dead, update logic grid
         if (isLegalMoveInDirection(oldPosition, newDirection) && !isDead()) {
             //if the move results in pushing robots, add the resulting moves to the moves list

@@ -14,7 +14,6 @@ public class PlayerPiece extends DirectionedPiece {
     private TiledMapTileLayer.Cell currentCell; //Cell for the current state of the player
     private TiledMapTileLayer.Cell playerCell; //cell for normal player
     private TiledMapTileLayer.Cell deadPlayerCell; //cell for dead player looks
-    private TiledMapTileLayer.Cell wonPlayerCell; //cell for player who has won looks
 
     public PlayerPiece(Position pos, int id, Direction dir, Player player) {
         super(pos, id, dir);
@@ -27,7 +26,6 @@ public class PlayerPiece extends DirectionedPiece {
     public void initiatePlayerPieceCells() {
         playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 0)));
         deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 1)));
-        wonPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 2)));
         currentCell = playerCell; //appearance starts as normal player
     }
 
