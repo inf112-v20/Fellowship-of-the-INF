@@ -1,6 +1,6 @@
 # Manual tests for cogs
 #### Setup 
-* Go to Phase.java and uncomment line 77 to make robot 1 stand still during the phase to making testing easier
+* Go to Phase.java and uncomment line 70 to make robot 1 stand still during the phase to making testing easier
 * Run Main.
 * Press the Play button in the menu screen.
 * Press the Stage 1 button in the stage selection screen.

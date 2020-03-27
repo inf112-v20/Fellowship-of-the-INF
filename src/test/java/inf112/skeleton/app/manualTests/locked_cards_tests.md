@@ -1,6 +1,6 @@
 # Manual tests for congs
 #### Setup 
-* Comment out line 77 in Phase.java if it isn't already.  
+* Comment out line 70 in Phase.java if it isn't already.  
 * Run Main.
 * Press the Play button in the menu screen.
 * Press the Stage 1 button in the stage selection screen.
