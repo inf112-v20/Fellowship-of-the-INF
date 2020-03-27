@@ -109,7 +109,12 @@ __Work for next time:__
 __Attendence__: Everyone
 
 __Summary__: 
-
+ * Several tests have been made
+ * Johanna explained how collision works
+ * Lena had fixed respawns once again.
+ * Decided to clean up the master branch, and keep TODOs on develop for the time being
 
 __Work for next time:__
-
+ * Finish making tests for the assignment
+ * Clean up MarkDown
+ * Ready to hand in assignment
