@@ -5,7 +5,6 @@ import inf112.skeleton.app.game_logic.Game;
 import inf112.skeleton.app.game_logic.Move;
 import inf112.skeleton.app.game_logic.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
@@ -18,114 +17,58 @@ import java.util.Arrays;
  * Class representing a player.
  */
 public class Player {
-
-    private boolean isDead;
-    private boolean powerDownMode;
     private LogicGrid logicGrid;
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
     private ArrayList<ProgramCard> playerHandDeck;
-    private ProgramCard[] selectedCards;
-    private ArrayList<ProgramCard> lockedCards;
-
+    private ProgramCard[] selectedCards = new ProgramCard[5];
+    private ArrayList<ProgramCard> lockedCards = new ArrayList<>();
     private Position spawnPoint;
-    private int damage;
-    private int playerNumber;
-    private int lives = 3;
-    private int checkpointsVisited;
     private BoardPiece currentBoardPiece;
     private Direction latestMoveDirection;
     private boolean conveyorBeltMove = false;
     private boolean hasBeenMovedThisPhase = false;
+    private boolean isDead = false;
+    private boolean powerDownMode = false;
+    private int damage = 0;
+    private int playerNumber;
+    private int lives = 3;
+    private int checkpointsVisited = 0;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
         this.logicGrid = game.getLogicGrid();
         this.pieceGrid = logicGrid.getGrid();
-        this.damage = 0;
-        this.checkpointsVisited = 0;
-        GameDeck gameDeck = game.getGameDeck();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
-        this.selectedCards = new ProgramCard[5];
-        this.lockedCards = new ArrayList<>();
-
-
         //Find the spawn point of the player, and set spawnPoint position to the first spawn
         findFirstSpawnPoint();
-
         this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, this);
-        this.isDead = false;
-        this.powerDownMode = false;
-    }
-
-
-    /**
-     * Getter for position
-     *
-     * @return position of player
-     */
-    public Position getPos() {
-        return playerPiece.getPos();
-    }
-
-    public void setPos(int x, int y) {
-        playerPiece.setPos(new Position(x, y));
-    }
-
-    private void setPos(Position positionIn) {
-        playerPiece.setPos(positionIn);
-    }
-
-    /**
-     * Getter for player
-     *
-     * @return player
-     */
-    public TiledMapTileLayer.Cell getPlayerCell() {
-        return playerPiece.getCurrentCell();
     }
 
     /**
      * Tries to move the player in a new direction
      *
      * @param newDirection new direction to move the player
+     * @param moves        list that moves created can be added to
      */
     public void tryToGo(Direction newDirection, MovesToExecuteSimultaneously moves) {
         Move move = new Move(this);
-        Position pos = playerPiece.getPos();
-        int newX = playerPiece.getPos().getX();
-        int newY = playerPiece.getPos().getY();
+        Position oldPosition = playerPiece.getPos();
+        Position newPosition = oldPosition.getPositionIn(newDirection);
 
-        if (isLegalMove(pos.getX(), pos.getY(), newDirection)) {
-            switch (newDirection) {
-                case NORTH:
-                    newY += 1;
-                    break;
-                case SOUTH:
-                    newY -= 1;
-                    break;
-                case WEST:
-                   newX -= 1;
-                    break;
-                case EAST:
-                    newX += 1;
-                    break;
-            }
-        }
         //check if the move kills the player, if so lose a life
-        if (isDeadMove(newX, newY)) {
+        if (isLegalMoveInDirection(oldPosition, newDirection) && isDeadMove(newPosition)) {
             currentBoardPiece = pieceGrid[spawnPoint.getX()][spawnPoint.getY()].get(0);
             latestMoveDirection = newDirection;
-            this.conveyorBeltMove = false;
             loseLife();
         }
 
-        //if position has changed and player isn't dead, update logic grid
-        if ((newY != pos.getY() || newX != pos.getX()) && !isDead()) {
+        //if move is legal and player isn't dead, update logic grid
+        if (isLegalMoveInDirection(oldPosition, newDirection) && !isDead()) {
             //if the move results in pushing robots, add the resulting moves to the moves list
             addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
-            setCurrentBoardPiece(newX, newY); //update currentBoardPiece
-            setPos(newX, newY);
+            setCurrentBoardPiece(newPosition.getX(), newPosition.getY()); //update currentBoardPiece
+            setPos(newPosition);
             move.updateMove(this);
             moves.add(move);
             latestMoveDirection = newDirection;
@@ -138,9 +81,8 @@ public class Player {
             setPowerDownMode(true);
         }
 
-        //TODO Add what happens when a player runs out of lives? @Johanna
         //Handle what happens if the player runs out of lives
-        else {
+        else if (lives < 0 && isDead()) {
             respawnPlayer();
             setPowerDownMode(true);
             isDead = true;
@@ -178,6 +120,11 @@ public class Player {
         return null; //return null if target position is not within grid
     }
 
+    /**
+     * Updates currentBoardPiece based on what type of tile the player is standing on.
+     *
+     * @param newX, newY new position for Player
+     */
     public void setCurrentBoardPiece(int newX, int newY) {
         BoardPiece currPiece;
         for (int i = 0; i < pieceGrid[newX][newY].size(); i++) {
@@ -201,81 +148,42 @@ public class Player {
     }
 
     /**
-     * Method for checking if a move-1-forward move is applicable.
-     *
-     * @param x-coordinate current x coordinate
-     * @param y-coordinate current y coordinate
-     * @param dir          current direction
-     * @return whether moving one tile in a given direction is legal
-     */
-    private boolean isLegalMove(int x, int y, Direction dir) {
-        if (isDead()) {
-            return false;
-        }
-        switch (dir) {
-            case EAST:
-                if (isLegalMoveInDirection(x + 1, y, new Position(x, y), dir)) {
-                    return true;
-                }
-                break;
-            case WEST:
-                if (isLegalMoveInDirection(x - 1, y, new Position(x, y), dir)) {
-                    return true;
-                }
-                break;
-            case NORTH:
-                if (isLegalMoveInDirection(x, y + 1, new Position(x, y), dir)) {
-                    return true;
-                }
-                break;
-            case SOUTH:
-                if (isLegalMoveInDirection(x, y - 1, new Position(x, y), dir)) {
-                    return true;
-                }
-                break;
-        }
-        return false;
-    }
-
-    /**
-     * Checks if a move in a certian direction is legal.
+     * Checks if a move in a certain direction is legal.
      * The robot must be allowed to exit it's current cell.
      * The robot must be allowed to enter the destination cell.
      * There must not be a robot that cannot be pushed in the way.
      *
-     * @param newX            x-coordinate of new position
-     * @param newY            y-coordinate of new position
      * @param currentPosition position you are moving from
      * @param dir             direction we are checking if a move is legal in
      * @return true if move is legal
      */
-    public boolean isLegalMoveInDirection(int newX, int newY, Position currentPosition, Direction dir) {
-        Position positionInFront = new Position(newX, newY);
+    public boolean isLegalMoveInDirection(Position currentPosition, Direction dir) {
+        Position positionInFront = currentPosition.getPositionIn(dir);
         if (logicGrid.canLeavePosition(currentPosition, dir) && logicGrid.canEnterNewPosition(positionInFront, dir)) {
             //if the position in front is in bounds, check if there is a player there that can be pushed
             if (logicGrid.isInBounds(positionInFront)) {
                 //If there is a player in the way of where you want to move, check that you can push that player
                 PlayerPiece possiblePlayer = logicGrid.getPieceType(positionInFront, PlayerPiece.class);
                 if (possiblePlayer != null) {
-                    return isLegalMove(positionInFront.getX(), positionInFront.getY(), dir);
+                    return isLegalMoveInDirection(positionInFront, dir);
                 } else return true;
             } else return true;
         }
         return false;
     }
 
-
     /**
      * Method for checking if a move results in death
      *
-     * @param x x-position after move
-     * @param y y-position after move
+     * @param position to check
      * @return whether the move results in death
      */
-    private boolean isDeadMove(int x, int y) {
+    private boolean isDeadMove(Position position) {
+        int x = position.getX();
+        int y = position.getY();
         BoardPiece currPiece;
         //if move is within bounds, check if move is to AbyssPiece
-        if (logicGrid.isInBounds(new Position(x, y))) {
+        if (logicGrid.isInBounds(position)) {
             for (int i = 0; i < pieceGrid[x][y].size(); i++) {
                 currPiece = pieceGrid[x][y].get(i);
                 if (currPiece instanceof AbyssPiece) {
@@ -322,7 +230,6 @@ public class Player {
                 turnPlayerRight();
                 break;
             default:
-                //TODO error handling as default maybe?
                 break;
         }
         rotateMove.updateMove(this); //complete rotateMove object
@@ -342,15 +249,15 @@ public class Player {
     }
 
     public void turnPlayerAround() {
-        playerPiece.turnAround();
+        if (!isDead()) playerPiece.turnAround();
     }
 
     public void turnPlayerLeft() {
-        playerPiece.turnLeft();
+        if (!isDead()) playerPiece.turnLeft();
     }
 
     public void turnPlayerRight() {
-        playerPiece.turnRight();
+        if (!isDead()) playerPiece.turnRight();
     }
 
     public ArrayList<ProgramCard> getPlayerHandDeck() {
@@ -370,10 +277,39 @@ public class Player {
     }
 
     /**
+     * Getter for position
+     *
+     * @return position of player
+     */
+    public Position getPos() {
+        return playerPiece.getPos();
+    }
+
+    public void setPos(int x, int y) {
+        playerPiece.setPos(new Position(x, y));
+    }
+
+    private void setPos(Position positionIn) {
+        playerPiece.setPos(positionIn);
+    }
+
+    /**
+     * Getter for player
+     *
+     * @return player
+     */
+    public TiledMapTileLayer.Cell getPlayerCell() {
+        return playerPiece.getCurrentCell();
+    }
+
+    /**
      * Picks the first cards in the hand so that selectedcards has 5 cards.
      */
     public void pickFirstFiveCards() {
-        for (int i = 0; i < 5 - lockedCards.size() ; i++) {
+        for (int i = 0; i < 5 - lockedCards.size(); i++) {
+            if (playerHandDeck.size() == 0) {
+                continue;
+            }
             selectedCards[i] = playerHandDeck.get(i);
         }
     }
@@ -383,10 +319,6 @@ public class Player {
         return "Player{" +
                 "playerNumber=" + playerNumber +
                 '}';
-    }
-
-    public Position getSpawnPoint() {
-        return spawnPoint;
     }
 
     public void setSpawnPoint(int x, int y) {
@@ -404,7 +336,7 @@ public class Player {
         setPos(spawnPoint.getX(), spawnPoint.getY());
     }
 
-    public void setPowerDownMode(boolean a){
+    public void setPowerDownMode(boolean a) {
         powerDownMode = a;
     }
 
@@ -476,6 +408,9 @@ public class Player {
         spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
     }
 
+    /**
+     * Method for testing.
+     */
     public void gainLife() {
         lives++;
     }
@@ -488,6 +423,9 @@ public class Player {
         checkpointsVisited++;
     }
 
+    /**
+     * Method for testing.
+     */
     public void removeCheckpoint() {
         checkpointsVisited--;
     }
