@@ -1,6 +1,9 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.game_logic;
+
 
 import inf112.skeleton.app.player.Player;
+
+
 
 public class Round {
 
@@ -23,21 +26,18 @@ public class Round {
      * Computer players pick the first five cards they are given.
      */
     public void startRound(){
-        System.out.println("ROUND " + (roundNumber) + " START!");
         for (int i = 0; i < game.getListOfPlayers().length ; i++) {
             Player player = game.getListOfPlayers()[i];
             player.setPlayerHandDeck(game.getGameDeck().drawHand(player.getPlayerHandDeck(), player.getDamage()));
             player.removeSelectedCards();
             int numberOfLockedCards = player.getLockedCards().size();
             for (int j = 0; j < numberOfLockedCards; j++) {
-                player.getSelectedCards()[4-j] = (player.getLockedCards().get(j));
+                int number = 5 - numberOfLockedCards;
+                player.getSelectedCards()[number + j] = (player.getLockedCards().get(j));
             }
         }
         for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
             game.getListOfPlayers()[playerNumber - 1].pickFirstFiveCards();
-        }
-        for (int i = 0; i < 5 ; i++) {
-            System.out.println(game.getListOfPlayers()[1].getSelectedCards()[i].toString());
         }
     }
 
@@ -46,9 +46,21 @@ public class Round {
      */
     public void nextPhase(){
         if(phaseNr > 4){ return; }
-        System.out.println("PHASE " + (phaseNr+1) + " START!");
         phase.executePhase(phaseNr);
         phaseNr++;
+    }
+
+    /**
+     * When the round is done, check if there are any players in power down mode.
+     * If there are any, and they still have lives left, then take them out of power down mode.
+     */
+    public void finnishRound(){
+        for (int i=0; i<game.getListOfPlayers().length; i++) {
+            Player player = game.getListOfPlayers()[i];
+            if (player.isPowerDownMode() && player.getLives()>=0) {
+                player.setPowerDownMode(false);
+            }
+        }
     }
 
     public Phase getPhase(){return phase;}

@@ -15,13 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import inf112.skeleton.app.Game;
-import inf112.skeleton.app.Phase;
+import inf112.skeleton.app.game_logic.Game;
+import inf112.skeleton.app.game_logic.Phase;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.player.Player;
 
 
 import java.util.ArrayList;
+
 
 public class UIScreen{
     private ScoreBoardScreen scoreBoardScreen;
@@ -62,11 +63,11 @@ public class UIScreen{
      */
     public void handleInput(){
          if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-             if(!cardButton.hasSelectedFiveCards()){return;}
              if(game.getRound().getPhaseNr() > 4){
                  this.newRound();
              }
              else {
+                 if(game.getRound().getPhaseNr() == 0){executeLockInButton(); return;}
                  game.getRound().nextPhase();
                  updateGameLog();
              }
@@ -81,6 +82,11 @@ public class UIScreen{
     public void newRound(){
         game.executeRound();
         lockInButton.setTouchable(Touchable.disabled);
+        if(player.getLockedCards().size() == 5){
+            lockInButton.setTouchable(Touchable.enabled);
+            Color c = lockInButton.getColor();
+            lockInButton.setColor(c.r, c.g, c.b, 1);
+        }
         removeGameLog();
         cardButton = new CardButton(player, width, height, stage, lockInButton);
     }
@@ -90,7 +96,7 @@ public class UIScreen{
      * and creates a new gamelog for this phase.
      * The gamelog shows current round, current phase
      * the order of the cards for this phase and which player
-     * played that card.
+     * played which card.
      */
     public void updateGameLog() {
         removeGameLog();
@@ -108,7 +114,7 @@ public class UIScreen{
             float textPosX = cardPicture.getRegionWidth()*0.65f;
             float textPosY = cardPicture.getRegionHeight();
             gamelogActors.add(drawText(priorityText, 4, posX + textPosX, height*0.4f + textPosY, Color.GREEN));
-            TextureRegion playerPicture = player.getStandardPlayerCell().getTile().getTextureRegion();
+            TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
             posX = (width * 0.515f) + (i * gap);
             gamelogActors.add(createImage(playerPicture, 0.01f, posX, height*0.55f, 1));
             posX = (width * 0.53f) + (i * gap);
@@ -219,7 +225,6 @@ public class UIScreen{
         }
     }
 
-    //TODO Change powerDown from image to button
     /**
      * Creates the powerdown image
      */
@@ -290,7 +295,6 @@ public class UIScreen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 executeLockInButton();
-                updateGameLog();
             }
         });
     }
@@ -324,7 +328,7 @@ public class UIScreen{
      */
     public void executeLockInButton(){
         for (int i = 0; i < 5 ; i++) {
-            if(cardButton.getSelectedCards()[i] == null){System.out.println("Not enough cards");return;}
+            if(cardButton.getSelectedCards()[i] == null){System.out.println("Not enough cards"); return;}
         }
         for (int i = 0; i < 5 ; i++) {
             cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
@@ -337,9 +341,8 @@ public class UIScreen{
                 cardButton.getLeftOverCardButtons().get(i).remove();
             }
         }
-        player.setSelectedCards(cardButton.getSelectedCards());
-        game.getRound().nextPhase();
-        //updateGameLog();
+        player.setSelectedCards(cardButton.getSelectedCards());game.getRound().nextPhase();
+        updateGameLog();
     }
 
     public Stage getStage() {

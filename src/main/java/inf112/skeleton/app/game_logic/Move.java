@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.game_logic;
 
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;

@@ -27,7 +27,7 @@ public class StageSelectionScreen implements Screen {
     private ImageButton stage2Button;
     private ImageButton backButton;
 
-    public StageSelectionScreen (RoboRallyDemo game, int playerCount) {
+    public StageSelectionScreen(RoboRallyDemo game, int playerCount) {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
@@ -50,8 +50,8 @@ public class StageSelectionScreen implements Screen {
         int yPadding = 50;
         picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
         logo = new Image(new SpriteDrawable(picture));
-        logo.setSize(logo.getWidth()*1.5f, logo.getHeight()*2);
-        logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));
+        logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
+        logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
         int xPadding = 100;
@@ -125,33 +125,34 @@ public class StageSelectionScreen implements Screen {
             });
             stage.addActor(stage2Button);
 
-        }
-
-
-
-
-
         // testStage button
         picture = new Sprite(new Texture("menu/navbuttons/TestStageButton.png"));
         stageTestButton = new ImageButton(new SpriteDrawable(picture));
-        stageTestButton.setPosition(width/2 - stageTestButton.getWidth()/2, yPadding);
+        stageTestButton.setPosition(width / 2 - stageTestButton.getWidth() / 2, yPadding);
         stageTestButton.addListener(new ClickListener() {
             @Override
             public void clicked (InputEvent event, float x, float y) {
                 game.setScreen(new GameScreen("maps/TestMap.tmx"));
+                // Test map 1 for robot pushing: robot_pushing_test_map_1.tmx
+                //game.setScreen(new GameScreen("robot_pushing_test_map_1.tmx"));
+                // Test map 2 for robot pushing: robot_pushing_test_map_2.tmx
+                //game.setScreen(new GameScreen("robot_pushing_test_map_2.tmx"));
+                // Test map 3 for robot pushing: robot_pushing_test_map_3.tmx
+                //game.setScreen(new GameScreen("robot_pushing_test_map_3.tmx"));
+                // Test map for conveyorbelts: conveyorBeltTestMap.tmx
+                //game.setScreen(new GameScreen("conveyorBeltTestMap.tmx"));
             }
         });
         stage.addActor(stageTestButton);
 
 
-
         // Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         backButton = new ImageButton(new SpriteDrawable(picture));
-        backButton.setPosition((width-xPadding)- backButton.getWidth(), 100);
+        backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
         backButton.addListener(new ClickListener() {
             @Override
-            public void clicked (InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new MainMenuScreen(game));
             }
         });

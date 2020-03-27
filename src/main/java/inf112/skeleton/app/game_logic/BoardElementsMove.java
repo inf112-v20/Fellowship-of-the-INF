@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.game_logic;
 
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
@@ -13,34 +13,43 @@ public class BoardElementsMove {
 
     /**
      * Rotates a player standing on a cog 90* in the direction of the cog.
-     * @param boardPiece The BoardPiece that a player is currently standing on(should always be a CogPiece!).
      * @param player The player that is currently standing on the BoardPiece.
+     * @param game The current game
      */
-    public static void rotateCog(BoardPiece boardPiece, Player player){
+    public static void rotateCog(Player player, Game game){
+        BoardPiece boardPiece = player.getCurrentBoardPiece();
         if(((CogPiece) boardPiece).isRotateClockwise()){
             player.turnPlayerRight();
         }
         else{
             player.turnPlayerLeft();
         }
-    }
+}
 
     /**
      * Moves a player standing on an conveyorBelt one tile in the direction of the conveyorBelt.
+     * Creates a recursive call if there is a robot standing directly in front of the first robot
+     * that can be moved away (i.e. that robot is also standing on conveyorbelt facing away from the first robot).
      * Will also rotate the player if the conveyorBelt is a turn and the last movement of the player was by a conveyorbelt.
-     * Will not move a player if there is another player standing in the way.
-     * @param boardPiece The BoardPiece that a player is currently standing on(should always be a ConveyorBeltPiece!).
+     * Will not move a player if there is another player standing in the way that cant be moved away.
      * @param player The player that is currently standing on the BoardPiece.
-     * @param logicGrid the logicgrid of the game
+     * @param game the current game
+     * @param onlyExpressBelt true if only expressbelt are moving at this point in the phase
      */
-    public static void moveConveyorBelt(BoardPiece boardPiece, Player player,LogicGrid logicGrid){
+    public static void moveConveyorBelt(Player player, Game game, boolean onlyExpressBelt, MovesToExecuteSimultaneously moves){
+        if(player == null || player.getCurrentBoardPiece() == null){System.out.println("Error: couldn't move player on conveyorbelt"); return;}
+        BoardPiece boardPiece = player.getCurrentBoardPiece();
+        LogicGrid logicGrid = game.getLogicGrid();
         ConveyorBeltPiece conveyorBeltPiece = (ConveyorBeltPiece) logicGrid.getPieceType(player.getPos(), boardPiece.getClass());
         Direction conveyorBeltDirection = conveyorBeltPiece.getDir();
         Position newPos = player.getPos().getPositionIn(conveyorBeltDirection);
-        if(!logicGrid.positionIsFree(newPos, 12)){
-            return;
+        if(isPlayerInFront(player, game, onlyExpressBelt)) {
+            moveConveyorBelt(game.getPlayerAt(newPos), game, onlyExpressBelt, moves);
+            game.performMoves(moves);
         }
-        if((conveyorBeltPiece.isTurn() && player.isLatestMoveConveyorBelt()&& player.latestMoveDirection() != conveyorBeltDirection)) {
+        if(isPlayerGoingToCrash(player, game, onlyExpressBelt)){ return; }
+        if((conveyorBeltPiece.isTurn() && player.isLatestMoveConveyorBelt()
+                && player.latestMoveDirection() != conveyorBeltDirection)) {
             if(player.latestMoveDirection().getRightTurnDirection() == conveyorBeltDirection) {
                 player.turnPlayerRight();
             }
@@ -48,18 +57,22 @@ public class BoardElementsMove {
                 player.turnPlayerLeft();
             }
         }
-        player.tryToGo(conveyorBeltDirection);
+        player.tryToGo(conveyorBeltDirection, moves);
+        player.setConveyorBeltMove(true);
+        player.setHasBeenMovedThisPhase(true);
     }
 
     /**
      * Checks if there a player standing in front of the conveyorbelt
-     * @param boardPiece the conveyorbelt that is going to be moving the player
      * @param player the player that is going to get moved
-     * @param logicGrid the logicgrid of the game
+     * @param game the current game
+     * @param onlyExpressBelt true if only expressbelt are moving at this point in the phase
      * @return true if there is player in front (in the direction of the conveyorbelt), and that player is standing
      * on a conveyorbelt that is not facing towards the first conveyorbelt, false otherwise
      */
-    public static boolean isPlayerInFront(BoardPiece boardPiece, Player player, LogicGrid logicGrid, boolean onlyExpressBelt){
+    private static boolean isPlayerInFront(Player player, Game game, boolean onlyExpressBelt){
+        BoardPiece boardPiece = player.getCurrentBoardPiece();
+        LogicGrid logicGrid = game.getLogicGrid();
         Position newPos = player.getPos().getPositionIn(((ConveyorBeltPiece) boardPiece).getDir());
         if(!logicGrid.isInBounds(newPos)){return false;}
         //12 = playerindex, 4 = conveyorbeltindex, 5 = expressbeltindex
@@ -80,12 +93,14 @@ public class BoardElementsMove {
 
     /**
      * Checks if a player is going to crash into another player from the movement of the conveyorbelt
-     * @param boardPiece the conveyorbelt that the player is going to get moved by
      * @param player the player that is going to be moved
-     * @param logicGrid the logicgrid of the game
+     * @param game the current game
+     * @param onlyExpressBelt true if only expressbelt are moving at this point in the phase
      * @return true if player is going to end up on the same tile as another player, false otherwise
      */
-    public static boolean isPlayerGoingToCrash(BoardPiece boardPiece, Player player, LogicGrid logicGrid, Game game, boolean onlyExpressBelt){
+    private static boolean isPlayerGoingToCrash(Player player, Game game, boolean onlyExpressBelt){
+        BoardPiece boardPiece = player.getCurrentBoardPiece();
+        LogicGrid logicGrid = game.getLogicGrid();
         Position newPos = player.getPos().getPositionIn(((ConveyorBeltPiece) boardPiece).getDir());
         if(!logicGrid.isInBounds(newPos)){return false;}
         if(!logicGrid.positionIsFree(newPos, 12)){ return true; }
@@ -95,13 +110,10 @@ public class BoardElementsMove {
             else if (i == 1) { orthoPos = newPos.getPositionIn(EAST); }
             else if (i == 2) { orthoPos = newPos.getPositionIn(SOUTH); }
             else{ orthoPos = newPos.getPositionIn(WEST); }
-            if(!logicGrid.isInBounds(orthoPos)){continue;}
+            if(!logicGrid.isInBounds(orthoPos) || orthoPos.equals(player.getPos())){continue;}
             if (!logicGrid.positionIsFree(orthoPos, 12) &&
                     (!logicGrid.positionIsFree(orthoPos, 4)||!logicGrid.positionIsFree(orthoPos, 5))) {
                 if (!game.getPlayerAt(orthoPos).hasBeenMovedThisPhase()) {
-                    if (orthoPos.getX() == player.getPos().getX() && orthoPos.getY() == player.getPos().getY()) {
-                        continue;
-                    }
                     if(onlyExpressBelt && boardPiece instanceof ExpressBeltPiece && !logicGrid.positionIsFree(orthoPos, 4)){
                         return false;
                     }
@@ -110,9 +122,7 @@ public class BoardElementsMove {
                         piece = logicGrid.getPieceType(orthoPos, ExpressBeltPiece.class);
                     }
                     Position orthoPosDir = orthoPos.getPositionIn(piece.getDir());
-                    if (orthoPosDir.getX() == newPos.getX() && orthoPosDir.getY() == newPos.getY()) {
-                        return true;
-                    }
+                    if (orthoPosDir.equals(newPos)) { return true;}
                 }
             }
         }

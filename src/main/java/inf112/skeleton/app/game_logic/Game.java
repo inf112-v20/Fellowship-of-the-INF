@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.game_logic;
 
 
 import com.badlogic.gdx.Gdx;
@@ -107,7 +107,7 @@ public class Game {
             player1.removeCheckpoint();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
             if(player1.isOnConveyorBelt()) {
-                BoardElementsMove.moveConveyorBelt(player1.getCurrentBoardPiece(), player1, logicGrid);
+                BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
                 player1.setConveyorBeltMove(true);
             }
         }
@@ -144,54 +144,7 @@ public class Game {
         moves.clear();
     }
 
-    /* no longer used
-    public void executePlayerHand(ArrayList<ProgramCard> hand) {
-        for (ProgramCard programCard : hand) {
-            convertCardToPlayerMove(programCard);
-        }
-    }
 
-
-    /**
-     * Gives the player a command, based on the program card
-     *
-     * @param programCard to convert to player move
-     */
-    /*
-    public void convertCardToPlayerMove(ProgramCard programCard) {
-        switch (programCard.getCommand()) {
-            case MOVE1:
-                player1.tryToGo(player1.getPlayerPiece().getDir());
-                break;
-            case MOVE2:
-                player1.tryToGo(player1.getPlayerPiece().getDir());
-                player1.tryToGo(player1.getPlayerPiece().getDir());
-                break;
-            case MOVE3:
-                player1.tryToGo(player1.getPlayerPiece().getDir());
-                player1.tryToGo(player1.getPlayerPiece().getDir());
-                player1.tryToGo(player1.getPlayerPiece().getDir());
-                break;
-            case UTURN:
-                player1.turnPlayerAround();
-                break;
-            case BACKUP:
-                player1.turnPlayerAround();
-                player1.tryToGo(player1.getPlayerPiece().getDir());
-                player1.turnPlayerAround();
-                break;
-            case ROTATELEFT:
-                player1.turnPlayerLeft();
-                break;
-            case ROTATERIGHT:
-                player1.turnPlayerRight();
-                break;
-            default:
-                break;
-        }
-    }
-
-    */
     public Player[] getListOfPlayers() {
         return playerList;
     }
@@ -209,6 +162,7 @@ public class Game {
         round.setRoundNumber(roundNumber);
         //check all players have hand
         round.startRound();
+        round.finnishRound();
     }
 
     public Queue<MovesToExecuteSimultaneously> getMoves() {
@@ -233,7 +187,7 @@ public class Game {
      */
     public Player getPlayerAt(Position pos){
         for (int i = 0; i < playerList.length ; i++) {
-            if(playerList[i].getPos().getX() == pos.getX() && playerList[i].getPos().getY() == pos.getY()){
+            if(playerList[i].getPos().equals(pos)){
                 return playerList[i];
             }
         }

@@ -14,9 +14,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import inf112.skeleton.app.Move;
-import inf112.skeleton.app.Game;
-import inf112.skeleton.app.MovesToExecuteSimultaneously;
+import inf112.skeleton.app.game_logic.Move;
+import inf112.skeleton.app.game_logic.Game;
+import inf112.skeleton.app.game_logic.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
@@ -30,44 +30,34 @@ import java.util.concurrent.TimeUnit;
  * Game screen at the moment only shows a board with a playerLayer, and a player
  */
 public class GameScreen implements Screen {
-    private TiledMap map; //roborally board
-    private TiledMapTileSet tiles;
     private OrthogonalTiledMapRenderer mapRenderer;
     private OrthographicCamera camera;
     private Viewport gridPort;
-    private int MAP_WIDTH; //dimensions of board
-    private int MAP_HEIGHT;
-    private int TILE_WIDTH_DPI; //pixel width per cell
-    private int MAP_WIDTH_DPI; //total width of map in pixels
-    private int MAP_HEIGHT_DPI; //total height of map in pixels
     private TiledMapTileLayer playerLayer;
-    private TmxMapLoader mapLoader;
-    private MapProperties mapProperties;
     private Stage stage;
     private UIScreen uiScreen;
-    private Player player;
     private Game game;
     private boolean currentMoveIsExecuted;
     private ScoreBoardScreen scoreBoardScreen;
 
     public GameScreen(String mapName) {
-        mapLoader = new TmxMapLoader();
-        this.map = mapLoader.load(mapName);
-        mapProperties = map.getProperties();
-        MAP_WIDTH = mapProperties.get("width", Integer.class);
-        MAP_HEIGHT = mapProperties.get("height", Integer.class);
-        TILE_WIDTH_DPI = mapProperties.get("tilewidth", Integer.class);
-        MAP_WIDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI;
-        MAP_HEIGHT_DPI = MAP_HEIGHT * TILE_WIDTH_DPI;
+        TmxMapLoader mapLoader = new TmxMapLoader();
+        TiledMap map = mapLoader.load(mapName); //roborally board
+        MapProperties mapProperties = map.getProperties();
+        int MAP_WIDTH = mapProperties.get("width", Integer.class); //dimensions of board
+        int MAP_HEIGHT = mapProperties.get("height", Integer.class);
+        int TILE_WIDTH_DPI = mapProperties.get("tilewidth", Integer.class); //pixel width per cell
+        int MAP_WIDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI; //total width of map in pixels
+        int MAP_HEIGHT_DPI = MAP_HEIGHT * TILE_WIDTH_DPI; //total height of map in pixels
 
-        tiles = this.map.getTileSets().getTileSet("maps/tileset.png");
+        TiledMapTileSet tiles = map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_HEIGHT_DPI, camera);
         camera.translate(MAP_WIDTH_DPI, MAP_WIDTH_DPI / 2);
-        mapRenderer = new OrthogonalTiledMapRenderer(this.map);
+        mapRenderer = new OrthogonalTiledMapRenderer(map);
         // Layers, add more later
-        playerLayer = (TiledMapTileLayer) this.map.getLayers().get("Player");
-        LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, this.map);
+        playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
+        LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, map);
         game = new Game(logicGrid, this);
         initializePlayers();
         currentMoveIsExecuted = true;
@@ -84,7 +74,7 @@ public class GameScreen implements Screen {
             TiledMapTileLayer.Cell playerCell = playerToInitialize.getPlayerCell();
             playerLayer.setCell(playerToInitialize.getPos().getX(), playerToInitialize.getPos().getY(), playerCell);
         }
-        player = game.getPlayer();
+        //player = game.getPlayer();
     }
 
     @Override
@@ -198,23 +188,6 @@ public class GameScreen implements Screen {
 
     }
 
-    //TODO This is a logic and should maybe be a method in the Game class?
-
-    /**
-     * Executes the cards that have been chosen
-     *
-     */
-    /*
-    public void executeLockIn(ArrayList<ProgramCard> programCards) {
-        if (programCards != null) {
-            game.getPlayer().setSelectedCards(programCards); //set the selected cards of player
-            game.executeRound();
-            uiScreen.updateGameLog();
-        }
-    }
-
-     */
-
     public void erasePlayers() {
         for (Player player : game.getListOfPlayers()) {
             playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
@@ -250,6 +223,5 @@ public class GameScreen implements Screen {
         playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
         playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
         playerLayer.setCell(newPos.getX(), newPos.getY(), playerPieceToUpdate.getPlayerCell()); //repaint at new position
-        System.out.println("Frontend executing: " + move);
     }
 }
