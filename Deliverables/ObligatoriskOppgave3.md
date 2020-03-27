@@ -13,10 +13,12 @@ In the first iteration we decided to use XP, with an emphasis on good communicat
 * **Pair programming** - *We will use pair programming to improve code quality and to build the skills of team members.* We did some pair programming at the beginning of this iteration, but after the university closed this stopped. As we saw great benifits from pair programming we hope to find a solution for how to do this remotely in the next iteration.
 * **Communication is key** - We have from the beginnig emphasised the importance of good communication, and this has of course been affected by the closing of the university. See further comments in the "Communicaton" section.
 
+### Problems we've had
+* With the closing of the university buildings, moving online was at times challenging. Comunication quality has gone down some, as people struggle with bad internet connection, and the general unrest of not having a spicific time to meet up on, and a set place to meet. 
+* We've had to refactor our code quite a bit, as bugs have been discovered as the code has grown larger. 
+* Merge conflicts have also been a problem for some members of our group. This has been partially solved by pulling and pushing to the develop branch more frequently, rather than waiting untill a meeting to do this. 
+
 ### Points of improvement
-HERE WE ARE SUPPOSED TO CHOOSE THREE POINTS OF IMPROVEMENT MENTIONED IN THE RETROSPECTIVE. THESE NEED TO BE AGREED UPON IN THE MEETING ON THURSDAY.
-* Start doing pair programming again, remote of course
-* Get better at using the project board
 * Actually reflect upon the previous iteration before planning the next one.
 * Plan meetings better, so that everyone is available at the agreed upon time.
 * Testing should be done either before or immediately after implementation, not toward the end of an iteration.
@@ -26,8 +28,10 @@ Since we no longer have physical meetings the quality of the communication has d
 
 
 ### Meeting logs
-Meeting logs can be found in a seperate MD file called MeetingLogsIteration3.
+[Meeting logs can be found in a seperate MD file called MeetingLogsIteration3.](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/MeetingLogsIteration3.md)
 
+### Project board screenshot
+![alt text](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/projectBoardScreenshot.png "Screen shot")
 
 ## Part 2: Requirements
 ### Requirements for Third Iteration
