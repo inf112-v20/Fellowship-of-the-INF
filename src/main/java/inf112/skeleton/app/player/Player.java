@@ -140,7 +140,7 @@ public class Player {
         }
 
         //Handle what happens if the player runs out of lives
-        else {
+        else if (lives < 0 && isDead()) {
             respawnPlayer();
             setPowerDownMode(true);
             isDead = true;
