@@ -59,6 +59,7 @@ __Work for next time:__
 __Attendence__: Everyone
 
 __Summary__: 
+* Due to the Corona virus, will all meeting from now on happen over discord.
 * Reviewed flag interaction.
 * Martin showed us how Codacy works.
 * Lena drew our attention to some serious bugs in the LogicGrid class.
@@ -109,7 +110,12 @@ __Work for next time:__
 __Attendence__: Everyone
 
 __Summary__: 
-
+ * Several tests have been made
+ * Johanna explained how collision works
+ * Lena had fixed respawns once again.
+ * Decided to clean up the master branch, and keep TODOs on develop for the time being
 
 __Work for next time:__
-
+ * Finish making tests for the assignment
+ * Clean up MarkDown
+ * Ready to hand in assignment
