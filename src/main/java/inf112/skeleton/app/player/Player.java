@@ -363,7 +363,8 @@ public class Player {
         Move respawnMove = new Move(this);
         isDead = false;
         playerPiece.showAlivePlayer();
-        setPos(spawnPoint.getX(), spawnPoint.getY());
+        Position validSpawnPointPosition = logicGrid.getValidSpawnPointPosition(spawnPoint);
+        setPos(validSpawnPointPosition.getX(), validSpawnPointPosition.getY());
         respawnMove.updateMove();
         moves.add(respawnMove);
     }

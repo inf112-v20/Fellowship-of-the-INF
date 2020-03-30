@@ -213,6 +213,7 @@ public class LogicGrid {
 
     /**
      * Checks if the position is available in the logic grid
+     * Layers index objects are initialized at the beginning of this class
      *
      * @param position   position to check if it is free
      * @param layerIndex layer we are checking position in
@@ -353,5 +354,21 @@ public class LogicGrid {
                 }
             }
         }
+    }
+
+    /**
+     * Finds a valid spawn point
+     * @param spawnPoint check if it is valid
+     * @return valid spawn point
+     */
+    public Position getValidSpawnPointPosition(Position spawnPoint) {
+        //if spawnPoint is valid, return spawnPoint
+        if (positionIsFree(spawnPoint, playerLayerIndex)) return spawnPoint;
+        //if spawnPoint is not valid, check the neighbouring positions.
+        for (Direction dir : Direction.values()) {
+            if (positionIsFree(spawnPoint.getPositionIn(dir), playerLayerIndex)) return spawnPoint.getPositionIn(dir);
+        }
+        System.out.println("Valid spawn point not found.");
+        return spawnPoint;
     }
 }
