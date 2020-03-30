@@ -193,7 +193,6 @@ public class Game {
     public void executeMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //backend execution
         this.moves.add(moves);//add to list of things to do in frontend
-        // gameScreen.executeMove(move); //frontend execution
     }
 
     /**

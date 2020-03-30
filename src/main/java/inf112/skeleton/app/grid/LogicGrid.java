@@ -4,6 +4,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.grid_objects.*;
+import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.player.TextureMaker;
 
 import java.util.ArrayList;
@@ -358,17 +359,55 @@ public class LogicGrid {
 
     /**
      * Finds a valid spawn point
+     *
      * @param spawnPoint check if it is valid
      * @return valid spawn point
      */
-    public Position getValidSpawnPointPosition(Position spawnPoint) {
+    public Position getValidSpawnPointPosition(Player player, Position spawnPoint) {
         //if spawnPoint is valid, return spawnPoint
-        if (positionIsFree(spawnPoint, playerLayerIndex)) return spawnPoint;
+        if (positionIsFree(spawnPoint, playerLayerIndex) && spawnIsSafe(spawnPoint)) return spawnPoint;
         //if spawnPoint is not valid, check the neighbouring positions.
         for (Direction dir : Direction.values()) {
-            if (positionIsFree(spawnPoint.getPositionIn(dir), playerLayerIndex)) return spawnPoint.getPositionIn(dir);
+            if (positionIsFree(spawnPoint.getPositionIn(dir), playerLayerIndex)
+                    && spawnIsSafe(spawnPoint)) return spawnPoint.getPositionIn(dir);
         }
-        System.out.println("Valid spawn point not found.");
+        for (Direction dir : Direction.values()) {
+            Position checkedPosition = spawnPoint.getPositionIn(dir);
+            for (Direction dir2 : Direction.values()) {
+                if (positionIsFree(checkedPosition.getPositionIn(dir), playerLayerIndex)
+                        && spawnIsSafe(spawnPoint)) return spawnPoint.getPositionIn(dir);
+            }
+        }
+        System.out.println("Valid spawn point for player " + player.getPlayerNumber() + " not found.");
         return spawnPoint;
+    }
+
+    /**
+     * Checks if it is save for a player to spawn in a position
+     * @param spawnPoint position to be checked
+     * @return true if the player doesn't die by spawning there
+     */
+    private boolean spawnIsSafe(Position spawnPoint) {
+        ArrayList<BoardPiece> boardPieceList = grid[spawnPoint.getX()][spawnPoint.getY()];
+        for (BoardPiece piece : boardPieceList) {
+            if (piece instanceof AbyssPiece) return false;
+            //you can add more things to check for here
+        }
+        return true;
+    }
+
+    /**
+     * Checks if a player was standing on it's spawnpoint before it died / moved to it's death
+     *
+     * @param player     to check if it is standing on spawnPoint
+     * @param spawnPoint position
+     * @return true if the player was standing on it's spawmpoint before it moves to it's death.
+     */
+    private boolean playerWasStandingOnItsSpawnPoint(Player player, Position spawnPoint) {
+        BoardPiece pieceOnSpawnPoint = grid[spawnPoint.getX()][spawnPoint.getY()].get(playerLayerIndex);
+        if (pieceOnSpawnPoint instanceof PlayerPiece) {
+            return ((PlayerPiece) pieceOnSpawnPoint).getPlayerNumber() == player.getPlayerNumber();
+        }
+        return false;
     }
 }

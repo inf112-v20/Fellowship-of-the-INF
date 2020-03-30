@@ -21,9 +21,9 @@ public class Player {
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
     private ArrayList<ProgramCard> playerHandDeck;
-    private ProgramCard[] selectedCards;
-    private ArrayList<ProgramCard> lockedCards;
-    private ArrayList<Position> laserPath;
+    private ProgramCard[] selectedCards = new ProgramCard[5];
+    private ArrayList<ProgramCard> lockedCards = new ArrayList<>();
+    private ArrayList<Position> laserPath = new ArrayList<>();
 
 
     private Position spawnPoint;
@@ -33,8 +33,9 @@ public class Player {
     private boolean hasBeenMovedThisPhase = false;
     private Position oldLaserPos;
     private Game game;
-    private boolean isDead;
-    private boolean powerDownMode;
+    private boolean isDead = false;
+    private boolean isPermanentlyDead = false;
+    private boolean powerDownMode = false;
     private int damage = 0;
     private int playerNumber;
     private int lives = 3;
@@ -47,15 +48,10 @@ public class Player {
         this.logicGrid = game.getLogicGrid();
         this.pieceGrid = logicGrid.getGrid();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
-        this.selectedCards = new ProgramCard[5];
-        this.lockedCards = new ArrayList<>();
-        this.laserPath = new ArrayList<>();
 
         //Find the spawn point of the player, and set spawnPoint position to the first spawn
         findFirstSpawnPoint();
         this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, this);
-        this.isDead = false;
-        this.powerDownMode = false;
         this.oldLaserPos = new Position(-1, 0);
     }
 
@@ -113,9 +109,16 @@ public class Player {
             latestMoveDirection = newDirection;
             this.conveyorBeltMove = false;
         }
+        if (!isPermanentlyDead) checkForRespawn(moves); //if statementw, otherwise player respawns when it's dead
+    }
 
+    /**
+     * Check if a player needs to be respawned
+     * @param moves list to add respawn move to
+     */
+    public void checkForRespawn(MovesToExecuteSimultaneously moves) {
         //If the player still have lives left, respawn it, but set it in shutdown mode
-        else if (lives >= 0 && isDead()) {
+        if (lives >= 0 && isDead()) {
             respawnPlayer(moves);
             setPowerDownMode(true);
         }
@@ -125,6 +128,7 @@ public class Player {
             respawnPlayer(moves);
             setPowerDownMode(true);
             isDead = true;
+            isPermanentlyDead = true;
         }
     }
 
@@ -141,6 +145,10 @@ public class Player {
         PlayerPiece possiblePlayerPiece = getPlayerPieceToPush(playerPiece, dir);
         if (possiblePlayerPiece != null) { //if there is a player to push, push it
             Player playertoPush = possiblePlayerPiece.getPlayer();
+            if (playertoPush.getPlayerNumber() == playerNumber) {
+                System.out.println("Error: Player " + playerNumber + " can't push itself.");
+                return;
+            }
             playertoPush.tryToGo(dir, moves);
         }
     }
@@ -363,7 +371,7 @@ public class Player {
         Move respawnMove = new Move(this);
         isDead = false;
         playerPiece.showAlivePlayer();
-        Position validSpawnPointPosition = logicGrid.getValidSpawnPointPosition(spawnPoint);
+        Position validSpawnPointPosition = logicGrid.getValidSpawnPointPosition(this, spawnPoint);
         setPos(validSpawnPointPosition.getX(), validSpawnPointPosition.getY());
         respawnMove.updateMove();
         moves.add(respawnMove);
