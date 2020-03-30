@@ -52,7 +52,6 @@ public class GameScreen implements Screen {
     private int seconds = countdownTimer;
     private int prevSeconds = countdownTimer;
     private Timer timer;
-    private TimerTask task;
     private boolean timerStarted = false;
 
 
@@ -132,9 +131,14 @@ public class GameScreen implements Screen {
             timerStarted = true;
             startTimer();
         }
-        if(seconds != prevSeconds){
-            uiScreen.drawTimer(seconds+1);
-            prevSeconds--;
+        if(timerStarted) {
+            if(!game.onePlayerLeftToPick()){
+                resetTimer();
+            }
+            if (seconds != prevSeconds) {
+                uiScreen.drawTimer(seconds + 1);
+                prevSeconds--;
+            }
         }
         if (!movesToExecute() && !game.moreLaserToShoot()) {
             handleKeyboardInput();
@@ -282,20 +286,24 @@ public class GameScreen implements Screen {
 
     private void startTimer(){
         timer = new Timer();
-        task = new TimerTask() {
+        TimerTask task = new TimerTask() {
             public void run() {
                 seconds--;
-                if(seconds < -1 && timerStarted){
+                if (seconds < -1 && timerStarted) {
                     game.getPlayerRemaining().pickRandomCards();
                     uiScreen.getCardButton().moveCardButtons();
-                    timer.cancel();
-                    prevSeconds = countdownTimer;
-                    seconds = countdownTimer;
-                    timerStarted = false;
-                    uiScreen.getTimerLabel().remove();
+                    resetTimer();
                 }
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    private void resetTimer(){
+        timer.cancel();
+        prevSeconds = countdownTimer;
+        seconds = countdownTimer;
+        timerStarted = false;
+        uiScreen.getTimerLabel().remove();
     }
 }

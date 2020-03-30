@@ -359,7 +359,7 @@ public class UIScreen {
                 return;
             }
         }
-        for (int i = 0; i < game.getListOfPlayers().length ; i++) {
+        for (int i = 1; i < game.getListOfPlayers().length ; i++) {
             if(!game.getListOfPlayers()[i].hasLockedIn()){
                 System.out.println("Not every computer player has locked in. Press 0 to lock in cards for every computer player");
                 return;
@@ -376,6 +376,7 @@ public class UIScreen {
                 cardButton.getLeftOverCardButtons().get(i).remove();
             }
         }
+        player.lockedIn();
         player.setSelectedCards(cardButton.getSelectedCards());
         game.getRound().nextPhase();
         updateGameLog();

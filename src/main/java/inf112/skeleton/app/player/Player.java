@@ -39,6 +39,7 @@ public class Player {
     private int playerNumber;
     private int lives = 3;
     private int checkpointsVisited = 0;
+    private boolean hasLockedIn = false;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -569,14 +570,9 @@ public class Player {
 
     }
 
-    public boolean hasLockedIn(){
-        for (ProgramCard selectedCard : selectedCards) {
-            if (selectedCard == null) {
-                return false;
-            }
-        }
-        return  true;
-    }
+    public void lockedIn(){ hasLockedIn = true; }
+
+    public boolean hasLockedIn(){ return hasLockedIn; }
 
     public void pickRandomCards(){
         if (playerHandDeck.isEmpty()) { return; }
@@ -604,7 +600,13 @@ public class Player {
     }
 
 
-    private boolean isCardAvailable(ProgramCard card) {
+    /**
+     * Checks if a card is available in hand
+     *
+     * @param card the card to check
+     * @return true if that type of card is available in hand, false otherwise
+     */
+    public boolean isCardAvailable(ProgramCard card) {
         for (ProgramCard selectedCard : getSelectedCards()) {
             if (selectedCard == null) {
                 continue;

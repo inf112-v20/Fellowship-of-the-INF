@@ -42,6 +42,7 @@ public class AIPlayer extends Player {
         for (int i = 0; i < 5 - getLockedCards().size(); i++) {
             getSelectedCards()[i] = chooseCard();
         }
+        lockedIn();
         flagsVisitedInRound = 0;
     }
 
@@ -103,6 +104,7 @@ public class AIPlayer extends Player {
      * @return true if the new position is closer to goal, false otherwise
      */
     private boolean isPosCloserToGoal(Position oldPos, Position newPos) {
+        if(oldPos == null || newPos == null){System.out.println("Error: Couldn't calculate distance from goal"); return false;}
         int oldDistanceAway = getDistanceAway(nextGoalPos, oldPos);
         int newDistanceAway = getDistanceAway(nextGoalPos, newPos);
         return (newDistanceAway < oldDistanceAway);
@@ -119,23 +121,6 @@ public class AIPlayer extends Player {
         return (Math.abs(pos1.getX() - pos2.getX()) + Math.abs(pos1.getY() - pos2.getY()));
     }
 
-    /**
-     * Checks if a card is available in hand
-     *
-     * @param card the card to check
-     * @return true if that type of card is available in hand, false otherwise
-     */
-    private boolean isCardAvailable(ProgramCard card) {
-        for (ProgramCard selectedCard : getSelectedCards()) {
-            if (selectedCard == null) {
-                continue;
-            }
-            if (selectedCard.equals(card)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Find the final position and direction at the end of the phase (after conveyorbelts and cogs move)
