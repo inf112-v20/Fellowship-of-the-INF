@@ -29,7 +29,7 @@ public class Player {
     private ArrayList<Position> laserPath;
     private Position newRobotPos;
     private Direction newRobotDir;
-    private int flagsVisitedInPhase = 0;
+    private int flagsVisitedInRound = 0;
     private Position nextGoalPos;
 
     private Position spawnPoint;
@@ -629,11 +629,11 @@ public class Player {
         for (int i = 0; i < 5 - lockedCards.size() ; i++) {
             selectedCards[i] = chooseCard();
         }
-        flagsVisitedInPhase = 0;
+        flagsVisitedInRound = 0;
     }
 
     public ProgramCard chooseCard(){
-        int goalFlag = checkpointsVisited + flagsVisitedInPhase;
+        int goalFlag = checkpointsVisited + flagsVisitedInRound;
         if(goalFlag > logicGrid.getFlagPositions().size()-1){goalFlag = logicGrid.getFlagPositions().size()-1;}
         nextGoalPos = logicGrid.getFlagPositions().get(goalFlag);
         System.out.println("Current goal flag: " + (goalFlag+1)+ " at " + nextGoalPos);
@@ -816,7 +816,7 @@ public class Player {
                 }
             }
             System.out.println("Card chosen is " + card.toString() + "\n");
-            if(goalPos.equals(newRobotPos)){ System.out.println("Player is at flag " + (checkpointsVisited+1+flagsVisitedInPhase)); flagsVisitedInPhase++; }
+            if(goalPos.equals(newRobotPos)){ System.out.println("Player is at flag " + (checkpointsVisited+1+flagsVisitedInRound)); flagsVisitedInRound++; }
             return card;
         }
         return null;
