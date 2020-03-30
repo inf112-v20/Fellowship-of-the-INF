@@ -16,6 +16,6 @@ public class LaserSourcePiece extends WallPiece {
      */
     public LaserSourcePiece(Position pos, int id, Direction dir, boolean doubleLaser) {
         super(pos, id, dir);
-        this.doubleLaser = doubleLaser;
+        doubleLaser = doubleLaser;
     }
 }

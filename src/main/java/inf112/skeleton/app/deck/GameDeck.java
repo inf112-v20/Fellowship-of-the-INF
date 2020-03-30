@@ -80,7 +80,7 @@ public class GameDeck {
 
     /**
      * Add the cards used in a programCard deck. Should only be used when making a new deck
-     * @param deck
+     * @param deck deck to be added to
      */
     private void generateDeck(ArrayList<ProgramCard> deck) {
         addMove1(deck);

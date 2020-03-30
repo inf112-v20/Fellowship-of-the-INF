@@ -90,15 +90,6 @@ public class Move {
     }
 
     /**
-     * updates the move object with the players new position and direction
-     * @param updatePlayerPiece the PlayerPiece after its player has executed a move
-     */
-    public void updateMove(PlayerPiece updatePlayerPiece) {
-        newPos = playerPiece.getPos();
-        newDir = playerPiece.getDir();
-    }
-
-    /**
      *
      * @return an ArrayList containing only this move
      */

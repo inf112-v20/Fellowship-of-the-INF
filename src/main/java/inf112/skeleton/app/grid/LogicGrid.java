@@ -2,23 +2,26 @@ package inf112.skeleton.app.grid;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.grid_objects.*;
+import inf112.skeleton.app.player.TextureMaker;
 
 import java.util.ArrayList;
+
+import static inf112.skeleton.app.grid.Direction.WEST;
 
 public class LogicGrid {
     //dimensions of grid
     private int width;
     private int height;
 
-    //TODO unused atm
-    private int numberOfLayers;
-
     //The number of players i the game
     private int numberOfPlayers;
 
     //A list of the locations of the spawn points
     private ArrayList<Position> spawnPointPositions;
+    private ArrayList<Position> flagPositions;
+    private int flags= 0;
 
     //Tiled layers
     private TiledMapTileLayer floorLayer;
@@ -34,32 +37,34 @@ public class LogicGrid {
     private TiledMapTileLayer wallLayer;
     private TiledMapTileLayer flagLayer;
     private TiledMapTileLayer playerLayer;
+    private TiledMapTileLayer robotLasersLayer;
 
     //The indexes of the layers
     private int floorLayerIndex;
     private int repairLayerIndex;
     private int opCardLayerIndex;
     private int abyssLayerIndex;
-    private int conveyorBeltLayerIndex;
-    private int expressBeltLayerIndex;
+    private int conveyorBeltLayerIndex; //4
+    private int expressBeltLayerIndex; //5
     private int cogLayerIndex;
     private int pusherLayerIndex;
-    private int laserLayerIndex;
-    private int laserSourceLayerIndex;
+    private int laserLayerIndex; //8
+    private int laserSourceLayerIndex; //9
     private int wallLayerIndex;
     private int flagLayerIndex;
-    private int playerLayerIndex;
+    private int playerLayerIndex; //12
+    private int robotLasersLayerIndex;
 
     //private BoardPiece[] [][] grid;
     private ArrayList<BoardPiece>[][] grid;
     private BoardPieceGenerator boardPieceGenerator;
+
 
     public LogicGrid(int width, int height, TiledMap map) {
         grid = new ArrayList[width][height];
         this.width = grid[0].length;
         this.height = grid.length;
         numberOfPlayers = 8;
-        numberOfLayers = map.getLayers().getCount(); //not used right now
 
         //Make a list of what will be the first player spawns
         initializeSpawns();
@@ -78,6 +83,7 @@ public class LogicGrid {
         wallLayer = (TiledMapTileLayer) map.getLayers().get("Wall");
         flagLayer = (TiledMapTileLayer) map.getLayers().get("Flag");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
+        robotLasersLayer = (TiledMapTileLayer) map.getLayers().get("Robot Lasers");
 
         //extract index of each layer
         floorLayerIndex = map.getLayers().getIndex("Floor");
@@ -93,8 +99,11 @@ public class LogicGrid {
         wallLayerIndex = map.getLayers().getIndex("Wall");
         flagLayerIndex = map.getLayers().getIndex("Flag");
         playerLayerIndex = map.getLayers().getIndex("Player");
+        robotLasersLayerIndex = map.getLayers().getIndex("Robot Lasers");
 
+        this.flagPositions = new ArrayList<>();
         readTiledMapToPieceGrid();
+        sortFlagPositions();
     }
 
     /**
@@ -142,11 +151,10 @@ public class LogicGrid {
             int id = layer.getCell(x, y).getTile().getId();
             //if cell in layer is not empty, generate the corresponding BoardPiece and add to grid
             BoardPiece piece = boardPieceGenerator.generate(id);
-
+            if(layer == flagLayer){ flags++;flagPositions.add(null); }
             isThisASpawnPoint(piece, x, y);
 
             //check returned piece isn't a null
-            int size = grid[x][y].size();
             grid[x][y].add(layerIndex, piece);
             return;
         }
@@ -211,7 +219,6 @@ public class LogicGrid {
      */
     public boolean positionIsFree(Position position, int layerIndex) {
         //conveyor belts cannot move players off board as it causes error
-        //TODO, allow conveyorBelt to push player to death.
         if(!isInBounds(position)){
             return false;
         }
@@ -253,9 +260,9 @@ public class LogicGrid {
      * at the location in the list corresponding to the spawnNumber of the piece.
      *
      * This list is used by the players to find their first spawn point.
-     * @param piece
-     * @param x
-     * @param y
+     * @param piece piece to be checked
+     * @param x coordinates for @param piece
+     * @param y coordinates for @param piece
      */
     private void isThisASpawnPoint(BoardPiece piece, int x, int y) {
         //If it is a spawnPoint tile, add it to a list of start positions
@@ -278,14 +285,14 @@ public class LogicGrid {
      */
     public boolean canLeavePosition(Position currentPosition, Direction dir) {
         WallPiece possibleWallPiece = getPieceType(currentPosition, WallPiece.class);
-        if (possibleWallPiece != null && possibleWallPiece instanceof WallPiece) {
+        if (possibleWallPiece != null) {
             //cannot leave if the WallPiece player is standing on has a wall in the direction
             if (!(possibleWallPiece).canLeave(dir)) return false;
         }
         LaserSourcePiece possibleLaserSourcePiece = getPieceType(currentPosition, LaserSourcePiece.class);
-        if (possibleLaserSourcePiece != null && possibleLaserSourcePiece instanceof WallPiece) {
+        if (possibleLaserSourcePiece != null) {
             //cannot leave if the laserSourcePiece player is standing on has a wall in the direction
-            if (!(possibleLaserSourcePiece).canLeave(dir)) return false;
+            return (possibleLaserSourcePiece).canLeave(dir);
         }
         return true;
     }
@@ -302,14 +309,14 @@ public class LogicGrid {
         //if the piece in front is within the bounds, check what is there
         if (isInBounds(positionInFront)) {
             WallPiece possibleWallPiece = getPieceType(positionInFront, WallPiece.class);
-            if (possibleWallPiece != null && possibleWallPiece instanceof WallPiece) {
+            if (possibleWallPiece != null) {
                 //cannot go if WallPiece in front has a wall facing player
                 if (!(possibleWallPiece).canGo(dir)) return false;
             }
             LaserSourcePiece possibleLaserSourcePiece = getPieceType(positionInFront, LaserSourcePiece.class);
-            if (possibleLaserSourcePiece != null && possibleLaserSourcePiece instanceof WallPiece) {
+            if (possibleLaserSourcePiece != null) {
                 //cannot go if WallPiece in front has a wall facing player
-                if (!(possibleLaserSourcePiece).canGo(dir)) return false;
+                return (possibleLaserSourcePiece).canGo(dir);
             }
         }
         return true;
@@ -322,5 +329,21 @@ public class LogicGrid {
      */
     public boolean isInBounds(Position pos){
         return pos.getY() < height && pos.getY() >= 0 && pos.getX() < width && pos.getX() >= 0;
+    }
+
+    public ArrayList<Position> getFlagPositions(){
+        return flagPositions;
+    }
+
+    private void sortFlagPositions() {
+        for (int y = width - 1; y >= 0; y--) {
+            for (int x = 0; x < height; x++) {
+                Position pos = new Position(x, y);
+                if (!positionIsFree(pos, flagLayerIndex)) {
+                    FlagPiece flagPiece = (FlagPiece) grid[x][y].get(flagLayerIndex);
+                    flagPositions.add(flagPiece.getFlagNumber() - 1, pos);
+                }
+            }
+        }
     }
 }

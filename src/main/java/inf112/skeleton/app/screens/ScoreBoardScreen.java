@@ -136,7 +136,6 @@ public class ScoreBoardScreen {
             table.add(checkpointLabel).expandX().center().fill();
             table.row();
         }
-        //table.debug();
         stage.addActor(table);
     }
 

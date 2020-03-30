@@ -3,10 +3,17 @@ package inf112.skeleton.app.game_logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.deck.GameDeck;
+import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.BoardPiece;
+import inf112.skeleton.app.grid_objects.LaserPiece;
+import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
+import inf112.skeleton.app.player.TextureMaker;
 import inf112.skeleton.app.screens.GameScreen;
 
 import java.util.LinkedList;
@@ -24,6 +31,7 @@ public class Game {
     private GameScreen gameScreen;
 
 
+
     public Game(LogicGrid logicGrid, GameScreen gameScreen) {
         this.logicGrid = logicGrid;
         this.gameScreen = gameScreen;
@@ -34,16 +42,23 @@ public class Game {
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
         this.moves = new LinkedList<>();
+
+
     }
 
     public void initiateComputerPlayers() {
         for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
-            Player playerToBeInitiated = new Player(playerNumber, this);
+            Player playerToBeInitiated = new AIPlayer(playerNumber, this);
             playerList[playerNumber - 1] = playerToBeInitiated;
             logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
     }
 
+    /**
+     * Perform moves for robots
+     *
+     * @param moves All moves to execute
+     */
     public void performMoves(MovesToExecuteSimultaneously moves) {
         for (Move move : moves) {
             Position oldPos = move.getOldPos();
@@ -78,7 +93,7 @@ public class Game {
     public Round getRound(){return round;}
 
     /**
-     * Handles keyboard input
+     * Handles keyboard input for manually moving Player 1 around.
      */
     public void handleKeyBoardInput() {
         Move rotateMove = new Move(player1); //initiate possible rotateMove to be done
@@ -93,6 +108,9 @@ public class Game {
             player1.turnPlayerRight();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             player1.turnPlayerAround();
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            player1.shootLaser();
+            gameScreen.shootLasers();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             player1.takeDamage(1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
@@ -108,7 +126,6 @@ public class Game {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
             if(player1.isOnConveyorBelt()) {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
-                player1.setConveyorBeltMove(true);
             }
         }
         rotateMove.updateMove(player1); //complete rotateMove object
@@ -154,15 +171,12 @@ public class Game {
         this.round = new Round(this);
         if (!moves.isEmpty())
             return;
-        //let computer players pick the first five cards as their selected
-        for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
-            playerList[playerNumber - 1].pickFirstFiveCards();
-        }
+
         roundNumber++;
         round.setRoundNumber(roundNumber);
         //check all players have hand
         round.startRound();
-        round.finnishRound();
+        round.finishRound();
     }
 
     public Queue<MovesToExecuteSimultaneously> getMoves() {
@@ -186,11 +200,18 @@ public class Game {
      * @return the player at that position
      */
     public Player getPlayerAt(Position pos){
-        for (int i = 0; i < playerList.length ; i++) {
-            if(playerList[i].getPos().equals(pos)){
-                return playerList[i];
+        for (Player player : playerList) {
+            if(player.getPos().equals(pos)){
+                return player;
             }
         }
         return null; //no player in position
+    }
+
+    public boolean moreLaserToShoot(){
+        for (Player player : playerList) {
+            if(!player.getOldLaserPos().equals(new Position(-1,-1))){return true;}
+        }
+        return false;
     }
 }
