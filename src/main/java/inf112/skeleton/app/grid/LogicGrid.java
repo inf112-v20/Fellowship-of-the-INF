@@ -21,7 +21,7 @@ public class LogicGrid {
     //A list of the locations of the spawn points
     private ArrayList<Position> spawnPointPositions;
     private ArrayList<Position> flagPositions;
-    private int flags;
+    private int flags= 0;
 
     //Tiled layers
     private TiledMapTileLayer floorLayer;
@@ -101,6 +101,7 @@ public class LogicGrid {
         playerLayerIndex = map.getLayers().getIndex("Player");
         robotLasersLayerIndex = map.getLayers().getIndex("Robot Lasers");
 
+        this.flagPositions = new ArrayList<>();
         readTiledMapToPieceGrid();
         sortFlagPositions();
     }
@@ -150,7 +151,7 @@ public class LogicGrid {
             int id = layer.getCell(x, y).getTile().getId();
             //if cell in layer is not empty, generate the corresponding BoardPiece and add to grid
             BoardPiece piece = boardPieceGenerator.generate(id);
-            if(layer == flagLayer){ flags++; }
+            if(layer == flagLayer){ flags++;flagPositions.add(null); }
             isThisASpawnPoint(piece, x, y);
 
             //check returned piece isn't a null
@@ -335,7 +336,6 @@ public class LogicGrid {
     }
 
     private void sortFlagPositions() {
-        this.flagPositions = new ArrayList<>(flags);
         for (int y = width - 1; y >= 0; y--) {
             for (int x = 0; x < height; x++) {
                 Position pos = new Position(x, y);
