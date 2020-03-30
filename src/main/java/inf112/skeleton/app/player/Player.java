@@ -663,9 +663,9 @@ public class Player {
         if(!(bestCard == null)){return bestCard;}
 
         ProgramCard randomCard = playerHandDeck.get(0);
-        for (int i = 0; i < playerHandDeck.size(); i++) {
-            if(!isCardAlreadyChosen(playerHandDeck.get(i))){
-                randomCard = playerHandDeck.get(i);
+        for (ProgramCard programCard : playerHandDeck) {
+            if (isCardAvailable(programCard)) {
+                randomCard = programCard;
                 System.out.println(toString() + " chose " + randomCard.toString() + " as a random card");
                 break;
             }
@@ -700,12 +700,12 @@ public class Player {
      * @param card the card to check
      * @return true if that type of card is available in hand, false otherwise
      */
-    private boolean isCardAlreadyChosen(ProgramCard card){
-        for (int i = 0; i < selectedCards.length ; i++) {
-            if(selectedCards[i] == null){continue;}
-            if(selectedCards[i].equals(card)){return true;}
+    private boolean isCardAvailable(ProgramCard card){
+        for (ProgramCard selectedCard : selectedCards) {
+            if (selectedCard == null) { continue; }
+            if (selectedCard.equals(card)) { return false; }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -786,12 +786,11 @@ public class Player {
     /**
      * Gets the new position from using a card
      * @param cardMove the amount movement from the card (0 for rotation cards)
-     * @param dir the new dir if card is rotation card
+     * @param newDir the new dir if card is rotation card
      * @return the new position from using the card given
      */
-    private List<Object> getPosFromCardMove(int cardMove, Direction dir){
+    private List<Object> getPosFromCardMove(int cardMove, Direction newDir){
         Position newPos = newRobotPos;
-        Direction newDir = dir;
         for (int i = 0; i < cardMove; i++) {
             newPos = newPos.getPositionIn(newDir);
         }
@@ -805,7 +804,7 @@ public class Player {
      */
     private ProgramCard getCardInHand(CardType cardType){
         for (ProgramCard card : playerHandDeck) {
-            if (card.getCommand() == cardType && !isCardAlreadyChosen(card)) {
+            if (card.getCommand() == cardType && isCardAvailable(card)) {
                 return card;
             }
         }
@@ -814,7 +813,7 @@ public class Player {
 
     /**
      * Gets cardType from an id
-     * @param id = movement for movecard, = rotations array position + 1 in getBestCardsOrdered()
+     * @param id = movement for move cards, or = rotations array position + 1 in getBestCardsOrdered() for rotation cards
      * @param moveCard true if its a movecard
      * @return the cardType from the given id
      */
