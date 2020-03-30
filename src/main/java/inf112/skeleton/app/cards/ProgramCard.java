@@ -21,31 +21,31 @@ public class ProgramCard implements IProgramCard {
     private void createImage() {
         switch (cardType) {
             case MOVE1:
-                texture = new Texture(Gdx.files.internal("cardmove1.png"));
+                texture = new Texture(Gdx.files.internal("ui/cards/cardmove1.png"));
                 movement = 1;
                 break;
             case MOVE2:
-                texture = new Texture(Gdx.files.internal("cardmove2.png"));
+                texture = new Texture(Gdx.files.internal("ui/cards/cardmove2.png"));
                 movement = 2;
                 break;
             case MOVE3:
-                texture = new Texture(Gdx.files.internal("cardmove3.png"));
+                texture = new Texture(Gdx.files.internal("ui/cards/cardmove3.png"));
                 movement = 3;
                 break;
             case BACKUP:
-                texture = new Texture(Gdx.files.internal("cardbackup.png"));
+                texture = new Texture(Gdx.files.internal("ui/cards/cardbackup.png"));
                 movement = 1;
                 break;
             case ROTATERIGHT:
-                texture = new Texture(Gdx.files.internal("cardrturn.png"));
+                texture = new Texture(Gdx.files.internal("ui/cards/cardrturn.png"));
                 moveCard = false;
                 break;
             case ROTATELEFT:
-                texture = new Texture(Gdx.files.internal("cardlturn.png"));
+                texture = new Texture(Gdx.files.internal("ui/cards/cardlturn.png"));
                 moveCard = false;
                 break;
             case UTURN:
-                texture = new Texture(Gdx.files.internal("carduturn.png"));
+                texture = new Texture(Gdx.files.internal("ui/cards/carduturn.png"));
                 moveCard = false;
                 break;
             default:
