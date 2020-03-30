@@ -621,7 +621,9 @@ public class Player {
 
     }
 
-
+    /**
+     * Pick cards for computer player
+     */
     public void pickCards() {
         if(playerHandDeck.isEmpty()){ return;}
         newRobotPos = new Position(getPos().getX(), getPos().getY());
@@ -632,6 +634,10 @@ public class Player {
         flagsVisitedInRound = 0;
     }
 
+    /**
+     * Picks the best available card in hand
+     * @return the best card
+     */
     public ProgramCard chooseCard(){
         int goalFlag = checkpointsVisited + flagsVisitedInRound;
         if(goalFlag > logicGrid.getFlagPositions().size()-1){goalFlag = logicGrid.getFlagPositions().size()-1;}
@@ -648,11 +654,11 @@ public class Player {
             System.out.println(toString() + " should rotate");
         } else { System.out.println(toString() + " should move"); }
 
-        ProgramCard bestCard = getBestCard(nextGoalPos, shouldPickMoveCard);
+        ProgramCard bestCard = getBestCard(shouldPickMoveCard);
         if(bestCard == null){
             if(shouldPickMoveCard) {System.out.println("There wasn't any optimal movement cards left, choosing rotation card instead");}
             else{System.out.println("There wasn't any optimal rotation cards left, choosing movement card instead");}
-            bestCard = getBestCard(nextGoalPos, !shouldPickMoveCard);
+            bestCard = getBestCard(!shouldPickMoveCard);
         }
         if(!(bestCard == null)){return bestCard;}
 
@@ -667,16 +673,33 @@ public class Player {
         return randomCard;
     }
 
+    /**
+     * Checks if a position is closer to current goal than an other position
+     * @param oldPos the old position
+     * @param newPos the new position
+     * @return true if the new position is closer to goal, false otherwise
+     */
     private boolean isPosCloserToGoal(Position oldPos, Position newPos){
         int oldDistanceAway = getDistanceAway(nextGoalPos, oldPos);
         int newDistanceAway = getDistanceAway(nextGoalPos, newPos);
         return(newDistanceAway < oldDistanceAway);
     }
 
+    /**
+     * Check how far away two positions are
+     * @param pos1 position 1
+     * @param pos2 position 2
+     * @return sum of difference of x pos and y pos of the two positions
+     */
     private int getDistanceAway(Position pos1, Position pos2){
         return(Math.abs(pos1.getX()-pos2.getX()) + Math.abs(pos1.getY()- pos2.getY()));
     }
 
+    /**
+     * Checks if a card is available in hand
+     * @param card the card to check
+     * @return true if that type of card is available in hand, false otherwise
+     */
     private boolean isCardAlreadyChosen(ProgramCard card){
         for (int i = 0; i < selectedCards.length ; i++) {
             if(selectedCards[i] == null){continue;}
@@ -685,6 +708,13 @@ public class Player {
         return false;
     }
 
+    /**
+     * Find the final position and direction at the end of the phase (after conveyorbelts and cogs move)
+     * @param pos the position after a card move
+     * @param dir the direction after a card move
+     * @param expressBeltMove always false if calling this method from outside of this method
+     * @return the final position at the end of the phase
+     */
     private List<Object> findFinalPosAndDir(Position pos, Direction dir, boolean expressBeltMove){
         if(!logicGrid.isInBounds(pos)) {return Arrays.asList(pos, dir);}
         Position finalPos = pos;
@@ -721,6 +751,11 @@ public class Player {
         return Arrays.asList(finalPos, finalDir);
     }
 
+    /**
+     * Finds the best card in order for this phase
+     * @param moveCard true if a card is a movecard, false if its a rotationcard
+     * @return sorted 2d array with best card first. [][0] = cardtype, [][1] = movescore
+     */
     private int[][] getBestCardsOrdered(boolean moveCard){
         int[][] bestMovesInOrder = new int[3][2];
         int movement = 0;
@@ -734,14 +769,7 @@ public class Player {
             List<Object> finalPosAndDir = getPosFromCardMove(movement, rotations[rotation]);
             Position finalPos = (Position)finalPosAndDir.get(0);
             Direction finalDir = (Direction)finalPosAndDir.get(1);
-            Position posInFront = finalPos.getPositionIn(finalDir);
-            int moveScore = getDistanceAway(finalPos, nextGoalPos);
-            if(!isPosCloserToGoal(finalPos, finalPos.getPositionIn(finalDir))){moveScore++;}
-            if(isPosCloserToGoal(finalPos, finalPos.getPositionIn(finalDir.getOppositeDirection()))){moveScore++;}
-            if(logicGrid.isInBounds(posInFront)&& logicGrid.isInBounds(finalPos)) {
-                if (!isLegalMoveInDirection(posInFront.getX(), posInFront.getY(), finalPos, finalDir)) { moveScore++; }
-            }
-            if(isDeadMove(finalPos.getX(), finalPos.getY())){moveScore = 100;}
+            int moveScore = getMoveScore(finalPosAndDir);
             System.out.println("Pos: " + finalPos + ", Dir: " + finalDir + ", Movescore: " + moveScore);
             bestMovesInOrder[i][0] = moveScore;
             bestMovesInOrder[i][1] = i + 1;
@@ -755,6 +783,12 @@ public class Player {
         return bestMovesInOrder;
     }
 
+    /**
+     * Gets the new position from using a card
+     * @param cardMove the amount movement from the card (0 for rotation cards)
+     * @param dir the new dir if card is rotation card
+     * @return the new position from using the card given
+     */
     private List<Object> getPosFromCardMove(int cardMove, Direction dir){
         Position newPos = newRobotPos;
         Direction newDir = dir;
@@ -764,6 +798,11 @@ public class Player {
         return findFinalPosAndDir(newPos, newDir, false);
     }
 
+    /**
+     * Gets the first available card in hand of that type
+     * @param cardType the type of card you want
+     * @return the first card of that type in hand, null if it isn't available
+     */
     private ProgramCard getCardInHand(CardType cardType){
         for (ProgramCard card : playerHandDeck) {
             if (card.getCommand() == cardType && !isCardAlreadyChosen(card)) {
@@ -773,6 +812,12 @@ public class Player {
         return null;
     }
 
+    /**
+     * Gets cardType from an id
+     * @param id = movement for movecard, = rotations array position + 1 in getBestCardsOrdered()
+     * @param moveCard true if its a movecard
+     * @return the cardType from the given id
+     */
     private CardType getType(int id, boolean moveCard){
         CardType cardType = CardType.BACKUP;
         switch (id) {
@@ -794,7 +839,12 @@ public class Player {
         return cardType;
     }
 
-    private ProgramCard getBestCard(Position goalPos, boolean shouldPickMoveCard){
+    /**
+     * Gets the best card for the robots current position in the round
+     * @param shouldPickMoveCard true if robot should pick move card, false if it should pick a rotation card
+     * @return the best available card
+     */
+    private ProgramCard getBestCard(boolean shouldPickMoveCard){
         int[][] bestMovesInOrder =  getBestCardsOrdered(shouldPickMoveCard);
         for (int i = 0; i < 3 ; i++) {
             int moveScore = bestMovesInOrder[i][0];
@@ -816,24 +866,37 @@ public class Player {
                 }
             }
             System.out.println("Card chosen is " + card.toString() + "\n");
-            if(goalPos.equals(newRobotPos)){ System.out.println("Player is at flag " + (checkpointsVisited+1+flagsVisitedInRound)); flagsVisitedInRound++; }
+            if(nextGoalPos.equals(newRobotPos)){ System.out.println("Player is at flag " + (checkpointsVisited+1+flagsVisitedInRound)); flagsVisitedInRound++; }
             return card;
         }
         return null;
     }
 
+    /**
+     * Gets the move score from a backup card
+     * @return move score from using a backup this phase
+     */
     private int getBackUpCardMoveScore(){
         List<Object> finalPosAndDir = findFinalPosAndDir(newRobotPos.getPositionIn(newRobotDir.getOppositeDirection()), newRobotDir, false);
-        Position finalPos = (Position) finalPosAndDir.get(0);
-        Direction finalDir = (Direction) finalPosAndDir.get(1);
+        return getMoveScore(finalPosAndDir);
+    }
+
+    /**
+     * Gets the move score for a cardtype. Lower score = better score.
+     * if movescore = 100, then using that cardtype will result in death.
+     * Facing away from the next goal at the end of phase will result in worse score.
+     * @param finalPosAndDir final position and direction at the end of the phase.
+     * @return the movescore calculated for a cardtype.
+     */
+    private int getMoveScore(List<Object> finalPosAndDir){
+        Position finalPos = (Position)finalPosAndDir.get(0);
+        Direction finalDir = (Direction)finalPosAndDir.get(1);
         Position posInFront = finalPos.getPositionIn(finalDir);
         int moveScore = getDistanceAway(finalPos, nextGoalPos);
         if(!isPosCloserToGoal(finalPos, finalPos.getPositionIn(finalDir))){moveScore++;}
         if(isPosCloserToGoal(finalPos, finalPos.getPositionIn(finalDir.getOppositeDirection()))){moveScore++;}
-        if(logicGrid.isInBounds(posInFront) && logicGrid.isInBounds(finalPos)) {
-            if (!isLegalMoveInDirection(posInFront.getX(), posInFront.getY(), finalPos, finalDir)) {
-                moveScore++;
-            }
+        if(logicGrid.isInBounds(posInFront)&& logicGrid.isInBounds(finalPos)) {
+            if (!isLegalMoveInDirection(posInFront.getX(), posInFront.getY(), finalPos, finalDir)) { moveScore++; }
         }
         if(isDeadMove(finalPos.getX(), finalPos.getY())){moveScore = 100;}
         return moveScore;
