@@ -48,9 +48,9 @@ public class CardButton {
         ArrayList<Stack> listOfCardButtons = createCardButtons(playerHand);
         cardButtons = new ArrayList<>();
         leftOverCardButtons = new ArrayList<>();
-        for (int i = 0; i < listOfCardButtons.size(); i++) {
-            cardButtons.add(listOfCardButtons.get(i));
-            leftOverCardButtons.add(listOfCardButtons.get(i));
+        for (Stack listOfCardButton : listOfCardButtons) {
+            cardButtons.add(listOfCardButton);
+            leftOverCardButtons.add(listOfCardButton);
         }
         createLockedCardButtons();
     }
@@ -289,6 +289,11 @@ public class CardButton {
         return true;
     }
 
+    /**
+     * Moves cardButtons to the correct positions in the register.
+     * Is used for when a player lets the timer run out when choosing cards for the next round,
+     * and the remaining slots in the register is randomly chosen.
+     */
     public void moveCardButtons(){
         for (int i = 0; i < selectedCardButtons.length; i++) {
             ProgramCard selectedCard = getSelectedCards()[i];
@@ -299,6 +304,7 @@ public class CardButton {
                     }
                 }
             }
+            assert selectedCardButtons[i] != null;
             selectedCardButtons[i].setTouchable(Touchable.disabled);
         }
     }

@@ -230,6 +230,10 @@ public class Game {
         return false;
     }
 
+    /**
+     * Check if there is only one player that hasn't locked in cards for the next round
+     * @return true if there is only one player left picking cards, false otherwise.
+     */
     public boolean onePlayerLeftToPick(){
         int lockedInPlayers = 0;
         for (Player player : playerList) {
@@ -243,8 +247,10 @@ public class Game {
         return (lockedInPlayers == playerList.length-1);
     }
 
-    public Player getPlayerRemaining(){
-        return playerRemaining;
-    }
+    /**
+     * Get player that hasn't locked card
+     * @return the one player that hasn't locked in cards for the next round
+     */
+    public Player getPlayerRemaining(){ return playerRemaining; }
 
 }

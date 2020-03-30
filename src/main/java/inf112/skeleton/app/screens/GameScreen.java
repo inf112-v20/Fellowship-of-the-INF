@@ -3,7 +3,6 @@ package inf112.skeleton.app.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapProperties;
@@ -126,20 +125,21 @@ public class GameScreen implements Screen {
      * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
-        //only handle keyboard input if there are no moves to execute
+        //Start timer if there is only one left picking cards for the next round
         if(game.onePlayerLeftToPick() && !timerStarted){
             timerStarted = true;
             startTimer();
         }
         if(timerStarted) {
             if(!game.onePlayerLeftToPick()){
-                resetTimer();
+                stopTimer();
             }
             if (seconds != prevSeconds) {
                 uiScreen.drawTimer(seconds + 1);
                 prevSeconds--;
             }
         }
+        //only handle keyboard input if there are no moves to execute
         if (!movesToExecute() && !game.moreLaserToShoot()) {
             handleKeyboardInput();
             uiScreen.update();
@@ -284,6 +284,10 @@ public class GameScreen implements Screen {
         playerLayer.setCell(newPos.getX(), newPos.getY(), playerPieceToUpdate.getPlayerCell()); //repaint at new position
     }
 
+
+    /**
+     * Starts a timer counting down for 30 seconds
+     */
     private void startTimer(){
         timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -292,14 +296,17 @@ public class GameScreen implements Screen {
                 if (seconds < -1 && timerStarted) {
                     game.getPlayerRemaining().pickRandomCards();
                     uiScreen.getCardButton().moveCardButtons();
-                    resetTimer();
+                    stopTimer();
                 }
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
     }
 
-    private void resetTimer(){
+    /**
+     * Stops the timer and removes it from the screen
+     */
+    private void stopTimer(){
         timer.cancel();
         prevSeconds = countdownTimer;
         seconds = countdownTimer;

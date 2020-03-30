@@ -33,8 +33,8 @@ public class Player {
     private boolean hasBeenMovedThisPhase = false;
     private Position oldLaserPos;
     private Game game;
-    private boolean isDead = false;
-    private boolean powerDownMode = false;
+    private boolean isDead;
+    private boolean powerDownMode;
     private int damage = 0;
     private int playerNumber;
     private int lives = 3;
@@ -535,9 +535,13 @@ public class Player {
 
     public void setOldLaserPos(Position pos) { oldLaserPos = pos; }
 
+    public void lockedIn(){ hasLockedIn = true; }
+
+    public boolean hasLockedIn(){ return hasLockedIn; }
+
     /**
      * Shoot laser in the direction which the robot is pointing.
-     * Lasers stops at walls and players, and will damage a player if they hit them.
+     * Lasers stops at walls and players, and will damage any player hit
      */
     public void shootLaser() {
         Direction laserDir = playerPiece.getDir();
@@ -570,10 +574,9 @@ public class Player {
 
     }
 
-    public void lockedIn(){ hasLockedIn = true; }
-
-    public boolean hasLockedIn(){ return hasLockedIn; }
-
+    /**
+     * Picks random cards for the remaining open slots in the register
+     */
     public void pickRandomCards(){
         if (playerHandDeck.isEmpty()) { return; }
         ArrayList<Integer> numbers = new ArrayList<>();
@@ -598,7 +601,6 @@ public class Player {
             else{numbers.add(randomNumber);}
         }
     }
-
 
     /**
      * Checks if a card is available in hand

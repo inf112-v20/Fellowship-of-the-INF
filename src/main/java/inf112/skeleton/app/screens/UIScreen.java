@@ -57,11 +57,7 @@ public class UIScreen {
         createCheckPointTokens();
         createPowerDownImage();
         this.newRound();
-
-
     }
-
-
 
     /**
      * Press ENTER to play the next phase.
@@ -145,11 +141,6 @@ public class UIScreen {
      * getting repairs, visiting flags/checkpoints, losing lifes.
      */
     public void update() {
-
-
-
-
-
 
         float alpha; //opacity of the image
         Color c = lifeActors[0].getColor();
@@ -382,18 +373,18 @@ public class UIScreen {
         updateGameLog();
     }
 
-    public Stage getStage() {
-        return stage;
-    }
-
-    public ScoreBoardScreen getScoreBoardScreen() {
-        return scoreBoardScreen;
-    }
-
+    /**
+     * Draws timertext in the topright corner of the screen
+     * @param seconds the current timer number to draw
+     */
     public void drawTimer(int seconds){
         if(timerLabel != null){ timerLabel.remove();}
         if(seconds>= 0) timerLabel = drawText(String.valueOf(seconds), 30, width*0.9f, height*0.9f, Color.BLACK);
     }
+
+    public Stage getStage() { return stage; }
+
+    public ScoreBoardScreen getScoreBoardScreen() { return scoreBoardScreen; }
 
     public CardButton getCardButton() { return cardButton; }
 

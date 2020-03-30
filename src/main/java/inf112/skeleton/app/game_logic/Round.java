@@ -80,6 +80,10 @@ public class Round {
         return phaseNr;
     }
 
+    /**
+     * Lock in cards for computer players.
+     * Press 0 to do it manually.
+     */
     public void lockInCardsForComputers(){
         for (int i = 1; i < game.getListOfPlayers().length; i++) {
             AIPlayer aiPlayer = (AIPlayer) game.getListOfPlayers()[i];
