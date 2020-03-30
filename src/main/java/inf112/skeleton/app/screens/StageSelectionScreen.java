@@ -11,10 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import inf112.skeleton.app.RoboRallyDemo;
+import inf112.skeleton.app.RoboRallyGame;
 
 public class StageSelectionScreen implements Screen {
-    private RoboRallyDemo game;
+    private RoboRallyGame game;
     private float width;
     private float height;
 
@@ -27,7 +27,7 @@ public class StageSelectionScreen implements Screen {
     private ImageButton stage2Button;
     private ImageButton backButton;
 
-    public StageSelectionScreen(RoboRallyDemo game, int playerCount) {
+    public StageSelectionScreen(RoboRallyGame game, int playerCount) {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
