@@ -58,7 +58,7 @@ public class AIPlayer extends  Player {
         boolean shouldPickMoveCard = true;
         System.out.println("Position: " + newRobotPos + ", Direction: " + newRobotDir);
 
-        if (!isLegalMoveInDirection(posInFront.getX(), posInFront.getY(), getPos(), newRobotDir)
+        if (!isLegalMoveInDirection(newRobotPos, newRobotDir)
                 || !isPosCloserToGoal(newRobotPos, posInFront)) {
             shouldPickMoveCard = false;
             System.out.println(toString() + " should rotate");
@@ -305,9 +305,9 @@ public class AIPlayer extends  Player {
         if(!isPosCloserToGoal(finalPos, finalPos.getPositionIn(finalDir))){moveScore++;}
         if(isPosCloserToGoal(finalPos, finalPos.getPositionIn(finalDir.getOppositeDirection()))){moveScore++;}
         if(logicGrid.isInBounds(posInFront)&& logicGrid.isInBounds(finalPos)) {
-            if (!isLegalMoveInDirection(posInFront.getX(), posInFront.getY(), finalPos, finalDir)) { moveScore++; }
+            if (!isLegalMoveInDirection(finalPos, finalDir)) { moveScore++; }
         }
-        if(isDeadMove(finalPos.getX(), finalPos.getY())){moveScore = 100;}
+        if(isDeadMove(finalPos)){moveScore = 100;}
         return moveScore;
     }
 
