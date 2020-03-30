@@ -1,6 +1,6 @@
 # ObligatoriskOppgave3
 
-## Part 1:Team and Project
+## Part 1: Team and Project
 ### Roles
 The roles we delegated at the last iteration have worked quite well. The Code Integrity and Tidiness role has become obsolete as we now use Codacy to improve code quality.
 
@@ -13,10 +13,12 @@ In the first iteration we decided to use XP, with an emphasis on good communicat
 * **Pair programming** - *We will use pair programming to improve code quality and to build the skills of team members.* We did some pair programming at the beginning of this iteration, but after the university closed this stopped. As we saw great benifits from pair programming we hope to find a solution for how to do this remotely in the next iteration.
 * **Communication is key** - We have from the beginnig emphasised the importance of good communication, and this has of course been affected by the closing of the university. See further comments in the "Communicaton" section.
 
+### Problems we've had
+* With the closing of the university buildings, moving online was at times challenging. Comunication quality has gone down some, as people struggle with bad internet connection, and the general unrest of not having a spicific time to meet up on, and a set place to meet. 
+* We've had to refactor our code quite a bit, as bugs have been discovered as the code has grown larger. 
+* Merge conflicts have also been a problem for some members of our group. This has been partially solved by pulling and pushing to the develop branch more frequently, rather than waiting untill a meeting to do this. 
+
 ### Points of improvement
-HERE WE ARE SUPPOSED TO CHOOSE THREE POINTS OF IMPROVEMENT MENTIONED IN THE RETROSPECTIVE. THESE NEED TO BE AGREED UPON IN THE MEETING ON THURSDAY.
-* Start doing pair programming again, remote of course
-* Get better at using the project board
 * Actually reflect upon the previous iteration before planning the next one.
 * Plan meetings better, so that everyone is available at the agreed upon time.
 * Testing should be done either before or immediately after implementation, not toward the end of an iteration.
@@ -26,8 +28,10 @@ Since we no longer have physical meetings the quality of the communication has d
 
 
 ### Meeting logs
-Meeting logs can be found in a seperate MD file called MeetingLogsIteration3.
+[Meeting logs can be found in a seperate MD file called MeetingLogsIteration3.](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/MeetingLogsIteration3.md)
 
+### Project board screenshot
+![alt text](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/projectBoardScreenshot.png "Screen shot")
 
 ## Part 2: Requirements
 ### Requirements for Third Iteration
@@ -224,11 +228,13 @@ to damage tokens).
 
 ### Other known bugs
 * When you press enter instead of clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
-* Moving a robot into a wall causes it to respawn.
 
 
 
-## Deloppgave3: Code
+## Part 3: Code
+
+### UML
+You can find the UMLs in the UML folder in deliverables. LargeUML.png is the complete UML of the entire project. It is quite large, so there is also a simplifiedUML.png you can take a look at. The simplified UML also reffers to three smaller UML's, which you can also have a look at. These smallet ones describe the structure of the cards, board pieces and screens.
 
 ### How to run the program
 * Ensure maven install and build is complete. Then, run Main. A Menu Screen will pop up. Press the play button to start the game, and then the Stage 1 button from the stage selection screen.

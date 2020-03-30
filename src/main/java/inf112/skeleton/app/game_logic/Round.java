@@ -1,8 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
-
 import inf112.skeleton.app.player.Player;
-
 
 
 public class Round {
@@ -45,7 +43,7 @@ public class Round {
      * Execute the next phase
      */
     public void nextPhase(){
-        if(phaseNr > 4){ return; }
+        if(phaseNr >= NUMBER_OF_PHASES){ return; }
         phase.executePhase(phaseNr);
         phaseNr++;
     }
@@ -54,7 +52,7 @@ public class Round {
      * When the round is done, check if there are any players in power down mode.
      * If there are any, and they still have lives left, then take them out of power down mode.
      */
-    public void finnishRound(){
+    public void finishRound(){
         for (int i=0; i<game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
             if (player.isPowerDownMode() && player.getLives()>=0) {

@@ -14,9 +14,8 @@ public class BoardElementsMove {
     /**
      * Rotates a player standing on a cog 90* in the direction of the cog.
      * @param player The player that is currently standing on the BoardPiece.
-     * @param game The current game
      */
-    public static void rotateCog(Player player, Game game){
+    public static void rotateCog(Player player){
         BoardPiece boardPiece = player.getCurrentBoardPiece();
         if(((CogPiece) boardPiece).isRotateClockwise()){
             player.turnPlayerRight();
@@ -104,7 +103,7 @@ public class BoardElementsMove {
         Position newPos = player.getPos().getPositionIn(((ConveyorBeltPiece) boardPiece).getDir());
         if(!logicGrid.isInBounds(newPos)){return false;}
         if(!logicGrid.positionIsFree(newPos, 12)){ return true; }
-        for (int i = 0; i <4 ; i++) {
+        for (int i = 0; i < 4 ; i++) {
             Position orthoPos;
             if (i == 0) { orthoPos = newPos.getPositionIn(NORTH); }
             else if (i == 1) { orthoPos = newPos.getPositionIn(EAST); }

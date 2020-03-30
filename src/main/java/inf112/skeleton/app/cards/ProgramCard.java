@@ -40,7 +40,6 @@ public class ProgramCard implements IProgramCard{
                 texture = new Texture(Gdx.files.internal("ui/cards/carduturn.png"));
                 break;
             default:
-                //TODO error handling as default maybe?
                 break;
         }
     }

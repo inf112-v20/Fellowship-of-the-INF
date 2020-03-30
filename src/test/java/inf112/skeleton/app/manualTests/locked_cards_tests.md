@@ -1,12 +1,12 @@
 # Manual tests for congs
-####Setup 
-* Comment out line 77 in Phase.java if it isn't already.  
+#### Setup 
+* Comment out line 70 in Phase.java if it isn't already.  
 * Run Main.
 * Press the Play button in the menu screen.
 * Press the Stage 1 button in the stage selection screen.
 
 
-###Tests
+### Tests
 #### Test1 for locking cards and unlocking cards
 * Complete setup.
 * Pick any 5 cards that won't kill robot 1 and lock in.

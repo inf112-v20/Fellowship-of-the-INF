@@ -1,10 +1,10 @@
 # Manual tests for the delay between movement of robots
-####Setup
+#### Setup
 * Run Main.
 * Press the Play button in the menu screen.
 * Press the Stage 1 button on the stage selection screen.
 
-###Tests
+### Tests
 #### Test for delay
 * Complete setup
 * Select any of the five cards that do not cause your robot to die.

@@ -9,7 +9,7 @@ public abstract class DirectionedPiece extends BoardPiece {
 
     /**
      * A board piece with direction
-     * @param pos positoin of piece on map
+     * @param pos position of piece on map
      * @param id tmx id
      * @param dir direction piece is facing
      */

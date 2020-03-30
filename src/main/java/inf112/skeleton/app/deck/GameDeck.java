@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class GameDeck {
-    private ArrayList<ProgramCard> drawDeck;
-    private ArrayList<ProgramCard> discardDeck;
+    private ArrayList<ProgramCard> drawDeck = new ArrayList<>();;
+    private ArrayList<ProgramCard> discardDeck = new ArrayList<>();;
     private final int maxNumberOfCardsOnHand = 9;
 
     private final int nrOfMove1 = 18;
@@ -21,9 +21,7 @@ public class GameDeck {
     private final int nrOfUturn = 6;
 
     public GameDeck() {
-        drawDeck = new ArrayList<ProgramCard>();
         generateDeck(drawDeck);
-        discardDeck = new ArrayList<ProgramCard>();
     }
 
     /**
@@ -80,7 +78,7 @@ public class GameDeck {
 
     /**
      * Add the cards used in a programCard deck. Should only be used when making a new deck
-     * @param deck
+     * @param deck deck to be added to
      */
     private void generateDeck(ArrayList<ProgramCard> deck) {
         addMove1(deck);

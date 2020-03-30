@@ -11,9 +11,6 @@ public class LogicGrid {
     private int width;
     private int height;
 
-    //TODO unused atm
-    private int numberOfLayers;
-
     //The number of players i the game
     private int numberOfPlayers;
 
@@ -59,7 +56,6 @@ public class LogicGrid {
         this.width = grid[0].length;
         this.height = grid.length;
         numberOfPlayers = 8;
-        numberOfLayers = map.getLayers().getCount(); //not used right now
 
         //Make a list of what will be the first player spawns
         initializeSpawns();
@@ -146,7 +142,6 @@ public class LogicGrid {
             isThisASpawnPoint(piece, x, y);
 
             //check returned piece isn't a null
-            int size = grid[x][y].size();
             grid[x][y].add(layerIndex, piece);
             return;
         }
@@ -194,11 +189,7 @@ public class LogicGrid {
                 grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
                 //add piece to new position
                 grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
-            } else {
-                System.out.println(newPosition.toString() + " is not available for " + playerPiece.toString());
             }
-        } else {
-            System.out.println("Cannot move nonplayer object" + playerPiece.toString() + "from " + oldPosition.toString() + " to " + newPosition.toString());
         }
     }
 
@@ -211,7 +202,6 @@ public class LogicGrid {
      */
     public boolean positionIsFree(Position position, int layerIndex) {
         //conveyor belts cannot move players off board as it causes error
-        //TODO, allow conveyorBelt to push player to death.
         if(!isInBounds(position)){
             return false;
         }
@@ -253,9 +243,9 @@ public class LogicGrid {
      * at the location in the list corresponding to the spawnNumber of the piece.
      *
      * This list is used by the players to find their first spawn point.
-     * @param piece
-     * @param x
-     * @param y
+     * @param piece piece to be checked
+     * @param x coordinates for @param piece
+     * @param y coordinates for @param piece
      */
     private void isThisASpawnPoint(BoardPiece piece, int x, int y) {
         //If it is a spawnPoint tile, add it to a list of start positions
@@ -278,14 +268,14 @@ public class LogicGrid {
      */
     public boolean canLeavePosition(Position currentPosition, Direction dir) {
         WallPiece possibleWallPiece = getPieceType(currentPosition, WallPiece.class);
-        if (possibleWallPiece != null && possibleWallPiece instanceof WallPiece) {
+        if (possibleWallPiece != null) {
             //cannot leave if the WallPiece player is standing on has a wall in the direction
             if (!(possibleWallPiece).canLeave(dir)) return false;
         }
         LaserSourcePiece possibleLaserSourcePiece = getPieceType(currentPosition, LaserSourcePiece.class);
-        if (possibleLaserSourcePiece != null && possibleLaserSourcePiece instanceof WallPiece) {
+        if (possibleLaserSourcePiece != null) {
             //cannot leave if the laserSourcePiece player is standing on has a wall in the direction
-            if (!(possibleLaserSourcePiece).canLeave(dir)) return false;
+            return (possibleLaserSourcePiece).canLeave(dir);
         }
         return true;
     }
@@ -302,14 +292,14 @@ public class LogicGrid {
         //if the piece in front is within the bounds, check what is there
         if (isInBounds(positionInFront)) {
             WallPiece possibleWallPiece = getPieceType(positionInFront, WallPiece.class);
-            if (possibleWallPiece != null && possibleWallPiece instanceof WallPiece) {
+            if (possibleWallPiece != null) {
                 //cannot go if WallPiece in front has a wall facing player
                 if (!(possibleWallPiece).canGo(dir)) return false;
             }
             LaserSourcePiece possibleLaserSourcePiece = getPieceType(positionInFront, LaserSourcePiece.class);
-            if (possibleLaserSourcePiece != null && possibleLaserSourcePiece instanceof WallPiece) {
+            if (possibleLaserSourcePiece != null) {
                 //cannot go if WallPiece in front has a wall facing player
-                if (!(possibleLaserSourcePiece).canGo(dir)) return false;
+                return (possibleLaserSourcePiece).canGo(dir);
             }
         }
         return true;

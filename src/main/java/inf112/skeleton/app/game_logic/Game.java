@@ -14,13 +14,13 @@ import java.util.Queue;
 
 public class Game {
     private LogicGrid logicGrid;
+    private final int NUMBER_OF_PLAYERS = 4;
     private GameDeck gameDeck;
     private Player player1;
-    private Player[] playerList;
+    private Player[] playerList = new Player[NUMBER_OF_PLAYERS];;
     private int roundNumber = 0;
     private Round round;
-    private final int NUMBER_OF_PLAYERS = 4;
-    private Queue<MovesToExecuteSimultaneously> moves;
+    private Queue<MovesToExecuteSimultaneously> moves = new LinkedList<>();
     private GameScreen gameScreen;
 
 
@@ -29,11 +29,9 @@ public class Game {
         this.gameScreen = gameScreen;
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player1 = new Player(1, this);
-        this.playerList = new Player[NUMBER_OF_PLAYERS];
         playerList[0] = player1;
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
-        this.moves = new LinkedList<>();
     }
 
     public void initiateComputerPlayers() {
@@ -44,6 +42,11 @@ public class Game {
         }
     }
 
+    /**
+     * Perform moves for robots
+     *
+     * @param moves All moves to execute
+     */
     public void performMoves(MovesToExecuteSimultaneously moves) {
         for (Move move : moves) {
             Position oldPos = move.getOldPos();
@@ -63,10 +66,6 @@ public class Game {
 
     public GameDeck getGameDeck() { return gameDeck; }
 
-    public void setGameDeck(GameDeck gameDeck) {
-        this.gameDeck = gameDeck;
-    }
-
     public Player getPlayer() {
         return player1;
     }
@@ -78,7 +77,7 @@ public class Game {
     public Round getRound(){return round;}
 
     /**
-     * Handles keyboard input
+     * Handles keyboard input for manually moving Player 1 around.
      */
     public void handleKeyBoardInput() {
         Move rotateMove = new Move(player1); //initiate possible rotateMove to be done
@@ -108,7 +107,6 @@ public class Game {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
             if(player1.isOnConveyorBelt()) {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
-                player1.setConveyorBeltMove(true);
             }
         }
         rotateMove.updateMove(player1); //complete rotateMove object
@@ -149,6 +147,7 @@ public class Game {
         return playerList;
     }
 
+
     public void executeRound() {
         // If there are moves to execute, then don't start new round
         this.round = new Round(this);
@@ -162,7 +161,7 @@ public class Game {
         round.setRoundNumber(roundNumber);
         //check all players have hand
         round.startRound();
-        round.finnishRound();
+        round.finishRound();
     }
 
     public Queue<MovesToExecuteSimultaneously> getMoves() {
@@ -177,7 +176,6 @@ public class Game {
     public void executeMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //backend execution
         this.moves.add(moves);//add to list of things to do in frontend
-        // gameScreen.executeMove(move); //frontend execution
     }
 
     /**
@@ -186,9 +184,9 @@ public class Game {
      * @return the player at that position
      */
     public Player getPlayerAt(Position pos){
-        for (int i = 0; i < playerList.length ; i++) {
-            if(playerList[i].getPos().equals(pos)){
-                return playerList[i];
+        for (Player player : playerList) {
+            if(player.getPos().equals(pos)){
+                return player;
             }
         }
         return null; //no player in position

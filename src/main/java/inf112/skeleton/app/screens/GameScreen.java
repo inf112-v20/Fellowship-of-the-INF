@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * Game screen at the moment only shows a board with a playerLayer, and a player
+ * Screen for the physical board.
  */
 public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer mapRenderer;
@@ -74,7 +74,6 @@ public class GameScreen implements Screen {
             TiledMapTileLayer.Cell playerCell = playerToInitialize.getPlayerCell();
             playerLayer.setCell(playerToInitialize.getPos().getX(), playerToInitialize.getPos().getY(), playerCell);
         }
-        //player = game.getPlayer();
     }
 
     @Override
@@ -107,7 +106,7 @@ public class GameScreen implements Screen {
      * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
-        //only handle keyboard inpuut if there are no moves to execute
+        //only handle keyboard input if there are no moves to execute
         if (!movesToExecute()) {
             handleKeyboardInput();
         }
@@ -141,7 +140,7 @@ public class GameScreen implements Screen {
 
 
     /**
-     * Changes the coordinates of the player based on user input
+     * Handling UI options
      */
 
     public void handleKeyboardInput() {
@@ -186,18 +185,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
 
-    }
-
-    public void erasePlayers() {
-        for (Player player : game.getListOfPlayers()) {
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
-        }
-    }
-
-    public void repaintPlayers() {
-        for (Player player : game.getListOfPlayers()) {
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
-        }
     }
 
     /**
