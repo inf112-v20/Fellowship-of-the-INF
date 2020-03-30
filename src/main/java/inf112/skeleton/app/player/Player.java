@@ -107,7 +107,7 @@ public class Player {
             addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
             setCurrentBoardPiece(newPosition.getX(), newPosition.getY()); //update currentBoardPiece
             setPos(newPosition);
-            move.updateMove(this);
+            move.updateMove();
             moves.add(move);
             latestMoveDirection = newDirection;
             this.conveyorBeltMove = false;
@@ -241,7 +241,6 @@ public class Player {
      * @param moves       list of moves to add move objects to
      */
     public void executeCardAction(ProgramCard programCard, MovesToExecuteSimultaneously moves) {
-        Move rotateMove = new Move(this); //initiate possible rotateMove to be done
         switch (programCard.getCommand()) {
             case MOVE1:
                 tryToGo(getPlayerPiece().getDir(), moves);
@@ -256,22 +255,20 @@ public class Player {
                 tryToGo(getPlayerPiece().getDir(), moves);
                 break;
             case UTURN:
-                turnPlayerAround();
+                turnPlayerAround(moves);
                 break;
             case BACKUP:
                 tryToGo(getPlayerPiece().getDir().getOppositeDirection(), moves);
                 break;
             case ROTATELEFT:
-                turnPlayerLeft();
+                turnPlayerLeft(moves);
                 break;
             case ROTATERIGHT:
-                turnPlayerRight();
+                turnPlayerRight(moves);
                 break;
             default:
                 break;
         }
-        rotateMove.updateMove(this); //complete rotateMove object
-        moves.add(rotateMove);
     }
 
     public int getPlayerNumber() {
@@ -286,16 +283,35 @@ public class Player {
         return playerPiece;
     }
 
-    public void turnPlayerAround() {
-        if (!isDead()) playerPiece.turnAround();
+    public void turnPlayerAround(MovesToExecuteSimultaneously moves) {
+        if (!isDead()) {
+            Move move = new Move(this);
+            playerPiece.turnAround();
+            move.updateMove();
+            moves.add(move);
+        }
     }
 
-    public void turnPlayerLeft() {
-        if (!isDead()) playerPiece.turnLeft();
+    /**
+     * If the player is not dead, player is turned around
+     * @param moves list to update
+     */
+    public void turnPlayerLeft(MovesToExecuteSimultaneously moves) {
+        if (!isDead())  {
+            Move move = new Move(this);
+            playerPiece.turnLeft();
+            move.updateMove();
+            moves.add(move);
+        }
     }
 
-    public void turnPlayerRight() {
-        if (!isDead()) playerPiece.turnRight();
+    public void turnPlayerRight(MovesToExecuteSimultaneously moves) {
+        if (!isDead()) {
+            Move move = new Move(this);
+            playerPiece.turnRight();
+            move.updateMove();
+            moves.add(move);
+        }
     }
 
     public ArrayList<ProgramCard> getPlayerHandDeck() {

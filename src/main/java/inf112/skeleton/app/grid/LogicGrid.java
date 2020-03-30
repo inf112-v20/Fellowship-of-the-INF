@@ -206,6 +206,8 @@ public class LogicGrid {
                 //add piece to new position
                 grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
             }
+        } else {
+            System.out.println("Cannot move nonplayer to new position");
         }
     }
 

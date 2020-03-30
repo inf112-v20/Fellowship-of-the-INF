@@ -15,13 +15,14 @@ public class BoardElementsMove {
      * Rotates a player standing on a cog 90* in the direction of the cog.
      *
      * @param player The player that is currently standing on the BoardPiece.
+     * @param moves list to update with rotate move
      */
-    public static void rotateCog(Player player) {
+    public static void rotateCog(Player player, MovesToExecuteSimultaneously moves) {
         BoardPiece boardPiece = player.getCurrentBoardPiece();
         if (((CogPiece) boardPiece).isRotateClockwise()) {
-            player.turnPlayerRight();
+            player.turnPlayerRight(moves);
         } else {
-            player.turnPlayerLeft();
+            player.turnPlayerLeft(moves);
         }
     }
 
@@ -64,9 +65,9 @@ public class BoardElementsMove {
         if ((conveyorBeltPiece.isTurn() && player.isLatestMoveConveyorBelt()
                 && player.latestMoveDirection() != conveyorBeltDirection)) {
             if (player.latestMoveDirection().getRightTurnDirection() == conveyorBeltDirection) {
-                player.turnPlayerRight();
+                player.turnPlayerRight(moves);
             } else if (player.latestMoveDirection().getLeftTurnDirection() == conveyorBeltDirection) {
-                player.turnPlayerLeft();
+                player.turnPlayerLeft(moves);
             }
         }
         player.tryToGo(conveyorBeltDirection, moves);

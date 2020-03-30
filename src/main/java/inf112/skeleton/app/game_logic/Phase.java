@@ -211,10 +211,7 @@ public class Phase {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
             if (player.isOnCog()) {
-                Move move = new Move(player);
-                BoardElementsMove.rotateCog(player);
-                move.updateMove(player);
-                moves.add(move);
+                BoardElementsMove.rotateCog(player, moves);
             }
         }
         game.executeMoves(moves);

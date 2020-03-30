@@ -83,9 +83,8 @@ public class Move {
     /**
      * updates the move object with the players new position and direction
      *
-     * @param player the player after it has executed a move
      */
-    public void updateMove(Player player) {
+    public void updateMove() {
         newPos = playerPiece.getPos();
         newDir = playerPiece.getDir();
     }

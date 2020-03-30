@@ -99,18 +99,17 @@ public class Game {
      * Handles keyboard input for manually moving Player 1 around.
      */
     public void handleKeyBoardInput() {
-        Move rotateMove = new Move(player1); //initiate possible rotateMove to be done
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();//initiate moves to be done
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            player1.turnPlayerLeft();
+            player1.turnPlayerLeft(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            player1.turnPlayerRight();
+            player1.turnPlayerRight(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            player1.turnPlayerAround();
+            player1.turnPlayerAround(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             player1.shootLaser();
             gameScreen.shootLasers();
@@ -131,8 +130,6 @@ public class Game {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
             }
         }
-        rotateMove.updateMove(player1); //complete rotateMove object
-        moves.add(rotateMove);
         //first player moves get executed
         performMoves(moves); //execute moves if there are any
         for (Move move : moves) {
@@ -142,20 +139,17 @@ public class Game {
 
         //second player moves get handled
         Player player2 = playerList[1];
-        Move move2 = new Move(player2);
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
             player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            player2.turnPlayerLeft();
+            player2.turnPlayerLeft(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            player2.turnPlayerRight();
+            player2.turnPlayerRight(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-            player2.turnPlayerAround();
+            player2.turnPlayerAround(moves);
         }
-        move2.updateMove(player2); //complete move object
-        moves.add(move2);
         //execution of player 2 moves
         performMoves(moves); //execute moves if there are any
         for (Move move : moves) {
