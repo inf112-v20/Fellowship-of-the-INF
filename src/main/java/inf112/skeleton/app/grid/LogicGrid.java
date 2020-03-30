@@ -358,7 +358,10 @@ public class LogicGrid {
     }
 
     /**
-     * Finds a valid spawn point
+     * Finds a valid spawn point.
+     *
+     * If spawn point is not valid, the positions N, S, E, W are checked, and if these are not valid,
+     * then the positions N, S, E, W of them are checked.
      *
      * @param spawnPoint check if it is valid
      * @return valid spawn point
@@ -371,6 +374,7 @@ public class LogicGrid {
             if (positionIsFree(spawnPoint.getPositionIn(dir), playerLayerIndex)
                     && spawnIsSafe(spawnPoint)) return spawnPoint.getPositionIn(dir);
         }
+        //check the neighbouring positions of the neighbouring positions
         for (Direction dir : Direction.values()) {
             Position checkedPosition = spawnPoint.getPositionIn(dir);
             for (Direction dir2 : Direction.values()) {
@@ -394,20 +398,5 @@ public class LogicGrid {
             //you can add more things to check for here
         }
         return true;
-    }
-
-    /**
-     * Checks if a player was standing on it's spawnpoint before it died / moved to it's death
-     *
-     * @param player     to check if it is standing on spawnPoint
-     * @param spawnPoint position
-     * @return true if the player was standing on it's spawmpoint before it moves to it's death.
-     */
-    private boolean playerWasStandingOnItsSpawnPoint(Player player, Position spawnPoint) {
-        BoardPiece pieceOnSpawnPoint = grid[spawnPoint.getX()][spawnPoint.getY()].get(playerLayerIndex);
-        if (pieceOnSpawnPoint instanceof PlayerPiece) {
-            return ((PlayerPiece) pieceOnSpawnPoint).getPlayerNumber() == player.getPlayerNumber();
-        }
-        return false;
     }
 }
