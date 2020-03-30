@@ -10,6 +10,7 @@ import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
+
 import java.util.*;
 
 /**
@@ -54,7 +55,7 @@ public class Player {
         this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, this);
         this.isDead = false;
         this.powerDownMode = false;
-        this.oldLaserPos = new Position(-1,0);
+        this.oldLaserPos = new Position(-1, 0);
     }
 
 
@@ -314,7 +315,6 @@ public class Player {
     }
 
 
-
     /**
      * Picks the first cards in the hand so that selectedcards has 5 cards.
      */
@@ -374,11 +374,15 @@ public class Player {
         }
         if (damage >= 5 && damage <= 9) {
             int number = damage - oldDamage;
-            if(oldDamage < 5){number = damage - 4;}
-            if(number > 5-lockedCards.size()){number = 5-lockedCards.size();}
+            if (oldDamage < 5) {
+                number = damage - 4;
+            }
+            if (number > 5 - lockedCards.size()) {
+                number = 5 - lockedCards.size();
+            }
             for (int i = 0; i < number; i++) {
-                lockedCards.add(0, selectedCards[(8-(damage-number))-i]);
-                System.out.println("Locking card" + selectedCards[(8-(damage-number))-i]);
+                lockedCards.add(0, selectedCards[(8 - (damage - number)) - i]);
+                System.out.println("Locking card" + selectedCards[(8 - (damage - number)) - i]);
                 playerHandDeck.remove(lockedCards.get(0));
             }
         }
@@ -526,36 +530,44 @@ public class Player {
         return hasBeenMovedThisPhase;
     }
 
-    public ArrayList<Position> getLaserPath(){
+    public ArrayList<Position> getLaserPath() {
         return laserPath;
     }
 
 
-
-    public Position getOldLaserPos(){
+    public Position getOldLaserPos() {
         return oldLaserPos;
     }
 
-    public void setOldLaserPos(Position pos){
+    public void setOldLaserPos(Position pos) {
         oldLaserPos = pos;
     }
 
-    public void shootLaser(){
+    public void shootLaser() {
         Direction laserDir = playerPiece.getDir();
         Position laserPos = getPos();
         for (int i = 0; i < logicGrid.getHeight(); i++) {
             //System.out.println(player.toString() + " laser is at " + laserPos);
-            if (!logicGrid.isInBounds(laserPos)) { return; }
-            if(!logicGrid.positionIsFree(laserPos, 12) && !laserPos.equals(getPos())){
-                if(game.getPlayerAt(laserPos) == null){System.out.println("Error: " + toString() + " Couldn't shoot player"); return;}
+            if (!logicGrid.isInBounds(laserPos)) {
+                return;
+            }
+            if (!logicGrid.positionIsFree(laserPos, 12) && !laserPos.equals(getPos())) {
+                if (game.getPlayerAt(laserPos) == null) {
+                    System.out.println("Error: " + toString() + " Couldn't shoot player");
+                    return;
+                }
                 game.getPlayerAt(laserPos).takeDamage(1);
                 //System.out.println(player.toString() + " hit " + game.getPlayerAt(laserPos).toString());
                 laserPath.add(laserPos);
                 return;
             }
-            if(!logicGrid.canLeavePosition(laserPos, laserDir)||
-                    !logicGrid.canEnterNewPosition(laserPos.getPositionIn(laserDir), laserDir)){return;}
-            if(i == 0){setOldLaserPos(laserPos);}
+            if (!logicGrid.canLeavePosition(laserPos, laserDir) ||
+                    !logicGrid.canEnterNewPosition(laserPos.getPositionIn(laserDir), laserDir)) {
+                return;
+            }
+            if (i == 0) {
+                setOldLaserPos(laserPos);
+            }
             laserPos = laserPos.getPositionIn(laserDir);
             laserPath.add(laserPos);
         }

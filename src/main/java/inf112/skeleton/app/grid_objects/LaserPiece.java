@@ -8,11 +8,10 @@ public class LaserPiece extends DirectionedPiece {
     private boolean crossingLasers;
 
     /**
-     *
-     * @param pos position of laser piece on board
-     * @param id tmx id
-     * @param dir direction the laser is shooting
-     * @param doubleLaser true if there are two parallel lasers on this cell
+     * @param pos            position of laser piece on board
+     * @param id             tmx id
+     * @param dir            direction the laser is shooting
+     * @param doubleLaser    true if there are two parallel lasers on this cell
      * @param crossingLasers true if this is a grid with crossing lasers
      */
     public LaserPiece(Position pos, int id, Direction dir, boolean doubleLaser, boolean crossingLasers) {

@@ -44,6 +44,7 @@ public class Phase {
 
     /**
      * Things that need to be done at the beginning of each phase
+     *
      * @param phaseNumber which phase out of five it is
      */
     public void startPhase(int phaseNumber) {
@@ -72,7 +73,7 @@ public class Phase {
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
-           // if(player.getPlayerNumber() == 1 || player.getPlayerNumber() == 2){continue;}
+            // if(player.getPlayerNumber() == 1 || player.getPlayerNumber() == 2){continue;}
             MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
         }
@@ -95,7 +96,7 @@ public class Phase {
     /**
      * Checks if players are currently on a flag.
      * If so, check if this is the flag the player is currently going for, using the number of checkpoints visited.
-     *
+     * <p>
      * If this is the right checkpoint, then set a new spawnpoint from this location.
      */
     private void touchCheckPoints() {
@@ -109,8 +110,8 @@ public class Phase {
                     player.setSpawnPoint(player.getPos().getX(), player.getPos().getY());
                 }
             }
+        }
     }
-}
 
     /**
      * Checks if a player is currently on a laser.
@@ -120,20 +121,22 @@ public class Phase {
         // Static lasers (from walls)
         for (Player player : listOfPlayers) {
             player.shootLaser();
-                LogicGrid logicGrid = game.getLogicGrid();
+            LogicGrid logicGrid = game.getLogicGrid();
             int damage = 1;
             LaserPiece laser;
-            if(logicGrid.isInBounds(player.getPos())) {
+            if (logicGrid.isInBounds(player.getPos())) {
                 if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
                     laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
                     if (!logicGrid.positionIsFree(player.getPos(), 8)
                             && logicGrid.positionIsFree(player.getPos(), 9)) {
-                        if(isPlayerBlocking(player.getPos(), laser.getDir())){
-                          //  System.out.println("Someone is blocking a laser for " + player.toString());
+                        if (isPlayerBlocking(player.getPos(), laser.getDir())) {
+                            //  System.out.println("Someone is blocking a laser for " + player.toString());
                             continue;
                         }
                     }
-                    if (laser.isDoubleLaser() || laser.isCrossingLasers()) {damage += 1;}
+                    if (laser.isDoubleLaser() || laser.isCrossingLasers()) {
+                        damage += 1;
+                    }
                     //System.out.println(player.toString() + " was hit by a laser");
                     player.takeDamage(damage);
                 }
@@ -141,15 +144,19 @@ public class Phase {
         }
     }
 
-    private boolean isPlayerBlocking(Position laserPos, Direction dir){
+    private boolean isPlayerBlocking(Position laserPos, Direction dir) {
         LogicGrid logicGrid = game.getLogicGrid();
         Position copy = laserPos;
         boolean playerBetween = false;
         for (int i = 0; i < logicGrid.getHeight(); i++) {
             laserPos = laserPos.getPositionIn(dir);
-            if(!logicGrid.isInBounds(laserPos)){break;}
+            if (!logicGrid.isInBounds(laserPos)) {
+                break;
+            }
             //System.out.println(laserPos);
-            if (!logicGrid.positionIsFree(laserPos, 12)) { playerBetween = true; }
+            if (!logicGrid.positionIsFree(laserPos, 12)) {
+                playerBetween = true;
+            }
             if (!logicGrid.positionIsFree(laserPos, 9)) {
                 if (game.getLogicGrid().getPieceType(laserPos, LaserSourcePiece.class) != null) {
                     LaserSourcePiece laserSource = game.getLogicGrid().getPieceType(laserPos, LaserSourcePiece.class);
@@ -161,27 +168,29 @@ public class Phase {
                 }
             }
         }
-        return(isPlayerBlocking(copy, dir.getOppositeDirection()));
+        return (isPlayerBlocking(copy, dir.getOppositeDirection()));
     }
-
 
 
     /**
      * Checks if any player is on a conveyorbelt and will move them if they do
+     *
      * @param moveOnlyExpressBelts true if only expressbelts should move
      */
     public void moveConveyorBelts(boolean moveOnlyExpressBelts) {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
-        for (Player player : listOfPlayers){
-            if(player.isOnConveyorBelt()) {
-                if((moveOnlyExpressBelts && !player.isOnExpressBelt())||player.hasBeenMovedThisPhase()){
+        for (Player player : listOfPlayers) {
+            if (player.isOnConveyorBelt()) {
+                if ((moveOnlyExpressBelts && !player.isOnExpressBelt()) || player.hasBeenMovedThisPhase()) {
                     continue;
                 }
                 BoardElementsMove.moveConveyorBelt(player, game, moveOnlyExpressBelts, moves);
             }
         }
         game.executeMoves(moves);
-        for (Player player : listOfPlayers){player.setHasBeenMovedThisPhase(false);}
+        for (Player player : listOfPlayers) {
+            player.setHasBeenMovedThisPhase(false);
+        }
     }
 
     /**

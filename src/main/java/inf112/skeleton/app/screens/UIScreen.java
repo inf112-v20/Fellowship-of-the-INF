@@ -24,7 +24,7 @@ import inf112.skeleton.app.player.Player;
 import java.util.ArrayList;
 
 
-public class UIScreen{
+public class UIScreen {
     private ScoreBoardScreen scoreBoardScreen;
     private Stage stage;
     private float width;
@@ -47,7 +47,7 @@ public class UIScreen{
         stage = new Stage();
         Texture texture = new Texture(Gdx.files.internal("ui/background.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
-        createImage(textureRegion, 1, width*0.5f, 0, 1);
+        createImage(textureRegion, 1, width * 0.5f, 0, 1);
         createLockInButton();
         createPlayerPicture();
         createDamageTokens();
@@ -61,17 +61,19 @@ public class UIScreen{
      * Press ENTER to play the next phase.
      * Starts a new round if the last phase was phase number 5
      */
-    public void handleInput(){
-         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-             if(game.getRound().getPhaseNr() > 4){
-                 this.newRound();
-             }
-             else {
-                 if(game.getRound().getPhaseNr() == 0){executeLockInButton(); return;}
-                 game.getRound().nextPhase();
-                 updateGameLog();
-             }
-         }
+    public void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (game.getRound().getPhaseNr() > 4) {
+                this.newRound();
+            } else {
+                if (game.getRound().getPhaseNr() == 0) {
+                    executeLockInButton();
+                    return;
+                }
+                game.getRound().nextPhase();
+                updateGameLog();
+            }
+        }
     }
 
     /**
@@ -79,10 +81,10 @@ public class UIScreen{
      * Removes the game log from the last phase
      * Creates new cardbuttons for the new playerhand
      */
-    public void newRound(){
+    public void newRound() {
         game.executeRound();
         lockInButton.setTouchable(Touchable.disabled);
-        if(player.getLockedCards().size() == 5){
+        if (player.getLockedCards().size() == 5) {
             lockInButton.setTouchable(Touchable.enabled);
             Color c = lockInButton.getColor();
             lockInButton.setColor(c.r, c.g, c.b, 1);
@@ -100,32 +102,33 @@ public class UIScreen{
         removeGameLog();
         Phase phase = game.getRound().getPhase();
         gamelogActors.add(drawText("Round " + game.getRound().getRoundNumber() +
-                ":          Phase " + (phase.getPhaseNumber()+1), 10, width*0.52f, height*0.7f, Color.GOLD));
+                ":          Phase " + (phase.getPhaseNumber() + 1), 10, width * 0.52f, height * 0.7f, Color.GOLD));
         for (int i = 0; i < phase.getOrderedListOfPlayers().size(); i++) {
             Player player = phase.getOrderedListOfPlayers().get(i);
             ProgramCard card = player.getSelectedCards()[phase.getPhaseNumber()];
             float gap = card.getTexture().getWidth() * 1.3f;
             float posX = (width * 0.51f) + (i * gap);
             TextureRegion cardPicture = new TextureRegion(card.getTexture());
-            gamelogActors.add(createImage(cardPicture, 0.2f, posX, height*0.4f, 1));
+            gamelogActors.add(createImage(cardPicture, 0.2f, posX, height * 0.4f, 1));
             String priorityText = String.valueOf(card.getPriority());
-            float textPosX = cardPicture.getRegionWidth()*0.65f;
+            float textPosX = cardPicture.getRegionWidth() * 0.65f;
             float textPosY = cardPicture.getRegionHeight();
-            gamelogActors.add(drawText(priorityText, 4, posX + textPosX, height*0.4f + textPosY, Color.GREEN));
+            gamelogActors.add(drawText(priorityText, 4, posX + textPosX, height * 0.4f + textPosY, Color.GREEN));
             TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
             posX = (width * 0.515f) + (i * gap);
-            gamelogActors.add(createImage(playerPicture, 0.01f, posX, height*0.55f, 1));
+            gamelogActors.add(createImage(playerPicture, 0.01f, posX, height * 0.55f, 1));
             posX = (width * 0.53f) + (i * gap);
-            gamelogActors.add(drawText("" + (i+1), 10, posX, height*0.37f, Color.BLACK));
+            gamelogActors.add(drawText("" + (i + 1), 10, posX, height * 0.37f, Color.BLACK));
         }
     }
+
     /**
      * Removes every actor from the gamelog
      * (and will automatically be removed from the stage)
      */
-    public void removeGameLog(){
+    public void removeGameLog() {
         int numberOfActors = gamelogActors.size();
-        for (int i = 0; i < numberOfActors ; i++) {
+        for (int i = 0; i < numberOfActors; i++) {
             gamelogActors.get(0).remove();
             gamelogActors.remove(0);
         }
@@ -135,27 +138,36 @@ public class UIScreen{
      * Updates the UI for the player info when taking damage,
      * getting repairs, visiting flags/checkpoints, losing lifes.
      */
-    public void update(){
+    public void update() {
         float alpha; //opacity of the image
         Color c = lifeActors[0].getColor();
-        for (int i = 0; i < 3 ; i++) {
-            if (i > player.getLives() - 1) {alpha = 0.2f; }
-            else {alpha = 1;}
+        for (int i = 0; i < 3; i++) {
+            if (i > player.getLives() - 1) {
+                alpha = 0.2f;
+            } else {
+                alpha = 1;
+            }
             lifeActors[i].setColor(c.r, c.g, c.b, alpha);
         }
         c = checkpointActors[0].getColor();
         for (int i = 0; i < 3; i++) {
-            if(i > player.getCheckpointsVisited()-1){alpha = 0.2f;}
-            else{alpha = 1;}
+            if (i > player.getCheckpointsVisited() - 1) {
+                alpha = 0.2f;
+            } else {
+                alpha = 1;
+            }
             checkpointActors[i].setColor(c.r, c.g, c.b, alpha);
         }
         c = damageActors[0].getColor();
         for (int i = 0; i < 10; i++) {
-            if(i > player.getDamage()-1){alpha = 0.2f;}
-            else{alpha = 1;}
-            damageActors[9-i].setColor(c.r, c.g, c.b, alpha);
+            if (i > player.getDamage() - 1) {
+                alpha = 0.2f;
+            } else {
+                alpha = 1;
+            }
+            damageActors[9 - i].setColor(c.r, c.g, c.b, alpha);
         }
-        if(player.getSelectedCards()[4] != null) {
+        if (player.getSelectedCards()[4] != null) {
             for (int i = 0; i < 5; i++) {
                 if (i < player.getLockedCards().size()) {
                     cardButton.getSelectedCardImages()[4 - i].setColor(Color.RED);
@@ -170,25 +182,25 @@ public class UIScreen{
     /**
      * Creates the player picture and the name of the player above it.
      */
-    public void createPlayerPicture(){
+    public void createPlayerPicture() {
         Texture backgroundTexture = new Texture(Gdx.files.internal("ui/profilepicture.png"));
         TextureRegion backgroundPicture = new TextureRegion(backgroundTexture);
-        createImage(backgroundPicture, 1, width *0.5f, height*0.75f, 0.85f);
+        createImage(backgroundPicture, 1, width * 0.5f, height * 0.75f, 0.85f);
         TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
-        createImage(playerPicture, 1, width *0.5f, height*0.75f, 1);
-        String playerName  = "Player " + player.getPlayerNumber();
+        createImage(playerPicture, 1, width * 0.5f, height * 0.75f, 1);
+        String playerName = "Player " + player.getPlayerNumber();
         drawText(playerName, 10, width * 0.51f, height * 0.95f, Color.BLACK);
     }
 
     /**
      * Creates all 3 life tokens.
      */
-    public void createLifeTokens(){
+    public void createLifeTokens() {
         Texture texture = new Texture(Gdx.files.internal("ui/lifetoken.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         float alpha = 1;
         float posY = height * 0.87f;
-        for (int i = 0; i < 3 ; i++) {
+        for (int i = 0; i < 3; i++) {
             float posX = (width * 0.6f) + (i * texture.getWidth() * 1.8f);
             Image lifeTokenImage = createImage(textureRegion, 0.25f, posX, posY, alpha);
             lifeActors[i] = lifeTokenImage;
@@ -198,11 +210,11 @@ public class UIScreen{
     /**
      * Creates all 3 checkpoint tokens
      */
-    public void createCheckPointTokens(){
+    public void createCheckPointTokens() {
         Texture texture = new Texture(Gdx.files.internal("ui/checkpointtoken.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         float posY = height * 0.75f;
-        for (int i = 0; i < 3 ; i++) {
+        for (int i = 0; i < 3; i++) {
             float posX = (width * 0.6f) + (i * texture.getWidth() * 1.8f);
             Image checkpointTokenImage = createImage(textureRegion, 0.25f, posX, posY, 0.2f);
             checkpointActors[i] = checkpointTokenImage;
@@ -212,11 +224,11 @@ public class UIScreen{
     /**
      * Creates all 10 damagetokens
      */
-    public void createDamageTokens(){
+    public void createDamageTokens() {
         Texture texture = new Texture(Gdx.files.internal("ui/damagetoken.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         float posY = height * 0.25f;
-        for (int i = 0; i < 10 ; i++) {
+        for (int i = 0; i < 10; i++) {
             float posX = (width * 0.51f) + (i * texture.getWidth() * 2.5f);
             Image damageTokenImage = createImage(textureRegion, 1.1f, posX, posY, 1);
             damageActors[i] = damageTokenImage;
@@ -226,7 +238,7 @@ public class UIScreen{
     /**
      * Creates the powerdown image
      */
-    public void createPowerDownImage(){
+    public void createPowerDownImage() {
         Texture texture = new Texture(Gdx.files.internal("ui/powerdown.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         float posY = height * 0.08f;
@@ -237,9 +249,9 @@ public class UIScreen{
     /**
      * Creates the lockInButton
      */
-    public void createLockInButton(){
+    public void createLockInButton() {
         Texture texture = new Texture(Gdx.files.internal("ui/lockinbutton.png"));
-        lockInButton = createButton(texture, 0.75f, width * 0.8f, height*0.08f);
+        lockInButton = createButton(texture, 0.75f, width * 0.8f, height * 0.08f);
         Color c = lockInButton.getColor();
         lockInButton.setColor(c.r, c.g, c.b, 0.5f);
         lockInButtonPressed(lockInButton);
@@ -247,10 +259,11 @@ public class UIScreen{
 
     /**
      * Creates an ImageButton and adds it to the stage
+     *
      * @param texture the texture for the button
-     * @param scale the scale to size the button by
-     * @param posX the wanted x position of the button
-     * @param posY the wanted y position of the button
+     * @param scale   the scale to size the button by
+     * @param posX    the wanted x position of the button
+     * @param posY    the wanted y position of the button
      * @return the created ImageButton
      */
     public ImageButton createButton(Texture texture, float scale, float posX, float posY) {
@@ -265,11 +278,12 @@ public class UIScreen{
 
     /**
      * Creates an Image and adds to the stage
+     *
      * @param textureRegion the texture for the image
-     * @param scale the scale to size the image by
-     * @param posX the wanted x position of the image
-     * @param posY the wanted y position of the image
-     * @param alpha the opacity of the image
+     * @param scale         the scale to size the image by
+     * @param posX          the wanted x position of the image
+     * @param posY          the wanted y position of the image
+     * @param alpha         the opacity of the image
      * @return the created Image
      */
     public Image createImage(TextureRegion textureRegion, float scale, float posX, float posY, float alpha) {
@@ -285,9 +299,10 @@ public class UIScreen{
 
     /**
      * Clicklistener for the lockinbutton
+     *
      * @param lockInButton the button to create a clicklistener for
      */
-    public void lockInButtonPressed(ImageButton lockInButton){
+    public void lockInButtonPressed(ImageButton lockInButton) {
 
         lockInButton.addListener(new ClickListener() {
             @Override
@@ -299,14 +314,15 @@ public class UIScreen{
 
     /**
      * Draws text on the UI
-     * @param text the text to draw
+     *
+     * @param text  the text to draw
      * @param scale the scale to size the text by
-     * @param posX the wanted x position of the text
-     * @param posY the wanted y position of the text
+     * @param posX  the wanted x position of the text
+     * @param posY  the wanted y position of the text
      * @param color the wanted color of the text
      * @return the Label that is created
      */
-    public Label drawText(String text, float scale, float posX, float posY, Color color){
+    public Label drawText(String text, float scale, float posX, float posY, Color color) {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = new BitmapFont();
         labelStyle.fontColor = color;
@@ -324,22 +340,26 @@ public class UIScreen{
      * Disables the buttons for the cards so the
      * player cant move them after locking in.
      */
-    public void executeLockInButton(){
-        for (int i = 0; i < 5 ; i++) {
-            if(cardButton.getSelectedCards()[i] == null){System.out.println("Not enough cards"); return;}
+    public void executeLockInButton() {
+        for (int i = 0; i < 5; i++) {
+            if (cardButton.getSelectedCards()[i] == null) {
+                System.out.println("Not enough cards");
+                return;
+            }
         }
-        for (int i = 0; i < 5 ; i++) {
+        for (int i = 0; i < 5; i++) {
             cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
         }
         Color c = lockInButton.getColor();
         lockInButton.setColor(c.r, c.g, c.b, 0.5f);
         lockInButton.setTouchable(Touchable.disabled);
-        for (int i = 0; i <cardButton.getLeftOverCardButtons().size() ; i++) {
-            if(cardButton.getLeftOverCardButtons().get(i) != null) {
+        for (int i = 0; i < cardButton.getLeftOverCardButtons().size(); i++) {
+            if (cardButton.getLeftOverCardButtons().get(i) != null) {
                 cardButton.getLeftOverCardButtons().get(i).remove();
             }
         }
-        player.setSelectedCards(cardButton.getSelectedCards());game.getRound().nextPhase();
+        player.setSelectedCards(cardButton.getSelectedCards());
+        game.getRound().nextPhase();
         updateGameLog();
     }
 
@@ -347,6 +367,8 @@ public class UIScreen{
         return stage;
     }
 
-    public ScoreBoardScreen getScoreBoardScreen(){return scoreBoardScreen;}
+    public ScoreBoardScreen getScoreBoardScreen() {
+        return scoreBoardScreen;
+    }
 }
 

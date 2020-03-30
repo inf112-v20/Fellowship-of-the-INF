@@ -17,6 +17,7 @@ public class BoardPieceGenerator {
 
     /**
      * Creates BoardPiece to put in PieceGrid
+     *
      * @param id tmx id
      * @return BoardPiece corresponding to the id
      */

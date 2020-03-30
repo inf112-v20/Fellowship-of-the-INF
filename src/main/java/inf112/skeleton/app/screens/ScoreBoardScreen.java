@@ -49,16 +49,16 @@ public class ScoreBoardScreen {
         update();
     }
 
-    public void update(){
+    public void update() {
         table.clear();
         table.setWidth(3000);
         table.setHeight(3000);
-        table.setPosition(4000,500);
+        table.setPosition(4000, 500);
 
         TextureRegion whiteTR = new TextureRegion(whiteTexture);
-        TextureRegionDrawable whiteTRD =  new TextureRegionDrawable(whiteTR);
+        TextureRegionDrawable whiteTRD = new TextureRegionDrawable(whiteTR);
 
-        String headLabelText  = "Name";
+        String headLabelText = "Name";
         Label headLabel = new Label(headLabelText, oddRowStyle);
         headLabel.setFontScale(10);
         headLabel.setAlignment(1);
@@ -90,7 +90,7 @@ public class ScoreBoardScreen {
         table.add(checkpointStack).fill();
         table.row();
 
-        for (int i = 0; i < game.getListOfPlayers().length ; i++) {
+        for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
             String playerText = "Player " + player.getPlayerNumber();
             String lifeText = "" + player.getLives();
@@ -101,18 +101,17 @@ public class ScoreBoardScreen {
             Label damageLabel;
             Label checkpointLabel;
             Image backgroundColor = new Image(whiteTRD);
-            if(i%2 == 0){
+            if (i % 2 == 0) {
                 playerLabel = new Label(playerText, evenRowStyle);
                 lifeLabel = new Label(lifeText, evenRowStyle);
                 damageLabel = new Label(damageText, evenRowStyle);
                 checkpointLabel = new Label(checkpointText, evenRowStyle);
                 backgroundColor.setColor(Color.BLACK);
-            }
-            else{
+            } else {
                 playerLabel = new Label(playerText, oddRowStyle);
                 lifeLabel = new Label(lifeText, oddRowStyle);
                 damageLabel = new Label(damageText, oddRowStyle);
-                checkpointLabel = new Label(checkpointText, oddRowStyle );
+                checkpointLabel = new Label(checkpointText, oddRowStyle);
                 backgroundColor.setColor(Color.DARK_GRAY);
             }
             playerLabel.setFontScale(10);
@@ -139,13 +138,13 @@ public class ScoreBoardScreen {
         stage.addActor(table);
     }
 
-    public Image createImage(Texture texture){
+    public Image createImage(Texture texture) {
         TextureRegion textureRegion = new TextureRegion(texture);
         TextureRegionDrawable textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         return new Image(textureRegionDrawable);
     }
 
-    public Stage getStage(){
+    public Stage getStage() {
         return stage;
     }
 }

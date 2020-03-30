@@ -12,8 +12,8 @@ public abstract class BoardPiece {
 
     /**
      * @param pos position of boardPiece
-     * @param id number is retrieved from RoborallyBoard.tmx. It essetially tells us which tile image represents this
-     *           board piece
+     * @param id  number is retrieved from RoborallyBoard.tmx. It essetially tells us which tile image represents this
+     *            board piece
      */
     public BoardPiece(Position pos, int id) {
         this.pos = pos;
@@ -29,7 +29,7 @@ public abstract class BoardPiece {
     }
 
 
-    public  int getId(){
+    public int getId() {
         return id;
     }
 }

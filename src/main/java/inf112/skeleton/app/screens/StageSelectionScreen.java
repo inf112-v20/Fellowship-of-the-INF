@@ -146,8 +146,6 @@ public class StageSelectionScreen implements Screen {
             stage.addActor(stageTestButton);
 
 
-
-
         }
         // Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));

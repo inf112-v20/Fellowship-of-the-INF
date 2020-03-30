@@ -3,7 +3,7 @@ package inf112.skeleton.app.cards;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-public class ProgramCard implements IProgramCard{
+public class ProgramCard implements IProgramCard {
 
     private int priority;
     private CardType cardType;
@@ -82,14 +82,13 @@ public class ProgramCard implements IProgramCard{
          */
     }
 
-    public boolean isMoveCard(){
+    public boolean isMoveCard() {
         return moveCard;
     }
 
-    public int getMovement(){
+    public int getMovement() {
         return movement;
     }
-
 
 
 }

@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class GameDeck {
-    private ArrayList<ProgramCard> drawDeck = new ArrayList<>();;
-    private ArrayList<ProgramCard> discardDeck = new ArrayList<>();;
+    private ArrayList<ProgramCard> drawDeck = new ArrayList<>();
+    ;
+    private ArrayList<ProgramCard> discardDeck = new ArrayList<>();
+    ;
     private final int maxNumberOfCardsOnHand = 9;
 
     private final int nrOfMove1 = 18;
@@ -28,7 +30,7 @@ public class GameDeck {
      * Draw a new hand based on the damage you have taken. Will also handle if you are running out of cards.
      * Number of cards are calculated by subtracting the number of damage you have taken from the maximum number of cards
      *
-     * @param playerHand The cards the player has had on their hand
+     * @param playerHand  The cards the player has had on their hand
      * @param damageValue The amount of damage the player has taken
      * @return A new deck of cards to the play
      */
@@ -64,9 +66,9 @@ public class GameDeck {
         }
     }
 
-    private void moveAll(ArrayList<ProgramCard> toDeck, ArrayList<ProgramCard> fromDeck){
+    private void moveAll(ArrayList<ProgramCard> toDeck, ArrayList<ProgramCard> fromDeck) {
         int deckSize = fromDeck.size();
-        for(int i=0; i<deckSize; i++) {
+        for (int i = 0; i < deckSize; i++) {
             toDeck.add(fromDeck.get(0));
             fromDeck.remove(0);
         }
@@ -78,6 +80,7 @@ public class GameDeck {
 
     /**
      * Add the cards used in a programCard deck. Should only be used when making a new deck
+     *
      * @param deck deck to be added to
      */
     private void generateDeck(ArrayList<ProgramCard> deck) {
@@ -93,7 +96,7 @@ public class GameDeck {
 
     private void addMove1(ArrayList<ProgramCard> deck) {
         int priority = 490;
-        for (int i=0; i<nrOfMove1; i++) {
+        for (int i = 0; i < nrOfMove1; i++) {
             deck.add(new ProgramCard(priority, CardType.MOVE1));
             priority += 10;
         }
@@ -101,7 +104,7 @@ public class GameDeck {
 
     private void addMove2(ArrayList<ProgramCard> deck) {
         int priority = 670;
-        for (int i=0; i<nrOfMove2; i++) {
+        for (int i = 0; i < nrOfMove2; i++) {
             deck.add(new ProgramCard(priority, CardType.MOVE2));
             priority += 10;
         }
@@ -109,7 +112,7 @@ public class GameDeck {
 
     private void addMove3(ArrayList<ProgramCard> deck) {
         int priority = 790;
-        for (int i=0; i<nrOfMove3; i++) {
+        for (int i = 0; i < nrOfMove3; i++) {
             deck.add(new ProgramCard(priority, CardType.MOVE3));
             priority += 10;
         }
@@ -117,7 +120,7 @@ public class GameDeck {
 
     private void addBackup(ArrayList<ProgramCard> deck) {
         int priority = 430;
-        for (int i=0; i<nrOfBackup; i++) {
+        for (int i = 0; i < nrOfBackup; i++) {
             deck.add(new ProgramCard(priority, CardType.BACKUP));
             priority += 10;
         }

@@ -24,7 +24,7 @@ public class MainMenuScreen implements Screen {
     private ImageButton playButton;
     private ImageButton exitButton;
 
-    public MainMenuScreen (RoboRallyGame game) {
+    public MainMenuScreen(RoboRallyGame game) {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
@@ -46,8 +46,8 @@ public class MainMenuScreen implements Screen {
         int yPadding = 50;
         picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
         logo = new Image(new SpriteDrawable(picture));
-        logo.setSize(logo.getWidth()*1.5f, logo.getHeight()*2);
-        logo.setPosition((width-logo.getWidth())/2, height-(logo.getHeight()+yPadding));
+        logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
+        logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
         // Play button
@@ -58,7 +58,7 @@ public class MainMenuScreen implements Screen {
         playButton.setPosition(xPadding, yPadding);
         playButton.addListener(new ClickListener() {
             @Override
-            public void clicked (InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new PlayerSelectionScreen(game));
             }
         });
@@ -67,10 +67,10 @@ public class MainMenuScreen implements Screen {
         // Exit button
         picture = new Sprite(new Texture("menu/navbuttons/ExitButton.png"));
         exitButton = new ImageButton(new SpriteDrawable(picture));
-        exitButton.setPosition((width-xPadding)-exitButton.getWidth(), yPadding);
+        exitButton.setPosition((width - xPadding) - exitButton.getWidth(), yPadding);
         exitButton.addListener(new ClickListener() {
             @Override
-            public void clicked (InputEvent event, float x, float y) {
+            public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.exit();
             }
         });

@@ -26,8 +26,8 @@ public class Round {
      * in that players list of selected cards (from right to left).
      * Computer players pick the first five cards they are given.
      */
-    public void startRound(){
-        for (int i = 0; i < game.getListOfPlayers().length ; i++) {
+    public void startRound() {
+        for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
             player.setPlayerHandDeck(game.getGameDeck().drawHand(player.getPlayerHandDeck(), player.getDamage()));
             player.removeSelectedCards();
@@ -37,7 +37,7 @@ public class Round {
                 player.getSelectedCards()[number + j] = (player.getLockedCards().get(j));
             }
         }
-        for (int i = 1; i < game.getListOfPlayers().length ; i++) {
+        for (int i = 1; i < game.getListOfPlayers().length; i++) {
             AIPlayer aiPlayer = (AIPlayer) game.getListOfPlayers()[i];
             System.out.println(aiPlayer.toString() + " playerhand: " + aiPlayer.getPlayerHandDeck());
             aiPlayer.pickCards();
@@ -49,8 +49,10 @@ public class Round {
     /**
      * Execute the next phase
      */
-    public void nextPhase(){
-        if(phaseNr >= NUMBER_OF_PHASES){ return; }
+    public void nextPhase() {
+        if (phaseNr >= NUMBER_OF_PHASES) {
+            return;
+        }
         phase.executePhase(phaseNr);
         phaseNr++;
     }
@@ -59,20 +61,28 @@ public class Round {
      * When the round is done, check if there are any players in power down mode.
      * If there are any, and they still have lives left, then take them out of power down mode.
      */
-    public void finishRound(){
-        for (int i=0; i<game.getListOfPlayers().length; i++) {
+    public void finishRound() {
+        for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
-            if (player.isPowerDownMode() && player.getLives()>=0) {
+            if (player.isPowerDownMode() && player.getLives() >= 0) {
                 player.setPowerDownMode(false);
             }
         }
     }
 
-    public Phase getPhase(){return phase;}
+    public Phase getPhase() {
+        return phase;
+    }
 
-    public void setRoundNumber(int number){ this.roundNumber = number;}
+    public void setRoundNumber(int number) {
+        this.roundNumber = number;
+    }
 
-    public int getRoundNumber(){return roundNumber;}
+    public int getRoundNumber() {
+        return roundNumber;
+    }
 
-    public int getPhaseNr(){return phaseNr;}
+    public int getPhaseNr() {
+        return phaseNr;
+    }
 }

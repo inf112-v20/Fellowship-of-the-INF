@@ -31,7 +31,6 @@ public class Game {
     private GameScreen gameScreen;
 
 
-
     public Game(LogicGrid logicGrid, GameScreen gameScreen) {
         this.logicGrid = logicGrid;
         this.gameScreen = gameScreen;
@@ -76,7 +75,9 @@ public class Game {
         this.logicGrid = logicGrid;
     }
 
-    public GameDeck getGameDeck() { return gameDeck; }
+    public GameDeck getGameDeck() {
+        return gameDeck;
+    }
 
     public void setGameDeck(GameDeck gameDeck) {
         this.gameDeck = gameDeck;
@@ -90,7 +91,9 @@ public class Game {
         this.player1 = player;
     }
 
-    public Round getRound(){return round;}
+    public Round getRound() {
+        return round;
+    }
 
     /**
      * Handles keyboard input for manually moving Player 1 around.
@@ -108,7 +111,7 @@ public class Game {
             player1.turnPlayerRight();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             player1.turnPlayerAround();
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             player1.shootLaser();
             gameScreen.shootLasers();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
@@ -124,7 +127,7 @@ public class Game {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
             player1.removeCheckpoint();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
-            if(player1.isOnConveyorBelt()) {
+            if (player1.isOnConveyorBelt()) {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
             }
         }
@@ -196,21 +199,24 @@ public class Game {
 
     /**
      * Gets a player at a given position
+     *
      * @param pos the position of a player
      * @return the player at that position
      */
-    public Player getPlayerAt(Position pos){
+    public Player getPlayerAt(Position pos) {
         for (Player player : playerList) {
-            if(player.getPos().equals(pos)){
+            if (player.getPos().equals(pos)) {
                 return player;
             }
         }
         return null; //no player in position
     }
 
-    public boolean moreLaserToShoot(){
+    public boolean moreLaserToShoot() {
         for (Player player : playerList) {
-            if(!player.getOldLaserPos().equals(new Position(-1,-1))){return true;}
+            if (!player.getOldLaserPos().equals(new Position(-1, -1))) {
+                return true;
+            }
         }
         return false;
     }

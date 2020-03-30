@@ -13,7 +13,7 @@ public class WallPiece extends DirectionedPiece {
      * @return whether player piece can move into this tile
      */
     public boolean canGo(Direction dir) {
-            return !dir.getOppositeDirection().equals(this.dir);
+        return !dir.getOppositeDirection().equals(this.dir);
     }
 
     /**

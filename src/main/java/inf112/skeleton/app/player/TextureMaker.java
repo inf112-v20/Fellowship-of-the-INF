@@ -14,14 +14,14 @@ public class TextureMaker {
         Texture playerTexture = new Texture("ui/playerSprites.png");
         TextureRegion region = new TextureRegion(playerTexture);
         //split image into texture regions
-        TextureRegion[][] regions = region.split(300,300);
+        TextureRegion[][] regions = region.split(300, 300);
 
-        TextureRegion alive = regions[playerNumber-1][0];
-        TextureRegion dead = regions[playerNumber-1][1];
-        TextureRegion won = regions[playerNumber-1][2];
+        TextureRegion alive = regions[playerNumber - 1][0];
+        TextureRegion dead = regions[playerNumber - 1][1];
+        TextureRegion won = regions[playerNumber - 1][2];
 
         //this can be used later to change the state of the player
-        switch(state) {
+        switch (state) {
             case 0:
                 return alive;
             case 1:

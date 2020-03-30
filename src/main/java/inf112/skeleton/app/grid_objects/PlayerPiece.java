@@ -82,7 +82,9 @@ public class PlayerPiece extends DirectionedPiece {
         currentCell = playerCell;
     }
 
-    public int getPlayerNumber() {return playerNumber;}
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
 
     public Player getPlayer() {
         return player;

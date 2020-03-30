@@ -33,7 +33,7 @@ public class BoardPieceTest {
             for (int y = 1; y <= 20; y++) {
                 assertNotEquals(boardPiece.getPos(), new Position(x, y));
                 boardPiece.setPos(new Position(x, y));
-                assertEquals(boardPiece.getPos(), new Position( x, y));
+                assertEquals(boardPiece.getPos(), new Position(x, y));
             }
         }
     }

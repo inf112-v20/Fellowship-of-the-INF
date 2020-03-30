@@ -29,7 +29,7 @@ public class Position {
     @Override
     public String toString() {
         return "Pos(" + x +
-                ", "+ y +
+                ", " + y +
                 ')';
     }
 
@@ -44,6 +44,7 @@ public class Position {
 
     /**
      * Returns a new Position object positioned in the direction dir from this position
+     *
      * @param dir direction from this position that the current position lies.
      * @return new Posiiton object
      */

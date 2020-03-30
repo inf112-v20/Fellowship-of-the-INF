@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class MovesToExecuteSimultaneously extends ArrayList<Move> {
     /**
      * If the move contains  changes, add the move to the list
+     *
      * @param move move to add
      * @return true if the move was added, else false
      */

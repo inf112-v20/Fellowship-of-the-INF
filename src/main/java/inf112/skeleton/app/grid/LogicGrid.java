@@ -21,7 +21,7 @@ public class LogicGrid {
     //A list of the locations of the spawn points
     private ArrayList<Position> spawnPointPositions;
     private ArrayList<Position> flagPositions;
-    private int flags= 0;
+    private int flags = 0;
 
     //Tiled layers
     private TiledMapTileLayer floorLayer;
@@ -151,7 +151,10 @@ public class LogicGrid {
             int id = layer.getCell(x, y).getTile().getId();
             //if cell in layer is not empty, generate the corresponding BoardPiece and add to grid
             BoardPiece piece = boardPieceGenerator.generate(id);
-            if(layer == flagLayer){ flags++;flagPositions.add(null); }
+            if (layer == flagLayer) {
+                flags++;
+                flagPositions.add(null);
+            }
             isThisASpawnPoint(piece, x, y);
 
             //check returned piece isn't a null
@@ -209,13 +212,13 @@ public class LogicGrid {
     /**
      * Checks if the position is available in the logic grid
      *
-     * @param position position to check if it is free
+     * @param position   position to check if it is free
      * @param layerIndex layer we are checking position in
      * @return true if there is a NullPiece in the position you are checking
      */
     public boolean positionIsFree(Position position, int layerIndex) {
         //conveyor belts cannot move players off board as it causes error
-        if(!isInBounds(position)){
+        if (!isInBounds(position)) {
             return false;
         }
         return (grid[position.getX()][position.getY()].get(layerIndex) instanceof NullPiece);
@@ -231,9 +234,10 @@ public class LogicGrid {
 
     /**
      * Remember to check that this method does not return null
-     * @param pos position of piece
+     *
+     * @param pos  position of piece
      * @param type piece type
-     * @param <T> piece class
+     * @param <T>  piece class
      * @return piece if it is there, null otherwise
      */
     public <T extends BoardPiece> T getPieceType(Position pos, Class<T> type) {
@@ -245,7 +249,7 @@ public class LogicGrid {
 
     private void initializeSpawns() {
         spawnPointPositions = new ArrayList<>();
-        for (int i=0; i<numberOfPlayers; i++) {
+        for (int i = 0; i < numberOfPlayers; i++) {
             spawnPointPositions.add(null);
         }
     }
@@ -254,11 +258,12 @@ public class LogicGrid {
      * Check if the piece is a spawn point.
      * If so, then add it's position to the list spawnPointPosition,
      * at the location in the list corresponding to the spawnNumber of the piece.
-     *
+     * <p>
      * This list is used by the players to find their first spawn point.
+     *
      * @param piece piece to be checked
-     * @param x coordinates for @param piece
-     * @param y coordinates for @param piece
+     * @param x     coordinates for @param piece
+     * @param y     coordinates for @param piece
      */
     private void isThisASpawnPoint(BoardPiece piece, int x, int y) {
         //If it is a spawnPoint tile, add it to a list of start positions
@@ -266,17 +271,20 @@ public class LogicGrid {
         int MAX_SPAWNPOINT_NUMBER = 132;
         int id = piece.getId();
         if (id >= MIN_SPAWNPOINT_NUMBER && id <= MAX_SPAWNPOINT_NUMBER) {
-            spawnPointPositions.set(((SpawnPointPiece) piece).getSpawnNumber()-1, new Position(x,y));
+            spawnPointPositions.set(((SpawnPointPiece) piece).getSpawnNumber() - 1, new Position(x, y));
         }
     }
 
-    public ArrayList<Position> getSpawnPointPositions() { return spawnPointPositions; }
+    public ArrayList<Position> getSpawnPointPositions() {
+        return spawnPointPositions;
+    }
 
     /**
      * Checks if robot is allowed to leave its current position in a certain direction.
      * Checks if walls are blocking the way.
+     *
      * @param currentPosition position player is in now
-     * @param dir direction we would like to leave piece from
+     * @param dir             direction we would like to leave piece from
      * @return true if robot can leave it's current position.
      */
     public boolean canLeavePosition(Position currentPosition, Direction dir) {
@@ -297,8 +305,9 @@ public class LogicGrid {
      * Checks if a robot is allowed to enter the position in from from a certain direction.
      * Checks if walls are blocking the way.
      * Checks if players that cannot be pushed are blocking the way.
+     *
      * @param positionInFront position we are checking if the robot can enter
-     * @param dir direction we are entering the new position from
+     * @param dir             direction we are entering the new position from
      * @return true if it is legal to enter position from direction
      */
     public boolean canEnterNewPosition(Position positionInFront, Direction dir) {
@@ -320,14 +329,15 @@ public class LogicGrid {
 
     /**
      * Checks if a position is inbounds
+     *
      * @param pos the position to check
      * @return true if the position is inside the map, false otherwise
      */
-    public boolean isInBounds(Position pos){
+    public boolean isInBounds(Position pos) {
         return pos.getY() < height && pos.getY() >= 0 && pos.getX() < width && pos.getX() >= 0;
     }
 
-    public ArrayList<Position> getFlagPositions(){
+    public ArrayList<Position> getFlagPositions() {
         return flagPositions;
     }
 

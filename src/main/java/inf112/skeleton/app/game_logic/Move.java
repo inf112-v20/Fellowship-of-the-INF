@@ -24,6 +24,7 @@ public class Move {
     /**
      * Constructor for initiating a move, before the player has executed it.
      * Since the player hasn't done anything yet, oldDir = newDir, and oldPos = newPos
+     *
      * @param player that is going to execute a move
      */
     public Move(Player player) {
@@ -64,16 +65,15 @@ public class Move {
 
     @Override
     public String toString() {
-        return "Move player " +  playerPiece.getPlayerNumber() +
-                " ("+ oldPos +
+        return "Move player " + playerPiece.getPlayerNumber() +
+                " (" + oldPos +
                 ", " + oldDir +
                 ") to (" + newPos +
-                ", "+ newDir +
+                ", " + newDir +
                 ')';
     }
 
     /**
-     *
      * @return true if the move changes either position or rotation
      */
     public boolean isNotStandStill() {
@@ -82,6 +82,7 @@ public class Move {
 
     /**
      * updates the move object with the players new position and direction
+     *
      * @param player the player after it has executed a move
      */
     public void updateMove(Player player) {
@@ -90,7 +91,6 @@ public class Move {
     }
 
     /**
-     *
      * @return an ArrayList containing only this move
      */
     public MovesToExecuteSimultaneously toMovesList() {

@@ -1,6 +1,6 @@
 package inf112.skeleton.app.cards;
 
-public interface IProgramCard extends ICard{
+public interface IProgramCard extends ICard {
 
     /**
      * Get the priority value of the card

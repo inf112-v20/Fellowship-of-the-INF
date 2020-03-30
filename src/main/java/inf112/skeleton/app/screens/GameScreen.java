@@ -47,7 +47,6 @@ public class GameScreen implements Screen {
     private TiledMapTileLayer.Cell verticalLaser;
 
 
-
     public GameScreen(String mapName) {
         TmxMapLoader mapLoader = new TmxMapLoader();
         TiledMap map = mapLoader.load(mapName); //roborally board
@@ -111,7 +110,7 @@ public class GameScreen implements Screen {
 
     /**
      * Update all changes to board
-     *
+     * <p>
      * If there are moves to execute, they are executed with a delay.
      * This is so that when many moves are executed, the user can differentiate between them.
      */
@@ -127,7 +126,7 @@ public class GameScreen implements Screen {
             executeMove();
             delayForSeconds(1000); //add delay
         }
-        if(!movesToExecute() && game.moreLaserToShoot()){
+        if (!movesToExecute() && game.moreLaserToShoot()) {
             shootLasers();
             delayForSeconds(150);
         }
@@ -153,17 +152,17 @@ public class GameScreen implements Screen {
         currentMoveIsExecuted = true;
     }
 
-    public void shootLasers(){
-        for (int i = 0; i <game.getListOfPlayers().length; i++) {
+    public void shootLasers() {
+        for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
             Position oldLaserPos = player.getOldLaserPos();
             robotLasersLayer.setCell(oldLaserPos.getX(), oldLaserPos.getY(), null);
-            if(player.getLaserPath().isEmpty()){
-                player.setOldLaserPos(new Position(-1,-1));
+            if (player.getLaserPath().isEmpty()) {
+                player.setOldLaserPos(new Position(-1, -1));
                 continue;
             }
             TiledMapTileLayer.Cell laser = horizontalLaser;
-            if(player.getPlayerPiece().getDir() == NORTH ||player.getPlayerPiece().getDir() == SOUTH){
+            if (player.getPlayerPiece().getDir() == NORTH || player.getPlayerPiece().getDir() == SOUTH) {
                 laser = verticalLaser;
             }
             Position newLaserPos = player.getLaserPath().get(0);
@@ -179,11 +178,10 @@ public class GameScreen implements Screen {
      */
 
     public void handleKeyboardInput() {
-        if(Gdx.input.isKeyPressed(Input.Keys.TAB)){
+        if (Gdx.input.isKeyPressed(Input.Keys.TAB)) {
             stage = scoreBoardScreen.getStage();
             stage.setViewport(gridPort);
-        }
-        else {
+        } else {
             stage = uiScreen.getStage();
             stage.setViewport(gridPort);
         }
@@ -247,6 +245,7 @@ public class GameScreen implements Screen {
 
     /**
      * Erases the player currently on the board, and redraws it in it's state after having executed the move
+     *
      * @param move that the player performed
      */
     public void redrawPlayer(Move move) {
