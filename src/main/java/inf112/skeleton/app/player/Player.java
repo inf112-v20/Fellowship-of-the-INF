@@ -441,9 +441,7 @@ public class Player {
         return lives;
     }
 
-    public void visitedCheckpoint() {
-        checkpointsVisited++;
-    }
+    public void visitedCheckpoint() { checkpointsVisited++; }
 
     /**
      * Method for testing.
@@ -569,6 +567,53 @@ public class Player {
             laserPath.add(laserPos);
         }
 
+    }
+
+    public boolean hasLockedIn(){
+        for (ProgramCard selectedCard : selectedCards) {
+            if (selectedCard == null) {
+                return false;
+            }
+        }
+        return  true;
+    }
+
+    public void pickRandomCards(){
+        if (playerHandDeck.isEmpty()) { return; }
+        ArrayList<Integer> numbers = new ArrayList<>();
+        boolean hasSelectedFiveCards = false;
+        while (!hasSelectedFiveCards){
+            if(numbers.size() == playerHandDeck.size()){
+                System.out.println("Error: Couldn't choose enough random cards");
+                return;
+            }
+            int randomNumber = (int)(Math.random()*playerHandDeck.size());
+            if(numbers.contains(randomNumber)){continue;}
+            ProgramCard card = playerHandDeck.get(randomNumber);
+            if(isCardAvailable(card)){
+                for (int i = 0; i < selectedCards.length; i++) {
+                    if(selectedCards[i] == null){
+                        selectedCards[i] = card;
+                        break;
+                    }
+                    if(i == 4){hasSelectedFiveCards = true;}
+                }
+            }
+            else{numbers.add(randomNumber);}
+        }
+    }
+
+
+    private boolean isCardAvailable(ProgramCard card) {
+        for (ProgramCard selectedCard : getSelectedCards()) {
+            if (selectedCard == null) {
+                continue;
+            }
+            if (selectedCard.equals(card)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

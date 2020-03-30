@@ -3,6 +3,7 @@ package inf112.skeleton.app.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapProperties;
@@ -23,6 +24,8 @@ import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.Player;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import static inf112.skeleton.app.grid.Direction.NORTH;
@@ -45,6 +48,13 @@ public class GameScreen implements Screen {
     private ScoreBoardScreen scoreBoardScreen;
     private TiledMapTileLayer.Cell horizontalLaser;
     private TiledMapTileLayer.Cell verticalLaser;
+    final private int countdownTimer = 30;
+    private int seconds = countdownTimer;
+    private int prevSeconds = countdownTimer;
+    private Timer timer;
+    private TimerTask task;
+    private boolean timerStarted = false;
+
 
 
     public GameScreen(String mapName) {
@@ -73,6 +83,8 @@ public class GameScreen implements Screen {
         currentMoveIsExecuted = true;
         //UI gets game deck from game class
         uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game);
+
+
     }
 
     /**
@@ -116,6 +128,14 @@ public class GameScreen implements Screen {
      */
     public void update() {
         //only handle keyboard input if there are no moves to execute
+        if(game.onePlayerLeftToPick() && !timerStarted){
+            timerStarted = true;
+            startTimer();
+        }
+        if(seconds != prevSeconds){
+            uiScreen.drawTimer(seconds+1);
+            prevSeconds--;
+        }
         if (!movesToExecute() && !game.moreLaserToShoot()) {
             handleKeyboardInput();
             uiScreen.update();
@@ -183,11 +203,10 @@ public class GameScreen implements Screen {
     public void handleKeyboardInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.TAB)) {
             stage = scoreBoardScreen.getStage();
-            stage.setViewport(gridPort);
         } else {
             stage = uiScreen.getStage();
-            stage.setViewport(gridPort);
         }
+        stage.setViewport(gridPort);
         game.handleKeyBoardInput();
         uiScreen.handleInput();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -259,5 +278,24 @@ public class GameScreen implements Screen {
         playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
         playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
         playerLayer.setCell(newPos.getX(), newPos.getY(), playerPieceToUpdate.getPlayerCell()); //repaint at new position
+    }
+
+    private void startTimer(){
+        timer = new Timer();
+        task = new TimerTask() {
+            public void run() {
+                seconds--;
+                if(seconds < -1 && timerStarted){
+                    game.getPlayerRemaining().pickRandomCards();
+                    uiScreen.getCardButton().moveCardButtons();
+                    timer.cancel();
+                    prevSeconds = countdownTimer;
+                    seconds = countdownTimer;
+                    timerStarted = false;
+                    uiScreen.getTimerLabel().remove();
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, 1000);
     }
 }

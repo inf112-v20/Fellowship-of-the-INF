@@ -289,4 +289,18 @@ public class CardButton {
         return true;
     }
 
+    public void moveCardButtons(){
+        for (int i = 0; i < selectedCardButtons.length; i++) {
+            ProgramCard selectedCard = getSelectedCards()[i];
+            if(selectedCard != null && selectedCardButtons[i] == null){
+                for (int j = 0; j < playerHand.size() ; j++) {
+                    if(selectedCard.equals(playerHand.get(j))){
+                        addCard(cardButtons.get(j));
+                    }
+                }
+            }
+            selectedCardButtons[i].setTouchable(Touchable.disabled);
+        }
+    }
+
 }

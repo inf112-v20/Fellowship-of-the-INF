@@ -29,6 +29,7 @@ public class Game {
     private final int NUMBER_OF_PLAYERS = 4;
     private Queue<MovesToExecuteSimultaneously> moves;
     private GameScreen gameScreen;
+    private Player playerRemaining;
 
 
     public Game(LogicGrid logicGrid, GameScreen gameScreen) {
@@ -162,6 +163,10 @@ public class Game {
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
         }
         moves.clear();
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
+            round.lockInCardsForComputers();
+        }
     }
 
 
@@ -224,4 +229,22 @@ public class Game {
         }
         return false;
     }
+
+    public boolean onePlayerLeftToPick(){
+        int lockedInPlayers = 0;
+        for (Player player : playerList) {
+            if (player.hasLockedIn()) {
+                lockedInPlayers++;
+            }
+            else{
+                playerRemaining = player;
+            }
+        }
+        return (lockedInPlayers == playerList.length-1);
+    }
+
+    public Player getPlayerRemaining(){
+        return playerRemaining;
+    }
+
 }
