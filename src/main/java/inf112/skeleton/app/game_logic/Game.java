@@ -11,6 +11,7 @@ import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.BoardPiece;
 import inf112.skeleton.app.grid_objects.LaserPiece;
+import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.player.TextureMaker;
 import inf112.skeleton.app.screens.GameScreen;
@@ -47,7 +48,7 @@ public class Game {
 
     public void initiateComputerPlayers() {
         for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
-            Player playerToBeInitiated = new Player(playerNumber, this);
+            Player playerToBeInitiated = new AIPlayer(playerNumber, this);
             playerList[playerNumber - 1] = playerToBeInitiated;
             logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
