@@ -116,13 +116,13 @@ public class Player {
 
         //If the player still have lives left, respawn it, but set it in shutdown mode
         else if (lives >= 0 && isDead()) {
-            respawnPlayer();
+            respawnPlayer(moves);
             setPowerDownMode(true);
         }
 
         //Handle what happens if the player runs out of lives
         else if (lives < 0 && isDead()) {
-            respawnPlayer();
+            respawnPlayer(moves);
             setPowerDownMode(true);
             isDead = true;
         }
@@ -356,14 +356,16 @@ public class Player {
     }
 
     /**
-     * Put the player back to it's respawn position and update all maps
+     *Put the player back to it's respawn position, update boardPiece and moves
+     * @param moves list to update
      */
-    public void respawnPlayer() {
+    public void respawnPlayer(MovesToExecuteSimultaneously moves) {
+        Move respawnMove = new Move(this);
         isDead = false;
         playerPiece.showAlivePlayer();
-        playerPiece.setPos(new Position(spawnPoint.getX(), spawnPoint.getY()));
-        logicGrid.movePlayerToNewPosition(playerPiece.getPos(), new Position(spawnPoint.getX(), spawnPoint.getY()));
         setPos(spawnPoint.getX(), spawnPoint.getY());
+        respawnMove.updateMove();
+        moves.add(respawnMove);
     }
 
     public void setPowerDownMode(boolean a) {
