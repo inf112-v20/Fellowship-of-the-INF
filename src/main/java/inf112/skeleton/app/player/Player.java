@@ -530,19 +530,16 @@ public class Player {
         return hasBeenMovedThisPhase;
     }
 
-    public ArrayList<Position> getLaserPath() {
-        return laserPath;
-    }
+    public ArrayList<Position> getLaserPath() { return laserPath; }
 
+    public Position getOldLaserPos() { return oldLaserPos; }
 
-    public Position getOldLaserPos() {
-        return oldLaserPos;
-    }
+    public void setOldLaserPos(Position pos) { oldLaserPos = pos; }
 
-    public void setOldLaserPos(Position pos) {
-        oldLaserPos = pos;
-    }
-
+    /**
+     * Shoot laser in the direction which the robot is pointing.
+     * Lasers stops at walls and players, and will damage a player if they hit them.
+     */
     public void shootLaser() {
         Direction laserDir = playerPiece.getDir();
         Position laserPos = getPos();

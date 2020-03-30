@@ -212,6 +212,10 @@ public class Game {
         return null; //no player in position
     }
 
+    /**
+     * Checks if all robots are done shooting their laser.
+     * @return true if robots are done shooting, false otherwise.
+     */
     public boolean moreLaserToShoot() {
         for (Player player : playerList) {
             if (!player.getOldLaserPos().equals(new Position(-1, -1))) {

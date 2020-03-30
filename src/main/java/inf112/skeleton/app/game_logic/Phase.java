@@ -19,9 +19,11 @@ public class Phase {
     private int phaseNumber;
     HashMap<Player, Integer> playerAndPriority;
     private Game game;
+    private LogicGrid logicGrid;
 
     public Phase(Game game) {
         this.game = game;
+        this.logicGrid = game.getLogicGrid();
         this.listOfPlayers = game.getListOfPlayers();
         this.playerAndPriority = new HashMap<>();
         this.phaseNumber = 0;
@@ -116,17 +118,17 @@ public class Phase {
     /**
      * Checks if a player is currently on a laser.
      * If so, the player receives damage, and the laser is intercepted.
+     * Players also shoot their own laser.
      */
     private void lasersFire() {
         // Static lasers (from walls)
         for (Player player : listOfPlayers) {
             player.shootLaser();
-            LogicGrid logicGrid = game.getLogicGrid();
             int damage = 1;
             LaserPiece laser;
             if (logicGrid.isInBounds(player.getPos())) {
-                if (game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class) != null) {
-                    laser = game.getLogicGrid().getPieceType(player.getPos(), LaserPiece.class);
+                if (logicGrid.getPieceType(player.getPos(), LaserPiece.class) != null) {
+                    laser = logicGrid.getPieceType(player.getPos(), LaserPiece.class);
                     if (!logicGrid.positionIsFree(player.getPos(), 8)
                             && logicGrid.positionIsFree(player.getPos(), 9)) {
                         if (isPlayerBlocking(player.getPos(), laser.getDir())) {
@@ -144,12 +146,20 @@ public class Phase {
         }
     }
 
-    private boolean isPlayerBlocking(Position laserPos, Direction dir) {
-        LogicGrid logicGrid = game.getLogicGrid();
-        Position copy = laserPos;
+    /**
+     * Checks if a player is blocking a laser from hitting another player.
+     * Since all horizontal lasers point west, and all vertical lasers point north
+     * it is not certain we find the lasersource by following the laser direction,
+     * if so we call the method again checking for the lasersource in the other direction.
+     * @param playerPos the position of a player that is standing on a laser.
+     * @param laserDir the direction of the laser.
+     * @return true if a player is standing between the player on the laser and the lasersource, false otherwise.
+     */
+    private boolean isPlayerBlocking(Position playerPos, Direction laserDir) {
+        Position laserPos = playerPos;
         boolean playerBetween = false;
         for (int i = 0; i < logicGrid.getHeight(); i++) {
-            laserPos = laserPos.getPositionIn(dir);
+            laserPos = laserPos.getPositionIn(laserDir);
             if (!logicGrid.isInBounds(laserPos)) {
                 break;
             }
@@ -158,17 +168,17 @@ public class Phase {
                 playerBetween = true;
             }
             if (!logicGrid.positionIsFree(laserPos, 9)) {
-                if (game.getLogicGrid().getPieceType(laserPos, LaserSourcePiece.class) != null) {
-                    LaserSourcePiece laserSource = game.getLogicGrid().getPieceType(laserPos, LaserSourcePiece.class);
-                    if (laserSource.getDir().equals(dir)) {
-                        // System.out.println("Source for laser is at " + laserPos + " pointing " + dir.getOppositeDirection());
+                if (logicGrid.getPieceType(laserPos, LaserSourcePiece.class) != null) {
+                    LaserSourcePiece laserSource = logicGrid.getPieceType(laserPos, LaserSourcePiece.class);
+                    if (laserSource.getDir().equals(laserDir)) {
+                        //System.out.println("Source for laser is at " + laserPos + " pointing " + laserDir.getOppositeDirection());
                         //System.out.println("Player blocking? " + playerBetween);
                         return playerBetween;
                     }
                 }
             }
         }
-        return (isPlayerBlocking(copy, dir.getOppositeDirection()));
+        return (isPlayerBlocking(playerPos, laserDir.getOppositeDirection()));
     }
 
 

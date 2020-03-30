@@ -152,6 +152,9 @@ public class GameScreen implements Screen {
         currentMoveIsExecuted = true;
     }
 
+    /**
+     * Draws lasers on a cell for 150ms
+     */
     public void shootLasers() {
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
