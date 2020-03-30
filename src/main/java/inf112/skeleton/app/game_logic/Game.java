@@ -3,17 +3,11 @@ package inf112.skeleton.app.game_logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.deck.GameDeck;
-import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.grid_objects.BoardPiece;
-import inf112.skeleton.app.grid_objects.LaserPiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
-import inf112.skeleton.app.player.TextureMaker;
 import inf112.skeleton.app.screens.GameScreen;
 
 import java.util.LinkedList;
@@ -78,10 +72,6 @@ public class Game {
 
     public GameDeck getGameDeck() {
         return gameDeck;
-    }
-
-    public void setGameDeck(GameDeck gameDeck) {
-        this.gameDeck = gameDeck;
     }
 
     public Player getPlayer() {

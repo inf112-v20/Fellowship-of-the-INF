@@ -35,6 +35,7 @@ public class AIPlayer extends Player {
      */
     public void pickCards() {
         if (playerHandDeck.isEmpty()) {
+            lockedIn();
             return;
         }
         newRobotPos = new Position(getPos().getX(), getPos().getY());
@@ -182,10 +183,10 @@ public class AIPlayer extends Player {
     }
 
     /**
-     * Finds the best card in order for this phase
+     * Finds the best cards in order for this phase
      *
-     * @param moveCard true if a card is a movecard, false if its a rotationcard
-     * @return sorted 2d array with best card first. [][0] = cardtype, [][1] = movescore
+     * @param moveCard true to get the best move cards ordered, false to get the best rotation cards ordered.
+     * @return sorted 2d array with best card first. [][0] = cardid, [][1] = movescore
      */
     private int[][] getBestCardsOrdered(boolean moveCard) {
         int[][] bestMovesInOrder = new int[3][2];
@@ -204,7 +205,8 @@ public class AIPlayer extends Player {
             Position finalPos = (Position) finalPosAndDir.get(0);
             Direction finalDir = (Direction) finalPosAndDir.get(1);
             int moveScore = getMoveScore(finalPosAndDir);
-            System.out.println(getType(i + 1, moveCard).toString() + " will put player at pos: " + finalPos + ", facing dir: " + finalDir + ". Movescore: " + moveScore);
+            System.out.println(getType(i + 1, moveCard).toString() + " will put player at pos: " + finalPos +
+                    ", facing dir: " + finalDir + ". Movescore: " + moveScore);
             bestMovesInOrder[i][0] = moveScore;
             bestMovesInOrder[i][1] = i + 1;
         }
@@ -301,7 +303,7 @@ public class AIPlayer extends Player {
             if (moveScore == 100) {
                 System.out.println(cardType + " will result in death");
                 continue;
-            } //100 = death move
+            }
             List<Object> finalPosAndDir = getPosFromCardMove(card.getMovement(), newRobotDir.getCardTurnDirection(cardType));
             newRobotPos = (Position) finalPosAndDir.get(0);
             newRobotDir = (Direction) finalPosAndDir.get(1);

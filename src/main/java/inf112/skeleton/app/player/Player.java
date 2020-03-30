@@ -1,7 +1,6 @@
 package inf112.skeleton.app.player;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import inf112.skeleton.app.cards.CardType;
 import inf112.skeleton.app.game_logic.Game;
 import inf112.skeleton.app.game_logic.Move;
 import inf112.skeleton.app.game_logic.MovesToExecuteSimultaneously;
@@ -24,7 +23,6 @@ public class Player {
     private ProgramCard[] selectedCards = new ProgramCard[5];
     private ArrayList<ProgramCard> lockedCards = new ArrayList<>();
     private ArrayList<Position> laserPath = new ArrayList<>();
-
 
     private Position spawnPoint;
     private BoardPiece currentBoardPiece;
@@ -340,9 +338,9 @@ public class Player {
     }
 
 
-    /**
+    /** TODO remove? can be useful for testing maybe
      * Picks the first cards in the hand so that selectedcards has 5 cards.
-     */
+
     public void pickFirstFiveCards() {
         for (int i = 0; i < 5 - lockedCards.size(); i++) {
             if (playerHandDeck.size() == 0) {
@@ -351,6 +349,7 @@ public class Player {
             selectedCards[i] = playerHandDeck.get(i);
         }
     }
+     */
 
     @Override
     public String toString() {
@@ -394,15 +393,14 @@ public class Player {
      * @param amountOfDamage the number of damage the player takes
      */
     public void takeDamage(int amountOfDamage) {
-        int oldDamage = damage;
         damage += amountOfDamage;
         if (damage >= 10) {
             lives--;
             damage = 10;
         }
         if (damage >= 5 && damage <= 9) {
-            int number = damage - oldDamage;
-            if (oldDamage < 5) {
+            int number = amountOfDamage;
+            if (damage - number < 5) {
                 number = damage - 4;
             }
             if (number > 5 - lockedCards.size()) {

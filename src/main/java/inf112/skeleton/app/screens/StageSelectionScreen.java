@@ -20,12 +20,6 @@ public class StageSelectionScreen implements Screen {
 
     private int playerCount;
     private Stage stage;
-    private Image background;
-    private Image logo;
-    private ImageButton stage1Button;
-    private ImageButton stageTestButton;
-    private ImageButton stage2Button;
-    private ImageButton backButton;
 
     public StageSelectionScreen(RoboRallyGame game, int playerCount) {
         this.game = game;
@@ -41,7 +35,7 @@ public class StageSelectionScreen implements Screen {
         // picture = all actors on stage
         // Background
         Sprite picture = new Sprite(new Texture("menu/StageSelectBackground.png"));
-        background = new Image(new SpriteDrawable(picture));
+        Image background = new Image(new SpriteDrawable(picture));
         background.setSize(width, height);
         background.setPosition(0, 0);
         stage.addActor(background);
@@ -49,13 +43,16 @@ public class StageSelectionScreen implements Screen {
         // Logo
         int yPadding = 50;
         picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
-        logo = new Image(new SpriteDrawable(picture));
+        Image logo = new Image(new SpriteDrawable(picture));
         logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
         int xPadding = 100;
 
+        ImageButton stage1Button;
+        ImageButton stageTestButton;
+        ImageButton stage2Button;
         if (playerCount < 5) {
             //Stage 1 button
             yPadding = 400;
@@ -149,7 +146,7 @@ public class StageSelectionScreen implements Screen {
         }
         // Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
-        backButton = new ImageButton(new SpriteDrawable(picture));
+        ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
         backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
         backButton.addListener(new ClickListener() {
             @Override

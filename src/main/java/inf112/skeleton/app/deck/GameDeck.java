@@ -9,18 +9,7 @@ import java.util.Collections;
 
 public class GameDeck {
     private ArrayList<ProgramCard> drawDeck = new ArrayList<>();
-    ;
     private ArrayList<ProgramCard> discardDeck = new ArrayList<>();
-    ;
-    private final int maxNumberOfCardsOnHand = 9;
-
-    private final int nrOfMove1 = 18;
-    private final int nrOfMove2 = 12;
-    private final int nrOfMove3 = 6;
-    private final int nrOfBackup = 6;
-    private final int nrOfRotateRight = 18;
-    private final int nrOfRotateLeft = 18;
-    private final int nrOfUturn = 6;
 
     public GameDeck() {
         generateDeck(drawDeck);
@@ -35,6 +24,7 @@ public class GameDeck {
      * @return A new deck of cards to the play
      */
     public ArrayList<ProgramCard> drawHand(ArrayList<ProgramCard> playerHand, int damageValue) {
+        int maxNumberOfCardsOnHand = 9;
         int numberOfCards = maxNumberOfCardsOnHand - damageValue;
         moveAll(discardDeck, playerHand);
         if (canDrawFullHand(numberOfCards)) {
@@ -96,6 +86,7 @@ public class GameDeck {
 
     private void addMove1(ArrayList<ProgramCard> deck) {
         int priority = 490;
+        int nrOfMove1 = 18;
         for (int i = 0; i < nrOfMove1; i++) {
             deck.add(new ProgramCard(priority, CardType.MOVE1));
             priority += 10;
@@ -104,6 +95,7 @@ public class GameDeck {
 
     private void addMove2(ArrayList<ProgramCard> deck) {
         int priority = 670;
+        int nrOfMove2 = 12;
         for (int i = 0; i < nrOfMove2; i++) {
             deck.add(new ProgramCard(priority, CardType.MOVE2));
             priority += 10;
@@ -112,6 +104,7 @@ public class GameDeck {
 
     private void addMove3(ArrayList<ProgramCard> deck) {
         int priority = 790;
+        int nrOfMove3 = 6;
         for (int i = 0; i < nrOfMove3; i++) {
             deck.add(new ProgramCard(priority, CardType.MOVE3));
             priority += 10;
@@ -120,6 +113,7 @@ public class GameDeck {
 
     private void addBackup(ArrayList<ProgramCard> deck) {
         int priority = 430;
+        int nrOfBackup = 6;
         for (int i = 0; i < nrOfBackup; i++) {
             deck.add(new ProgramCard(priority, CardType.BACKUP));
             priority += 10;
@@ -128,6 +122,7 @@ public class GameDeck {
 
     private void addRotateRight(ArrayList<ProgramCard> deck) {
         int priority = 80;
+        int nrOfRotateRight = 18;
         for (int i = 0; i < nrOfRotateRight; i++) {
             deck.add(new ProgramCard(priority, CardType.ROTATERIGHT));
             priority += 20;
@@ -136,6 +131,7 @@ public class GameDeck {
 
     private void addRotateLeft(ArrayList<ProgramCard> deck) {
         int priority = 70;
+        int nrOfRotateLeft = 18;
         for (int i = 0; i < nrOfRotateLeft; i++) {
             deck.add(new ProgramCard(priority, CardType.ROTATELEFT));
             priority += 20;
@@ -144,6 +140,7 @@ public class GameDeck {
 
     private void addUturn(ArrayList<ProgramCard> deck) {
         int priority = 10;
+        int nrOfUturn = 6;
         for (int i = 0; i < nrOfUturn; i++) {
             deck.add(new ProgramCard(priority, CardType.UTURN));
             priority += 10;

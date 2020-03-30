@@ -2,14 +2,11 @@ package inf112.skeleton.app.grid;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.grid_objects.*;
 import inf112.skeleton.app.player.Player;
-import inf112.skeleton.app.player.TextureMaker;
 
 import java.util.ArrayList;
 
-import static inf112.skeleton.app.grid.Direction.WEST;
 
 public class LogicGrid {
     //dimensions of grid
@@ -22,7 +19,6 @@ public class LogicGrid {
     //A list of the locations of the spawn points
     private ArrayList<Position> spawnPointPositions;
     private ArrayList<Position> flagPositions;
-    private int flags = 0;
 
     //Tiled layers
     private TiledMapTileLayer floorLayer;
@@ -38,7 +34,6 @@ public class LogicGrid {
     private TiledMapTileLayer wallLayer;
     private TiledMapTileLayer flagLayer;
     private TiledMapTileLayer playerLayer;
-    private TiledMapTileLayer robotLasersLayer;
 
     //The indexes of the layers
     private int floorLayerIndex;
@@ -54,7 +49,6 @@ public class LogicGrid {
     private int wallLayerIndex;
     private int flagLayerIndex;
     private int playerLayerIndex; //12
-    private int robotLasersLayerIndex;
 
     //private BoardPiece[] [][] grid;
     private ArrayList<BoardPiece>[][] grid;
@@ -84,7 +78,6 @@ public class LogicGrid {
         wallLayer = (TiledMapTileLayer) map.getLayers().get("Wall");
         flagLayer = (TiledMapTileLayer) map.getLayers().get("Flag");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
-        robotLasersLayer = (TiledMapTileLayer) map.getLayers().get("Robot Lasers");
 
         //extract index of each layer
         floorLayerIndex = map.getLayers().getIndex("Floor");
@@ -100,7 +93,6 @@ public class LogicGrid {
         wallLayerIndex = map.getLayers().getIndex("Wall");
         flagLayerIndex = map.getLayers().getIndex("Flag");
         playerLayerIndex = map.getLayers().getIndex("Player");
-        robotLasersLayerIndex = map.getLayers().getIndex("Robot Lasers");
 
         this.flagPositions = new ArrayList<>();
         readTiledMapToPieceGrid();
@@ -153,7 +145,6 @@ public class LogicGrid {
             //if cell in layer is not empty, generate the corresponding BoardPiece and add to grid
             BoardPiece piece = boardPieceGenerator.generate(id);
             if (layer == flagLayer) {
-                flags++;
                 flagPositions.add(null);
             }
             isThisASpawnPoint(piece, x, y);

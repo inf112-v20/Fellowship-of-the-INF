@@ -1,6 +1,5 @@
 package inf112.skeleton.app.game_logic;
 
-import inf112.skeleton.app.game_logic.Move;
 
 import java.util.ArrayList;
 

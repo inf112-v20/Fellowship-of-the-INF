@@ -43,7 +43,7 @@ public class BoardElementsMove {
             return;
         }
         BoardPiece boardPiece = player.getCurrentBoardPiece();
-        if (!(boardPiece instanceof ConveyorBeltPiece) && !(boardPiece instanceof ExpressBeltPiece)) {
+        if (!(boardPiece instanceof ConveyorBeltPiece)) {
             System.out.println("Error: couldn't move player on conveyorbelt");
             return;
         }
