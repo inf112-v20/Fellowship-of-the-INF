@@ -168,7 +168,7 @@ public class GameScreen implements Screen {
             }
             Position newLaserPos = player.getLaserPath().get(0);
             robotLasersLayer.setCell(newLaserPos.getX(), newLaserPos.getY(), laser);
-            player.removeLaserPath();
+            player.getLaserPath().remove(0);
             player.setOldLaserPos(newLaserPos);
         }
     }

@@ -39,7 +39,15 @@ public class BoardElementsMove {
     public static void moveConveyorBelt(Player player, Game game, boolean onlyExpressBelt, MovesToExecuteSimultaneously moves){
         if(player == null || player.getCurrentBoardPiece() == null){System.out.println("Error: couldn't move player on conveyorbelt"); return;}
         BoardPiece boardPiece = player.getCurrentBoardPiece();
+        if(!(boardPiece instanceof  ConveyorBeltPiece) && !(boardPiece instanceof ExpressBeltPiece)) {
+            System.out.println("Error: couldn't move player on conveyorbelt");
+            return;
+        }
         LogicGrid logicGrid = game.getLogicGrid();
+        if (!logicGrid.isInBounds(player.getPos())){
+            System.out.println("Error: conveyorbelt can't move " + player.toString() + " because they are out of bounds");
+            return;
+        }
         ConveyorBeltPiece conveyorBeltPiece = (ConveyorBeltPiece) logicGrid.getPieceType(player.getPos(), boardPiece.getClass());
         Direction conveyorBeltDirection = conveyorBeltPiece.getDir();
         Position newPos = player.getPos().getPositionIn(conveyorBeltDirection);

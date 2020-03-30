@@ -2,6 +2,8 @@ package inf112.skeleton.app.game_logic;
 
 import inf112.skeleton.app.player.Player;
 
+import java.util.Arrays;
+
 
 public class Round {
 
@@ -34,9 +36,13 @@ public class Round {
                 player.getSelectedCards()[number + j] = (player.getLockedCards().get(j));
             }
         }
-        for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
-            game.getListOfPlayers()[playerNumber - 1].pickFirstFiveCards();
+        for (int i = 1; i < game.getListOfPlayers().length ; i++) {
+            Player player = game.getListOfPlayers()[i];
+            System.out.println(player.toString() + " playerhand: " + player.getPlayerHandDeck());
+            player.pickCards();
+            System.out.println(player.toString() + " chose " + Arrays.toString(player.getSelectedCards()));
         }
+
     }
 
     /**

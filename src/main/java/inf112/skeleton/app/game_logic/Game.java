@@ -107,6 +107,9 @@ public class Game {
             player1.turnPlayerRight();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             player1.turnPlayerAround();
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            player1.shootLaser();
+            gameScreen.shootLasers();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             player1.takeDamage(1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
@@ -167,10 +170,7 @@ public class Game {
         this.round = new Round(this);
         if (!moves.isEmpty())
             return;
-        //let computer players pick the first five cards as their selected
-        for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
-            playerList[playerNumber - 1].pickFirstFiveCards();
-        }
+
         roundNumber++;
         round.setRoundNumber(roundNumber);
         //check all players have hand
