@@ -1,6 +1,7 @@
 package inf112.skeleton.app.player;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import inf112.skeleton.app.cards.CardType;
 import inf112.skeleton.app.game_logic.Game;
 import inf112.skeleton.app.game_logic.Move;
 import inf112.skeleton.app.game_logic.MovesToExecuteSimultaneously;
@@ -9,9 +10,7 @@ import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Class representing a player.
@@ -21,13 +20,18 @@ public class Player {
     private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
     private ArrayList<ProgramCard> playerHandDeck;
-    private ProgramCard[] selectedCards = new ProgramCard[5];
-    private ArrayList<ProgramCard> lockedCards = new ArrayList<>();
+    private ProgramCard[] selectedCards;
+    private ArrayList<ProgramCard> lockedCards;
+    private ArrayList<Position> laserPath;
+
+
     private Position spawnPoint;
     private BoardPiece currentBoardPiece;
     private Direction latestMoveDirection;
     private boolean conveyorBeltMove = false;
     private boolean hasBeenMovedThisPhase = false;
+    private Position oldLaserPos;
+    private Game game;
     private boolean isDead = false;
     private boolean powerDownMode = false;
     private int damage = 0;
@@ -37,12 +41,47 @@ public class Player {
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
+        this.game = game;
         this.logicGrid = game.getLogicGrid();
         this.pieceGrid = logicGrid.getGrid();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
+        this.selectedCards = new ProgramCard[5];
+        this.lockedCards = new ArrayList<>();
+        this.laserPath = new ArrayList<>();
+
         //Find the spawn point of the player, and set spawnPoint position to the first spawn
         findFirstSpawnPoint();
         this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, this);
+        this.isDead = false;
+        this.powerDownMode = false;
+        this.oldLaserPos = new Position(-1,0);
+    }
+
+
+    /**
+     * Getter for position
+     *
+     * @return position of player
+     */
+    public Position getPos() {
+        return playerPiece.getPos();
+    }
+
+    public void setPos(int x, int y) {
+        playerPiece.setPos(new Position(x, y));
+    }
+
+    private void setPos(Position positionIn) {
+        playerPiece.setPos(positionIn);
+    }
+
+    /**
+     * Getter for player
+     *
+     * @return player
+     */
+    public TiledMapTileLayer.Cell getPlayerCell() {
+        return playerPiece.getCurrentCell();
     }
 
     /**
@@ -176,7 +215,7 @@ public class Player {
      * @param position to check
      * @return whether the move results in death
      */
-    private boolean isDeadMove(Position position) {
+    public boolean isDeadMove(Position position) {
         int x = position.getX();
         int y = position.getY();
         BoardPiece currPiece;
@@ -274,31 +313,7 @@ public class Player {
         this.selectedCards = selectedCards;
     }
 
-    /**
-     * Getter for position
-     *
-     * @return position of player
-     */
-    public Position getPos() {
-        return playerPiece.getPos();
-    }
 
-    public void setPos(int x, int y) {
-        playerPiece.setPos(new Position(x, y));
-    }
-
-    private void setPos(Position positionIn) {
-        playerPiece.setPos(positionIn);
-    }
-
-    /**
-     * Getter for player
-     *
-     * @return player
-     */
-    public TiledMapTileLayer.Cell getPlayerCell() {
-        return playerPiece.getCurrentCell();
-    }
 
     /**
      * Picks the first cards in the hand so that selectedcards has 5 cards.
@@ -351,14 +366,19 @@ public class Player {
      * @param amountOfDamage the number of damage the player takes
      */
     public void takeDamage(int amountOfDamage) {
+        int oldDamage = damage;
         damage += amountOfDamage;
         if (damage >= 10) {
             lives--;
             damage = 10;
         }
         if (damage >= 5 && damage <= 9) {
-            for (int i = damage - amountOfDamage - 4; i < damage - 4; i++) {
-                lockedCards.add(0, selectedCards[4 - i]);
+            int number = damage - oldDamage;
+            if(oldDamage < 5){number = damage - 4;}
+            if(number > 5-lockedCards.size()){number = 5-lockedCards.size();}
+            for (int i = 0; i < number; i++) {
+                lockedCards.add(0, selectedCards[(8-(damage-number))-i]);
+                System.out.println("Locking card" + selectedCards[(8-(damage-number))-i]);
                 playerHandDeck.remove(lockedCards.get(0));
             }
         }
@@ -504,6 +524,42 @@ public class Player {
 
     public Boolean hasBeenMovedThisPhase() {
         return hasBeenMovedThisPhase;
+    }
+
+    public ArrayList<Position> getLaserPath(){
+        return laserPath;
+    }
+
+
+
+    public Position getOldLaserPos(){
+        return oldLaserPos;
+    }
+
+    public void setOldLaserPos(Position pos){
+        oldLaserPos = pos;
+    }
+
+    public void shootLaser(){
+        Direction laserDir = playerPiece.getDir();
+        Position laserPos = getPos();
+        for (int i = 0; i < logicGrid.getHeight(); i++) {
+            //System.out.println(player.toString() + " laser is at " + laserPos);
+            if (!logicGrid.isInBounds(laserPos)) { return; }
+            if(!logicGrid.positionIsFree(laserPos, 12) && !laserPos.equals(getPos())){
+                if(game.getPlayerAt(laserPos) == null){System.out.println("Error: " + toString() + " Couldn't shoot player"); return;}
+                game.getPlayerAt(laserPos).takeDamage(1);
+                //System.out.println(player.toString() + " hit " + game.getPlayerAt(laserPos).toString());
+                laserPath.add(laserPos);
+                return;
+            }
+            if(!logicGrid.canLeavePosition(laserPos, laserDir)||
+                    !logicGrid.canEnterNewPosition(laserPos.getPositionIn(laserDir), laserDir)){return;}
+            if(i == 0){setOldLaserPos(laserPos);}
+            laserPos = laserPos.getPositionIn(laserDir);
+            laserPath.add(laserPos);
+        }
+
     }
 
 }

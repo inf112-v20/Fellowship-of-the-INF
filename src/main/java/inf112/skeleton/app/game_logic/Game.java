@@ -3,10 +3,17 @@ package inf112.skeleton.app.game_logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import inf112.skeleton.app.deck.GameDeck;
+import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.BoardPiece;
+import inf112.skeleton.app.grid_objects.LaserPiece;
+import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
+import inf112.skeleton.app.player.TextureMaker;
 import inf112.skeleton.app.screens.GameScreen;
 
 import java.util.LinkedList;
@@ -14,14 +21,15 @@ import java.util.Queue;
 
 public class Game {
     private LogicGrid logicGrid;
-    private final int NUMBER_OF_PLAYERS = 4;
     private GameDeck gameDeck;
     private Player player1;
-    private Player[] playerList = new Player[NUMBER_OF_PLAYERS];;
+    private Player[] playerList;
     private int roundNumber = 0;
     private Round round;
-    private Queue<MovesToExecuteSimultaneously> moves = new LinkedList<>();
+    private final int NUMBER_OF_PLAYERS = 4;
+    private Queue<MovesToExecuteSimultaneously> moves;
     private GameScreen gameScreen;
+
 
 
     public Game(LogicGrid logicGrid, GameScreen gameScreen) {
@@ -29,14 +37,18 @@ public class Game {
         this.gameScreen = gameScreen;
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player1 = new Player(1, this);
+        this.playerList = new Player[NUMBER_OF_PLAYERS];
         playerList[0] = player1;
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
+        this.moves = new LinkedList<>();
+
+
     }
 
     public void initiateComputerPlayers() {
         for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
-            Player playerToBeInitiated = new Player(playerNumber, this);
+            Player playerToBeInitiated = new AIPlayer(playerNumber, this);
             playerList[playerNumber - 1] = playerToBeInitiated;
             logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
@@ -66,6 +78,10 @@ public class Game {
 
     public GameDeck getGameDeck() { return gameDeck; }
 
+    public void setGameDeck(GameDeck gameDeck) {
+        this.gameDeck = gameDeck;
+    }
+
     public Player getPlayer() {
         return player1;
     }
@@ -92,6 +108,9 @@ public class Game {
             player1.turnPlayerRight();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             player1.turnPlayerAround();
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            player1.shootLaser();
+            gameScreen.shootLasers();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             player1.takeDamage(1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
@@ -147,16 +166,12 @@ public class Game {
         return playerList;
     }
 
-
     public void executeRound() {
         // If there are moves to execute, then don't start new round
         this.round = new Round(this);
         if (!moves.isEmpty())
             return;
-        //let computer players pick the first five cards as their selected
-        for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
-            playerList[playerNumber - 1].pickFirstFiveCards();
-        }
+
         roundNumber++;
         round.setRoundNumber(roundNumber);
         //check all players have hand
@@ -176,6 +191,7 @@ public class Game {
     public void executeMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //backend execution
         this.moves.add(moves);//add to list of things to do in frontend
+        // gameScreen.executeMove(move); //frontend execution
     }
 
     /**
@@ -190,5 +206,12 @@ public class Game {
             }
         }
         return null; //no player in position
+    }
+
+    public boolean moreLaserToShoot(){
+        for (Player player : playerList) {
+            if(!player.getOldLaserPos().equals(new Position(-1,-1))){return true;}
+        }
+        return false;
     }
 }
