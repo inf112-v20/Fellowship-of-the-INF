@@ -23,6 +23,8 @@ import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.Player;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import static inf112.skeleton.app.grid.Direction.NORTH;
@@ -45,6 +47,12 @@ public class GameScreen implements Screen {
     private ScoreBoardScreen scoreBoardScreen;
     private TiledMapTileLayer.Cell horizontalLaser;
     private TiledMapTileLayer.Cell verticalLaser;
+    final private int countdownTimer = 30;
+    private int seconds = countdownTimer;
+    private int prevSeconds = countdownTimer;
+    private Timer timer;
+    private boolean timerStarted = false;
+
 
 
     public GameScreen(String mapName) {
@@ -73,6 +81,8 @@ public class GameScreen implements Screen {
         currentMoveIsExecuted = true;
         //UI gets game deck from game class
         uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game);
+
+
     }
 
     /**
@@ -115,6 +125,20 @@ public class GameScreen implements Screen {
      * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
+        //Start timer if there is only one left picking cards for the next round
+        if(game.onePlayerLeftToPick() && !timerStarted){
+            timerStarted = true;
+            startTimer();
+        }
+        if(timerStarted) {
+            if(!game.onePlayerLeftToPick()){
+                stopTimer();
+            }
+            if (seconds != prevSeconds) {
+                uiScreen.drawTimer(seconds + 1);
+                prevSeconds--;
+            }
+        }
         //only handle keyboard input if there are no moves to execute
         if (!movesToExecute() && !game.moreLaserToShoot()) {
             handleKeyboardInput();
@@ -183,11 +207,10 @@ public class GameScreen implements Screen {
     public void handleKeyboardInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.TAB)) {
             stage = scoreBoardScreen.getStage();
-            stage.setViewport(gridPort);
         } else {
             stage = uiScreen.getStage();
-            stage.setViewport(gridPort);
         }
+        stage.setViewport(gridPort);
         game.handleKeyBoardInput();
         uiScreen.handleInput();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -259,5 +282,35 @@ public class GameScreen implements Screen {
         playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
         playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
         playerLayer.setCell(newPos.getX(), newPos.getY(), playerPieceToUpdate.getPlayerCell()); //repaint at new position
+    }
+
+
+    /**
+     * Starts a timer counting down for 30 seconds
+     */
+    private void startTimer(){
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+            public void run() {
+                seconds--;
+                if (seconds < -1 && timerStarted) {
+                    game.getPlayerRemaining().pickRandomCards();
+                    uiScreen.getCardButton().moveCardButtons();
+                    stopTimer();
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    /**
+     * Stops the timer and removes it from the screen
+     */
+    private void stopTimer(){
+        timer.cancel();
+        prevSeconds = countdownTimer;
+        seconds = countdownTimer;
+        timerStarted = false;
+        uiScreen.getTimerLabel().remove();
     }
 }

@@ -37,13 +37,7 @@ public class Round {
                 player.getSelectedCards()[number + j] = (player.getLockedCards().get(j));
             }
         }
-        for (int i = 1; i < game.getListOfPlayers().length; i++) {
-            AIPlayer aiPlayer = (AIPlayer) game.getListOfPlayers()[i];
-            System.out.println(aiPlayer.toString() + " playerhand: " + aiPlayer.getPlayerHandDeck());
-            aiPlayer.pickCards();
-            System.out.println(aiPlayer.toString() + " chose " + Arrays.toString(aiPlayer.getSelectedCards()) + "\n");
-        }
-
+        //lockInCardsForComputers();
     }
 
     /**
@@ -84,5 +78,18 @@ public class Round {
 
     public int getPhaseNr() {
         return phaseNr;
+    }
+
+    /**
+     * Lock in cards for computer players.
+     * Press 0 to do it manually.
+     */
+    public void lockInCardsForComputers(){
+        for (int i = 1; i < game.getListOfPlayers().length; i++) {
+            AIPlayer aiPlayer = (AIPlayer) game.getListOfPlayers()[i];
+            System.out.println(aiPlayer.toString() + " playerhand: " + aiPlayer.getPlayerHandDeck());
+            aiPlayer.pickCards();
+            System.out.println(aiPlayer.toString() + " chose " + Arrays.toString(aiPlayer.getSelectedCards()) + "\n");
+        }
     }
 }

@@ -33,12 +33,13 @@ public class Player {
     private boolean hasBeenMovedThisPhase = false;
     private Position oldLaserPos;
     private Game game;
-    private boolean isDead = false;
-    private boolean powerDownMode = false;
+    private boolean isDead;
+    private boolean powerDownMode;
     private int damage = 0;
     private int playerNumber;
     private int lives = 3;
     private int checkpointsVisited = 0;
+    private boolean hasLockedIn = false;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -457,9 +458,7 @@ public class Player {
         return lives;
     }
 
-    public void visitedCheckpoint() {
-        checkpointsVisited++;
-    }
+    public void visitedCheckpoint() { checkpointsVisited++; }
 
     /**
      * Method for testing.
@@ -552,9 +551,13 @@ public class Player {
 
     public void setOldLaserPos(Position pos) { oldLaserPos = pos; }
 
+    public void lockedIn(){ hasLockedIn = true; }
+
+    public boolean hasLockedIn(){ return hasLockedIn; }
+
     /**
      * Shoot laser in the direction which the robot is pointing.
-     * Lasers stops at walls and players, and will damage a player if they hit them.
+     * Lasers stops at walls and players, and will damage any player hit
      */
     public void shootLaser() {
         Direction laserDir = playerPiece.getDir();
@@ -585,6 +588,52 @@ public class Player {
             laserPath.add(laserPos);
         }
 
+    }
+
+    /**
+     * Picks random cards for the remaining open slots in the register
+     */
+    public void pickRandomCards(){
+        if (playerHandDeck.isEmpty()) { return; }
+        ArrayList<Integer> numbers = new ArrayList<>();
+        boolean hasSelectedFiveCards = false;
+        while (!hasSelectedFiveCards){
+            if(numbers.size() == playerHandDeck.size()){
+                System.out.println("Error: Couldn't choose enough random cards");
+                return;
+            }
+            int randomNumber = (int)(Math.random()*playerHandDeck.size());
+            if(numbers.contains(randomNumber)){continue;}
+            ProgramCard card = playerHandDeck.get(randomNumber);
+            if(isCardAvailable(card)){
+                for (int i = 0; i < selectedCards.length; i++) {
+                    if(selectedCards[i] == null){
+                        selectedCards[i] = card;
+                        break;
+                    }
+                    if(i == 4){hasSelectedFiveCards = true;}
+                }
+            }
+            else{numbers.add(randomNumber);}
+        }
+    }
+
+    /**
+     * Checks if a card is available in hand
+     *
+     * @param card the card to check
+     * @return true if that type of card is available in hand, false otherwise
+     */
+    public boolean isCardAvailable(ProgramCard card) {
+        for (ProgramCard selectedCard : getSelectedCards()) {
+            if (selectedCard == null) {
+                continue;
+            }
+            if (selectedCard.equals(card)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

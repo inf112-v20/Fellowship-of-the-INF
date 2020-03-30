@@ -37,8 +37,10 @@ public class UIScreen {
     private Actor[] checkpointActors = new Actor[3];
     private Actor[] damageActors = new Actor[10];
     private ArrayList<Actor> gamelogActors = new ArrayList<>();
+    private Label timerLabel = null;
 
-    public UIScreen(float width, Game game) {
+
+    public UIScreen(final float width, Game game) {
         this.width = width;
         this.game = game;
         this.scoreBoardScreen = new ScoreBoardScreen(game);
@@ -139,6 +141,7 @@ public class UIScreen {
      * getting repairs, visiting flags/checkpoints, losing lifes.
      */
     public void update() {
+
         float alpha; //opacity of the image
         Color c = lifeActors[0].getColor();
         for (int i = 0; i < 3; i++) {
@@ -347,6 +350,12 @@ public class UIScreen {
                 return;
             }
         }
+        for (int i = 1; i < game.getListOfPlayers().length ; i++) {
+            if(!game.getListOfPlayers()[i].hasLockedIn()){
+                System.out.println("Not every computer player has locked in. Press 0 to lock in cards for every computer player");
+                return;
+            }
+        }
         for (int i = 0; i < 5; i++) {
             cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
         }
@@ -358,17 +367,27 @@ public class UIScreen {
                 cardButton.getLeftOverCardButtons().get(i).remove();
             }
         }
+        player.lockedIn();
         player.setSelectedCards(cardButton.getSelectedCards());
         game.getRound().nextPhase();
         updateGameLog();
     }
 
-    public Stage getStage() {
-        return stage;
+    /**
+     * Draws timertext in the topright corner of the screen
+     * @param seconds the current timer number to draw
+     */
+    public void drawTimer(int seconds){
+        if(timerLabel != null){ timerLabel.remove();}
+        if(seconds>= 0) timerLabel = drawText(String.valueOf(seconds), 30, width*0.9f, height*0.9f, Color.BLACK);
     }
 
-    public ScoreBoardScreen getScoreBoardScreen() {
-        return scoreBoardScreen;
-    }
+    public Stage getStage() { return stage; }
+
+    public ScoreBoardScreen getScoreBoardScreen() { return scoreBoardScreen; }
+
+    public CardButton getCardButton() { return cardButton; }
+
+    public Label getTimerLabel(){return timerLabel;}
 }
 

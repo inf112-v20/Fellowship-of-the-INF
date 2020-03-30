@@ -29,6 +29,7 @@ public class Game {
     private final int NUMBER_OF_PLAYERS = 4;
     private Queue<MovesToExecuteSimultaneously> moves;
     private GameScreen gameScreen;
+    private Player playerRemaining;
 
 
     public Game(LogicGrid logicGrid, GameScreen gameScreen) {
@@ -156,6 +157,10 @@ public class Game {
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
         }
         moves.clear();
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
+            round.lockInCardsForComputers();
+        }
     }
 
 
@@ -218,4 +223,28 @@ public class Game {
         }
         return false;
     }
+
+    /**
+     * Check if there is only one player that hasn't locked in cards for the next round
+     * @return true if there is only one player left picking cards, false otherwise.
+     */
+    public boolean onePlayerLeftToPick(){
+        int lockedInPlayers = 0;
+        for (Player player : playerList) {
+            if (player.hasLockedIn()) {
+                lockedInPlayers++;
+            }
+            else{
+                playerRemaining = player;
+            }
+        }
+        return (lockedInPlayers == playerList.length-1);
+    }
+
+    /**
+     * Get player that hasn't locked card
+     * @return the one player that hasn't locked in cards for the next round
+     */
+    public Player getPlayerRemaining(){ return playerRemaining; }
+
 }
