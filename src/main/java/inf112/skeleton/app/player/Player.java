@@ -123,9 +123,8 @@ public class Player {
 
         //TODO: read comment:
         /*
-         * Respawns only happen at round end, so this code is only useful for immediately respawning a player
-         * after using keyboard inputs to move the player. If this code is implemented, then moves from cards that
-         * kill a player during a phase will immediately respawn the player after the card move. Perhaps this code
+         * According to the Roborally rules respawns only happen at round end, so this code is only useful for
+         * immediately respawning a player after using keyboard inputs to move the player.  Perhaps this code
          * can be removed then? Currently players are respawned at round end in finishRound() in Round.java.
          * Anyways, it should work as intended using keyboard inputs also.
          */
