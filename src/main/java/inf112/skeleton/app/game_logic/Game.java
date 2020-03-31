@@ -10,6 +10,7 @@ import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -24,7 +25,7 @@ public class Game {
     private Queue<MovesToExecuteSimultaneously> moves;
     private GameScreen gameScreen;
     private Player playerRemaining;
-
+    private ArrayList<Player> deadPlayers;
 
     public Game(LogicGrid logicGrid, GameScreen gameScreen) {
         this.logicGrid = logicGrid;
@@ -32,12 +33,11 @@ public class Game {
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player1 = new Player(1, this);
         this.playerList = new Player[NUMBER_OF_PLAYERS];
+        this.deadPlayers = new ArrayList<>();
         playerList[0] = player1;
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
         this.moves = new LinkedList<>();
-
-
     }
 
     public void initiateComputerPlayers() {
@@ -48,19 +48,6 @@ public class Game {
         }
     }
 
-    /**
-     * Perform moves for robots
-     *
-     * @param moves All moves to execute
-     */
-    public void performMoves(MovesToExecuteSimultaneously moves) {
-        for (Move move : moves) {
-            Position oldPos = move.getOldPos();
-            Position newPos = move.getNewPos();
-            if (!oldPos.equals(newPos)) //if the positions are not the same, then move the player on the board
-                logicGrid.movePlayerToNewPosition(oldPos, newPos);
-        }
-    }
 
     public LogicGrid getLogicGrid() {
         return logicGrid;
@@ -91,6 +78,7 @@ public class Game {
      */
     public void handleKeyBoardInput() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();//initiate moves to be done
+        Player player2 = playerList[1];
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -121,16 +109,10 @@ public class Game {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
             }
         }
-        //first player moves get executed
-        performMoves(moves); //execute moves if there are any
-        for (Move move : moves) {
-            gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
-        }
-        moves.clear();
+
 
         //second player moves get handled
-        Player player2 = playerList[1];
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
             player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
@@ -141,7 +123,7 @@ public class Game {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
             player2.turnPlayerAround(moves);
         }
-        //execution of player 2 moves
+        //execution of moves
         performMoves(moves); //execute moves if there are any
         for (Move move : moves) {
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
@@ -173,6 +155,20 @@ public class Game {
 
     public Queue<MovesToExecuteSimultaneously> getMoves() {
         return moves;
+    }
+
+    /**
+     * Perform moves for robots
+     *
+     * @param moves All moves to execute
+     */
+    public void performMoves(MovesToExecuteSimultaneously moves) {
+        for (Move move : moves) {
+            Position oldPos = move.getOldPos();
+            Position newPos = move.getNewPos();
+            if (!oldPos.equals(newPos)) //if the positions are not the same, then move the player on the board
+                logicGrid.movePlayerToNewPosition(move.getPlayerPiece(), oldPos, newPos);
+        }
     }
 
     /**
@@ -235,5 +231,7 @@ public class Game {
      * @return the one player that hasn't locked in cards for the next round
      */
     public Player getPlayerRemaining(){ return playerRemaining; }
+
+    public ArrayList<Player> getDeadPlayers(){return deadPlayers;}
 
 }

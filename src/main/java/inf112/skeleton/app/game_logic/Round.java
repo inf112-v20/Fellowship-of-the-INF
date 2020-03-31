@@ -62,6 +62,12 @@ public class Round {
                 player.setPowerDownMode(false);
             }
         }
+        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
+        for(Player deadPlayer : game.getDeadPlayers()){
+            deadPlayer.checkForRespawn(moves);
+        }
+        game.executeMoves(moves);
+        game.getDeadPlayers().clear();
     }
 
     public Phase getPhase() {

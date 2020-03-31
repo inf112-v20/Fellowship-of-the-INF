@@ -23,6 +23,7 @@ public class Player {
     private ProgramCard[] selectedCards = new ProgramCard[5];
     private ArrayList<ProgramCard> lockedCards = new ArrayList<>();
     private ArrayList<Position> laserPath = new ArrayList<>();
+    private ArrayList<Player> playersPushed = new ArrayList<>();
 
     private Position spawnPoint;
     private BoardPiece currentBoardPiece;
@@ -39,6 +40,10 @@ public class Player {
     private int lives = 3;
     private int checkpointsVisited = 0;
     private boolean hasLockedIn = false;
+    private boolean isPushed = false;
+    private Position lastPosAlive;
+    private Position deadPosition;
+    private int movesLeft = 0;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -51,6 +56,7 @@ public class Player {
         findFirstSpawnPoint();
         this.playerPiece = new PlayerPiece(spawnPoint, 200, Direction.NORTH, this);
         this.oldLaserPos = new Position(-1, 0);
+        this.deadPosition = new Position(playerNumber*100, playerNumber*100);
     }
 
 
@@ -87,14 +93,20 @@ public class Player {
      * @param moves        list that moves created can be added to
      */
     public void tryToGo(Direction newDirection, MovesToExecuteSimultaneously moves) {
+
         Move move = new Move(this);
         Position oldPosition = playerPiece.getPos();
         Position newPosition = oldPosition.getPositionIn(newDirection);
+
         //check if the move kills the player, if so lose a life
         if (isLegalMoveInDirection(oldPosition, newDirection) && isDeadMove(newPosition)) {
-            currentBoardPiece = pieceGrid[spawnPoint.getX()][spawnPoint.getY()].get(0);
             latestMoveDirection = newDirection;
             loseLife();
+            lastPosAlive = oldPosition;
+            setPos(deadPosition);
+            move.updateMove();
+            moves.add(move);
+            game.getDeadPlayers().add(this);
         }
         //if move is legal and player isn't dead, update logic grid
         if (isLegalMoveInDirection(oldPosition, newDirection) && !isDead()) {
@@ -107,29 +119,34 @@ public class Player {
             latestMoveDirection = newDirection;
             this.conveyorBeltMove = false;
         }
-        if (!isPermanentlyDead) checkForRespawn(moves); //if statementw, otherwise player respawns when it's dead
-    }
 
-    /**
-     * Check if a player needs to be respawned
-     * @param moves list to add respawn move to
-     */
-    public void checkForRespawn(MovesToExecuteSimultaneously moves) {
-        //If the player still have lives left, respawn it, but set it in shutdown mode
-        if (lives >= 0 && isDead()) {
-            respawnPlayer(moves);
-            setPowerDownMode(true);
+        //TODO: read comment:
+        /*
+         * Respawns only happen at round end, so this code is only useful for immediately respawning a player
+         * after using keyboard inputs to move the player. If this code is implemented, then moves from cards that
+         * kill a player during a phase will immediately respawn the player after the card move. Perhaps this code
+         * can be removed then? Currently players are respawned at round end in finishRound() in Round.java.
+         * Anyways, it should work as intended using keyboard inputs also if you uncomment the code under.
+
+         */
+        if(!this.isPushed) {
+            movesLeft--;
+            if (movesLeft == 0) {
+                for (int i = 0; i < playersPushed.size(); i++) {
+                    Player pushedPlayer = playersPushed.get(i);
+                    pushedPlayer.isPushed = false;
+                    if (pushedPlayer.isDead()) {
+                        pushedPlayer.checkForRespawn(moves);
+                        pushedPlayer.playersPushed.clear();
+                    }
+                }
+                playersPushed.clear();
+                if (isDead) {
+                    checkForRespawn(moves);
+                }
+            }
         }
-
-        //Handle what happens if the player runs out of lives
-        else if (lives < 0 && isDead()) {
-            respawnPlayer(moves);
-            setPowerDownMode(true);
-            isDead = true;
-            isPermanentlyDead = true;
-        }
     }
-
 
     /**
      * If there is a player to be pushed, call tryToGo for the player laying there
@@ -147,6 +164,8 @@ public class Player {
                 System.out.println("Error: Player " + playerNumber + " can't push itself.");
                 return;
             }
+            playertoPush.isPushed = true;
+            playersPushed.add(0, playertoPush);
             playertoPush.tryToGo(dir, moves);
         }
     }
@@ -161,9 +180,64 @@ public class Player {
     private PlayerPiece getPlayerPieceToPush(PlayerPiece playerPiece, Direction dir) {
         Position targetPosition = playerPiece.getPos().getPositionIn(dir);
         if (logicGrid.isInBounds(targetPosition))
-            return logicGrid.getPieceType(targetPosition, PlayerPiece.class);
+            if(game.getPlayerAt(targetPosition) != null) {
+                return game.getPlayerAt(targetPosition).getPlayerPiece();
+            }
         return null; //return null if target position is not within grid
     }
+
+
+    /**
+     * Check if a player needs to be respawned
+     * @param moves list to add respawn move to
+     */
+    public void checkForRespawn(MovesToExecuteSimultaneously moves) {
+        //If the player still have lives left, respawn it, but set it in shutdown mode
+        if (lives >= 0 && isDead()) {
+            respawnPlayer(moves);
+            setPowerDownMode(true);
+        }
+
+        //Handle what happens if the player runs out of lives
+        else if (lives < 0 && isDead()) {
+            Move permaDeadMove = new Move(playerPiece, lastPosAlive, deadPosition, playerPiece.getDir(), playerPiece.getDir());
+            moves.add(permaDeadMove);
+            setPos(deadPosition);
+            setPowerDownMode(true);
+            isDead = true;
+            isPermanentlyDead = true;
+        }
+    }
+
+    public void setSpawnPoint(int x, int y) {
+        spawnPoint = new Position(x, y);
+    }
+
+    /**
+     *Put the player back to it's respawn position, update boardPiece and moves
+     * @param moves list to update
+     */
+    public void respawnPlayer(MovesToExecuteSimultaneously moves) {
+        game.performMoves(moves);
+        Move respawnMove = new Move(this);
+        Position validSpawnPointPosition = logicGrid.getValidSpawnPointPosition(this, spawnPoint);
+        setPos(validSpawnPointPosition);
+        respawnMove.updateMove();
+        moves.add(respawnMove);
+        isDead = false;
+        playerPiece.showAlivePlayer();
+    }
+
+    public void setPowerDownMode(boolean a) {
+        powerDownMode = a;
+    }
+
+    public boolean isPowerDownMode() {
+        return powerDownMode;
+    }
+
+
+
 
     /**
      * Updates currentBoardPiece based on what type of tile the player is standing on.
@@ -203,6 +277,9 @@ public class Player {
      * @return true if move is legal
      */
     public boolean isLegalMoveInDirection(Position currentPosition, Direction dir) {
+        if (!logicGrid.isInBounds(currentPosition)) {
+            return false;
+        }
         Position positionInFront = currentPosition.getPositionIn(dir);
         if (logicGrid.canLeavePosition(currentPosition, dir) && logicGrid.canEnterNewPosition(positionInFront, dir)) {
             //if the position in front is in bounds, check if there is a player there that can be pushed
@@ -248,6 +325,7 @@ public class Player {
      * @param moves       list of moves to add move objects to
      */
     public void executeCardAction(ProgramCard programCard, MovesToExecuteSimultaneously moves) {
+        movesLeft = programCard.getMovement();
         switch (programCard.getCommand()) {
             case MOVE1:
                 tryToGo(getPlayerPiece().getDir(), moves);
@@ -358,31 +436,7 @@ public class Player {
                 '}';
     }
 
-    public void setSpawnPoint(int x, int y) {
-        spawnPoint = new Position(x, y);
-    }
 
-    /**
-     *Put the player back to it's respawn position, update boardPiece and moves
-     * @param moves list to update
-     */
-    public void respawnPlayer(MovesToExecuteSimultaneously moves) {
-        Move respawnMove = new Move(this);
-        isDead = false;
-        playerPiece.showAlivePlayer();
-        Position validSpawnPointPosition = logicGrid.getValidSpawnPointPosition(this, spawnPoint);
-        setPos(validSpawnPointPosition.getX(), validSpawnPointPosition.getY());
-        respawnMove.updateMove();
-        moves.add(respawnMove);
-    }
-
-    public void setPowerDownMode(boolean a) {
-        powerDownMode = a;
-    }
-
-    public boolean isPowerDownMode() {
-        return powerDownMode;
-    }
 
     /**
      * Damages a player a given amount
@@ -563,6 +617,8 @@ public class Player {
     public void lockedIn(){ hasLockedIn = true; }
 
     public boolean hasLockedIn(){ return hasLockedIn; }
+
+    public Position getLastPosAlive(){return  lastPosAlive;}
 
     /**
      * Shoot laser in the direction which the robot is pointing.

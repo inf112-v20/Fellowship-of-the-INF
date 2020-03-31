@@ -279,6 +279,10 @@ public class GameScreen implements Screen {
         Position oldPos = move.getOldPos();
         Position newPos = move.getNewPos();
         Direction newDir = move.getNewDir();
+        Position lastPosAlive = playerPieceToUpdate.getPlayer().getLastPosAlive();
+        if(!game.getLogicGrid().isInBounds(oldPos) && game.getLogicGrid().positionIsFree(lastPosAlive, 12)){
+            playerLayer.setCell(lastPosAlive.getX(), lastPosAlive.getY() , null);
+        }
         playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
         playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
         playerLayer.setCell(newPos.getX(), newPos.getY(), playerPieceToUpdate.getPlayerCell()); //repaint at new position

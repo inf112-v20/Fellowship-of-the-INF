@@ -75,7 +75,9 @@ public class Phase {
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             orderedListOfPlayers.add(player);
+            if(player.isDead()){continue;}
             // if(player.getPlayerNumber() == 1 || player.getPlayerNumber() == 2){continue;}
+            if (player.getPlayerNumber() == 2){continue;}
             MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
         }
@@ -103,10 +105,9 @@ public class Phase {
      */
     private void touchCheckPoints() {
         for (Player player : listOfPlayers) {
-
+            if(player.isDead()){continue;}
             if (player.getCurrentBoardPiece() instanceof FlagPiece) {
                 FlagPiece flag = (FlagPiece) player.getCurrentBoardPiece();
-
                 if (player.getCheckpointsVisited() + 1 == flag.getFlagNumber()) {
                     player.visitedCheckpoint();
                     player.setSpawnPoint(player.getPos().getX(), player.getPos().getY());
@@ -123,6 +124,7 @@ public class Phase {
     private void lasersFire() {
         // Static lasers (from walls)
         for (Player player : listOfPlayers) {
+            if(player.isDead()){continue;}
             player.shootLaser();
             int damage = 1;
             LaserPiece laser;
@@ -190,6 +192,7 @@ public class Phase {
     public void moveConveyorBelts(boolean moveOnlyExpressBelts) {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
+            if(player.isDead()){continue;}
             if (player.isOnConveyorBelt()) {
                 if ((moveOnlyExpressBelts && !player.isOnExpressBelt()) || player.hasBeenMovedThisPhase()) {
                     continue;
@@ -210,6 +213,7 @@ public class Phase {
     public void rotateCogs() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
+            if(player.isDead()){continue;}
             if (player.isOnCog()) {
                 BoardElementsMove.rotateCog(player, moves);
             }

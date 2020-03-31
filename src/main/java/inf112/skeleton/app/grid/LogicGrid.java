@@ -188,18 +188,22 @@ public class LogicGrid {
      * @param oldPosition the position player is moving from
      * @param newPosition the position player is moving to
      */
-    public void movePlayerToNewPosition(Position oldPosition, Position newPosition) {
-        BoardPiece playerPiece = grid[oldPosition.getX()][oldPosition.getY()].get(playerLayerIndex);
-        if (playerPiece instanceof PlayerPiece) {
-            //check if position is free in logic grid
-            if (positionIsFree(newPosition, playerLayerIndex)) {
-                //set old position to NullPiece
-                grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
-                //add piece to new position
-                grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
-            }
-        } else {
-            System.out.println("Cannot move nonplayer to new position");
+    public void movePlayerToNewPosition(PlayerPiece playerPiece, Position oldPosition, Position newPosition) {
+
+        if(!isInBounds(newPosition)){
+            grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
+            return;
+        }
+        if(!isInBounds(oldPosition)){
+            grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
+            return;
+        }
+        //check if position is free in logic grid
+        if (positionIsFree(newPosition, playerLayerIndex)) {
+            //set old position to NullPiece
+            grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
+            //add piece to new position
+            grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
         }
     }
 
@@ -359,18 +363,20 @@ public class LogicGrid {
      */
     public Position getValidSpawnPointPosition(Player player, Position spawnPoint) {
         //if spawnPoint is valid, return spawnPoint
-        if (positionIsFree(spawnPoint, playerLayerIndex) && spawnIsSafe(spawnPoint)) return spawnPoint;
+        if (positionIsFree(spawnPoint, playerLayerIndex)){ return spawnPoint; }
+
         //if spawnPoint is not valid, check the neighbouring positions.
         for (Direction dir : Direction.values()) {
             if (positionIsFree(spawnPoint.getPositionIn(dir), playerLayerIndex)
-                    && spawnIsSafe(spawnPoint)) return spawnPoint.getPositionIn(dir);
-        }
+                    && spawnIsSafe(spawnPoint)){ return spawnPoint.getPositionIn(dir);}
+            }
         //check the neighbouring positions of the neighbouring positions
         for (Direction dir : Direction.values()) {
             Position checkedPosition = spawnPoint.getPositionIn(dir);
             for (Direction dir2 : Direction.values()) {
-                if (positionIsFree(checkedPosition.getPositionIn(dir), playerLayerIndex)
-                        && spawnIsSafe(spawnPoint)) return spawnPoint.getPositionIn(dir);
+                if (positionIsFree(checkedPosition.getPositionIn(dir2), playerLayerIndex)
+                        && spawnIsSafe(spawnPoint)) { return spawnPoint.getPositionIn(dir2);
+                }
             }
         }
         System.out.println("Valid spawn point for player " + player.getPlayerNumber() + " not found.");
