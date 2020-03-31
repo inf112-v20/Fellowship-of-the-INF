@@ -128,7 +128,7 @@ public class Player {
          * can be removed then? Currently players are respawned at round end in finishRound() in Round.java.
          * Anyways, it should work as intended using keyboard inputs also if you uncomment the code under.
 
-         */
+
         if(!this.isPushed) {
             movesLeft--;
             if (movesLeft == 0) {
@@ -146,6 +146,8 @@ public class Player {
                 }
             }
         }
+
+         */
     }
 
     /**
