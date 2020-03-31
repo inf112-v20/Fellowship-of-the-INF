@@ -67,6 +67,7 @@ public class UIScreen {
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (game.getRound().getPhaseNr() > 4) {
+                game.getRound().finishRound();
                 this.newRound();
             } else {
                 if (game.getRound().getPhaseNr() == 0) {
@@ -369,7 +370,7 @@ public class UIScreen {
                 cardButton.getLeftOverCardButtons().get(i).remove();
             }
         }
-        player.lockedIn();
+        player.setLockedIn(true);
         game.getRound().nextPhase();
         updateGameLog();
     }

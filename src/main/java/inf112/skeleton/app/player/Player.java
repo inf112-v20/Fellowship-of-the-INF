@@ -147,7 +147,6 @@ public class Player {
             }
         }
 
-
     }
 
     /**
@@ -621,7 +620,7 @@ public class Player {
 
     public void setOldLaserPos(Position pos) { oldLaserPos = pos; }
 
-    public void lockedIn(){ hasLockedIn = true; }
+    public void setLockedIn(boolean bool){ hasLockedIn = bool; }
 
     public boolean hasLockedIn(){ return hasLockedIn; }
 
@@ -690,7 +689,7 @@ public class Player {
             }
             else{numbers.add(randomNumber);}
         }
-        lockedIn();
+        setLockedIn(true);
     }
 
     /**

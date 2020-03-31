@@ -139,7 +139,6 @@ public class Game {
         }
     }
 
-
     public Player[] getListOfPlayers() {
         return playerList;
     }
@@ -147,14 +146,9 @@ public class Game {
     public void executeRound() {
         // If there are moves to execute, then don't start new round
         this.round = new Round(this);
-        if (!moves.isEmpty())
-            return;
-
         roundNumber++;
         round.setRoundNumber(roundNumber);
-        //check all players have hand
         round.startRound();
-        round.finishRound();
     }
 
     public Queue<MovesToExecuteSimultaneously> getMoves() {

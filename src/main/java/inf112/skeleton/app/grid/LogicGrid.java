@@ -346,7 +346,7 @@ public class LogicGrid {
                 Position pos = new Position(x, y);
                 if (!positionIsFree(pos, flagLayerIndex)) {
                     FlagPiece flagPiece = (FlagPiece) grid[x][y].get(flagLayerIndex);
-                    flagPositions.add(flagPiece.getFlagNumber() - 1, pos);
+                    flagPositions.set(flagPiece.getFlagNumber() - 1, pos);
                 }
             }
         }

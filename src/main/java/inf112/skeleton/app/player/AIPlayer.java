@@ -35,15 +35,13 @@ public class AIPlayer extends Player {
      */
     public void pickCards() {
         if (playerHandDeck.isEmpty()) {
-            lockedIn();
+            setLockedIn(true);
             return;
         }
-        newRobotPos = new Position(getPos().getX(), getPos().getY());
-        newRobotDir = getPlayerPiece().getDir();
         for (int i = 0; i < 5 - getLockedCards().size(); i++) {
             getSelectedCards()[i] = chooseCard();
         }
-        lockedIn();
+        setLockedIn(true);
         flagsVisitedInRound = 0;
     }
 
@@ -105,7 +103,9 @@ public class AIPlayer extends Player {
      * @return true if the new position is closer to goal, false otherwise
      */
     private boolean isPosCloserToGoal(Position oldPos, Position newPos) {
-        if(oldPos == null || newPos == null){System.out.println("Error: Couldn't calculate distance from goal"); return false;}
+        if(oldPos == null || newPos == null || nextGoalPos == null){
+            System.out.println("Error: Couldn't calculate distance from goal");
+            return false;}
         int oldDistanceAway = getDistanceAway(nextGoalPos, oldPos);
         int newDistanceAway = getDistanceAway(nextGoalPos, newPos);
         return (newDistanceAway < oldDistanceAway);
@@ -364,6 +364,11 @@ public class AIPlayer extends Player {
             moveScore = 100;
         }
         return moveScore;
+    }
+
+    public void setNewRobotPosAndDir(Position pos, Direction dir){
+        newRobotPos = pos;
+        newRobotDir = dir;
     }
 
 }
