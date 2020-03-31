@@ -43,7 +43,8 @@ public class Player {
     private boolean isPushed = false;
     private Position lastPosAlive;
     private Position deadPosition;
-    private int movesLeft = 0;
+    private int movesLeft = 1;
+    private boolean keyInput = false;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -126,10 +127,9 @@ public class Player {
          * after using keyboard inputs to move the player. If this code is implemented, then moves from cards that
          * kill a player during a phase will immediately respawn the player after the card move. Perhaps this code
          * can be removed then? Currently players are respawned at round end in finishRound() in Round.java.
-         * Anyways, it should work as intended using keyboard inputs also if you uncomment the code under.
-
-
-        if(!this.isPushed) {
+         * Anyways, it should work as intended using keyboard inputs also.
+         */
+        if(!this.isPushed && keyInput) {
             movesLeft--;
             if (movesLeft == 0) {
                 for (int i = 0; i < playersPushed.size(); i++) {
@@ -144,10 +144,11 @@ public class Player {
                 if (isDead) {
                     checkForRespawn(moves);
                 }
+                movesLeft = 1;
             }
         }
 
-         */
+
     }
 
     /**
@@ -228,6 +229,7 @@ public class Player {
         moves.add(respawnMove);
         isDead = false;
         playerPiece.showAlivePlayer();
+        if(keyInput){game.getDeadPlayers().clear();}
     }
 
     public void setPowerDownMode(boolean a) {
@@ -327,6 +329,8 @@ public class Player {
      * @param moves       list of moves to add move objects to
      */
     public void executeCardAction(ProgramCard programCard, MovesToExecuteSimultaneously moves) {
+        keyInput = false;
+        //Move rotateMove = new Move(this);
         movesLeft = programCard.getMovement();
         switch (programCard.getCommand()) {
             case MOVE1:
@@ -356,6 +360,8 @@ public class Player {
             default:
                 break;
         }
+        //rotateMove.updateMove(); //complete rotateMove object
+        //moves.add(rotateMove);
     }
 
     public int getPlayerNumber() {
@@ -621,6 +627,8 @@ public class Player {
     public boolean hasLockedIn(){ return hasLockedIn; }
 
     public Position getLastPosAlive(){return  lastPosAlive;}
+
+    public void setKeyInput(boolean bool){ keyInput = bool; }
 
     /**
      * Shoot laser in the direction which the robot is pointing.

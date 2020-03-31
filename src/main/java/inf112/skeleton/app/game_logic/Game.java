@@ -80,8 +80,10 @@ public class Game {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();//initiate moves to be done
         Player player2 = playerList[1];
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            player1.setKeyInput(true);
             player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            player1.setKeyInput(true);
             player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             player1.turnPlayerLeft(moves);
@@ -113,8 +115,10 @@ public class Game {
 
         //second player moves get handled
         else if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            player2.setKeyInput(true);
             player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            player2.setKeyInput(true);
             player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
             player2.turnPlayerLeft(moves);

@@ -77,7 +77,6 @@ public class Phase {
             orderedListOfPlayers.add(player);
             if(player.isDead()){continue;}
             // if(player.getPlayerNumber() == 1 || player.getPlayerNumber() == 2){continue;}
-            if (player.getPlayerNumber() == 2){continue;}
             MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
         }
