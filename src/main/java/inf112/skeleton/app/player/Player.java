@@ -691,6 +691,7 @@ public class Player {
             }
             else{numbers.add(randomNumber);}
         }
+        lockedIn();
     }
 
     /**

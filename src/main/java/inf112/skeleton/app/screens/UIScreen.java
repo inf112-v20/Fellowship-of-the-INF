@@ -345,6 +345,7 @@ public class UIScreen {
      * player cant move them after locking in.
      */
     public void executeLockInButton() {
+        if(game.getRound().getPhaseNr() != 0 ){return;}
         for (int i = 0; i < 5; i++) {
             if (cardButton.getSelectedCards()[i] == null) {
                 System.out.println("Not enough cards");
@@ -369,7 +370,6 @@ public class UIScreen {
             }
         }
         player.lockedIn();
-        player.setSelectedCards(cardButton.getSelectedCards());
         game.getRound().nextPhase();
         updateGameLog();
     }

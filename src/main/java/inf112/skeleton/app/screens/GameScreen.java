@@ -133,6 +133,7 @@ public class GameScreen implements Screen {
         if(timerStarted) {
             if(!game.onePlayerLeftToPick()){
                 stopTimer();
+                uiScreen.executeLockInButton();
             }
             if (seconds != prevSeconds) {
                 uiScreen.drawTimer(seconds + 1);
@@ -296,12 +297,12 @@ public class GameScreen implements Screen {
         timer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
-                seconds--;
-                if (seconds < -1 && timerStarted) {
+                if (seconds < 0 && timerStarted) {
                     game.getPlayerRemaining().pickRandomCards();
                     uiScreen.getCardButton().moveCardButtons();
-                    stopTimer();
+                    //uiScreen.executeLockInButton();
                 }
+                seconds--;
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
@@ -311,10 +312,10 @@ public class GameScreen implements Screen {
      * Stops the timer and removes it from the screen
      */
     private void stopTimer(){
+        timerStarted = false;
         timer.cancel();
         prevSeconds = countdownTimer;
         seconds = countdownTimer;
-        timerStarted = false;
         uiScreen.getTimerLabel().remove();
     }
 }
