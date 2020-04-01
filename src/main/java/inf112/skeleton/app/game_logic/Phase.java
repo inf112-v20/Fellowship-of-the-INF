@@ -42,6 +42,7 @@ public class Phase {
         rotateCogs();
         lasersFire();
         touchCheckPoints();
+        game.setPhaseDone(true);
     }
 
     /**

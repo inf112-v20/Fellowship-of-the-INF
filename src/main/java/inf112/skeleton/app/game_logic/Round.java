@@ -37,7 +37,7 @@ public class Round {
                 player.getSelectedCards()[number + j] = (player.getLockedCards().get(j));
             }
         }
-        //lockInCardsForComputers();
+        //lockInCardsForComputers(true);
     }
 
     /**
@@ -63,7 +63,6 @@ public class Round {
                 player.setPowerDownMode(false);
             }
         }
-        System.out.println(game.getDeadPlayers().size());
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for(Player deadPlayer : game.getDeadPlayers()){
             deadPlayer.checkForRespawn(moves);
@@ -92,13 +91,16 @@ public class Round {
      * Lock in cards for computer players.
      * Press 0 to do it manually.
      */
-    public void lockInCardsForComputers(){
-        for (int i = 1; i < game.getListOfPlayers().length; i++) {
-            AIPlayer aiPlayer = (AIPlayer) game.getListOfPlayers()[i];
-            aiPlayer.setNewRobotPosAndDir(aiPlayer.getPos(), aiPlayer.getPlayerPiece().getDir());
-            System.out.println(aiPlayer.toString() + " playerhand: " + aiPlayer.getPlayerHandDeck());
-            aiPlayer.pickCards();
-            System.out.println(aiPlayer.toString() + " chose " + Arrays.toString(aiPlayer.getSelectedCards()) + "\n");
+    public void lockInCardsForComputers(boolean lockInForAll){
+        for (Player player : game.getListOfPlayers()) {
+            if(player instanceof AIPlayer && !player.hasLockedIn()) {
+                AIPlayer aiPlayer = (AIPlayer) player;
+                aiPlayer.setNewRobotPosAndDir(aiPlayer.getPos(), aiPlayer.getPlayerPiece().getDir());
+                System.out.println(aiPlayer.toString() + " playerhand: " + aiPlayer.getPlayerHandDeck());
+                aiPlayer.pickCards();
+                System.out.println(aiPlayer.toString() + " chose " + Arrays.toString(aiPlayer.getSelectedCards()) + "\n");
+                if(!lockInForAll){return;}
+            }
         }
     }
 }

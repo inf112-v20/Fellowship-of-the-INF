@@ -26,6 +26,8 @@ public class Game {
     private GameScreen gameScreen;
     private Player playerRemaining;
     private ArrayList<Player> deadPlayers;
+    private boolean phaseDone = false;
+    private boolean autoStartNextPhase = false;
 
     public Game(LogicGrid logicGrid, GameScreen gameScreen) {
         this.logicGrid = logicGrid;
@@ -135,7 +137,25 @@ public class Game {
         moves.clear();
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
-            round.lockInCardsForComputers();
+            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+                round.lockInCardsForComputers(false);
+            }
+            else{
+                round.lockInCardsForComputers(true);
+            }
+        }
+
+    }
+
+    public void handleNonGameLogicKeyBoardInput(){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)){
+            autoStartNextPhase = !autoStartNextPhase;
+            if(autoStartNextPhase){
+                System.out.println("Turning autostart of phases on");
+            }
+            else {
+                System.out.println("Turning autostart of phases off");
+            }
         }
     }
 
@@ -231,5 +251,11 @@ public class Game {
     public Player getPlayerRemaining(){ return playerRemaining; }
 
     public ArrayList<Player> getDeadPlayers(){return deadPlayers;}
+
+    public void setPhaseDone(boolean bool){ phaseDone = bool; }
+
+    public  boolean isPhaseDone(){return phaseDone;}
+
+    public boolean isAutoStartNextPhaseOn(){return autoStartNextPhase;}
 
 }

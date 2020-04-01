@@ -126,30 +126,44 @@ public class GameScreen implements Screen {
      */
     public void update() {
         //Start timer if there is only one left picking cards for the next round
+        handleKeyboardInput();
         if(game.onePlayerLeftToPick() && !timerStarted){
             timerStarted = true;
             startTimer();
         }
         if(timerStarted) {
+            //Stop timer when everybody has locked in cards
             if(!game.onePlayerLeftToPick()){
                 stopTimer();
                 uiScreen.executeLockInButton();
             }
-            if (seconds != prevSeconds) {
+            else if (seconds != prevSeconds) {
                 uiScreen.drawTimer(seconds + 1);
                 prevSeconds--;
             }
         }
         //only handle keyboard input if there are no moves to execute
         if (!movesToExecute() && !game.moreLaserToShoot()) {
-            handleKeyboardInput();
             uiScreen.update();
+            if(game.isPhaseDone() && game.isAutoStartNextPhaseOn()){
+                game.setPhaseDone(false);
+                if (game.getRound().getPhaseNr() > 4) {
+                    game.getRound().finishRound();
+                    uiScreen.newRound();
+                }
+                else {
+                    game.getRound().nextPhase();
+                    uiScreen.updateGameLog();
+                }
+            }
+            game.handleKeyBoardInput();
+            uiScreen.handleInput();
         }
         //only execute moves if there are any, the the current one hasn't been executed yet
         if (movesToExecute() && currentMoveIsExecuted) {
             currentMoveIsExecuted = false;
             executeMove();
-            delayForSeconds(1000); //add delay
+            delayForSeconds(500); //add delay
         }
         if (!movesToExecute() && game.moreLaserToShoot()) {
             shootLasers();
@@ -212,8 +226,7 @@ public class GameScreen implements Screen {
             stage = uiScreen.getStage();
         }
         stage.setViewport(gridPort);
-        game.handleKeyBoardInput();
-        uiScreen.handleInput();
+        game.handleNonGameLogicKeyBoardInput();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.graphics.setWindowedMode(600, 600);
         }
@@ -300,7 +313,6 @@ public class GameScreen implements Screen {
                 if (seconds < 0 && timerStarted) {
                     game.getPlayerRemaining().pickRandomCards();
                     uiScreen.getCardButton().moveCardButtons();
-                    //uiScreen.executeLockInButton();
                 }
                 seconds--;
             }

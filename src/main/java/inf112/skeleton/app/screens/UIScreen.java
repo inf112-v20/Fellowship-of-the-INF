@@ -40,7 +40,6 @@ public class UIScreen {
     private Label timerLabel = null;
 
 
-
     public UIScreen(final float width, Game game) {
         this.width = width;
         this.game = game;
@@ -355,7 +354,9 @@ public class UIScreen {
         }
         for (int i = 1; i < game.getListOfPlayers().length ; i++) {
             if(!game.getListOfPlayers()[i].hasLockedIn()){
-                System.out.println("Not every computer player has locked in. Press 0 to lock in cards for every computer player");
+                System.out.println("Not every computer player has locked in. " +
+                        "Press 0 to lock in cards for every computer player, " +
+                        "or LEFT CTRL + 0 to lock in player one by one.");
                 return;
             }
         }
