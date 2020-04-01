@@ -89,7 +89,7 @@ public class Round {
 
     /**
      * Lock in cards for computer players.
-     * Press 0 to do it manually.
+     * Press 0 to do it manually (Left CTRL + 0 to do one player at a time).
      */
     public void lockInCardsForComputers(boolean lockInForAll){
         for (Player player : game.getListOfPlayers()) {
