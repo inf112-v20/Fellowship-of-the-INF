@@ -239,8 +239,6 @@ public class Player {
     }
 
 
-
-
     /**
      * Updates currentBoardPiece based on what type of tile the player is standing on.
      *
@@ -472,6 +470,14 @@ public class Player {
                 playerHandDeck.remove(lockedCards.get(0));
             }
         }
+    }
+
+    /**
+     * Method to be used when the player decides to enter power down mode
+     */
+    public void doPowerDown() {
+        setPowerDownMode(true);
+        repairDamage(damage);
     }
 
     /**
