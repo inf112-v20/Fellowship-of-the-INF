@@ -55,7 +55,7 @@ public class GameScreen implements Screen {
 
 
 
-    public GameScreen(String mapName) {
+    public GameScreen(String mapName, int numberOfPlayers) {
         TmxMapLoader mapLoader = new TmxMapLoader();
         TiledMap map = mapLoader.load(mapName); //roborally board
         MapProperties mapProperties = map.getProperties();
@@ -76,7 +76,7 @@ public class GameScreen implements Screen {
         verticalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(47));
         robotLasersLayer = (TiledMapTileLayer) map.getLayers().get("Robot Lasers");
         LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, map);
-        game = new Game(logicGrid, this);
+        game = new Game(logicGrid, this, numberOfPlayers);
         initializePlayers();
         currentMoveIsExecuted = true;
         //UI gets game deck from game class
