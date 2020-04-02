@@ -125,6 +125,26 @@ These are the MVP's we picked to complete in this iteration:
 
 ---
 
+### Functional repair sites (single-wrench fields)
+**Usecase**: The user of the game would like the robots standing on single-wrench repair fields to discard damage 
+tokens in accordance to the rules of Roborally.
+
+
+**Acceptance criteria**
+
+* A robot standing on a single-wrench field at the end of a **round** (after 5 phases) discards 1 damage token.
+* If a robot does not currently have any damage tokens, then nothing happens (damage can't be negative).
+* UI has to be updated accordingly.
+
+
+**Tasks to complete**
+
+* Register when a robot is standing on a singe-wrench field at the end of a round.
+* Discard damage tokens according to ruleset.
+* Update UI (damage tokens).
+
+---
+
 ### Have functional lasers on the board
 **Usecase**: The user of the game would like robots to obtain one damage, in accordance to the rules of Roborally, when standing in the path of lasers.
 
