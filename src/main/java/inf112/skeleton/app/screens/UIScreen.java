@@ -32,6 +32,7 @@ public class UIScreen {
     private CardButton cardButton;
     private Game game;
     private ImageButton lockInButton;
+    private ImageButton powerDownButton;
     private Player player;
     private Actor[] lifeActors = new Actor[3];
     private Actor[] checkpointActors = new Actor[3];
@@ -55,7 +56,8 @@ public class UIScreen {
         createDamageTokens();
         createLifeTokens();
         createCheckPointTokens();
-        createPowerDownImage();
+        //createPowerDownImage();
+        createPowerDownButton();
         this.newRound();
     }
 
@@ -240,7 +242,7 @@ public class UIScreen {
     }
 
     /**
-     * Creates the powerdown image
+     * Creates the powerDown image
      */
     public void createPowerDownImage() {
         Texture texture = new Texture(Gdx.files.internal("ui/powerdown.png"));
@@ -248,6 +250,17 @@ public class UIScreen {
         float posY = height * 0.08f;
         float posX = width * 0.9f;
         createImage(textureRegion, 0.5f, posX, posY, 1);
+    }
+
+    /**
+     * Creates the powerDown button
+     */
+    public void createPowerDownButton() {
+        Texture texture = new Texture(Gdx.files.internal("ui/powerdown.png"));
+        powerDownButton = createButton(texture, 0.5f, width * 0.9f, height * 0.08f);
+        Color c = powerDownButton.getColor();
+        powerDownButton.setColor(c.r, c.g, c.b, 1f);
+        powerDownButtonPressed(powerDownButton);
     }
 
     /**
@@ -302,16 +315,29 @@ public class UIScreen {
     }
 
     /**
+     * TODO Can this be made generic with the powerDown Button, or do we need 2 listeners?
      * Clicklistener for the lockinbutton
      *
      * @param lockInButton the button to create a clicklistener for
      */
     public void lockInButtonPressed(ImageButton lockInButton) {
-
         lockInButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 executeLockInButton();
+            }
+        });
+    }
+
+    /**
+     * Clicklistener for the powerDownButton
+     *
+     * @param powerDownButton the button to  create a clicklistener for
+     */
+    public void powerDownButtonPressed(ImageButton powerDownButton) {
+        powerDownButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) { executePowerDownButton();
             }
         });
     }
@@ -335,6 +361,16 @@ public class UIScreen {
         textLabel.setPosition(posX, posY);
         stage.addActor(textLabel);
         return textLabel;
+    }
+
+    private void executePowerDownButton() {
+        if(game.getRound().getPhaseNr() != 0 ){return;}
+        System.out.println("Powerdown pressed");
+        powerDownButton.setTouchable(Touchable.disabled);
+        player.doPowerDown();
+        player.setLockedIn(true);
+        game.getRound().nextPhase();
+        updateGameLog();
     }
 
     /**
