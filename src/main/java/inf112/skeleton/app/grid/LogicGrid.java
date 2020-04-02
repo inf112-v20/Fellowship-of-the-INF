@@ -246,6 +246,10 @@ public class LogicGrid {
         return null;
     }
 
+    /**
+     * Create a list that is as long as the number of players,
+     * The list is only nullpointer
+     */
     private void initializeSpawns() {
         spawnPointPositions = new ArrayList<>();
         for (int i = 0; i < numberOfPlayers; i++) {
