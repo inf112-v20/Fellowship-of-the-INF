@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.LaserSourcePiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
@@ -21,9 +22,9 @@ public class Game {
     private GameDeck gameDeck;
     private Player player1;
     private Player[] playerList;
+    private int numberOfPlayers;
     private int roundNumber = 0;
     private Round round;
-    private final int NUMBER_OF_PLAYERS = 4;
     private Queue<MovesToExecuteSimultaneously> moves;
     private GameScreen gameScreen;
     private Player playerRemaining;
@@ -31,12 +32,13 @@ public class Game {
     private boolean phaseDone = false;
     private boolean autoStartNextPhase = false;
 
-    public Game(LogicGrid logicGrid, GameScreen gameScreen) {
+    public Game(LogicGrid logicGrid, GameScreen gameScreen, int numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
         this.logicGrid = logicGrid;
         this.gameScreen = gameScreen;
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player1 = new Player(1, this);
-        this.playerList = new Player[NUMBER_OF_PLAYERS];
+        this.playerList = new Player[numberOfPlayers];
         this.deadPlayers = new ArrayList<>();
         playerList[0] = player1;
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
@@ -45,7 +47,7 @@ public class Game {
     }
 
     public void initiateComputerPlayers() {
-        for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
+        for (int playerNumber = 2; playerNumber <= numberOfPlayers; playerNumber++) {
             Player playerToBeInitiated = new AIPlayer(playerNumber, this, EXPERT);
             playerList[playerNumber - 1] = playerToBeInitiated;
             logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
@@ -82,7 +84,9 @@ public class Game {
      */
     public void handleKeyBoardInput() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();//initiate moves to be done
-        Player player2 = playerList[1];
+        Player player2 = player1;
+        if (numberOfPlayers > 1) player2 = playerList[1];
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.setKeyInput(true);
             player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
@@ -97,7 +101,9 @@ public class Game {
             player1.turnPlayerAround(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             player1.shootLaser();
-            gameScreen.shootLasers();
+            gameScreen.shootRobotLasers();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.B)) { //only used for testing board lasers
+            gameScreen.blinkBoardLasers();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             player1.takeDamage(1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {

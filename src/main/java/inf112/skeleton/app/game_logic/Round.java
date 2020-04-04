@@ -1,6 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
-
+import inf112.skeleton.app.grid_objects.RepairPiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 
@@ -60,6 +60,8 @@ public class Round {
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
             player.setLockedIn(false);
+            // Repairs
+            checkForRepair(player);
             if (player.isPowerDownMode() && player.getLives() >= 0) {
                 player.setPowerDownMode(false);
             }
@@ -86,6 +88,19 @@ public class Round {
 
     public int getPhaseNr() {
         return phaseNr;
+    }
+
+    /**
+     * Checks if a player is standing on a single-wrench repair field. If so, discard 1 damage token.
+     *
+     * @param player player (robot) being checked.
+     */
+    public void checkForRepair(Player player) {
+        if (player.isDead()) return;
+        // Checks if player is standing on a repair field
+        if (game.getLogicGrid().getPieceType(player.getPos(), RepairPiece.class) != null) {
+            player.repairDamage(1);
+        }
     }
 
     /**

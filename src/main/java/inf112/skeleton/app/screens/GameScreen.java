@@ -21,6 +21,7 @@ import inf112.skeleton.app.game_logic.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.LaserSourcePiece;
 import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.Player;
 
@@ -39,26 +40,32 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer mapRenderer;
     private OrthographicCamera camera;
     private Viewport gridPort;
-    private TiledMapTileLayer playerLayer;
-    private TiledMapTileLayer robotLasersLayer;
+
     private Stage stage;
     private UIScreen uiScreen;
     private Game game;
     private boolean currentMoveIsExecuted;
     private ScoreBoardScreen scoreBoardScreen;
+    private TiledMapTileLayer playerLayer;
+    private TiledMapTileLayer robotLasersLayer;
+    private TiledMapTileLayer boardLaserLayer;
     private TiledMapTileLayer.Cell horizontalLaser;
     private TiledMapTileLayer.Cell verticalLaser;
+    private TiledMapTileLayer.Cell doubleHorizLaser;
+    private TiledMapTileLayer.Cell doubleVerticalLaser;
+    private TiledMapTileLayer.Cell emptyCell;
     final private int countdownTimer = 30;
     private int seconds = countdownTimer;
     private int prevSeconds = countdownTimer;
     private Timer timer;
     private boolean timerStarted = false;
+    private boolean boardLasersVisible = false;
 
 
-
-    public GameScreen(String mapName) {
+    public GameScreen(String mapName, int numberOfPlayers) {
         TmxMapLoader mapLoader = new TmxMapLoader();
         TiledMap map = mapLoader.load(mapName); //roborally board
+        initializeCellsAndLayers(map);
         MapProperties mapProperties = map.getProperties();
         int MAP_WIDTH = mapProperties.get("width", Integer.class); //dimensions of board
         int MAP_HEIGHT = mapProperties.get("height", Integer.class);
@@ -71,30 +78,36 @@ public class GameScreen implements Screen {
         gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_HEIGHT_DPI, camera);
         camera.translate(MAP_WIDTH_DPI, MAP_WIDTH_DPI / 2);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
-        // Layers, add more later
-        playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
-        horizontalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(39));
-        verticalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(47));
-        robotLasersLayer = (TiledMapTileLayer) map.getLayers().get("Robot Lasers");
         LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, map);
-        game = new Game(logicGrid, this);
+        game = new Game(logicGrid, this, numberOfPlayers);
         initializePlayers();
         currentMoveIsExecuted = true;
         //UI gets game deck from game class
         uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game);
-
-
+        clearLayer(boardLaserLayer); //lasers should only be shown when active
     }
 
     /**
      * Create a simple player with the ability to move around the board
      * Add it to the playerLayer
      */
-    public void initializePlayers() {
+    private void initializePlayers() {
         for (Player playerToInitialize : game.getListOfPlayers()) {
             TiledMapTileLayer.Cell playerCell = playerToInitialize.getPlayerCell();
             playerLayer.setCell(playerToInitialize.getPos().getX(), playerToInitialize.getPos().getY(), playerCell);
         }
+    }
+
+    private void initializeCellsAndLayers(TiledMap map) {
+        playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
+        robotLasersLayer = (TiledMapTileLayer) map.getLayers().get("Robot Lasers");
+        boardLaserLayer = (TiledMapTileLayer) map.getLayers().get("Lasers");
+        horizontalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(39));
+        verticalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(47));
+        doubleHorizLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(103));
+        doubleVerticalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(102));
+        emptyCell = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(0));
+
     }
 
     @Override
@@ -126,19 +139,22 @@ public class GameScreen implements Screen {
      * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
+        if (boardLasersVisible) {
+            clearLayer(boardLaserLayer);
+            boardLasersVisible = false;
+        }
         //Start timer if there is only one left picking cards for the next round
         handleKeyboardInput();
-        if(game.onePlayerLeftToPick() && !timerStarted){
+        if (game.onePlayerLeftToPick() && !timerStarted) {
             timerStarted = true;
             startTimer();
         }
-        if(timerStarted) {
+        if (timerStarted) {
             //Stop timer when everybody has locked in cards
-            if(!game.onePlayerLeftToPick()){
+            if (!game.onePlayerLeftToPick()) {
                 stopTimer();
                 uiScreen.executeLockInButton();
-            }
-            else if (seconds != prevSeconds) {
+            } else if (seconds != prevSeconds) {
                 uiScreen.drawTimer(seconds + 1);
                 prevSeconds--;
             }
@@ -146,13 +162,12 @@ public class GameScreen implements Screen {
         //only handle keyboard input if there are no moves to execute
         if (!movesToExecute() && !game.moreLaserToShoot()) {
             uiScreen.update();
-            if(game.isPhaseDone() && game.isAutoStartNextPhaseOn()){
+            if (game.isPhaseDone() && game.isAutoStartNextPhaseOn()) {
                 game.setPhaseDone(false);
                 if (game.getRound().getPhaseNr() > 4) {
                     game.getRound().finishRound();
                     uiScreen.newRound();
-                }
-                else {
+                } else {
                     game.getRound().nextPhase();
                     uiScreen.updateGameLog();
                 }
@@ -167,7 +182,8 @@ public class GameScreen implements Screen {
             delayForSeconds(500); //add delay
         }
         if (!movesToExecute() && game.moreLaserToShoot()) {
-            shootLasers();
+            shootRobotLasers();
+            showBoardLasers();
             delayForSeconds(150);
         }
     }
@@ -195,7 +211,7 @@ public class GameScreen implements Screen {
     /**
      * Draws lasers on a cell for 150ms
      */
-    public void shootLasers() {
+    public void shootRobotLasers() {
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
             Position oldLaserPos = player.getOldLaserPos();
@@ -213,6 +229,40 @@ public class GameScreen implements Screen {
             player.getLaserPath().remove(0);
             player.setOldLaserPos(newLaserPos);
         }
+    }
+
+    /**
+     * Makes the board lasers visible
+     */
+    public void showBoardLasers() {
+        LogicGrid logicGrid = game.getLogicGrid();
+        //activate lasers
+        for (LaserSourcePiece laserSource : logicGrid.getLaserSourceList()) {
+            TiledMapTileLayer.Cell laserCell = getLaserCell(laserSource);
+            for (Position pos : logicGrid.getLaserPath(laserSource)) {
+                boardLaserLayer.setCell(pos.getX(), pos.getY(), laserCell);
+            }
+        }
+        boardLasersVisible = true;
+    }
+
+
+    private TiledMapTileLayer.Cell getLaserCell(LaserSourcePiece laserSource) {
+        Direction laserDirection = laserSource.getLaserDir();
+        TiledMapTileLayer.Cell laserId = horizontalLaser;
+        switch (laserDirection) {
+            case NORTH:
+            case SOUTH:
+                if (laserSource.isDoubleLaser()) laserId = doubleVerticalLaser;
+                else laserId = verticalLaser;
+                break;
+            case EAST:
+            case WEST:
+                if (laserSource.isDoubleLaser()) laserId = doubleHorizLaser;
+                else laserId = horizontalLaser;
+                break;
+        }
+        return laserId;
     }
 
 
@@ -295,8 +345,8 @@ public class GameScreen implements Screen {
         Position newPos = move.getNewPos();
         Direction newDir = move.getNewDir();
         Position lastPosAlive = playerPieceToUpdate.getPlayer().getLastPosAlive();
-        if(!game.getLogicGrid().isInBounds(oldPos) && game.getLogicGrid().positionIsFree(lastPosAlive, 12)){
-            playerLayer.setCell(lastPosAlive.getX(), lastPosAlive.getY() , null);
+        if (!game.getLogicGrid().isInBounds(oldPos) && game.getLogicGrid().positionIsFree(lastPosAlive, 12)) {
+            playerLayer.setCell(lastPosAlive.getX(), lastPosAlive.getY(), null);
         }
         playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
         playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
@@ -307,7 +357,7 @@ public class GameScreen implements Screen {
     /**
      * Starts a timer counting down for 30 seconds
      */
-    private void startTimer(){
+    private void startTimer() {
         timer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
@@ -324,11 +374,30 @@ public class GameScreen implements Screen {
     /**
      * Stops the timer and removes it from the screen
      */
-    private void stopTimer(){
+    private void stopTimer() {
         timerStarted = false;
         timer.cancel();
         prevSeconds = countdownTimer;
         seconds = countdownTimer;
         uiScreen.getTimerLabel().remove();
+    }
+
+    /**
+     * Sets all the cells in the layer to the empty cell.
+     * @param layerToClear layer to be cleared
+     */
+    public void clearLayer(TiledMapTileLayer layerToClear) {
+        for (int x = 0; x < layerToClear.getWidth(); x++) {
+            for (int y = 0; y < layerToClear.getHeight(); y++) {
+                layerToClear.setCell(x, y, emptyCell);
+            }
+        }
+    }
+
+    /**
+     * Only used for testing.
+     */
+    public void blinkBoardLasers() {
+        showBoardLasers();
     }
 }
