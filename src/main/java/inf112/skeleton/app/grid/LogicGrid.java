@@ -53,6 +53,7 @@ public class LogicGrid {
     //private BoardPiece[] [][] grid;
     private ArrayList<BoardPiece>[][] grid;
     private ArrayList<LaserSourcePiece> laserSourceList = new ArrayList<>();
+    private ArrayList<PusherPiece> pushersList = new ArrayList<>();
     private BoardPieceGenerator boardPieceGenerator;
 
 
@@ -149,6 +150,8 @@ public class LogicGrid {
                 flagPositions.add(null);
             } else if (layer == laserSourceLayer && piece instanceof LaserSourcePiece) {
                 laserSourceList.add((LaserSourcePiece) piece);
+            } else if (layer == pusherLayer && piece instanceof PusherPiece) {
+                pushersList.add((PusherPiece) piece);
             }
             isThisASpawnPoint(piece, x, y);
 
@@ -300,6 +303,11 @@ public class LogicGrid {
             //cannot leave if the laserSourcePiece player is standing on has a wall in the direction
             return (possibleLaserSourcePiece).canLeave(dir);
         }
+        PusherPiece possiblePusherPiece = getPieceType(currentPosition, PusherPiece.class);
+        if (possiblePusherPiece != null) {
+            //cannot leave if the pusherPiece player is standing on has a wall in the direction
+            return (possiblePusherPiece).canLeave(dir);
+        }
         return true;
     }
 
@@ -322,8 +330,13 @@ public class LogicGrid {
             }
             LaserSourcePiece possibleLaserSourcePiece = getPieceType(positionInFront, LaserSourcePiece.class);
             if (possibleLaserSourcePiece != null) {
-                //cannot go if WallPiece in front has a wall facing player
+                //cannot go if LaserSourcePiece in front has a wall facing player
                 return (possibleLaserSourcePiece).canGo(dir);
+            }
+            PusherPiece possiblePusherPiece = getPieceType(positionInFront, PusherPiece.class);
+            if (possiblePusherPiece != null) {
+                //cannot go if PusherPiece in front has a wall facing player
+                return (possiblePusherPiece).canGo(dir);
             }
         }
         return true;
@@ -408,6 +421,10 @@ public class LogicGrid {
 
     public ArrayList<LaserSourcePiece> getLaserSourceList() {
         return laserSourceList;
+    }
+
+    public ArrayList<PusherPiece> getPushersList() {
+        return pushersList;
     }
 
     /**

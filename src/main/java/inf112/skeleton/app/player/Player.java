@@ -30,6 +30,7 @@ public class Player {
     private Direction latestMoveDirection;
     private boolean conveyorBeltMove = false;
     private boolean hasBeenMovedThisPhase = false;
+    private boolean hasBeenPushedThisPhase = false;
     private Position oldLaserPos;
     private Game game;
     private boolean isDead = false;
@@ -710,4 +711,11 @@ public class Player {
         return true;
     }
 
+    public void setHasBeenPushedThisPhase(boolean hasBeenPushed) {
+        this.hasBeenPushedThisPhase = hasBeenPushed;
+    }
+
+    public boolean hasBeenPushedThisPhase() {
+        return hasBeenPushedThisPhase;
+    }
 }

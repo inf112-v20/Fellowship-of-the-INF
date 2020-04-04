@@ -4,9 +4,7 @@ import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.grid_objects.FlagPiece;
-import inf112.skeleton.app.grid_objects.LaserPiece;
-import inf112.skeleton.app.grid_objects.LaserSourcePiece;
+import inf112.skeleton.app.grid_objects.*;
 import inf112.skeleton.app.player.Player;
 
 
@@ -39,6 +37,7 @@ public class Phase {
         moveRobots();
         moveConveyorBelts(true);
         moveConveyorBelts(false);
+        pushersPush();
         rotateCogs();
         lasersFire();
         touchCheckPoints();
@@ -219,6 +218,30 @@ public class Phase {
             }
         }
         game.executeMoves(moves);
+    }
+
+    /**
+     * If a player is standing on an active pusher, it will be pushed.
+     */
+    public void pushersPush() {
+        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
+        boolean isOddPhase = ((phaseNumber+1) % 2) != 0;
+        for (PusherPiece pusher : logicGrid.getPushersList()) {
+            if (pusher.isActiveWhenOddPhase() == isOddPhase){
+                PlayerPiece possiblePlayer = logicGrid.getPieceType(pusher.getPos(), PlayerPiece.class);
+                if (possiblePlayer != null) {
+                    Player player = possiblePlayer.getPlayer();
+                    if (!player.hasBeenPushedThisPhase()) {
+                        player.tryToGo(pusher.getPushingDir(), moves);
+                        player.setHasBeenPushedThisPhase(true);
+                    }
+                }
+            }
+        }
+        game.executeMoves(moves);
+        for (Player player : listOfPlayers) {
+            player.setHasBeenPushedThisPhase(false);
+        }
     }
 
     public ArrayList<Player> getOrderedListOfPlayers() {
