@@ -9,9 +9,9 @@ import inf112.skeleton.app.grid.Position;
 public class PusherPiece extends DirectionedPiece {
     private boolean active;
 
-    public PusherPiece(Position pos, int id, Direction dir, boolean active) {
+    public PusherPiece(Position pos, int id, Direction dir, boolean activeWhenOddPhase) {
         super(pos, id, dir);
-        this.active = active;
+        this.active = activeWhenOddPhase;
     }
 
     public boolean isActive() {
