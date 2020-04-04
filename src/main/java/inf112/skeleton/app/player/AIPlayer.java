@@ -29,16 +29,17 @@ public class AIPlayer extends Player {
     private Difficulty difficulty;
 
 
-
     public AIPlayer(int playerNumber, Game game, Difficulty difficulty) {
         super(playerNumber, game);
         this.logicGrid = game.getLogicGrid();
         this.flagPositionScores = logicGrid.getFlagPositionScores();
         this.difficulty = difficulty;
+        this.playerHandDeck = getPlayerHandDeck();
+
     }
 
     /**
-     * Pick cards for computer player
+     * Pick cards for computer player depending on what difficult they are set to
      */
     public void pickCards() {
         this.playerHandDeck = getPlayerHandDeck();
@@ -66,6 +67,11 @@ public class AIPlayer extends Player {
         System.out.println(toString() + " chose " + Arrays.toString(getSelectedCards()) + "\n");
     }
 
+    /**
+     * Picks a random card for each phase as long as it doesn't put the robot
+     * in a position at the end of the phase that will kill it.
+     * Is used for picking cards at easy difficulty.
+     */
     private void pickRandom(){
         ArrayList<Integer> randomNumbers = new ArrayList<>();
         for (int i = 0; i < playerHandDeck.size(); i++) {
@@ -77,7 +83,7 @@ public class AIPlayer extends Player {
             List<Object> finalPosAndDir =  getPosFromCardMove(card, newRobotPos, newRobotDir);
             Position finalPos = (Position) finalPosAndDir.get(0);
             Direction finalDir = (Direction) finalPosAndDir.get(1);
-            if(isDeadMove(finalPos)){ continue; }
+            if(logicGrid.isDeadMove(finalPos)){ continue; }
             newRobotPos = finalPos;
             newRobotDir = finalDir;
             chosenCards.add(card);
@@ -94,7 +100,11 @@ public class AIPlayer extends Player {
         addCardsToSelectedCards(chosenCards);
     }
 
-
+    /**
+     * Picks the card for a phase that has the best score for that phase.
+     * I.e for each phase pick the card that will put the robot closest to the goal.
+     * Is used for picking cards at medium difficulty.
+     */
     private void pickGreedy() {
         for (int i = 0; i < cardsToPick ; i++) {
             nextGoalFlag = updateGoalFlag(checkpointsVisited+flagsVisitedInRound);
@@ -113,7 +123,10 @@ public class AIPlayer extends Player {
     }
 
 
-
+    /**
+     * Get the best card for a phase
+     * @return the card with best score (i.e lowest score)
+     */
     private ProgramCard getBestCard() {
         Object[] bestMovesInOrder = getBestCardsOrdered();
         for (Object cardAndScore : bestMovesInOrder) {
@@ -131,19 +144,22 @@ public class AIPlayer extends Player {
     }
 
 
+    /**
+     * Sort all unique available cards left in the playerhand by their score.
+     * If a score = 100, then that card will result in death or make the robot stand still
+     * (no change in position or direction).
+     * @return Sorted array with keysets, with the key being ProgramCards
+     * and the value is the score for that card. Sorted from best to worst score.
+     */
     private Object[] getBestCardsOrdered() {
         HashMap<ProgramCard, Integer> cardAndScore = new HashMap<>();
         ArrayList<ProgramCard> checkedCards = new ArrayList<>();
-        System.out.println("Available cards left: " + availableCardsLeft);
         for (ProgramCard card : availableCardsLeft) {
             if (isCardChecked(checkedCards, card)) {
                 continue;
             }
             checkedCards.add(card);
-            System.out.println("Finding score for " + card.getCommand());
             if (isCardUseless(card, newRobotPos, newRobotDir)) {
-                System.out.println("Using " + card.getCommand() + " at pos " + newRobotPos
-                        + " with dir " + newRobotDir + " is useless\n");
                 cardAndScore.put(card, 100);
                 continue;
             }
@@ -151,9 +167,6 @@ public class AIPlayer extends Player {
             Position finalPos = (Position) finalPosAndDir.get(0);
             Direction finalDir = (Direction) finalPosAndDir.get(1);
             int cardScore = getScore(finalPos, finalDir, nextGoalFlag);
-            System.out.println("Using " + card.getCommand() + " at pos " + newRobotPos
-                    + " with dir " + newRobotDir + " moves the robot to pos " + finalPos
-                    + " facing dir " + finalDir + " which has a score of " + cardScore + "\n");
             cardAndScore.put(card, cardScore);
         }
 
@@ -169,6 +182,16 @@ public class AIPlayer extends Player {
 
     }
 
+    /**
+     * Gets the score for a position depending how close it is to the goal
+     * This is the only difference between hard and expert difficulty.
+     * Hard difficulty uses manhattan score, which can be misleading (due to walls and holes).
+     * Expert difficulty knows exactly how far away a position is from the goal (factoring in holes and walls.
+     * @param pos the position to get the score for
+     * @param dir the direction of the robot (affects the score too)
+     * @param goalFlag the current goal flag
+     * @return the score calculated for a position with the direction given
+     */
     private int getScore (Position pos, Direction dir, int goalFlag){
         ArrayList<List<Object>> flagPosScores =  flagPositionScores.get(goalFlag);
         Position goalPos = (Position) flagPosScores.get(0).get(0);
@@ -188,8 +211,13 @@ public class AIPlayer extends Player {
     }
 
 
-
-
+    /**
+     * Picks the cards that will put the robot at the position with the best score at round end.
+     * The search for the best cards is guided by ignoring cards that don't do anything (e.g. moving into walls)
+     * and cards that will end up killing the robot. It focuses first on cards that have at least equal or better score
+     * than the current score.
+     * Is used for picking cards at hard and expert difficulty.
+     */
     private void pickOptimal(){
         int goalFlag = updateGoalFlag(checkpointsVisited);
         int score = getScore(newRobotPos, newRobotDir, goalFlag);
@@ -197,25 +225,20 @@ public class AIPlayer extends Player {
         ArrayList<ProgramCard> chosenCards = new ArrayList<>();
         int[] totalScore = {goalFlag, 0, score};
 
-
         List<Object> startNode = Arrays.asList(newRobotPos, newRobotDir, totalScore, chosenCards, playerHandDeck, goalFlag);
         ArrayList<List<Object>> startFrontier = new ArrayList<>();
         startFrontier.add(startNode);
         path.add(startFrontier);
 
-        int counter = 1;
         int[] bestFinalTotalScore = {goalFlag, 100, 100};
-        int firstNodeWithFiveCards = 0;
 
-         for (int i = 0; i < path.size() ; i++) {
+          for (int i = 0; i < path.size() ; i++) {
              ArrayList<List<Object>> frontier = path.get(i);
              for (List<Object> frontierNode : frontier) {
 
                  ArrayList<ProgramCard> currentChosenCards = new ArrayList<ProgramCard>((ArrayList) frontierNode.get(3));
-                 if (currentChosenCards.size() == 4 && firstNodeWithFiveCards == 0) {
-                     firstNodeWithFiveCards = counter - 1;
-                 }
-                 if (currentChosenCards.size() == 5) {
+
+                 if (currentChosenCards.size() == cardsToPick) {
                      break;
                  }
 
@@ -247,17 +270,16 @@ public class AIPlayer extends Player {
                          continue;
                      }
 
-                     List<Object> node = getNode(currentPos, currentDir, card, currentTotalScore);
-                     int[] nodeTotalScore = (int[]) node.get(2);
-                     int nodeScore = nodeTotalScore[2];
-                     int nodeGoalFlag = nodeTotalScore[0];
+                     List<Object> posAndScore = getFinalPosAndScore(currentPos, currentDir, card, currentTotalScore);
+                     totalScore = (int[]) posAndScore.get(2);
+                     goalFlag = totalScore[0];
+                     score = totalScore[2];
 
-                     if (nodeScore < bestNodeScore && nodeGoalFlag == currentTotalScore[0]) {
-                         bestNodeScore = nodeScore;
+                     if (score < bestNodeScore && goalFlag == currentTotalScore[0]) {
+                         bestNodeScore = score;
                      }
-                     newFrontier.add(createList(node, card, currentChosenCards, currentAvailableCards, goalFlag));
+                     newFrontier.add(createNode(posAndScore, card, currentChosenCards, currentAvailableCards, goalFlag));
                  }
-
 
                  for (int k = 0; k < newFrontier.size(); k++) {
                      ArrayList<ProgramCard> cardsInFrontier = (ArrayList) newFrontier.get(k).get(3);
@@ -269,7 +291,7 @@ public class AIPlayer extends Player {
                          newFrontier.remove(k);
                          k--;
                      }
-                     if (cardsInFrontier.size() == 5 &&
+                     if (cardsInFrontier.size() == cardsToPick &&
                              nextFlag >= bestFinalTotalScore[0] &&
                              movesToFlag <= bestFinalTotalScore[1] &&
                              nodeScore < bestFinalTotalScore[2]) {
@@ -277,22 +299,33 @@ public class AIPlayer extends Player {
                      }
                  }
                  path.add(newFrontier);
-                 counter++;
              }
         }
-         for (int i = firstNodeWithFiveCards; i < path.size(); i++) {
-             ArrayList<List<Object>> paths = path.get(i);
+          Collections.reverse(path);
+         a :for (ArrayList<List<Object>> paths : path) {
              for (List<Object> objects : paths) {
-                 ArrayList<ProgramCard> fiveCards = new ArrayList<>((ArrayList<ProgramCard>) objects.get(3));
+                 ArrayList<ProgramCard> bestCards = new ArrayList<>((ArrayList<ProgramCard>) objects.get(3));
                  totalScore = (int[]) objects.get(2);
-                 if (totalScore != bestFinalTotalScore) { continue; }
-                 addCardsToSelectedCards(fiveCards);
-                 break;
+                 if (totalScore != bestFinalTotalScore) {
+                     continue;
+                 }
+                 addCardsToSelectedCards(bestCards);
+                 break a;
              }
-        }
+         }
     }
 
-    private List<Object> getNode(Position pos, Direction dir, ProgramCard card, int[] totalScore){
+    /**
+     * Gets the final position and direction from using a card.
+     * Calculates the score for this new position and direction.
+     * @param pos the current (node) position
+     * @param dir the current (node) direction
+     * @param card the card to check
+     * @param totalScore the current (node) total score. [0] = current goalFlag,
+     * [1] = moves used to get to flag (if flag is reached in a round), [2] current score for current position
+     * @return list of new postion, direction, and the total score for the new position and direction.
+     */
+    private List<Object> getFinalPosAndScore(Position pos, Direction dir, ProgramCard card, int[] totalScore){
         List<Object> finalPosAndDir = getPosFromCardMove(card, pos, dir);
         Position finalPos = (Position) finalPosAndDir.get(0);
         Direction finalDir = (Direction) finalPosAndDir.get(1);
@@ -301,11 +334,20 @@ public class AIPlayer extends Player {
         return Arrays.asList(finalPos, finalDir, newTotalScore);
     }
 
-    private List<Object> createList(List<Object> node, ProgramCard card, ArrayList<ProgramCard> cardsChosen,
+    /**
+     * Creates a node for a card that may be added to the frontier.
+     * @param posDirAndScore Position, direction, and total score for the node.
+     * @param card ProgramCard for the node
+     * @param cardsChosen The ProgramCards chosen from the previous node.
+     * @param cardsLeft The ProgramCards left to choose from the previous node.
+     * @param roundStartGoalFlag The goalFlag number at the start of the round.
+     * @return the new node created with updated list of cards.
+     */
+    private List<Object> createNode(List<Object> posDirAndScore, ProgramCard card, ArrayList<ProgramCard> cardsChosen,
                                     ArrayList<ProgramCard> cardsLeft, int roundStartGoalFlag){
-        Position nodePos = (Position) node.get(0);
-        Direction nodeDir = (Direction) node.get(1);
-        int[] nodeTotalScore = (int[]) node.get(2);
+        Position nodePos = (Position) posDirAndScore.get(0);
+        Direction nodeDir = (Direction) posDirAndScore.get(1);
+        int[] nodeTotalScore = (int[]) posDirAndScore.get(2);
         ArrayList<ProgramCard> nodeChosenCards = new ArrayList<>(cardsChosen);
         ArrayList<ProgramCard> nodeAvailableCards = new ArrayList<>(cardsLeft);
         nodeChosenCards.add(card);
@@ -331,8 +373,12 @@ public class AIPlayer extends Player {
      */
 
 
-
-
+    /**
+     * Checks if a ProgramCard is already in a list of ProgramCards.
+     * @param checkedCards the list of ProgramCards to check
+     * @param card the ProgramCard to check
+     * @return true if it is already in the list, false otherwise
+     */
     private boolean isCardChecked(ArrayList<ProgramCard> checkedCards, ProgramCard card){
         for (ProgramCard checkedCard : checkedCards) {
             if (checkedCard.getCommand().equals(card.getCommand())) return true;
@@ -340,14 +386,28 @@ public class AIPlayer extends Player {
         return false;
     }
 
+    /**
+     * Checks if card will be useless to pick in a phase.
+     * A card is useless if it will result in death or make no change in position and direction.
+     * @param card the ProgramCard to check
+     * @param pos the current position
+     * @param dir the current direction
+     * @return true if the card is useless, false otherwise.
+     */
     private boolean isCardUseless(ProgramCard card, Position pos, Direction dir){
         List<Object> finalPosAndDir = getPosFromCardMove(card, pos, dir);
         Position newPos = (Position) finalPosAndDir.get(0);
         Direction newDir = (Direction) finalPosAndDir.get(1);
         if(pos.equals(newPos) && dir.equals(newDir)){ return true;}
-        return isDeadMove(newPos);
+        return logicGrid.isDeadMove(newPos);
     }
 
+    /**
+     * Updates the current goal flag number.
+     * Handles potential error when the current number is higher than the number of flags in the game.
+     * @param flagGoal the new goal flag number
+     * @return the new goal flag number
+     */
     private int updateGoalFlag(int flagGoal){
         int goalFlag = flagGoal;
         if (goalFlag > logicGrid.getFlagPositions().size() - 1) {
@@ -356,9 +416,13 @@ public class AIPlayer extends Player {
         return goalFlag;
     }
 
+    /**
+     * Gets the first available card in the playerHandDeck that is not already chosen.
+     * @return the first card available in the playerHandDeck.
+     */
     private ProgramCard getFirstAvailableCard(){
         for (ProgramCard programCard : playerHandDeck) {
-            if (isCardAvailable(programCard)) {
+            if (!isCardChecked(chosenCards, programCard)) {
                 return programCard;
             }
         }
@@ -404,7 +468,7 @@ public class AIPlayer extends Player {
      * @return the final position at the end of the phase
      */
     private List<Object> findFinalPosAndDir(Position pos, Direction dir, boolean expressBeltMove) {
-        if (isDeadMove(pos)) {
+        if (logicGrid.isDeadMove(pos)) {
             return Arrays.asList(pos, dir);
         }
         Position finalPos = pos;
@@ -454,6 +518,14 @@ public class AIPlayer extends Player {
         return Arrays.asList(finalPos, finalDir);
     }
 
+    /**
+     * Gets the final position and direction after using a card and board elements are moved.
+     * i.e phase end position and direction.
+     * @param card the card to check
+     * @param pos the current position
+     * @param dir the current direction
+     * @return the final position and direction.
+     */
     private List<Object> getPosFromCardMove(ProgramCard card, Position pos, Direction dir) {
         int moves = Math.abs(card.getMovement());
         Position newPos = pos;
@@ -461,7 +533,7 @@ public class AIPlayer extends Player {
         if(card.getCommand().equals(CardType.BACKUP)) moveDir = dir.getOppositeDirection();
 
         for (int i = 0; i < moves; i++) {
-            if (isDeadMove(newPos.getPositionIn(moveDir))) {
+            if (logicGrid.isDeadMove(newPos.getPositionIn(moveDir))) {
                 return findFinalPosAndDir(newPos.getPositionIn(moveDir), dir, false);
             }
             if(!isLegalMoveInDirection(newPos, moveDir)){

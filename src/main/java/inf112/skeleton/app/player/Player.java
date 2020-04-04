@@ -100,7 +100,7 @@ public class Player {
         Position newPosition = oldPosition.getPositionIn(newDirection);
 
         //check if the move kills the player, if so lose a life
-        if (isLegalMoveInDirection(oldPosition, newDirection) && isDeadMove(newPosition)) {
+        if (isLegalMoveInDirection(oldPosition, newDirection) && logicGrid.isDeadMove(newPosition)) {
             latestMoveDirection = newDirection;
             loseLife();
             lastPosAlive = oldPosition;
@@ -292,30 +292,6 @@ public class Player {
                     return isLegalMoveInDirection(positionInFront, dir);
                 } else return true;
             } else return true;
-        }
-        return false;
-    }
-
-    /**
-     * Method for checking if a move results in death
-     *
-     * @param position to check
-     * @return whether the move results in death
-     */
-    public boolean isDeadMove(Position position) {
-        int x = position.getX();
-        int y = position.getY();
-        BoardPiece currPiece;
-        //if move is within bounds, check if move is to AbyssPiece
-        if (logicGrid.isInBounds(position)) {
-            for (int i = 0; i < pieceGrid[x][y].size(); i++) {
-                currPiece = pieceGrid[x][y].get(i);
-                if (currPiece instanceof AbyssPiece) {
-                    return true;
-                }
-            }
-        } else {
-            return true;
         }
         return false;
     }

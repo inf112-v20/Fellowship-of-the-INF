@@ -101,7 +101,7 @@ public class LogicGrid {
         this.flagPositions = new ArrayList<>();
         readTiledMapToPieceGrid();
         sortFlagPositions();
-        createTableForScores();
+        createScoresForPositions();
     }
 
     /**
@@ -403,7 +403,12 @@ public class LogicGrid {
     }
 
 
-    private void createTableForScores(){
+    /**
+     * Creates a list of scores for every position (not abysses) for every flag in the game.
+     * The score is how many moves it takes to reach the flag from that position,
+     * which takes walls and holes into consideration.
+     */
+    private void createScoresForPositions(){
 
         ArrayList <Position> flags = getFlagPositions();
         ArrayList<ArrayList<List<Object>>> flagMapPositions = new ArrayList<>();
@@ -411,9 +416,8 @@ public class LogicGrid {
         for (Position flag : flags) {
 
             ArrayList<List<Object>> mapPositions = new ArrayList<>();
-            Position startPos = flag;
             int moves = 0;
-            List<Object> posAndScore = Arrays.asList(startPos, moves);
+            List<Object> posAndScore = Arrays.asList(flag, moves);
             mapPositions.add(posAndScore);
 
             for (int j = 0; j < mapPositions.size(); j++) {
@@ -431,23 +435,17 @@ public class LogicGrid {
                     }
                     int movesToNeighborPos = movesToPos + 1;
                     posAndScore = Arrays.asList(neighborPos, movesToNeighborPos);
-                    boolean checked = false;
+                    boolean alreadyChecked = false;
 
                     for (int k = 0; k < mapPositions.size(); k++) {
-
                         Position checkedPos = (Position) mapPositions.get(k).get(0);
-                        int movesToCheckedPos = (Integer) mapPositions.get(k).get(1);
                         if (checkedPos.equals(neighborPos)) {
-                            if (movesToNeighborPos < movesToCheckedPos) {
-                                mapPositions.set(k, posAndScore);
-                                break;
-                            }
-                            checked = true;
+                            alreadyChecked = true;
+                            break;
                         }
                     }
-                    if (!checked) {
-                        mapPositions.add(posAndScore);
-                    }
+                    if(!alreadyChecked) mapPositions.add(posAndScore);
+
                 }
             }
             flagMapPositions.add(mapPositions);
@@ -460,7 +458,12 @@ public class LogicGrid {
     }
 
 
-
+    /**
+     * Method for checking if a move results in death
+     *
+     * @param position to check
+     * @return whether the move results in death
+     */
     public boolean isDeadMove(Position position) {
         int x = position.getX();
         int y = position.getY();
