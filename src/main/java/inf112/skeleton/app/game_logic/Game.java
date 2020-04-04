@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import static inf112.skeleton.app.player.AIPlayer.Difficulty.*;
+
 public class Game {
     private LogicGrid logicGrid;
     private GameDeck gameDeck;
@@ -44,7 +46,7 @@ public class Game {
 
     public void initiateComputerPlayers() {
         for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
-            Player playerToBeInitiated = new AIPlayer(playerNumber, this);
+            Player playerToBeInitiated = new AIPlayer(playerNumber, this, EXPERT);
             playerList[playerNumber - 1] = playerToBeInitiated;
             logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
@@ -254,7 +256,7 @@ public class Game {
 
     public void setPhaseDone(boolean bool){ phaseDone = bool; }
 
-    public  boolean isPhaseDone(){return phaseDone;}
+    public boolean isPhaseDone(){return phaseDone;}
 
     public boolean isAutoStartNextPhaseOn(){return autoStartNextPhase;}
 

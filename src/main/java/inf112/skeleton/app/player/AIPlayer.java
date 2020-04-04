@@ -10,9 +10,7 @@ import inf112.skeleton.app.grid_objects.CogPiece;
 import inf112.skeleton.app.grid_objects.ConveyorBeltPiece;
 import inf112.skeleton.app.grid_objects.ExpressBeltPiece;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class AIPlayer extends Player {
     private Position newRobotPos;
@@ -20,80 +18,353 @@ public class AIPlayer extends Player {
     private int flagsVisitedInRound = 0;
     private int checkpointsVisited;
     private Position nextGoalPos;
+    private int nextGoalFlag;
     private LogicGrid logicGrid;
     private ArrayList<ProgramCard> playerHandDeck;
+    private ArrayList<ArrayList<List<Object>>> flagPositionScores;
+    private ArrayList<ProgramCard> availableCardsLeft;
+    private int cardsToPick;
+    private ArrayList<ProgramCard> chosenCards;
+    public enum Difficulty{EASY, MEDIUM, HARD, EXPERT}
+    private Difficulty difficulty;
 
-    public AIPlayer(int playerNumber, Game game) {
+
+
+    public AIPlayer(int playerNumber, Game game, Difficulty difficulty) {
         super(playerNumber, game);
-        logicGrid = game.getLogicGrid();
-        playerHandDeck = getPlayerHandDeck();
-        checkpointsVisited = getCheckpointsVisited();
+        this.logicGrid = game.getLogicGrid();
+        this.flagPositionScores = logicGrid.getFlagPositionScores();
+        this.difficulty = difficulty;
     }
 
     /**
      * Pick cards for computer player
      */
     public void pickCards() {
+        this.playerHandDeck = getPlayerHandDeck();
+        this.checkpointsVisited = getCheckpointsVisited();
+        this.cardsToPick = 5 - getLockedCards().size();
+        this.chosenCards = new ArrayList<>();
+        this.availableCardsLeft = new ArrayList<>(playerHandDeck);
+        this.newRobotPos = getPos();
+        this.newRobotDir = getPlayerPiece().getDir();
+
         if (playerHandDeck.isEmpty()) {
             setLockedIn(true);
             return;
         }
-        for (int i = 0; i < 5 - getLockedCards().size(); i++) {
-            getSelectedCards()[i] = chooseCard();
+
+        switch (difficulty){
+            case EASY: pickRandom(); break;
+            case MEDIUM: pickGreedy(); break;
+            case HARD:
+            case EXPERT:
+                pickOptimal(); break;
         }
         setLockedIn(true);
-        flagsVisitedInRound = 0;
+        System.out.println(toString() + " playerhand: " + playerHandDeck);
+        System.out.println(toString() + " chose " + Arrays.toString(getSelectedCards()) + "\n");
     }
 
-    /**
-     * Checks first if a robot should move or rotate this phase
-     * and picks the best available card in hand accordingly.
-     *
-     * @return the best card
-     */
-    public ProgramCard chooseCard() {
-        int goalFlag = checkpointsVisited + flagsVisitedInRound;
-        if (goalFlag > logicGrid.getFlagPositions().size() - 1) {
-            goalFlag = logicGrid.getFlagPositions().size() - 1;
+    private void pickRandom(){
+        ArrayList<Integer> randomNumbers = new ArrayList<>();
+        for (int i = 0; i < playerHandDeck.size(); i++) {
+            randomNumbers.add(i);
         }
-        nextGoalPos = logicGrid.getFlagPositions().get(goalFlag);
-        System.out.println("Current goal flag: " + (goalFlag + 1) + " at " + nextGoalPos);
-
-        Position posInFront = newRobotPos.getPositionIn(newRobotDir);
-        boolean shouldPickMoveCard = true;
-        System.out.println("Position: " + newRobotPos + ", Direction: " + newRobotDir);
-
-        if (!isLegalMoveInDirection(newRobotPos, newRobotDir)
-                || !isPosCloserToGoal(newRobotPos, posInFront)) {
-            shouldPickMoveCard = false;
-            System.out.println(toString() + " should rotate");
-        } else {
-            System.out.println(toString() + " should move");
+        Collections.shuffle(randomNumbers);
+        for (int randomNumber : randomNumbers){
+            ProgramCard card = playerHandDeck.get(randomNumber);
+            List<Object> finalPosAndDir =  getPosFromCardMove(card, newRobotPos, newRobotDir);
+            Position finalPos = (Position) finalPosAndDir.get(0);
+            Direction finalDir = (Direction) finalPosAndDir.get(1);
+            if(isDeadMove(finalPos)){ continue; }
+            newRobotPos = finalPos;
+            newRobotDir = finalDir;
+            chosenCards.add(card);
+            if(chosenCards.size() == cardsToPick) {break;}
         }
 
-        ProgramCard bestCard = getBestCard(shouldPickMoveCard);
-        if (bestCard == null) {
-            if (shouldPickMoveCard) {
-                System.out.println("There wasn't any optimal movement cards left, choosing rotation card instead");
-            } else {
-                System.out.println("There wasn't any optimal rotation cards left, choosing movement card instead");
+        if(chosenCards.size() != cardsToPick) {
+            int cardsMissing = chosenCards.size() - cardsToPick;
+            for (int i = 0; i < cardsMissing ; i++) {
+                chosenCards.add(getFirstAvailableCard());
             }
-            bestCard = getBestCard(!shouldPickMoveCard);
-        }
-        if (!(bestCard == null)) {
-            return bestCard;
         }
 
-        ProgramCard randomCard = playerHandDeck.get(0);
-        for (ProgramCard programCard : playerHandDeck) {
-            if (isCardAvailable(programCard)) {
-                randomCard = programCard;
-                System.out.println(toString() + " chose " + randomCard.toString() + " as a random card");
+        addCardsToSelectedCards(chosenCards);
+    }
+
+
+    private void pickGreedy() {
+        for (int i = 0; i < cardsToPick ; i++) {
+            nextGoalFlag = updateGoalFlag(checkpointsVisited+flagsVisitedInRound);
+            nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
+            ProgramCard bestCard = getBestCard();
+            if (!(bestCard == null)) {
+                chosenCards.add(bestCard);
+                availableCardsLeft.remove(bestCard);
+                continue;
+            }
+            ProgramCard firstAvailableCard = getFirstAvailableCard();
+            chosenCards.add(firstAvailableCard);
+            availableCardsLeft.remove(firstAvailableCard);
+        }
+        addCardsToSelectedCards(chosenCards);
+    }
+
+
+
+    private ProgramCard getBestCard() {
+        Object[] bestMovesInOrder = getBestCardsOrdered();
+        for (Object cardAndScore : bestMovesInOrder) {
+            ProgramCard card = ((Map.Entry<ProgramCard, Integer>) cardAndScore).getKey();
+            int cardScore = ((Map.Entry<ProgramCard, Integer>) cardAndScore).getValue();
+            System.out.println(card.getCommand() + ", score: " + cardScore);
+            if (cardScore == 100) { continue;}
+            List<Object> finalPosAndDir = getPosFromCardMove(card, newRobotPos, newRobotDir);
+            newRobotPos = (Position) finalPosAndDir.get(0);
+            newRobotDir = (Direction) finalPosAndDir.get(1);
+            if (nextGoalPos.equals(newRobotPos)) { flagsVisitedInRound++; }
+            return card;
+        }
+        return null;
+    }
+
+
+    private Object[] getBestCardsOrdered() {
+        HashMap<ProgramCard, Integer> cardAndScore = new HashMap<>();
+        ArrayList<ProgramCard> checkedCards = new ArrayList<>();
+        System.out.println("Available cards left: " + availableCardsLeft);
+        for (ProgramCard card : availableCardsLeft) {
+            if (isCardChecked(checkedCards, card)) {
+                continue;
+            }
+            checkedCards.add(card);
+            System.out.println("Finding score for " + card.getCommand());
+            if (isCardUseless(card, newRobotPos, newRobotDir)) {
+                System.out.println("Using " + card.getCommand() + " at pos " + newRobotPos
+                        + " with dir " + newRobotDir + " is useless\n");
+                cardAndScore.put(card, 100);
+                continue;
+            }
+            List<Object> finalPosAndDir = getPosFromCardMove(card, newRobotPos, newRobotDir);
+            Position finalPos = (Position) finalPosAndDir.get(0);
+            Direction finalDir = (Direction) finalPosAndDir.get(1);
+            int cardScore = getScore(finalPos, finalDir, nextGoalFlag);
+            System.out.println("Using " + card.getCommand() + " at pos " + newRobotPos
+                    + " with dir " + newRobotDir + " moves the robot to pos " + finalPos
+                    + " facing dir " + finalDir + " which has a score of " + cardScore + "\n");
+            cardAndScore.put(card, cardScore);
+        }
+
+        Object[] a = cardAndScore.entrySet().toArray();
+        Arrays.sort(a, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                return ((Map.Entry<ProgramCard, Integer>) o1).getValue()
+                        .compareTo(((Map.Entry<ProgramCard, Integer>) o2).getValue());
+            }
+        });
+
+        return a;
+
+    }
+
+    private int getScore (Position pos, Direction dir, int goalFlag){
+        ArrayList<List<Object>> flagPosScores =  flagPositionScores.get(goalFlag);
+        Position goalPos = (Position) flagPosScores.get(0).get(0);
+        int score =  getDistanceAway(pos, goalPos);
+        if(!isPosCloserToGoal(pos, pos.getPositionIn(dir), goalPos)){score++;}
+        if(difficulty.equals(Difficulty.MEDIUM) || difficulty.equals(Difficulty.HARD)){return score;}
+
+        for (List<Object> flagPosScore : flagPosScores) {
+            Position mapPos = (Position) flagPosScore.get(0);
+            if (pos.equals(mapPos)) {
+                score = (Integer) flagPosScore.get(1);
+                if(!isPosCloserToGoal(pos, pos.getPositionIn(dir), goalPos)){score++;}
                 break;
             }
         }
-        return randomCard;
+        return score;
     }
+
+
+
+
+    private void pickOptimal(){
+        int goalFlag = updateGoalFlag(checkpointsVisited);
+        int score = getScore(newRobotPos, newRobotDir, goalFlag);
+        ArrayList<ArrayList<List<Object>>> path = new ArrayList<>();
+        ArrayList<ProgramCard> chosenCards = new ArrayList<>();
+        int[] totalScore = {goalFlag, 0, score};
+
+
+        List<Object> startNode = Arrays.asList(newRobotPos, newRobotDir, totalScore, chosenCards, playerHandDeck, goalFlag);
+        ArrayList<List<Object>> startFrontier = new ArrayList<>();
+        startFrontier.add(startNode);
+        path.add(startFrontier);
+
+        int counter = 1;
+        int[] bestFinalTotalScore = {goalFlag, 100, 100};
+        int firstNodeWithFiveCards = 0;
+
+         for (int i = 0; i < path.size() ; i++) {
+             ArrayList<List<Object>> frontier = path.get(i);
+             for (List<Object> frontierNode : frontier) {
+
+                 ArrayList<ProgramCard> currentChosenCards = new ArrayList<ProgramCard>((ArrayList) frontierNode.get(3));
+                 if (currentChosenCards.size() == 4 && firstNodeWithFiveCards == 0) {
+                     firstNodeWithFiveCards = counter - 1;
+                 }
+                 if (currentChosenCards.size() == 5) {
+                     break;
+                 }
+
+                 int[] currentTotalScore = (int[]) frontierNode.get(2);
+                 int currentGoalFlag = currentTotalScore[0];
+                 Position currentGoalPos = logicGrid.getFlagPositions().get(currentGoalFlag);
+                 Position currentPos = (Position) frontierNode.get(0);
+                 Direction currentDir = (Direction) frontierNode.get(1);
+                 ArrayList<ProgramCard> currentAvailableCards = new ArrayList<ProgramCard>((ArrayList) frontierNode.get(4));
+
+                 if (currentPos.equals(currentGoalPos)) {
+                     currentGoalFlag = updateGoalFlag(currentGoalFlag + 1);
+                     currentTotalScore[0] = currentGoalFlag;
+                     currentTotalScore[1] = currentChosenCards.size();
+                     currentTotalScore[2] = getScore(currentPos, currentDir, currentGoalFlag);
+                 }
+
+                 ArrayList<List<Object>> newFrontier = new ArrayList<>();
+                 ArrayList<ProgramCard> checkedCards = new ArrayList<>();
+                 int bestNodeScore = 100;
+
+                 for (int k = 0; k < currentAvailableCards.size(); k++) {
+                     ProgramCard card = currentAvailableCards.get(k);
+                     if (isCardChecked(checkedCards, card)) {
+                         continue;
+                     }
+                     checkedCards.add(card);
+                     if (isCardUseless(card, currentPos, currentDir)) {
+                         continue;
+                     }
+
+                     List<Object> node = getNode(currentPos, currentDir, card, currentTotalScore);
+                     int[] nodeTotalScore = (int[]) node.get(2);
+                     int nodeScore = nodeTotalScore[2];
+                     int nodeGoalFlag = nodeTotalScore[0];
+
+                     if (nodeScore < bestNodeScore && nodeGoalFlag == currentTotalScore[0]) {
+                         bestNodeScore = nodeScore;
+                     }
+                     newFrontier.add(createList(node, card, currentChosenCards, currentAvailableCards, goalFlag));
+                 }
+
+
+                 for (int k = 0; k < newFrontier.size(); k++) {
+                     ArrayList<ProgramCard> cardsInFrontier = (ArrayList) newFrontier.get(k).get(3);
+                     int[] nodeTotalScore = (int[]) newFrontier.get(k).get(2);
+                     int nextFlag = nodeTotalScore[0];
+                     int movesToFlag = nodeTotalScore[1];
+                     int nodeScore = nodeTotalScore[2];
+                     if ((nodeScore > bestNodeScore) && nodeScore > currentTotalScore[2]) {
+                         newFrontier.remove(k);
+                         k--;
+                     }
+                     if (cardsInFrontier.size() == 5 &&
+                             nextFlag >= bestFinalTotalScore[0] &&
+                             movesToFlag <= bestFinalTotalScore[1] &&
+                             nodeScore < bestFinalTotalScore[2]) {
+                         bestFinalTotalScore = nodeTotalScore;
+                     }
+                 }
+                 path.add(newFrontier);
+                 counter++;
+             }
+        }
+         for (int i = firstNodeWithFiveCards; i < path.size(); i++) {
+             ArrayList<List<Object>> paths = path.get(i);
+             for (List<Object> objects : paths) {
+                 ArrayList<ProgramCard> fiveCards = new ArrayList<>((ArrayList<ProgramCard>) objects.get(3));
+                 totalScore = (int[]) objects.get(2);
+                 if (totalScore != bestFinalTotalScore) { continue; }
+                 addCardsToSelectedCards(fiveCards);
+                 break;
+             }
+        }
+    }
+
+    private List<Object> getNode(Position pos, Direction dir, ProgramCard card, int[] totalScore){
+        List<Object> finalPosAndDir = getPosFromCardMove(card, pos, dir);
+        Position finalPos = (Position) finalPosAndDir.get(0);
+        Direction finalDir = (Direction) finalPosAndDir.get(1);
+        int score = getScore(finalPos, finalDir, totalScore[0]);
+        int[] newTotalScore = {totalScore[0], totalScore[1], score};
+        return Arrays.asList(finalPos, finalDir, newTotalScore);
+    }
+
+    private List<Object> createList(List<Object> node, ProgramCard card, ArrayList<ProgramCard> cardsChosen,
+                                    ArrayList<ProgramCard> cardsLeft, int roundStartGoalFlag){
+        Position nodePos = (Position) node.get(0);
+        Direction nodeDir = (Direction) node.get(1);
+        int[] nodeTotalScore = (int[]) node.get(2);
+        ArrayList<ProgramCard> nodeChosenCards = new ArrayList<>(cardsChosen);
+        ArrayList<ProgramCard> nodeAvailableCards = new ArrayList<>(cardsLeft);
+        nodeChosenCards.add(card);
+        nodeAvailableCards.remove(card);
+        if(nodeTotalScore[0] == roundStartGoalFlag) {nodeTotalScore[1] = nodeChosenCards.size();}
+        return Arrays.asList(nodePos, nodeDir, nodeTotalScore, nodeChosenCards, nodeAvailableCards);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+    All methods below are just simple helper methods.
+     */
+
+
+
+
+    private boolean isCardChecked(ArrayList<ProgramCard> checkedCards, ProgramCard card){
+        for (ProgramCard checkedCard : checkedCards) {
+            if (checkedCard.getCommand().equals(card.getCommand())) return true;
+        }
+        return false;
+    }
+
+    private boolean isCardUseless(ProgramCard card, Position pos, Direction dir){
+        List<Object> finalPosAndDir = getPosFromCardMove(card, pos, dir);
+        Position newPos = (Position) finalPosAndDir.get(0);
+        Direction newDir = (Direction) finalPosAndDir.get(1);
+        if(pos.equals(newPos) && dir.equals(newDir)){ return true;}
+        return isDeadMove(newPos);
+    }
+
+    private int updateGoalFlag(int flagGoal){
+        int goalFlag = flagGoal;
+        if (goalFlag > logicGrid.getFlagPositions().size() - 1) {
+            goalFlag = logicGrid.getFlagPositions().size() - 1;
+        }
+        return goalFlag;
+    }
+
+    private ProgramCard getFirstAvailableCard(){
+        for (ProgramCard programCard : playerHandDeck) {
+            if (isCardAvailable(programCard)) {
+                return programCard;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Checks if a position is closer to current goal than an other position
@@ -102,12 +373,13 @@ public class AIPlayer extends Player {
      * @param newPos the new position
      * @return true if the new position is closer to goal, false otherwise
      */
-    private boolean isPosCloserToGoal(Position oldPos, Position newPos) {
-        if(oldPos == null || newPos == null || nextGoalPos == null){
+    private boolean isPosCloserToGoal(Position oldPos, Position newPos, Position goalPos) {
+        if(oldPos == null || newPos == null || goalPos == null){
             System.out.println("Error: Couldn't calculate distance from goal");
-            return false;}
-        int oldDistanceAway = getDistanceAway(nextGoalPos, oldPos);
-        int newDistanceAway = getDistanceAway(nextGoalPos, newPos);
+            return false;
+        }
+        int oldDistanceAway = getDistanceAway(goalPos, oldPos);
+        int newDistanceAway = getDistanceAway(goalPos, newPos);
         return (newDistanceAway < oldDistanceAway);
     }
 
@@ -116,7 +388,7 @@ public class AIPlayer extends Player {
      *
      * @param pos1 position 1
      * @param pos2 position 2
-     * @return sum of difference of x pos and y pos of the two positions
+     * @return sum of difference of x pos and y pos of the two positions (manhattan distance)
      */
     private int getDistanceAway(Position pos1, Position pos2) {
         return (Math.abs(pos1.getX() - pos2.getX()) + Math.abs(pos1.getY() - pos2.getY()));
@@ -132,7 +404,7 @@ public class AIPlayer extends Player {
      * @return the final position at the end of the phase
      */
     private List<Object> findFinalPosAndDir(Position pos, Direction dir, boolean expressBeltMove) {
-        if (!logicGrid.isInBounds(pos)) {
+        if (isDeadMove(pos)) {
             return Arrays.asList(pos, dir);
         }
         Position finalPos = pos;
@@ -182,193 +454,22 @@ public class AIPlayer extends Player {
         return Arrays.asList(finalPos, finalDir);
     }
 
-    /**
-     * Finds the best cards in order for this phase
-     *
-     * @param moveCard true to get the best move cards ordered, false to get the best rotation cards ordered.
-     * @return sorted 2d array with best card first. [][0] = cardid, [][1] = movescore
-     */
-    private int[][] getBestCardsOrdered(boolean moveCard) {
-        int[][] bestMovesInOrder = new int[3][2];
-        int movement = 0;
-        int rotation = 3;
-        Direction[] rotations = {newRobotDir.getLeftTurnDirection(), newRobotDir.getRightTurnDirection(),
-                newRobotDir.getOppositeDirection(), newRobotDir};
+    private List<Object> getPosFromCardMove(ProgramCard card, Position pos, Direction dir) {
+        int moves = Math.abs(card.getMovement());
+        Position newPos = pos;
+        Direction moveDir = dir;
+        if(card.getCommand().equals(CardType.BACKUP)) moveDir = dir.getOppositeDirection();
 
-        for (int i = 0; i < 3; i++) {
-            if (moveCard) {
-                movement = i + 1;
-            } else {
-                rotation = i;
+        for (int i = 0; i < moves; i++) {
+            if (isDeadMove(newPos.getPositionIn(moveDir))) {
+                return findFinalPosAndDir(newPos.getPositionIn(moveDir), dir, false);
             }
-            List<Object> finalPosAndDir = getPosFromCardMove(movement, rotations[rotation]);
-            Position finalPos = (Position) finalPosAndDir.get(0);
-            Direction finalDir = (Direction) finalPosAndDir.get(1);
-            int moveScore = getMoveScore(finalPosAndDir);
-            System.out.println(getType(i + 1, moveCard).toString() + " will put player at pos: " + finalPos +
-                    ", facing dir: " + finalDir + ". Movescore: " + moveScore);
-            bestMovesInOrder[i][0] = moveScore;
-            bestMovesInOrder[i][1] = i + 1;
-        }
-
-        java.util.Arrays.sort(bestMovesInOrder, new java.util.Comparator<int[]>() {
-            public int compare(int[] a, int[] b) {
-                return Integer.compare(a[0], b[0]);
+            if(!isLegalMoveInDirection(newPos, moveDir)){
+                return findFinalPosAndDir(newPos, dir, false);
             }
-        });
-        return bestMovesInOrder;
-    }
-
-    /**
-     * Gets the new position from using a card
-     *
-     * @param cardMove the amount movement from the card (0 for rotation cards)
-     * @param newDir   the new dir if card is rotation card
-     * @return the new position from using the card given
-     */
-    private List<Object> getPosFromCardMove(int cardMove, Direction newDir) {
-        Position newPos = newRobotPos;
-        for (int i = 0; i < cardMove; i++) {
-            newPos = newPos.getPositionIn(newDir);
+            newPos = newPos.getPositionIn(moveDir);
         }
+        Direction newDir = dir.getCardTurnDirection(card.getCommand());
         return findFinalPosAndDir(newPos, newDir, false);
     }
-
-    /**
-     * Gets the first available card in hand of that type
-     *
-     * @param cardType the type of card you want
-     * @return the first card of that type in hand, null if it isn't available
-     */
-    private ProgramCard getCardInHand(CardType cardType) {
-        for (ProgramCard card : playerHandDeck) {
-            if (card.getCommand() == cardType && isCardAvailable(card)) {
-                return card;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets cardType from an id
-     *
-     * @param id       = movement for move cards, or = rotations array position + 1 in getBestCardsOrdered() for rotation cards
-     * @param moveCard true if its a movecard
-     * @return the cardType from the given id
-     */
-    private CardType getType(int id, boolean moveCard) {
-        CardType cardType = CardType.BACKUP;
-        switch (id) {
-            case 1:
-                cardType = CardType.MOVE1;
-                if (!moveCard) {
-                    cardType = CardType.ROTATELEFT;
-                }
-                break;
-            case 2:
-                cardType = CardType.MOVE2;
-                if (!moveCard) {
-                    cardType = CardType.ROTATERIGHT;
-                }
-                break;
-            case 3:
-                cardType = CardType.MOVE3;
-                if (!moveCard) {
-                    cardType = CardType.UTURN;
-                }
-                break;
-            default:
-                break;
-        }
-        return cardType;
-    }
-
-    /**
-     * Gets the best card for the robots current position in the round
-     *
-     * @param shouldPickMoveCard true if robot should pick move card, false if it should pick a rotation card
-     * @return the best available card
-     */
-    private ProgramCard getBestCard(boolean shouldPickMoveCard) {
-        int[][] bestMovesInOrder = getBestCardsOrdered(shouldPickMoveCard);
-        for (int i = 0; i < 3; i++) {
-            int moveScore = bestMovesInOrder[i][0];
-            CardType cardType = getType(bestMovesInOrder[i][1], shouldPickMoveCard);
-            System.out.println("Best card is " + cardType);
-            ProgramCard card = getCardInHand(cardType);
-            if (card == null) {
-                System.out.println("Card is not available in hand");
-                continue;
-            }
-            if (moveScore == 100) {
-                System.out.println(cardType + " will result in death");
-                continue;
-            }
-            List<Object> finalPosAndDir = getPosFromCardMove(card.getMovement(), newRobotDir.getCardTurnDirection(cardType));
-            newRobotPos = (Position) finalPosAndDir.get(0);
-            newRobotDir = (Direction) finalPosAndDir.get(1);
-            if (!shouldPickMoveCard && getBackUpCardMoveScore() < moveScore) {
-                ProgramCard backUpCard = getCardInHand(getType(0, true));
-                if (!(backUpCard == null)) {
-                    card = backUpCard;
-                    finalPosAndDir = findFinalPosAndDir(newRobotPos.getPositionIn(newRobotDir.getOppositeDirection()), newRobotDir, false);
-                    newRobotPos = (Position) finalPosAndDir.get(0);
-                    newRobotDir = (Direction) finalPosAndDir.get(1);
-                }
-            }
-            System.out.println("Card chosen is " + card.toString() + "\n");
-            if (nextGoalPos.equals(newRobotPos)) {
-                System.out.println("Player is at flag " + (checkpointsVisited + 1 + flagsVisitedInRound));
-                flagsVisitedInRound++;
-            }
-            return card;
-        }
-        return null;
-    }
-
-    /**
-     * Gets the move score from a backup card
-     *
-     * @return move score from using a backup this phase
-     */
-    private int getBackUpCardMoveScore() {
-        List<Object> finalPosAndDir = findFinalPosAndDir(newRobotPos.getPositionIn(newRobotDir.getOppositeDirection()), newRobotDir, false);
-        return getMoveScore(finalPosAndDir);
-    }
-
-    /**
-     * Gets the move score for a cardtype. Lower score = better score.
-     * if movescore = 100, then using that cardtype will result in death.
-     * Facing away from the next goal at the end of phase will result in worse score.
-     *
-     * @param finalPosAndDir final position and direction at the end of the phase.
-     * @return the movescore calculated for a cardtype.
-     */
-    private int getMoveScore(List<Object> finalPosAndDir) {
-        Position finalPos = (Position) finalPosAndDir.get(0);
-        Direction finalDir = (Direction) finalPosAndDir.get(1);
-        Position posInFront = finalPos.getPositionIn(finalDir);
-        int moveScore = getDistanceAway(finalPos, nextGoalPos);
-        if (!isPosCloserToGoal(finalPos, finalPos.getPositionIn(finalDir))) {
-            moveScore++;
-        }
-        if (isPosCloserToGoal(finalPos, finalPos.getPositionIn(finalDir.getOppositeDirection()))) {
-            moveScore++;
-        }
-        if (logicGrid.isInBounds(posInFront) && logicGrid.isInBounds(finalPos)) {
-            if (!isLegalMoveInDirection(finalPos, finalDir)) {
-                moveScore++;
-            }
-        }
-        if (isDeadMove(finalPos)) {
-            moveScore = 100;
-        }
-        return moveScore;
-    }
-
-    public void setNewRobotPosAndDir(Position pos, Direction dir){
-        newRobotPos = pos;
-        newRobotDir = dir;
-    }
-
 }

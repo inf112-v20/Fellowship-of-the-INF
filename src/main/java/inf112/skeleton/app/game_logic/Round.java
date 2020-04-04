@@ -1,5 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
+
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 
@@ -95,10 +96,7 @@ public class Round {
         for (Player player : game.getListOfPlayers()) {
             if(player instanceof AIPlayer && !player.hasLockedIn()) {
                 AIPlayer aiPlayer = (AIPlayer) player;
-                aiPlayer.setNewRobotPosAndDir(aiPlayer.getPos(), aiPlayer.getPlayerPiece().getDir());
-                System.out.println(aiPlayer.toString() + " playerhand: " + aiPlayer.getPlayerHandDeck());
                 aiPlayer.pickCards();
-                System.out.println(aiPlayer.toString() + " chose " + Arrays.toString(aiPlayer.getSelectedCards()) + "\n");
                 if(!lockInForAll){return;}
             }
         }

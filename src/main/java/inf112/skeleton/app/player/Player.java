@@ -421,6 +421,12 @@ public class Player {
         this.selectedCards = selectedCards;
     }
 
+    public void addCardsToSelectedCards(ArrayList<ProgramCard> cards){
+        for (int i = 0; i < cards.size() ; i++) {
+            selectedCards[i] = cards.get(i);
+        }
+    }
+
 
     /** TODO remove? can be useful for testing maybe
      * Picks the first cards in the hand so that selectedcards has 5 cards.

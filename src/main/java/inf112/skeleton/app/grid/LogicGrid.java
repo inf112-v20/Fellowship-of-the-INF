@@ -6,6 +6,8 @@ import inf112.skeleton.app.grid_objects.*;
 import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class LogicGrid {
@@ -16,9 +18,11 @@ public class LogicGrid {
     //The number of players i the game
     private int numberOfPlayers;
 
+
     //A list of the locations of the spawn points
     private ArrayList<Position> spawnPointPositions;
     private ArrayList<Position> flagPositions;
+    private ArrayList<ArrayList<List<Object>>> flagPositionsScores;
 
     //Tiled layers
     private TiledMapTileLayer floorLayer;
@@ -97,6 +101,7 @@ public class LogicGrid {
         this.flagPositions = new ArrayList<>();
         readTiledMapToPieceGrid();
         sortFlagPositions();
+        createTableForScores();
     }
 
     /**
@@ -396,4 +401,81 @@ public class LogicGrid {
         }
         return true;
     }
+
+
+    private void createTableForScores(){
+
+        ArrayList <Position> flags = getFlagPositions();
+        ArrayList<ArrayList<List<Object>>> flagMapPositions = new ArrayList<>();
+
+        for (Position flag : flags) {
+
+            ArrayList<List<Object>> mapPositions = new ArrayList<>();
+            Position startPos = flag;
+            int moves = 0;
+            List<Object> posAndScore = Arrays.asList(startPos, moves);
+            mapPositions.add(posAndScore);
+
+            for (int j = 0; j < mapPositions.size(); j++) {
+                Position pos = (Position) mapPositions.get(j).get(0);
+                int movesToPos = (Integer) mapPositions.get(j).get(1);
+
+                for (Direction dir : Direction.values()) {
+
+                    Position neighborPos = pos.getPositionIn(dir);
+                    if (isDeadMove(neighborPos)) {
+                        continue;
+                    }
+                    if (!(canLeavePosition(pos, dir) && canEnterNewPosition(neighborPos, dir))) {
+                        continue;
+                    }
+                    int movesToNeighborPos = movesToPos + 1;
+                    posAndScore = Arrays.asList(neighborPos, movesToNeighborPos);
+                    boolean checked = false;
+
+                    for (int k = 0; k < mapPositions.size(); k++) {
+
+                        Position checkedPos = (Position) mapPositions.get(k).get(0);
+                        int movesToCheckedPos = (Integer) mapPositions.get(k).get(1);
+                        if (checkedPos.equals(neighborPos)) {
+                            if (movesToNeighborPos < movesToCheckedPos) {
+                                mapPositions.set(k, posAndScore);
+                                break;
+                            }
+                            checked = true;
+                        }
+                    }
+                    if (!checked) {
+                        mapPositions.add(posAndScore);
+                    }
+                }
+            }
+            flagMapPositions.add(mapPositions);
+        }
+        flagPositionsScores = flagMapPositions;
+    }
+
+    public ArrayList<ArrayList<List<Object>>> getFlagPositionScores(){
+        return flagPositionsScores;
+    }
+
+
+
+    public boolean isDeadMove(Position position) {
+        int x = position.getX();
+        int y = position.getY();
+        BoardPiece currPiece;
+        if (isInBounds(position)) {
+            for (int i = 0; i < grid[x][y].size(); i++) {
+                currPiece = grid[x][y].get(i);
+                if (currPiece instanceof AbyssPiece) {
+                    return true;
+                }
+            }
+        } else {
+            return true;
+        }
+        return false;
+    }
+
 }
