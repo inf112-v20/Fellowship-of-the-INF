@@ -52,6 +52,7 @@ public class LogicGrid {
 
     //private BoardPiece[] [][] grid;
     private ArrayList<BoardPiece>[][] grid;
+    private ArrayList<LaserSourcePiece> laserSourceList = new ArrayList<>();
     private BoardPieceGenerator boardPieceGenerator;
 
 
@@ -146,6 +147,8 @@ public class LogicGrid {
             BoardPiece piece = boardPieceGenerator.generate(id);
             if (layer == flagLayer) {
                 flagPositions.add(null);
+            } else if (layer == laserSourceLayer && piece instanceof LaserSourcePiece) {
+                laserSourceList.add((LaserSourcePiece) piece);
             }
             isThisASpawnPoint(piece, x, y);
 
@@ -190,11 +193,11 @@ public class LogicGrid {
      */
     public void movePlayerToNewPosition(PlayerPiece playerPiece, Position oldPosition, Position newPosition) {
 
-        if(!isInBounds(newPosition)){
+        if (!isInBounds(newPosition)) {
             grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
             return;
         }
-        if(!isInBounds(oldPosition)){
+        if (!isInBounds(oldPosition)) {
             grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
             return;
         }
@@ -354,7 +357,7 @@ public class LogicGrid {
 
     /**
      * Finds a valid spawn point.
-     *
+     * <p>
      * If spawn point is not valid, the positions N, S, E, W are checked, and if these are not valid,
      * then the positions N, S, E, W of them are checked.
      *
@@ -363,19 +366,24 @@ public class LogicGrid {
      */
     public Position getValidSpawnPointPosition(Player player, Position spawnPoint) {
         //if spawnPoint is valid, return spawnPoint
-        if (positionIsFree(spawnPoint, playerLayerIndex)){ return spawnPoint; }
+        if (positionIsFree(spawnPoint, playerLayerIndex)) {
+            return spawnPoint;
+        }
 
         //if spawnPoint is not valid, check the neighbouring positions.
         for (Direction dir : Direction.values()) {
             if (positionIsFree(spawnPoint.getPositionIn(dir), playerLayerIndex)
-                    && spawnIsSafe(spawnPoint)){ return spawnPoint.getPositionIn(dir);}
+                    && spawnIsSafe(spawnPoint)) {
+                return spawnPoint.getPositionIn(dir);
             }
+        }
         //check the neighbouring positions of the neighbouring positions
         for (Direction dir : Direction.values()) {
             Position checkedPosition = spawnPoint.getPositionIn(dir);
             for (Direction dir2 : Direction.values()) {
                 if (positionIsFree(checkedPosition.getPositionIn(dir2), playerLayerIndex)
-                        && spawnIsSafe(spawnPoint)) { return spawnPoint.getPositionIn(dir2);
+                        && spawnIsSafe(spawnPoint)) {
+                    return spawnPoint.getPositionIn(dir2);
                 }
             }
         }
@@ -385,6 +393,7 @@ public class LogicGrid {
 
     /**
      * Checks if it is save for a player to spawn in a position
+     *
      * @param spawnPoint position to be checked
      * @return true if the player doesn't die by spawning there
      */
@@ -395,5 +404,51 @@ public class LogicGrid {
             //you can add more things to check for here
         }
         return true;
+    }
+
+    public ArrayList<LaserSourcePiece> getLaserSourceList() {
+        return laserSourceList;
+    }
+
+    /**
+     * Checks of the position the laser wan't to enter is
+     * - In bounds
+     * - The position is not blocked by a player
+     * - The previous position can be left (not blocked by wall)
+     * - The position can be entered (not blocked by wall)
+     *
+     * @param checkPosition position to check if the laser can enter
+     * @param dir           direction of laser
+     * @return true if laser has not been blocked an can the position
+     */
+    public boolean blocksLaser(Position checkPosition, Direction dir) {
+        Position previousPosition = checkPosition.getPositionIn(dir.getOppositeDirection());
+        if (isInBounds(checkPosition)) {
+            return (!positionIsFree(checkPosition, playerLayerIndex) ||
+                    !canLeavePosition(previousPosition, dir) ||
+                    !canEnterNewPosition(checkPosition, dir));
+        }
+        return true;
+    }
+
+    /**
+     * Gets the list of positions that are the lasers path.
+     *
+     * @param laserSourcePiece the source of the laser who's path we are finding
+     * @return the positions of the path of the laser
+     */
+    public ArrayList<Position> getLaserPath(LaserSourcePiece laserSourcePiece) {
+        ArrayList<Position> laserPositions = new ArrayList<>();
+        Direction directionOflaser = laserSourcePiece.getLaserDir();
+        Position currentPosition = laserSourcePiece.getPos();
+        laserPositions.add(currentPosition);
+        //if there is a player standing on the lasersource piece, the path does not need to be generated
+        if (!positionIsFree(currentPosition, playerLayerIndex)) return laserPositions;
+        currentPosition = currentPosition.getPositionIn(directionOflaser);
+        while (!blocksLaser(currentPosition, directionOflaser)) {
+            laserPositions.add(currentPosition);
+            currentPosition = currentPosition.getPositionIn(directionOflaser);
+        }
+        return laserPositions;
     }
 }

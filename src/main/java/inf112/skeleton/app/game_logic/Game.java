@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.LaserSourcePiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
@@ -98,7 +99,9 @@ public class Game {
             player1.turnPlayerAround(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             player1.shootLaser();
-            gameScreen.shootLasers();
+            gameScreen.shootRobotLasers();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.B)) { //only used for testing board lasers
+            gameScreen.blinkBoardLasers();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             player1.takeDamage(1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
