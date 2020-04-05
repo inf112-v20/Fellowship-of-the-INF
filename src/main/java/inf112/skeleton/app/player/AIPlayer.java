@@ -224,12 +224,10 @@ public class AIPlayer extends Player {
         ArrayList<ArrayList<List<Object>>> path = new ArrayList<>();
         ArrayList<ProgramCard> chosenCards = new ArrayList<>();
         int[] totalScore = {goalFlag, 0, score};
-
         List<Object> startNode = Arrays.asList(newRobotPos, newRobotDir, totalScore, chosenCards, playerHandDeck, goalFlag);
         ArrayList<List<Object>> startFrontier = new ArrayList<>();
         startFrontier.add(startNode);
         path.add(startFrontier);
-
         int[] bestFinalTotalScore = {goalFlag, 100, 100};
 
           for (int i = 0; i < path.size() ; i++) {
@@ -237,25 +235,11 @@ public class AIPlayer extends Player {
              for (List<Object> frontierNode : frontier) {
 
                  ArrayList<ProgramCard> currentChosenCards = new ArrayList<ProgramCard>((ArrayList) frontierNode.get(3));
-
-                 if (currentChosenCards.size() == cardsToPick) {
-                     break;
-                 }
-
+                 if (currentChosenCards.size() == cardsToPick) { break; }
                  int[] currentTotalScore = (int[]) frontierNode.get(2);
-                 int currentGoalFlag = currentTotalScore[0];
-                 Position currentGoalPos = logicGrid.getFlagPositions().get(currentGoalFlag);
                  Position currentPos = (Position) frontierNode.get(0);
                  Direction currentDir = (Direction) frontierNode.get(1);
                  ArrayList<ProgramCard> currentAvailableCards = new ArrayList<ProgramCard>((ArrayList) frontierNode.get(4));
-
-                 if (currentPos.equals(currentGoalPos)) {
-                     currentGoalFlag = updateGoalFlag(currentGoalFlag + 1);
-                     currentTotalScore[0] = currentGoalFlag;
-                     currentTotalScore[1] = currentChosenCards.size();
-                     currentTotalScore[2] = getScore(currentPos, currentDir, currentGoalFlag);
-                 }
-
                  ArrayList<List<Object>> newFrontier = new ArrayList<>();
                  ArrayList<ProgramCard> checkedCards = new ArrayList<>();
                  int bestNodeScore = 100;
@@ -269,91 +253,70 @@ public class AIPlayer extends Player {
                      if (isCardUseless(card, currentPos, currentDir)) {
                          continue;
                      }
-
-                     List<Object> posAndScore = getFinalPosAndScore(currentPos, currentDir, card, currentTotalScore);
-                     totalScore = (int[]) posAndScore.get(2);
-                     goalFlag = totalScore[0];
-                     score = totalScore[2];
-
-                     if (score < bestNodeScore && goalFlag == currentTotalScore[0]) {
-                         bestNodeScore = score;
-                     }
-                     newFrontier.add(createNode(posAndScore, card, currentChosenCards, currentAvailableCards, goalFlag));
+                     newFrontier.add(createNode(currentPos, currentDir, card, currentTotalScore,
+                             currentChosenCards, currentAvailableCards, goalFlag));
                  }
 
                  for (int k = 0; k < newFrontier.size(); k++) {
                      ArrayList<ProgramCard> cardsInFrontier = (ArrayList) newFrontier.get(k).get(3);
                      int[] nodeTotalScore = (int[]) newFrontier.get(k).get(2);
-                     int nextFlag = nodeTotalScore[0];
-                     int movesToFlag = nodeTotalScore[1];
                      int nodeScore = nodeTotalScore[2];
-                     if ((nodeScore > bestNodeScore) && nodeScore > currentTotalScore[2]) {
+                     int flag = nodeTotalScore[0];
+                     if (nodeScore < bestNodeScore) {
+                         bestNodeScore = score;
+                     }
+                     if ((nodeScore > bestNodeScore) && nodeScore > currentTotalScore[2] &&
+                     flag <= currentTotalScore[0]) {
                          newFrontier.remove(k);
                          k--;
                      }
-                     if (cardsInFrontier.size() == cardsToPick &&
-                             nextFlag >= bestFinalTotalScore[0] &&
-                             movesToFlag <= bestFinalTotalScore[1] &&
-                             nodeScore < bestFinalTotalScore[2]) {
+                     if (cardsInFrontier.size() == cardsToPick && isCurrentBetter(bestFinalTotalScore, nodeTotalScore)){
                          bestFinalTotalScore = nodeTotalScore;
+                         chosenCards = cardsInFrontier;
                      }
                  }
                  path.add(newFrontier);
              }
-        }
-          Collections.reverse(path);
-         a :for (ArrayList<List<Object>> paths : path) {
-             for (List<Object> objects : paths) {
-                 ArrayList<ProgramCard> bestCards = new ArrayList<>((ArrayList<ProgramCard>) objects.get(3));
-                 totalScore = (int[]) objects.get(2);
-                 if (totalScore != bestFinalTotalScore) {
-                     continue;
-                 }
-                 addCardsToSelectedCards(bestCards);
-                 break a;
-             }
-         }
+          }
+          addCardsToSelectedCards(chosenCards);
     }
 
     /**
-     * Gets the final position and direction from using a card.
-     * Calculates the score for this new position and direction.
-     * @param pos the current (node) position
-     * @param dir the current (node) direction
-     * @param card the card to check
-     * @param totalScore the current (node) total score. [0] = current goalFlag,
-     * [1] = moves used to get to flag (if flag is reached in a round), [2] current score for current position
-     * @return list of new postion, direction, and the total score for the new position and direction.
+     * Creates a node for a card that may be added to the frontier
+     * @param pos the current position from the previous node
+     * @param dir the current direction from the previous node
+     * @param card ProgramCard for the node
+     * @param totalScore the total score from the previous node
+     * @param cardsChosen the ProramCards chosen from the previous node
+     * @param cardsLeft the available ProgramCards left from the previous node
+     * @param roundStartGoalFlag the goal flag number at round start
+     * @return the new node created with updated position, direction, total score, and lists of cards from using the card
      */
-    private List<Object> getFinalPosAndScore(Position pos, Direction dir, ProgramCard card, int[] totalScore){
+    private List<Object> createNode(Position pos, Direction dir, ProgramCard card, int[] totalScore,
+                                    ArrayList<ProgramCard> cardsChosen, ArrayList<ProgramCard> cardsLeft,
+                                    int roundStartGoalFlag){
         List<Object> finalPosAndDir = getPosFromCardMove(card, pos, dir);
         Position finalPos = (Position) finalPosAndDir.get(0);
         Direction finalDir = (Direction) finalPosAndDir.get(1);
-        int score = getScore(finalPos, finalDir, totalScore[0]);
-        int[] newTotalScore = {totalScore[0], totalScore[1], score};
-        return Arrays.asList(finalPos, finalDir, newTotalScore);
-    }
-
-    /**
-     * Creates a node for a card that may be added to the frontier.
-     * @param posDirAndScore Position, direction, and total score for the node.
-     * @param card ProgramCard for the node
-     * @param cardsChosen The ProgramCards chosen from the previous node.
-     * @param cardsLeft The ProgramCards left to choose from the previous node.
-     * @param roundStartGoalFlag The goalFlag number at the start of the round.
-     * @return the new node created with updated list of cards.
-     */
-    private List<Object> createNode(List<Object> posDirAndScore, ProgramCard card, ArrayList<ProgramCard> cardsChosen,
-                                    ArrayList<ProgramCard> cardsLeft, int roundStartGoalFlag){
-        Position nodePos = (Position) posDirAndScore.get(0);
-        Direction nodeDir = (Direction) posDirAndScore.get(1);
-        int[] nodeTotalScore = (int[]) posDirAndScore.get(2);
         ArrayList<ProgramCard> nodeChosenCards = new ArrayList<>(cardsChosen);
         ArrayList<ProgramCard> nodeAvailableCards = new ArrayList<>(cardsLeft);
         nodeChosenCards.add(card);
         nodeAvailableCards.remove(card);
-        if(nodeTotalScore[0] == roundStartGoalFlag) {nodeTotalScore[1] = nodeChosenCards.size();}
-        return Arrays.asList(nodePos, nodeDir, nodeTotalScore, nodeChosenCards, nodeAvailableCards);
+        int score = getScore(finalPos, finalDir, totalScore[0]);
+        int goalFlag = totalScore[0];
+        int moves = totalScore[1];
+        Position goalPos = logicGrid.getFlagPositions().get(goalFlag);
+        if(goalFlag == roundStartGoalFlag){
+            moves = nodeChosenCards.size();
+        }
+
+        if (finalPos.equals(goalPos)) {
+            goalFlag = updateGoalFlag(goalFlag + 1);
+            score = getScore(finalPos, finalDir, goalFlag);
+            moves = nodeChosenCards.size();
+        }
+        int[] newTotalScore = {goalFlag, moves , score};
+        return Arrays.asList(finalPos, finalDir, newTotalScore, nodeChosenCards, nodeAvailableCards);
     }
 
 
@@ -544,4 +507,21 @@ public class AIPlayer extends Player {
         Direction newDir = dir.getCardTurnDirection(card.getCommand());
         return findFinalPosAndDir(newPos, newDir, false);
     }
+
+    private boolean isCurrentBetter(int[] currentBest, int[] current){
+        if (current[0] < currentBest[0]){
+            return false;
+        }
+        if(current[0] == currentBest[0]){
+            if(current[1] > currentBest[1]){
+                return false;
+            }
+            if(current[1] == currentBest[1]){
+                return current[2] < currentBest[2];
+            }
+        }
+        return true;
+    }
+
 }
+

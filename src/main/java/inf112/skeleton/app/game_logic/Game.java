@@ -6,7 +6,6 @@ import com.badlogic.gdx.Input;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.grid_objects.LaserSourcePiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;

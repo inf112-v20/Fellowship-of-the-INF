@@ -5,10 +5,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import inf112.skeleton.app.RoboRallyGame;
@@ -109,7 +109,19 @@ public class PlayerSelectionScreen implements Screen {
         });
         stage.addActor(backButton);
 
-        Gdx.input.setInputProcessor(stage);
+/*
+        Skin skin=new Skin( Gdx.files.internal("menu/navbuttons/uiskin.json"));
+        Dialog dialog=new Dialog("Difficulty",skin);
+        dialog.setSize(100,100);
+        dialog.setPosition(player1Button.getX(), player1Button.getY()*0.5f);
+        final SelectBox<String> dropDownMenu = new SelectBox<>(skin);
+        dropDownMenu.setItems("EASY", "MEDIUM", "HARD", "EXPERT");
+        dialog.getContentTable().defaults().pad(10);
+        dialog.getContentTable().add(dropDownMenu);
+        stage.addActor(dialog);
+
+ */
+    Gdx.input.setInputProcessor(stage);
 
     }
 
