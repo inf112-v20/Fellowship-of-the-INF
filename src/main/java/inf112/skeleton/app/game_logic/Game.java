@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.LaserSourcePiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
@@ -13,6 +14,8 @@ import inf112.skeleton.app.screens.GameScreen;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import static inf112.skeleton.app.player.AIPlayer.Difficulty.*;
 
 public class Game {
     private LogicGrid logicGrid;
@@ -45,7 +48,7 @@ public class Game {
 
     public void initiateComputerPlayers() {
         for (int playerNumber = 2; playerNumber <= numberOfPlayers; playerNumber++) {
-            Player playerToBeInitiated = new AIPlayer(playerNumber, this);
+            Player playerToBeInitiated = new AIPlayer(playerNumber, this, EXPERT);
             playerList[playerNumber - 1] = playerToBeInitiated;
             logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
@@ -98,7 +101,9 @@ public class Game {
             player1.turnPlayerAround(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             player1.shootLaser();
-            gameScreen.shootLasers();
+            gameScreen.shootRobotLasers();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.B)) { //only used for testing board lasers
+            gameScreen.blinkBoardLasers();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             player1.takeDamage(1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
@@ -257,7 +262,7 @@ public class Game {
 
     public void setPhaseDone(boolean bool){ phaseDone = bool; }
 
-    public  boolean isPhaseDone(){return phaseDone;}
+    public boolean isPhaseDone(){return phaseDone;}
 
     public boolean isAutoStartNextPhaseOn(){return autoStartNextPhase;}
 

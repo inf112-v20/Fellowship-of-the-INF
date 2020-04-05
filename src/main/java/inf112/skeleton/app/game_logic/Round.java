@@ -1,9 +1,9 @@
 package inf112.skeleton.app.game_logic;
 
+import inf112.skeleton.app.grid_objects.RepairPiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 
-import java.util.Arrays;
 
 
 public class Round {
@@ -59,6 +59,8 @@ public class Round {
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
             player.setLockedIn(false);
+            // Repairs
+            checkForRepair(player);
             if (player.isPowerDownMode() && player.getLives() >= 0) {
                 player.setPowerDownMode(false);
             }
@@ -88,6 +90,19 @@ public class Round {
     }
 
     /**
+     * Checks if a player is standing on a single-wrench repair field. If so, discard 1 damage token.
+     *
+     * @param player player (robot) being checked.
+     */
+    public void checkForRepair(Player player) {
+        if (player.isDead()) return;
+        // Checks if player is standing on a repair field
+        if (game.getLogicGrid().getPieceType(player.getPos(), RepairPiece.class) != null) {
+            player.repairDamage(1);
+        }
+    }
+
+    /**
      * Lock in cards for computer players.
      * Press 0 to do it manually (Left CTRL + 0 to do one player at a time).
      */
@@ -95,10 +110,7 @@ public class Round {
         for (Player player : game.getListOfPlayers()) {
             if(player instanceof AIPlayer && !player.hasLockedIn()) {
                 AIPlayer aiPlayer = (AIPlayer) player;
-                aiPlayer.setNewRobotPosAndDir(aiPlayer.getPos(), aiPlayer.getPlayerPiece().getDir());
-                System.out.println(aiPlayer.toString() + " playerhand: " + aiPlayer.getPlayerHandDeck());
                 aiPlayer.pickCards();
-                System.out.println(aiPlayer.toString() + " chose " + Arrays.toString(aiPlayer.getSelectedCards()) + "\n");
                 if(!lockInForAll){return;}
             }
         }

@@ -34,7 +34,7 @@ public class ProgramCard implements IProgramCard {
                 break;
             case BACKUP:
                 texture = new Texture(Gdx.files.internal("ui/cards/cardbackup.png"));
-                movement = 1;
+                movement = -1;
                 break;
             case ROTATERIGHT:
                 texture = new Texture(Gdx.files.internal("ui/cards/cardrturn.png"));

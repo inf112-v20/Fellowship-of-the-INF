@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -320,13 +317,17 @@ public class UIScreen {
      *
      * @param lockInButton the button to create a clicklistener for
      */
-    public void lockInButtonPressed(ImageButton lockInButton) {
+    public void lockInButtonPressed(final ImageButton lockInButton) {
+
         lockInButton.addListener(new ClickListener() {
+
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 executeLockInButton();
             }
+
         });
+
     }
 
     /**
@@ -428,5 +429,17 @@ public class UIScreen {
     public CardButton getCardButton() { return cardButton; }
 
     public Label getTimerLabel(){return timerLabel;}
+
+    public void highlight(Actor actor){
+        System.out.println("Hover start");
+        Color c = actor.getColor();
+        actor.setColor(c.r, c.g, c.b, 1f);
+    }
+
+    public void unHighlight(Actor actor){
+        System.out.println("Hover end");
+        Color c = actor.getColor();
+        actor.setColor(c.r, c.g, c.b, 0.5f);
+    }
 }
 
