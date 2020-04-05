@@ -248,7 +248,7 @@ public class LogicGrid {
 
     /**
      * Create a list that is as long as the number of players,
-     * The list is only nullpointer
+     * The list is only null pointers at initiation
      */
     private void initializeSpawns() {
         spawnPointPositions = new ArrayList<>();
