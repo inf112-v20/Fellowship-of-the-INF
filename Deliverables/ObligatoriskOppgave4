@@ -49,7 +49,25 @@ Due to being unable to meet and play multiplayer over LAN, our team decided to i
 
 ---
 
+### Functional repair sites (single-wrench fields)
+**Usecase**: The user of the game would like the robots standing on single-wrench repair fields to discard damage
+tokens in accordance to the rules of Roborally.
 
+
+**Acceptance criteria**
+
+* A robot standing on a single-wrench field at the end of a **round** (after 5 phases) discards 1 damage token.
+* If a robot does not currently have any damage tokens, then nothing happens (damage can't be negative).
+* UI has to be updated accordingly.
+
+
+**Tasks to complete**
+
+* Register when a robot is standing on a singe-wrench field at the end of a round.
+* Discard damage tokens according to ruleset.
+* Update UI (damage tokens).
+
+---
 
 ### Other known bugs
 * When you press enter instead of clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
