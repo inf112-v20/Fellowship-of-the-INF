@@ -368,6 +368,7 @@ public class UIScreen {
         if(game.getRound().getPhaseNr() != 0 ){return;}
         System.out.println("Powerdown pressed");
         powerDownButton.setTouchable(Touchable.disabled);
+        removeUnusedCardsFromScreen();
         player.doPowerDown();
         player.setLockedIn(true);
         game.getRound().nextPhase();
@@ -403,14 +404,21 @@ public class UIScreen {
         Color c = lockInButton.getColor();
         lockInButton.setColor(c.r, c.g, c.b, 0.5f);
         lockInButton.setTouchable(Touchable.disabled);
+        removeUnusedCardsFromScreen();
+        player.setLockedIn(true);
+        game.getRound().nextPhase();
+        updateGameLog();
+    }
+
+    /**
+     * Removes the cards that are not used from the UI
+     */
+    public void removeUnusedCardsFromScreen() {
         for (int i = 0; i < cardButton.getLeftOverCardButtons().size(); i++) {
             if (cardButton.getLeftOverCardButtons().get(i) != null) {
                 cardButton.getLeftOverCardButtons().get(i).remove();
             }
         }
-        player.setLockedIn(true);
-        game.getRound().nextPhase();
-        updateGameLog();
     }
 
     /**
