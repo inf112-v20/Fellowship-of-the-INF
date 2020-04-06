@@ -112,7 +112,7 @@ public class BoardPieceGenerator {
             case (2):
                 return new PusherPiece(pos, id, Direction.EAST, false);
             case (3):
-                return new PusherPiece(pos, id, Direction.WEST, true);
+                return new PusherPiece(pos, id, Direction.SOUTH, true);
             case (4):
                 return new PusherPiece(pos, id, Direction.WEST, false);
             case (9):
