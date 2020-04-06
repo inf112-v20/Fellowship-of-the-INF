@@ -35,7 +35,12 @@ public class AIPlayer extends Player {
         this.flagPositionScores = logicGrid.getFlagPositionScores();
         this.difficulty = difficulty;
         this.playerHandDeck = getPlayerHandDeck();
+        /*
+        for (int i = 0; i < getPlayerNumber()-1; i++) {
+            visitedCheckpoint();
+        }
 
+         */
     }
 
     /**
@@ -43,6 +48,20 @@ public class AIPlayer extends Player {
      */
     public void pickCards() {
         this.playerHandDeck = getPlayerHandDeck();
+/*
+        ArrayList<ProgramCard> hand = new ArrayList<>();
+        hand.add(new ProgramCard(1, CardType.MOVE1));
+        hand.add(new ProgramCard(2, CardType.MOVE1));
+        hand.add(new ProgramCard(3, CardType.MOVE2));
+        hand.add(new ProgramCard(4, CardType.ROTATERIGHT));
+        hand.add(new ProgramCard(5, CardType.ROTATELEFT));
+        hand.add(new ProgramCard(6, CardType.BACKUP));
+        hand.add(new ProgramCard(7, CardType.UTURN));
+        hand.add(new ProgramCard(8, CardType.UTURN));
+        hand.add(new ProgramCard(9, CardType.ROTATELEFT));
+        playerHandDeck = hand;
+
+ */
         this.checkpointsVisited = getCheckpointsVisited();
         this.cardsToPick = 5 - getLockedCards().size();
         this.chosenCards = new ArrayList<>();
@@ -63,8 +82,8 @@ public class AIPlayer extends Player {
                 pickOptimal(); break;
         }
         setLockedIn(true);
-        System.out.println(toString() + " playerhand: " + playerHandDeck);
-        System.out.println(toString() + " chose " + Arrays.toString(getSelectedCards()) + "\n");
+        System.out.println(toString() + difficulty + " playerhand: " + playerHandDeck);
+        System.out.println(toString() + difficulty +" chose " + Arrays.toString(getSelectedCards()) + "\n");
     }
 
     /**
@@ -132,7 +151,6 @@ public class AIPlayer extends Player {
         for (Object cardAndScore : bestMovesInOrder) {
             ProgramCard card = ((Map.Entry<ProgramCard, Integer>) cardAndScore).getKey();
             int cardScore = ((Map.Entry<ProgramCard, Integer>) cardAndScore).getValue();
-            System.out.println(card.getCommand() + ", score: " + cardScore);
             if (cardScore == 100) { continue;}
             List<Object> finalPosAndDir = getPosFromCardMove(card, newRobotPos, newRobotDir);
             newRobotPos = (Position) finalPosAndDir.get(0);
@@ -508,6 +526,12 @@ public class AIPlayer extends Player {
         return findFinalPosAndDir(newPos, newDir, false);
     }
 
+    /**
+     * Checks if the current total score for a node is better than the best total score found so far
+     * @param currentBest the current best total score for any node throughout the search
+     * @param current the total score for the current node
+     * @return true if the total score for the current node is better, false otherwise.
+     */
     private boolean isCurrentBetter(int[] currentBest, int[] current){
         if (current[0] < currentBest[0]){
             return false;
