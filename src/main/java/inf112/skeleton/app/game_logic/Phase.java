@@ -110,7 +110,8 @@ public class Phase {
                 FlagPiece flag = (FlagPiece) player.getCurrentBoardPiece();
                 if (player.getCheckpointsVisited() + 1 == flag.getFlagNumber()) {
                     player.visitedCheckpoint();
-                    player.setSpawnPoint(player.getPos().getX(), player.getPos().getY());
+                    player.setSpawnPoint(player.getPos());
+                    System.out.println("Setting "+ player.toString() + " spawn point to " + player.getPos());
                 }
             }
         }

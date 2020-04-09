@@ -7,6 +7,7 @@ import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -403,31 +404,31 @@ public class LogicGrid {
      * @param spawnPoint check if it is valid
      * @return valid spawn point
      */
-    public Position getValidSpawnPointPosition(Player player, Position spawnPoint) {
+    public ArrayList<Position> getValidSpawnPointPosition(Position spawnPoint) {
         //if spawnPoint is valid, return spawnPoint
+        ArrayList<Position> availablePositions = new ArrayList<>();
         if (positionIsFree(spawnPoint, playerLayerIndex)) {
-            return spawnPoint;
+            System.out.println("OG Spawnpoint is available at" + spawnPoint);
+            availablePositions.add(spawnPoint);
+            return availablePositions;
         }
 
         //if spawnPoint is not valid, check the neighbouring positions.
         for (Direction dir : Direction.values()) {
-            if (positionIsFree(spawnPoint.getPositionIn(dir), playerLayerIndex)
-                    && spawnIsSafe(spawnPoint)) {
-                return spawnPoint.getPositionIn(dir);
+            Position pos = spawnPoint.getPositionIn(dir);
+            Position pos2 = pos.getPositionIn(dir.getRightTurnDirection());
+            if (positionIsFree(pos, playerLayerIndex)
+                    && spawnIsSafe(pos)) {
+                System.out.println("Spawnpoint1 is available at" + pos);
+                availablePositions.add(pos);
+            }
+            if (positionIsFree(pos2, playerLayerIndex)
+                    && spawnIsSafe(pos2)) {
+                System.out.println("Spawnpoint2 is available at" + pos2);
+                availablePositions.add(pos2);
             }
         }
-        //check the neighbouring positions of the neighbouring positions
-        for (Direction dir : Direction.values()) {
-            Position checkedPosition = spawnPoint.getPositionIn(dir);
-            for (Direction dir2 : Direction.values()) {
-                if (positionIsFree(checkedPosition.getPositionIn(dir2), playerLayerIndex)
-                        && spawnIsSafe(spawnPoint)) {
-                    return spawnPoint.getPositionIn(dir2);
-                }
-            }
-        }
-        System.out.println("Valid spawn point for player " + player.getPlayerNumber() + " not found.");
-        return spawnPoint;
+        return availablePositions;
     }
 
     /**
@@ -437,6 +438,7 @@ public class LogicGrid {
      * @return true if the player doesn't die by spawning there
      */
     private boolean spawnIsSafe(Position spawnPoint) {
+        if(!isInBounds(spawnPoint))return false;
         ArrayList<BoardPiece> boardPieceList = grid[spawnPoint.getX()][spawnPoint.getY()];
         for (BoardPiece piece : boardPieceList) {
             if (piece instanceof AbyssPiece) return false;
@@ -526,8 +528,8 @@ public class LogicGrid {
                     posAndScore = Arrays.asList(neighborPos, movesToNeighborPos);
                     boolean alreadyChecked = false;
 
-                    for (int k = 0; k < mapPositions.size(); k++) {
-                        Position checkedPos = (Position) mapPositions.get(k).get(0);
+                    for (List<Object> mapPosition : mapPositions) {
+                        Position checkedPos = (Position) mapPosition.get(0);
                         if (checkedPos.equals(neighborPos)) {
                             alreadyChecked = true;
                             break;

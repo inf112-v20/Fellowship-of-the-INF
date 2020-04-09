@@ -14,11 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import inf112.skeleton.app.RoboRallyGame;
+import inf112.skeleton.app.player.AIPlayer;
+import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
 public class PlayerSelectionScreen implements Screen {
     private RoboRallyGame game;
     private float width;
     private float height;
+    private Difficulty difficulty = Difficulty.EASY;
 
     private Stage stage;
 
@@ -58,7 +61,7 @@ public class PlayerSelectionScreen implements Screen {
         player1Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new StageSelectionScreen(game, 1));
+                game.setScreen(new StageSelectionScreen(game, 1, difficulty));
             }
         });
         stage.addActor(player1Button);
@@ -70,7 +73,7 @@ public class PlayerSelectionScreen implements Screen {
         player2Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new StageSelectionScreen(game, 2));
+                game.setScreen(new StageSelectionScreen(game, 2, difficulty));
             }
         });
         stage.addActor(player2Button);
@@ -82,7 +85,7 @@ public class PlayerSelectionScreen implements Screen {
         player3Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new StageSelectionScreen(game, 3));
+                game.setScreen(new StageSelectionScreen(game, 3, difficulty));
             }
         });
         stage.addActor(player3Button);
@@ -94,7 +97,7 @@ public class PlayerSelectionScreen implements Screen {
         player4Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new StageSelectionScreen(game, 4));
+                game.setScreen(new StageSelectionScreen(game, 4,difficulty));
             }
         });
         stage.addActor(player4Button);
@@ -114,20 +117,17 @@ public class PlayerSelectionScreen implements Screen {
         //Sin Source: https://github.com/libgdx/libgdx-skins/tree/master/skins/visui/assets
         TextureAtlas dropdownAtlas = new TextureAtlas(Gdx.files.internal("menu/navbuttons/uiskin.atlas"));
         Skin skin = new Skin(Gdx.files.internal("menu/navbuttons/uiskin.json"), dropdownAtlas);
-        Dialog dialog = new Dialog("Difficulty", skin);
-        dialog.setSize(100, 50);
-        dialog.setPosition(player1Button.getX(), player1Button.getY() * 0.5f);
-        final SelectBox<String> dropDownMenu = new SelectBox<>(skin);
+        final SelectBox<Difficulty> dropDownMenu = new SelectBox<>(skin);
+        dropDownMenu.setSize(100,50);
+        dropDownMenu.setPosition(player1Button.getX(), player1Button.getY() * 0.5f);
         dropDownMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println(dropDownMenu.getSelected());
+                difficulty = (dropDownMenu.getSelected());
             }
         });
-        dropDownMenu.setItems("EASY", "MEDIUM", "HARD", "EXPERT");
-        dialog.getContentTable().defaults().pad(10);
-        dialog.getContentTable().add(dropDownMenu);
-        stage.addActor(dialog);
+        dropDownMenu.setItems(Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD, Difficulty.EXPERT);
+        stage.addActor(dropDownMenu);
 
         Gdx.input.setInputProcessor(stage);
 

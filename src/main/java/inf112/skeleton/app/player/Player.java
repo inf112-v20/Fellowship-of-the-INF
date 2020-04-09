@@ -24,6 +24,7 @@ public class Player {
     private ArrayList<ProgramCard> lockedCards = new ArrayList<>();
     private ArrayList<Position> laserPath = new ArrayList<>();
     private ArrayList<Player> playersPushed = new ArrayList<>();
+    private ArrayList<Position> respawnPositions = new ArrayList<>();
 
     private Position spawnPoint;
     private BoardPiece currentBoardPiece;
@@ -74,7 +75,7 @@ public class Player {
         playerPiece.setPos(new Position(x, y));
     }
 
-    private void setPos(Position positionIn) {
+    public void setPos(Position positionIn) {
         playerPiece.setPos(positionIn);
     }
 
@@ -146,7 +147,6 @@ public class Player {
                 movesLeft = 1;
             }
         }
-
     }
 
     /**
@@ -210,8 +210,8 @@ public class Player {
         }
     }
 
-    public void setSpawnPoint(int x, int y) {
-        spawnPoint = new Position(x, y);
+    public void setSpawnPoint(Position pos) {
+        spawnPoint = pos;
     }
 
     /**
@@ -221,8 +221,23 @@ public class Player {
     public void respawnPlayer(MovesToExecuteSimultaneously moves) {
         game.performMoves(moves);
         Move respawnMove = new Move(this);
-        Position validSpawnPointPosition = logicGrid.getValidSpawnPointPosition(this, spawnPoint);
-        setPos(validSpawnPointPosition);
+        System.out.println("Finding spawn positions for " + toString());
+        respawnPositions = logicGrid.getValidSpawnPointPosition(spawnPoint);
+        if(this instanceof AIPlayer) {
+            AIPlayer aiPlayer = (AIPlayer) this;
+            Position newPos = aiPlayer.chooseRespawnPos(respawnPositions);
+            System.out.println("Respawning " + toString() + " at " + newPos);
+            setPos(newPos);
+            Direction newDir = aiPlayer.chooseRespawnDir(newPos);
+            getPlayerPiece().setDir(newDir);
+        }
+        else{
+            if(respawnPositions.size() == 1){
+                isDead = false;
+                playerPiece.showAlivePlayer();
+                return;
+            }
+        }
         respawnMove.updateMove();
         moves.add(respawnMove);
         isDead = false;
@@ -401,6 +416,12 @@ public class Player {
         for (int i = 0; i < cards.size() ; i++) {
             selectedCards[i] = cards.get(i);
         }
+
+        //TODO Remove. Temporary fix to stop nullpointers
+        for (ProgramCard selectedCard : selectedCards) {
+            if (selectedCard == null) pickRandomCards();
+        }
+
     }
 
 
@@ -440,6 +461,7 @@ public class Player {
             lives--;
             damage = 10;
         }
+
         if (damage >= 5 && damage <= 9) {
             int number = amountOfDamage;
             if (damage - number < 5) {
@@ -454,6 +476,8 @@ public class Player {
                 playerHandDeck.remove(lockedCards.get(0));
             }
         }
+
+
     }
 
     /**
@@ -609,6 +633,10 @@ public class Player {
     public Position getLastPosAlive(){return  lastPosAlive;}
 
     public void setKeyInput(boolean bool){ keyInput = bool; }
+
+    public ArrayList<Position> getRespawnPositions(){return respawnPositions; }
+
+    public Position getDeadPosition(){ return deadPosition; }
 
     /**
      * Shoot laser in the direction which the robot is pointing.

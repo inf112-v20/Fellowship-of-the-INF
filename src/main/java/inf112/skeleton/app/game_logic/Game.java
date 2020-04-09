@@ -7,6 +7,8 @@ import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.AIPlayer;
+import inf112.skeleton.app.player.AIPlayer.Difficulty;
+
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
 
@@ -29,9 +31,12 @@ public class Game {
     private ArrayList<Player> deadPlayers;
     private boolean phaseDone = false;
     private boolean autoStartNextPhase = false;
+    private boolean choosingRespawn;
+    private Difficulty difficulty;
 
-    public Game(LogicGrid logicGrid, GameScreen gameScreen, int numberOfPlayers) {
+    public Game(LogicGrid logicGrid, GameScreen gameScreen, int numberOfPlayers, Difficulty difficulty) {
         this.numberOfPlayers = numberOfPlayers;
+        this.difficulty = difficulty;
         this.logicGrid = logicGrid;
         this.gameScreen = gameScreen;
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
@@ -46,7 +51,6 @@ public class Game {
 
     public void initiateComputerPlayers() {
         for (int playerNumber = 2; playerNumber <= numberOfPlayers; playerNumber++) {
-            AIPlayer.Difficulty difficulty = AIPlayer.Difficulty.values()[playerNumber-1];
             Player playerToBeInitiated = new AIPlayer(playerNumber, this, difficulty);
             playerList[playerNumber - 1] = playerToBeInitiated;
             logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
@@ -264,5 +268,13 @@ public class Game {
     public boolean isPhaseDone(){return phaseDone;}
 
     public boolean isAutoStartNextPhaseOn(){return autoStartNextPhase;}
+
+    public void setChoosingRespawn(boolean bool){
+        choosingRespawn = bool;
+    }
+
+    public boolean isChoosingRespawn(){
+        return  choosingRespawn;
+    }
 
 }
