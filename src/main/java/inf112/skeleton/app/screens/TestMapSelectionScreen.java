@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RoboRallyGame;
 import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
@@ -23,7 +24,8 @@ public class TestMapSelectionScreen implements Screen {
     private RoboRallyGame game;
     private float width;
     private float height;
-    private String mapAddress;
+    private String[] mapNameList;
+    private String mapName;
     private Difficulty difficulty = Difficulty.EASY;
 
     private Stage stage;
@@ -32,9 +34,24 @@ public class TestMapSelectionScreen implements Screen {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
+        generateMapNameList();
     }
 
-    //TODO Lots of repeated code, maybe make button construction into methods?
+    private void generateMapNameList() {
+        mapNameList = new String[]{
+                "ConveyorBeltTestMap",
+                "RoborallyBoard_AI_Testmap",
+                "pushers_test_map_1",
+                "pushers_test_map_2",
+                "pushers_test_map_3",
+                "pushers_test_map_4",
+                "robot_pushing_test_map_1",
+                "robot_pushing_test_map_2",
+                "robot_pushing_test_map_3"
+        };
+        mapName = mapNameList[0];
+    }
+
     @Override
     public void show() {
         stage = new Stage();
@@ -55,7 +72,7 @@ public class TestMapSelectionScreen implements Screen {
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
-        // 1 Players button
+        // Back button
         yPadding = 400;
         int xPadding = 80;
         //Back button
@@ -70,22 +87,42 @@ public class TestMapSelectionScreen implements Screen {
         });
         stage.addActor(backButton);
 
+        //"Start Test" button
+        yPadding = 150;
+        xPadding = 100;
+        ImageButton startTestButton;
+        picture = new Sprite(new Texture("menu/navbuttons/Stage1Button.png"));
+        startTestButton = new ImageButton(new SpriteDrawable(picture));
+        startTestButton.setPosition(backButton.getX() - xPadding, backButton.getY() + picture.getHeight() + yPadding);
+        startTestButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //Original map: RoborallyBoard_debugged.tmx
+                //Test map for conveyorbelts: conveyorBeltTestMap.tmx
+                game.setScreen(new GameScreen("maps/testMaps/" + mapName + ".tmx", 4, difficulty));
+            }
+        });
+
+        stage.addActor(startTestButton);
+
 
         yPadding = 300;
         xPadding = 700;
+        int selectBoxWidth = 300;
+        int selectBoxHeight = 50;
         //Skin Source: https://github.com/libgdx/libgdx-skins/tree/master/skins/visui/assets
         TextureAtlas dropdownAtlas = new TextureAtlas(Gdx.files.internal("menu/navbuttons/uiskin.atlas"));
         Skin skin = new Skin(Gdx.files.internal("menu/navbuttons/uiskin.json"), dropdownAtlas);
-        final SelectBox<Difficulty> dropDownMenu = new SelectBox<>(skin);
-        dropDownMenu.setSize(100,50);
-        dropDownMenu.setPosition(logo.getX(), logo.getY()-yPadding * 0.5f);
+        final SelectBox<String> dropDownMenu = new SelectBox<>(skin);
+        dropDownMenu.setSize(selectBoxWidth, selectBoxHeight);
+        dropDownMenu.setPosition(logo.getX(), logo.getY() - yPadding * 0.5f);
         dropDownMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                difficulty = (dropDownMenu.getSelected());
+                mapName = (dropDownMenu.getSelected());
             }
         });
-        dropDownMenu.setItems(Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD, Difficulty.EXPERT);
+        dropDownMenu.setItems(mapNameList);
         stage.addActor(dropDownMenu);
 
         Gdx.input.setInputProcessor(stage);

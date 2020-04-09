@@ -53,6 +53,7 @@ public class GameScreen implements Screen {
     private Game game;
     private boolean currentMoveIsExecuted;
     private ScoreBoardScreen scoreBoardScreen;
+    private TiledMap map;
     private TiledMapTileLayer playerLayer;
     private TiledMapTileLayer robotLasersLayer;
     private TiledMapTileLayer boardLaserLayer;
@@ -75,7 +76,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(String mapName, int numberOfPlayers, Difficulty difficulty) {
         TmxMapLoader mapLoader = new TmxMapLoader();
-        TiledMap map = mapLoader.load(mapName); //roborally board
+        map = mapLoader.load(mapName); //roborally board
         initializeCellsAndLayers(map);
         MapProperties mapProperties = map.getProperties();
         int MAP_WIDTH = mapProperties.get("width", Integer.class); //dimensions of board
@@ -151,8 +152,8 @@ public class GameScreen implements Screen {
      */
     public void update() {
 
-        if(game.isChoosingRespawn()){
-            if(!createdButtons){
+        if (game.isChoosingRespawn()) {
+            if (!createdButtons) {
                 choosePosition();
                 createdButtons = true;
             }
@@ -403,12 +404,15 @@ public class GameScreen implements Screen {
 
     /**
      * Sets all the cells in the layer to the empty cell.
+     *
      * @param layerToClear layer to be cleared
      */
     public void clearLayer(TiledMapTileLayer layerToClear) {
-        for (int x = 0; x < layerToClear.getWidth(); x++) {
-            for (int y = 0; y < layerToClear.getHeight(); y++) {
-                layerToClear.setCell(x, y, emptyCell);
+        if (layerToClear != null) {
+            for (int x = 0; x < layerToClear.getWidth(); x++) {
+                for (int y = 0; y < layerToClear.getHeight(); y++) {
+                    layerToClear.setCell(x, y, emptyCell);
+                }
             }
         }
     }
@@ -420,12 +424,12 @@ public class GameScreen implements Screen {
         showBoardLasers();
     }
 
-    private void createRespawnButton(Position pos){
+    private void createRespawnButton(Position pos) {
         Texture texture = new Texture("white.png");
         TextureRegion myTextureRegion = new TextureRegion(texture);
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
         ImageButton button = new ImageButton(myTexRegionDrawable);
-        button.setPosition(pos.getX()*TILE_WIDTH_DPI, pos.getY()*TILE_WIDTH_DPI);
+        button.setPosition(pos.getX() * TILE_WIDTH_DPI, pos.getY() * TILE_WIDTH_DPI);
         button.setColor(Color.GREEN);
         Color c = button.getColor();
         button.setColor(c.r, c.g, c.b, 0.4f);
@@ -436,10 +440,10 @@ public class GameScreen implements Screen {
     }
 
 
-
-    private void respawnButtonPressed(final ImageButton respawnButton){
+    private void respawnButtonPressed(final ImageButton respawnButton) {
         respawnButton.addListener(new ClickListener() {
             final ImageButton tempButton = respawnButton;
+
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 executeRespawnButton(tempButton);
@@ -450,12 +454,12 @@ public class GameScreen implements Screen {
 
     }
 
-    private void executeRespawnButton(ImageButton button){
-        int posX = (int)button.getX()/TILE_WIDTH_DPI;
-        int posY = (int)button.getY()/TILE_WIDTH_DPI;
+    private void executeRespawnButton(ImageButton button) {
+        int posX = (int) button.getX() / TILE_WIDTH_DPI;
+        int posY = (int) button.getY() / TILE_WIDTH_DPI;
         Player player1 = game.getPlayer();
         PlayerPiece playerPiece = player1.getPlayerPiece();
-        if(respawnPos != null){
+        if (respawnPos != null) {
             playerLayer.setCell(respawnPos.getX(), respawnPos.getY(), null);
         }
         respawnPos = new Position(posX, posY);
@@ -463,26 +467,24 @@ public class GameScreen implements Screen {
         chooseDirection();
     }
 
-    private void chooseDirection(){
+    private void chooseDirection() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         Player player = game.getPlayer();
-        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             player.turnPlayerRight(moves);
-        }
-        else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             player.turnPlayerLeft(moves);
-        }
-        else if(Gdx.input.isKeyJustPressed(Input.Keys.R)){
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             game.setChoosingRespawn(false);
             game.getPlayer().setPos(respawnPos);
             PlayerPiece playerPiece = player.getPlayerPiece();
-            game.getLogicGrid().movePlayerToNewPosition(playerPiece, player.getDeadPosition() , respawnPos);
+            game.getLogicGrid().movePlayerToNewPosition(playerPiece, player.getDeadPosition(), respawnPos);
             System.out.println("Player 1 has respawned at " + respawnPos + " in dir " + player.getPlayerPiece().getDir());
             for (ImageButton buttons : respawnButtons) {
                 buttons.remove();
             }
 
-            if(!game.getDeadPlayers().isEmpty()){
+            if (!game.getDeadPlayers().isEmpty()) {
                 game.getRound().respawnPlayers();
             }
             return;
@@ -494,15 +496,15 @@ public class GameScreen implements Screen {
         moves.clear();
     }
 
-    private void choosePosition(){
+    private void choosePosition() {
         Player player = game.getPlayer();
-        if(player.getRespawnPositions().size() == 1){
+        if (player.getRespawnPositions().size() == 1) {
             respawnPos = player.getRespawnPositions().get(0);
             playerLayer.setCell(respawnPos.getX(), respawnPos.getY(), player.getPlayerPiece().getPlayerCell());
             return;
         }
         respawnButtons.clear();
-        for(Position pos : player.getRespawnPositions()){
+        for (Position pos : player.getRespawnPositions()) {
             createRespawnButton(pos);
         }
     }
