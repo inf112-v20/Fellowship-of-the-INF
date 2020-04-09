@@ -106,7 +106,6 @@ public class GameScreen implements Screen {
         doubleHorizLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(103));
         doubleVerticalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(102));
         emptyCell = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(0));
-
     }
 
     @Override

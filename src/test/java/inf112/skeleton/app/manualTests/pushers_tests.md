@@ -30,14 +30,14 @@ TODO: map 2
 
 #### Test odd-numberes pushers are only active during odd-numbered rounds
 * Complete setup nr. 5
-* Pick cards so that you do not change position in the next phase (rotate cards).
+* Pick cards so that you do not change position in the next phase (choose rotate cards).
 * Press 0 , then the lock in button.
 * Wait for one phase to be executed
 * *Assert: player one is being pushed in circles by the pushers.*
 
 #### Test even-numberes pushers are only active during even-numbered rounds
 * Complete setup nr. 6
-* Pick cards so that you do not change position in the next phase (rotate cards).
+* Pick cards so that you do not change position in the next phase (choose rotate cards).
 * Press 0 , then the lock in button.
 * Wait for one phase to be executed
 * *Assert: player one is being pushed in circles by the pushers.*
