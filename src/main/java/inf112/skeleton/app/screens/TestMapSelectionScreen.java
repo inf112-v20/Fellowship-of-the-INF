@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RoboRallyGame;
 import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
@@ -37,8 +36,13 @@ public class TestMapSelectionScreen implements Screen {
         generateMapNameList();
     }
 
+    /**
+     * Generates the list of maps you can choose from.
+     * Do not add filepath or ".tmx", only the name of the map.
+     */
     private void generateMapNameList() {
         mapNameList = new String[]{
+                //add more test maps here
                 "ConveyorBeltTestMap",
                 "RoborallyBoard_AI_Testmap",
                 "pushers_test_map_1",
@@ -56,7 +60,6 @@ public class TestMapSelectionScreen implements Screen {
     public void show() {
         stage = new Stage();
 
-        // picture = all actors on stage
         // Background
         Sprite picture = new Sprite(new Texture("menu/StageSelectBackground.png"));
         Image background = new Image(new SpriteDrawable(picture));
@@ -71,6 +74,15 @@ public class TestMapSelectionScreen implements Screen {
         logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
+
+
+        yPadding = 50;
+        picture = new Sprite(new Texture("menu/navbuttons/chooseTextMap.png"));
+        Image chooseText = new Image(new SpriteDrawable(picture));
+        float textScale = 0.4f;
+        chooseText.setSize(chooseText.getWidth() * textScale, chooseText.getHeight() * textScale);
+        chooseText.setPosition(logo.getX(), logo.getY() - (chooseText.getHeight() + yPadding));
+        stage.addActor(chooseText);
 
         // Back button
         yPadding = 400;
@@ -93,7 +105,7 @@ public class TestMapSelectionScreen implements Screen {
         ImageButton startTestButton;
         picture = new Sprite(new Texture("menu/navbuttons/Stage1Button.png"));
         startTestButton = new ImageButton(new SpriteDrawable(picture));
-        startTestButton.setPosition(backButton.getX() - xPadding, backButton.getY() + picture.getHeight() + yPadding);
+        startTestButton.setPosition(backButton.getX() - startTestButton.getWidth()- xPadding, backButton.getY());
         startTestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -115,7 +127,7 @@ public class TestMapSelectionScreen implements Screen {
         Skin skin = new Skin(Gdx.files.internal("menu/navbuttons/uiskin.json"), dropdownAtlas);
         final SelectBox<String> dropDownMenu = new SelectBox<>(skin);
         dropDownMenu.setSize(selectBoxWidth, selectBoxHeight);
-        dropDownMenu.setPosition(logo.getX(), logo.getY() - yPadding * 0.5f);
+        dropDownMenu.setPosition(chooseText.getX(), chooseText.getY() - yPadding * 0.5f);
         dropDownMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -132,7 +144,7 @@ public class TestMapSelectionScreen implements Screen {
     public void render(float v) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); //added to fix dropDownMenu
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }
 
