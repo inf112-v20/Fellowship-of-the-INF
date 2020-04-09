@@ -9,23 +9,26 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import inf112.skeleton.app.RoboRallyGame;
-import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
-public class PlayerSelectionScreen implements Screen {
+public class TestMapSelectionScreen implements Screen {
     private RoboRallyGame game;
     private float width;
     private float height;
+    private String mapAddress;
     private Difficulty difficulty = Difficulty.EASY;
 
     private Stage stage;
 
-    public PlayerSelectionScreen(RoboRallyGame game) {
+    public TestMapSelectionScreen(RoboRallyGame game) {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
@@ -55,53 +58,6 @@ public class PlayerSelectionScreen implements Screen {
         // 1 Players button
         yPadding = 400;
         int xPadding = 80;
-        picture = new Sprite(new Texture("menu/playerbuttons/1Player.png"));
-        ImageButton player1Button = new ImageButton(new SpriteDrawable(picture));
-        player1Button.setPosition(xPadding, yPadding);
-        player1Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new StageSelectionScreen(game, 1, difficulty));
-            }
-        });
-        stage.addActor(player1Button);
-
-        // 2 Players button
-        picture = new Sprite(new Texture("menu/playerbuttons/2Players.png"));
-        ImageButton player2Button = new ImageButton(new SpriteDrawable(picture));
-        player2Button.setPosition(2 * xPadding + player1Button.getWidth(), yPadding);
-        player2Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new StageSelectionScreen(game, 2, difficulty));
-            }
-        });
-        stage.addActor(player2Button);
-
-        //3 Players button
-        picture = new Sprite(new Texture("menu/playerbuttons/3Players.png"));
-        ImageButton player3Button = new ImageButton(new SpriteDrawable(picture));
-        player3Button.setPosition(3 * xPadding + player1Button.getWidth() + player2Button.getWidth(), yPadding);
-        player3Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new StageSelectionScreen(game, 3, difficulty));
-            }
-        });
-        stage.addActor(player3Button);
-
-        //4 Players button
-        picture = new Sprite(new Texture("menu/playerbuttons/4Players.png"));
-        ImageButton player4Button = new ImageButton(new SpriteDrawable(picture));
-        player4Button.setPosition(width - xPadding - player4Button.getWidth(), yPadding);
-        player4Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new StageSelectionScreen(game, 4,difficulty));
-            }
-        });
-        stage.addActor(player4Button);
-
         //Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
@@ -114,12 +70,15 @@ public class PlayerSelectionScreen implements Screen {
         });
         stage.addActor(backButton);
 
+
+        yPadding = 300;
+        xPadding = 700;
         //Skin Source: https://github.com/libgdx/libgdx-skins/tree/master/skins/visui/assets
         TextureAtlas dropdownAtlas = new TextureAtlas(Gdx.files.internal("menu/navbuttons/uiskin.atlas"));
         Skin skin = new Skin(Gdx.files.internal("menu/navbuttons/uiskin.json"), dropdownAtlas);
         final SelectBox<Difficulty> dropDownMenu = new SelectBox<>(skin);
         dropDownMenu.setSize(100,50);
-        dropDownMenu.setPosition(player1Button.getX(), player1Button.getY() * 0.5f);
+        dropDownMenu.setPosition(logo.getX(), logo.getY()-yPadding * 0.5f);
         dropDownMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

@@ -47,11 +47,11 @@ public class MainMenuScreen implements Screen {
         stage.addActor(logo);
 
         // Play button
-        yPadding = 100;
-        int xPadding = 100;
+        yPadding = 440;
+        int xPadding = 500;
         picture = new Sprite(new Texture("menu/navbuttons/PlayButton.png"));
         ImageButton playButton = new ImageButton(new SpriteDrawable(picture));
-        playButton.setPosition(xPadding, yPadding);
+        playButton.setPosition((width - picture.getWidth()) / 2, height - (picture.getHeight() + yPadding));
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -59,6 +59,20 @@ public class MainMenuScreen implements Screen {
             }
         });
         stage.addActor(playButton);
+
+        // Play button
+        yPadding = 100;
+        xPadding = 100;
+        picture = new Sprite(new Texture("menu/navbuttons/PlayButton.png"));
+        ImageButton testButton = new ImageButton(new SpriteDrawable(picture));
+        testButton.setPosition(xPadding, yPadding);
+        testButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new TestMapSelectionScreen(game));
+            }
+        });
+        stage.addActor(testButton);
 
         // Exit button
         picture = new Sprite(new Texture("menu/navbuttons/ExitButton.png"));
