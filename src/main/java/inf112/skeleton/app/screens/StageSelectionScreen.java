@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import inf112.skeleton.app.RoboRallyGame;
+import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
 public class StageSelectionScreen implements Screen {
     private RoboRallyGame game;
@@ -19,13 +20,15 @@ public class StageSelectionScreen implements Screen {
     private float height;
 
     private int playerCount;
+    private Difficulty difficulty;
     private Stage stage;
 
-    public StageSelectionScreen(RoboRallyGame game, int playerCount) {
+    public StageSelectionScreen(RoboRallyGame game, int playerCount, Difficulty difficulty) {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
         this.playerCount = playerCount;
+        this.difficulty = difficulty;
     }
 
     @Override
@@ -64,7 +67,8 @@ public class StageSelectionScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y) {
                     //Original map: RoborallyBoard_debugged.tmx
                     //Test map for conveyorbelts: conveyorBeltTestMap.tmx
-                    game.setScreen(new GameScreen("pushers_test_map_4.tmx", playerCount));                }
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_debugged.tmx", playerCount, difficulty));
+                }
             });
 
             stage.addActor(stage1Button);
@@ -75,7 +79,7 @@ public class StageSelectionScreen implements Screen {
             stage2Button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx", playerCount));
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx", playerCount, difficulty));
                 }
             });
             stage.addActor(stage2Button);
@@ -88,7 +92,7 @@ public class StageSelectionScreen implements Screen {
                 stageTestButton.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        game.setScreen(new GameScreen("maps/TestMap.tmx", playerCount));
+                        game.setScreen(new GameScreen("maps/TestMap.tmx", playerCount, difficulty));
                     }
                 });
                 stage.addActor(stageTestButton);
@@ -104,7 +108,7 @@ public class StageSelectionScreen implements Screen {
                 public void clicked(InputEvent event, float x, float y) {
                     //Original map: RoborallyBoard_debugged.tmx
                     //Test map for conveyorbelts: conveyorBeltTestMap.tmx
-                    game.setScreen(new GameScreen("maps/RoborallyBoard_debugged.tmx", playerCount));
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_debugged.tmx", playerCount, difficulty));
                 }
             });
 
@@ -116,7 +120,7 @@ public class StageSelectionScreen implements Screen {
             stage2Button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx", playerCount));
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx", playerCount, difficulty));
                 }
             });
             stage.addActor(stage2Button);
@@ -128,7 +132,7 @@ public class StageSelectionScreen implements Screen {
             stageTestButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    game.setScreen(new GameScreen("maps/TestMap.tmx", playerCount));
+                    game.setScreen(new GameScreen("maps/TestMap.tmx", playerCount, difficulty));
                     // Test map 1 for robot pushing: robot_pushing_test_map_1.tmx
                     //game.setScreen(new GameScreen("robot_pushing_test_map_1.tmx"));
                     // Test map 2 for robot pushing: robot_pushing_test_map_2.tmx

@@ -393,16 +393,5 @@ public class UIScreen {
 
     public Label getTimerLabel(){return timerLabel;}
 
-    public void highlight(Actor actor){
-        System.out.println("Hover start");
-        Color c = actor.getColor();
-        actor.setColor(c.r, c.g, c.b, 1f);
-    }
-
-    public void unHighlight(Actor actor){
-        System.out.println("Hover end");
-        Color c = actor.getColor();
-        actor.setColor(c.r, c.g, c.b, 0.5f);
-    }
 }
 
