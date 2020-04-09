@@ -101,7 +101,7 @@ public class Player {
         Position newPosition = oldPosition.getPositionIn(newDirection);
 
         //check if the move kills the player, if so lose a life
-        if (isLegalMoveInDirection(oldPosition, newDirection) && isDeadMove(newPosition)) {
+        if (isLegalMoveInDirection(oldPosition, newDirection) && logicGrid.isDeadMove(newPosition)) {
             latestMoveDirection = newDirection;
             loseLife();
             lastPosAlive = oldPosition;
@@ -298,30 +298,6 @@ public class Player {
     }
 
     /**
-     * Method for checking if a move results in death
-     *
-     * @param position to check
-     * @return whether the move results in death
-     */
-    public boolean isDeadMove(Position position) {
-        int x = position.getX();
-        int y = position.getY();
-        BoardPiece currPiece;
-        //if move is within bounds, check if move is to AbyssPiece
-        if (logicGrid.isInBounds(position)) {
-            for (int i = 0; i < pieceGrid[x][y].size(); i++) {
-                currPiece = pieceGrid[x][y].get(i);
-                if (currPiece instanceof AbyssPiece) {
-                    return true;
-                }
-            }
-        } else {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Player executes the move on the given card
      *
      * @param programCard to convert to player move
@@ -420,6 +396,12 @@ public class Player {
 
     public void setSelectedCards(ProgramCard[] selectedCards) {
         this.selectedCards = selectedCards;
+    }
+
+    public void addCardsToSelectedCards(ArrayList<ProgramCard> cards){
+        for (int i = 0; i < cards.size() ; i++) {
+            selectedCards[i] = cards.get(i);
+        }
     }
 
 

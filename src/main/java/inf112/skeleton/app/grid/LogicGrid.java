@@ -63,7 +63,7 @@ public class LogicGrid {
         this.height = grid.length;
         numberOfPlayers = 8;
 
-        //Make a list of what will be the first player spawns
+        //Make a lists for the location of spawns and flags
         initializeSpawns();
 
         //extract each layer from the tiled map
@@ -96,9 +96,9 @@ public class LogicGrid {
         flagLayerIndex = map.getLayers().getIndex("Flag");
         playerLayerIndex = map.getLayers().getIndex("Player");
 
-        this.flagPositions = new ArrayList<>();
         readTiledMapToPieceGrid();
-        sortFlagPositions();
+        createScoresForPositions();
+
     }
 
     /**
@@ -147,13 +147,15 @@ public class LogicGrid {
             //if cell in layer is not empty, generate the corresponding BoardPiece and add to grid
             BoardPiece piece = boardPieceGenerator.generate(id);
             if (layer == flagLayer) {
-                flagPositions.add(null);
+                //flagPositions.add(null);
+                addToListOfFlagsPos(piece, x, y);
             } else if (layer == laserSourceLayer && piece instanceof LaserSourcePiece) {
                 laserSourceList.add((LaserSourcePiece) piece);
             } else if (layer == pusherLayer && piece instanceof PusherPiece) {
                 pushersList.add((PusherPiece) piece);
+            } else if (layer == floorLayer) {
+                addToListOfSpawnPos(piece, x, y);
             }
-            isThisASpawnPoint(piece, x, y);
 
             //check returned piece isn't a null
             grid[x][y].add(layerIndex, piece);
@@ -252,6 +254,9 @@ public class LogicGrid {
         return null;
     }
 
+    /**
+     * A method used to create the list of spawn points based on the number of players
+     */
     private void initializeSpawns() {
         spawnPointPositions = new ArrayList<>();
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -270,7 +275,7 @@ public class LogicGrid {
      * @param x     coordinates for @param piece
      * @param y     coordinates for @param piece
      */
-    private void isThisASpawnPoint(BoardPiece piece, int x, int y) {
+    private void addToListOfSpawnPos(BoardPiece piece, int x, int y) {
         //If it is a spawnPoint tile, add it to a list of start positions
         int MIN_SPAWNPOINT_NUMBER = 121;
         int MAX_SPAWNPOINT_NUMBER = 132;
@@ -352,10 +357,38 @@ public class LogicGrid {
         return pos.getY() < height && pos.getY() >= 0 && pos.getX() < width && pos.getX() >= 0;
     }
 
+    /**
+     * Method used for creating the list of flag locations
+     */
+    public void initializeFlagList() {
+        //Create an empty list with enough space for the max number of flags
+        int MAX_NUMBER_OF_FLAGS = 4;
+        flagPositions = new ArrayList<>();
+        for (int i=0; i < MAX_NUMBER_OF_FLAGS; i++) { flagPositions.add(null); }
+    }
+
+    /**
+     * Add a flag piece to the list of spawn points, where the location of the position in the list corresponds to
+     * flagNumber - 1. Meaning the position of flag 1 is located at flagPosition.get(0);
+     *
+     * @param piece The piece that may be a flag piece
+     * @param x The x coordinate of the location of the piece
+     * @param y The y coordinate of the location of the piece
+     */
+    public void addToListOfFlagsPos(BoardPiece piece, int x, int y) {
+        if (piece instanceof FlagPiece) {
+            flagPositions.set(((FlagPiece) piece).getFlagNumber() - 1, new Position(x,y));
+        }
+    }
+
     public ArrayList<Position> getFlagPositions() {
         return flagPositions;
     }
 
+    /**
+     * TODO I believe this method is no longer needed.
+     * The method addToListOfFlagsPos add to flagPositions as flag pieces are discovered during setPieceInGrid
+     */
     private void sortFlagPositions() {
         for (int y = width - 1; y >= 0; y--) {
             for (int x = 0; x < height; x++) {
@@ -468,4 +501,84 @@ public class LogicGrid {
         }
         return laserPositions;
     }
+
+
+    /**
+     * Creates a list of scores for every position (not abysses) for every flag in the game.
+     * The score is how many moves it takes to reach the flag from that position,
+     * which takes walls and holes into consideration.
+     */
+    private void createScoresForPositions(){
+
+        ArrayList <Position> flags = getFlagPositions();
+        ArrayList<ArrayList<List<Object>>> flagMapPositions = new ArrayList<>();
+
+        for (Position flag : flags) {
+
+            ArrayList<List<Object>> mapPositions = new ArrayList<>();
+            int moves = 0;
+            List<Object> posAndScore = Arrays.asList(flag, moves);
+            mapPositions.add(posAndScore);
+
+            for (int j = 0; j < mapPositions.size(); j++) {
+                Position pos = (Position) mapPositions.get(j).get(0);
+                int movesToPos = (Integer) mapPositions.get(j).get(1);
+
+                for (Direction dir : Direction.values()) {
+
+                    Position neighborPos = pos.getPositionIn(dir);
+                    if (isDeadMove(neighborPos)) {
+                        continue;
+                    }
+                    if (!(canLeavePosition(pos, dir) && canEnterNewPosition(neighborPos, dir))) {
+                        continue;
+                    }
+                    int movesToNeighborPos = movesToPos + 1;
+                    posAndScore = Arrays.asList(neighborPos, movesToNeighborPos);
+                    boolean alreadyChecked = false;
+
+                    for (int k = 0; k < mapPositions.size(); k++) {
+                        Position checkedPos = (Position) mapPositions.get(k).get(0);
+                        if (checkedPos.equals(neighborPos)) {
+                            alreadyChecked = true;
+                            break;
+                        }
+                    }
+                    if(!alreadyChecked) mapPositions.add(posAndScore);
+
+                }
+            }
+            flagMapPositions.add(mapPositions);
+        }
+        flagPositionsScores = flagMapPositions;
+    }
+
+    public ArrayList<ArrayList<List<Object>>> getFlagPositionScores(){
+        return flagPositionsScores;
+    }
+
+
+    /**
+     * Method for checking if a move results in death
+     *
+     * @param position to check
+     * @return whether the move results in death
+     */
+    public boolean isDeadMove(Position position) {
+        int x = position.getX();
+        int y = position.getY();
+        BoardPiece currPiece;
+        if (isInBounds(position)) {
+            for (int i = 0; i < grid[x][y].size(); i++) {
+                currPiece = grid[x][y].get(i);
+                if (currPiece instanceof AbyssPiece) {
+                    return true;
+                }
+            }
+        } else {
+            return true;
+        }
+        return false;
+    }
+
 }

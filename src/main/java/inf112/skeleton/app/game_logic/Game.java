@@ -6,7 +6,6 @@ import com.badlogic.gdx.Input;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
-import inf112.skeleton.app.grid_objects.LaserSourcePiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
@@ -14,6 +13,7 @@ import inf112.skeleton.app.screens.GameScreen;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+
 
 public class Game {
     private LogicGrid logicGrid;
@@ -46,7 +46,8 @@ public class Game {
 
     public void initiateComputerPlayers() {
         for (int playerNumber = 2; playerNumber <= numberOfPlayers; playerNumber++) {
-            Player playerToBeInitiated = new AIPlayer(playerNumber, this);
+            AIPlayer.Difficulty difficulty = AIPlayer.Difficulty.values()[playerNumber-1];
+            Player playerToBeInitiated = new AIPlayer(playerNumber, this, difficulty);
             playerList[playerNumber - 1] = playerToBeInitiated;
             logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
@@ -260,7 +261,7 @@ public class Game {
 
     public void setPhaseDone(boolean bool){ phaseDone = bool; }
 
-    public  boolean isPhaseDone(){return phaseDone;}
+    public boolean isPhaseDone(){return phaseDone;}
 
     public boolean isAutoStartNextPhaseOn(){return autoStartNextPhase;}
 

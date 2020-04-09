@@ -1,0 +1,10 @@
+        ArrayList<ProgramCard> hand = new ArrayList<>();
+        hand.add(new ProgramCard(1, CardType.MOVE1));
+        hand.add(new ProgramCard(2, CardType.MOVE1));
+        hand.add(new ProgramCard(3, CardType.MOVE2));
+        hand.add(new ProgramCard(4, CardType.ROTATERIGHT));
+        hand.add(new ProgramCard(5, CardType.ROTATELEFT));
+        hand.add(new ProgramCard(6, CardType.BACKUP));
+        hand.add(new ProgramCard(7, CardType.UTURN));
+        hand.add(new ProgramCard(8, CardType.UTURN));
+        hand.add(new ProgramCard(9, CardType.ROTATELEFT));
