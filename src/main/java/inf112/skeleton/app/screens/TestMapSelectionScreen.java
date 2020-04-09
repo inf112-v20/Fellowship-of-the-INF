@@ -19,6 +19,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import inf112.skeleton.app.RoboRallyGame;
 import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
+/*
+Screen for selection of test map
+ */
 public class TestMapSelectionScreen implements Screen {
     private RoboRallyGame game;
     private float width;
@@ -85,9 +88,7 @@ public class TestMapSelectionScreen implements Screen {
         stage.addActor(chooseText);
 
         // Back button
-        yPadding = 400;
         int xPadding = 80;
-        //Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
         backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
@@ -105,12 +106,10 @@ public class TestMapSelectionScreen implements Screen {
         ImageButton startTestButton;
         picture = new Sprite(new Texture("menu/navbuttons/Stage1Button.png"));
         startTestButton = new ImageButton(new SpriteDrawable(picture));
-        startTestButton.setPosition(backButton.getX() - startTestButton.getWidth()- xPadding, backButton.getY());
+        startTestButton.setPosition(backButton.getX() - startTestButton.getWidth() - xPadding, backButton.getY());
         startTestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //Original map: RoborallyBoard_debugged.tmx
-                //Test map for conveyorbelts: conveyorBeltTestMap.tmx
                 game.setScreen(new GameScreen("maps/testMaps/" + mapName + ".tmx", 4, difficulty));
             }
         });
@@ -119,7 +118,6 @@ public class TestMapSelectionScreen implements Screen {
 
 
         yPadding = 300;
-        xPadding = 700;
         int selectBoxWidth = 300;
         int selectBoxHeight = 50;
         //Skin Source: https://github.com/libgdx/libgdx-skins/tree/master/skins/visui/assets
