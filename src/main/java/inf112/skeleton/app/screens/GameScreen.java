@@ -55,6 +55,7 @@ public class GameScreen implements Screen {
     private ScoreBoardScreen scoreBoardScreen;
     private TiledMap map;
     private TiledMapTileLayer playerLayer;
+    private int playerLayerIndex;
     private TiledMapTileLayer robotLasersLayer;
     private TiledMapTileLayer boardLaserLayer;
     private TiledMapTileLayer.Cell horizontalLaser;
@@ -113,6 +114,7 @@ public class GameScreen implements Screen {
 
     private void initializeCellsAndLayers(TiledMap map) {
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
+        playerLayerIndex = map.getLayers().getIndex("Player");
         robotLasersLayer = (TiledMapTileLayer) map.getLayers().get("Robot Lasers");
         boardLaserLayer = (TiledMapTileLayer) map.getLayers().get("Lasers");
         horizontalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(39));
@@ -365,10 +367,12 @@ public class GameScreen implements Screen {
         Position newPos = move.getNewPos();
         Direction newDir = move.getNewDir();
         Position lastPosAlive = playerPieceToUpdate.getPlayer().getLastPosAlive();
-        if (!game.getLogicGrid().isInBounds(oldPos) && game.getLogicGrid().positionIsFree(lastPosAlive, 12)) {
+        if (!game.getLogicGrid().isInBounds(oldPos) && game.getLogicGrid().positionIsFree(lastPosAlive, playerLayerIndex)) {
             playerLayer.setCell(lastPosAlive.getX(), lastPosAlive.getY(), null);
         }
-        playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
+        if (game.getLogicGrid().positionIsFree(oldPos, playerLayerIndex)) { //check that you are not erasing another player
+            playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
+        }
         playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
         playerLayer.setCell(newPos.getX(), newPos.getY(), playerPieceToUpdate.getPlayerCell()); //repaint at new position
     }
