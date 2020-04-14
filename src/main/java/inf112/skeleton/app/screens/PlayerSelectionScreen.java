@@ -52,7 +52,7 @@ public class PlayerSelectionScreen implements Screen {
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
-        //1 Players button
+        // 1 Players button
         yPadding = 400;
         int xPadding = 80;
         picture = new Sprite(new Texture("menu/playerbuttons/1Player.png"));
@@ -66,7 +66,7 @@ public class PlayerSelectionScreen implements Screen {
         });
         stage.addActor(player1Button);
 
-        //2 Players button
+        // 2 Players button
         picture = new Sprite(new Texture("menu/playerbuttons/2Players.png"));
         ImageButton player2Button = new ImageButton(new SpriteDrawable(picture));
         player2Button.setPosition(2 * xPadding + player1Button.getWidth(), yPadding);
@@ -102,7 +102,7 @@ public class PlayerSelectionScreen implements Screen {
         });
         stage.addActor(player4Button);
 
-        // Back button
+        //Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
         backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
@@ -114,7 +114,7 @@ public class PlayerSelectionScreen implements Screen {
         });
         stage.addActor(backButton);
 
-        //Sin Source: https://github.com/libgdx/libgdx-skins/tree/master/skins/visui/assets
+        //Skin Source: https://github.com/libgdx/libgdx-skins/tree/master/skins/visui/assets
         TextureAtlas dropdownAtlas = new TextureAtlas(Gdx.files.internal("menu/navbuttons/uiskin.atlas"));
         Skin skin = new Skin(Gdx.files.internal("menu/navbuttons/uiskin.json"), dropdownAtlas);
         final SelectBox<Difficulty> dropDownMenu = new SelectBox<>(skin);
@@ -130,7 +130,6 @@ public class PlayerSelectionScreen implements Screen {
         stage.addActor(dropDownMenu);
 
         Gdx.input.setInputProcessor(stage);
-
     }
 
     @Override

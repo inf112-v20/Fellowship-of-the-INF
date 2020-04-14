@@ -11,6 +11,10 @@ import static inf112.skeleton.app.grid.Direction.*;
 
 public class BoardElementsMove {
 
+    public static void pusherPushesPlayer(PusherPiece pusherPiece, Player player, MovesToExecuteSimultaneously moves) {
+        player.tryToGo(pusherPiece.getDir(), moves);
+    }
+
     /**
      * Rotates a player standing on a cog 90* in the direction of the cog.
      *
