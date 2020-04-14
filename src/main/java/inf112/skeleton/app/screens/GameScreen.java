@@ -61,7 +61,7 @@ public class GameScreen implements Screen {
     private TiledMapTileLayer.Cell doubleHorizLaser;
     private TiledMapTileLayer.Cell doubleVerticalLaser;
     private TiledMapTileLayer.Cell emptyCell;
-    final private int countdownTimer = 30;
+    final private int countdownTimer = 60;
     private int seconds = countdownTimer;
     private int prevSeconds = countdownTimer;
     private Timer timer;

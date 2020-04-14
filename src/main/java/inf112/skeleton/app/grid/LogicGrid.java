@@ -63,8 +63,9 @@ public class LogicGrid {
 
     public LogicGrid(int width, int height, TiledMap map) {
         grid = new ArrayList[width][height];
-        this.width = grid[0].length;
-        this.height = grid.length;
+        this.width = grid.length;
+        this.height = grid[0].length;
+
         numberOfPlayers = 8;
 
         //Make a lists for the location of spawns and flags
@@ -114,8 +115,8 @@ public class LogicGrid {
      * because of the way the grid is initialized.
      */
     public void readTiledMapToPieceGrid() {
-        for (int y = width - 1; y >= 0; y--) {
-            for (int x = 0; x < height; x++) {
+        for (int y = height - 1; y >= 0; y--) {
+            for (int x = 0; x < width; x++) {
                 grid[x][y] = new ArrayList<>();
                 //create new boardpieceGenerator for appropriate coordinate
                 boardPieceGenerator = new BoardPieceGenerator(x, y);
@@ -505,7 +506,7 @@ public class LogicGrid {
         ArrayList<ArrayList<List<Object>>> flagMapPositions = new ArrayList<>();
 
         for (Position flag : flags) {
-
+            if(flag == null)continue;
             ArrayList<List<Object>> mapPositions = new ArrayList<>();
             int moves = 0;
             List<Object> posAndScore = Arrays.asList(flag, moves);
@@ -516,7 +517,6 @@ public class LogicGrid {
                 int movesToPos = (Integer) mapPositions.get(j).get(1);
 
                 for (Direction dir : Direction.values()) {
-
                     Position neighborPos = pos.getPositionIn(dir);
                     if (isDeadMove(neighborPos)) {
                         continue;
