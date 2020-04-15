@@ -46,8 +46,8 @@ public class TestMapSelectionScreen implements Screen {
     private void generateMapNameList() {
         mapNameList = new String[]{
                 //add more test maps here
-                "ConveyorBeltTestMap",
-                "RoborallyBoard_AI_Testmap",
+                "conveyorbelt_test_map",
+                "ai_test_map",
                 "pushers_test_map_1",
                 "pushers_test_map_2",
                 "pushers_test_map_3",
@@ -130,6 +130,9 @@ public class TestMapSelectionScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 mapName = (dropDownMenu.getSelected());
+                if(mapName.equals("ai_test_map")){
+                    difficulty = Difficulty.TESTING;
+                }
             }
         });
         dropDownMenu.setItems(mapNameList);

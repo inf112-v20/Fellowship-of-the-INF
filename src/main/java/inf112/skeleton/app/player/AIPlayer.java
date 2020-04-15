@@ -28,7 +28,7 @@ public class AIPlayer extends Player {
     private ArrayList<ProgramCard> availableCardsLeft;
     private int cardsToPick;
     private ArrayList<ProgramCard> chosenCards;
-    public enum Difficulty{EASY, MEDIUM, HARD, EXPERT}
+    public enum Difficulty{EASY, MEDIUM, HARD, EXPERT, TESTING}
     private Difficulty difficulty;
 
 
@@ -55,7 +55,11 @@ public class AIPlayer extends Player {
         this.newRobotDamage = getDamage();
         this.nextGoalFlag = checkpointsVisited;
         this.nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
-        System.out.println(difficulty);
+
+
+        if(difficulty.equals(Difficulty.TESTING)){
+            createTestPlayer();
+        }
 
         if (playerHandDeck.isEmpty()) {
             setLockedIn(true);
@@ -116,7 +120,7 @@ public class AIPlayer extends Player {
      */
     private void pickGreedy() {
         for (int i = 0; i < cardsToPick ; i++) {
-            nextGoalFlag = updateGoalFlag(checkpointsVisited+flagsVisitedInRound);
+            nextGoalFlag = updateGoalFlag(nextGoalFlag+flagsVisitedInRound);
             nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
             ProgramCard bestCard = getBestCard();
             if (!(bestCard == null)) {
@@ -228,7 +232,7 @@ public class AIPlayer extends Player {
      * Is used for picking cards at hard and expert difficulty.
      */
     private void pickOptimal(){
-        int goalFlag = updateGoalFlag(checkpointsVisited);
+        int goalFlag = updateGoalFlag(nextGoalFlag);
         int score = getScore(newRobotPos, newRobotDir, goalFlag);
         int damage = getDamage();
         ArrayList<ArrayList<List<Object>>> path = new ArrayList<>();
@@ -615,6 +619,27 @@ public class AIPlayer extends Player {
         }
         System.out.println(toString() + " Best respawn dir is " + bestDir);
         return bestDir;
+    }
+
+    private void createTestPlayer(){
+        if(getPlayerNumber() == 2) this.difficulty = Difficulty.MEDIUM;
+        else if(getPlayerNumber() == 3)this.difficulty = Difficulty.HARD;
+        else if(getPlayerNumber() == 4)this.difficulty = Difficulty.EXPERT;
+        else this.difficulty = Difficulty.EASY;
+        ArrayList<ProgramCard> hand = new ArrayList<>();
+        hand.add(new ProgramCard(1, CardType.MOVE1));
+        hand.add(new ProgramCard(2, CardType.MOVE1));
+        hand.add(new ProgramCard(3, CardType.MOVE2));
+        hand.add(new ProgramCard(4, CardType.ROTATERIGHT));
+        hand.add(new ProgramCard(5, CardType.ROTATELEFT));
+        hand.add(new ProgramCard(6, CardType.BACKUP));
+        hand.add(new ProgramCard(7, CardType.UTURN));
+        hand.add(new ProgramCard(8, CardType.UTURN));
+        hand.add(new ProgramCard(9, CardType.ROTATELEFT));
+        playerHandDeck = hand;
+        nextGoalFlag = getPlayerNumber()-1;
+        nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
+        availableCardsLeft = playerHandDeck;
     }
 }
 
