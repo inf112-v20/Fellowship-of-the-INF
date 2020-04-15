@@ -212,8 +212,10 @@ public class Player {
     }
 
     public void setSpawnPoint(Position pos) {
-        spawnPoint = pos;
+        this.spawnPoint = pos;
     }
+
+    public Position getSpawnPoint() { return  this.spawnPoint;}
 
     /**
      *Put the player back to it's respawn position, update boardPiece and moves
@@ -229,6 +231,7 @@ public class Player {
             Position newPos = aiPlayer.chooseRespawnPos(respawnPositions);
             System.out.println("Respawning " + toString() + " at " + newPos);
             setPos(newPos);
+            spawnPoint = newPos;
             Direction newDir = aiPlayer.chooseRespawnDir(newPos);
             getPlayerPiece().setDir(newDir);
         }
@@ -426,19 +429,6 @@ public class Player {
     }
 
 
-    /** TODO remove? can be useful for testing maybe
-     * Picks the first cards in the hand so that selectedcards has 5 cards.
-
-    public void pickFirstFiveCards() {
-        for (int i = 0; i < 5 - lockedCards.size(); i++) {
-            if (playerHandDeck.size() == 0) {
-                continue;
-            }
-            selectedCards[i] = playerHandDeck.get(i);
-        }
-    }
-     */
-
     @Override
     public String toString() {
         return "Player{" +
@@ -520,7 +510,7 @@ public class Player {
      */
     public void findFirstSpawnPoint() {
         ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
-        spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
+        this.spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
     }
 
     /**

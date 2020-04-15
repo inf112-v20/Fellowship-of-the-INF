@@ -361,10 +361,10 @@ public class UIScreen {
                         "Press 0 to lock in cards for every computer player, " +
                         "or LEFT CTRL + 0 to lock in player one by one.");
                 return;
-            }
         }
+    }
         for (int i = 0; i < 5; i++) {
-            cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
+        cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
         }
         Color c = lockInButton.getColor();
         lockInButton.setColor(c.r, c.g, c.b, 0.5f);

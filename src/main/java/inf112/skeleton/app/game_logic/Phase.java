@@ -107,11 +107,15 @@ public class Phase {
             if(player.isDead()){continue;}
             if (player.getCurrentBoardPiece() instanceof FlagPiece) {
                 FlagPiece flag = (FlagPiece) player.getCurrentBoardPiece();
+                player.setSpawnPoint(player.getPos());
+                System.out.println("Setting "+ player.toString() + " spawn point to " + player.getPos());
                 if (player.getCheckpointsVisited() + 1 == flag.getFlagNumber()) {
                     player.visitedCheckpoint();
-                    player.setSpawnPoint(player.getPos());
-                    System.out.println("Setting "+ player.toString() + " spawn point to " + player.getPos());
                 }
+            }
+            else if(!logicGrid.positionIsFree(player.getPos(), 1) ||
+                    !logicGrid.positionIsFree(player.getPos(), 2)){
+                player.setSpawnPoint(player.getPos());
             }
         }
     }

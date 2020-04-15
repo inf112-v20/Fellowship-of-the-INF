@@ -42,8 +42,8 @@ public class LogicGrid {
 
     //The indexes of the layers
     private int floorLayerIndex;
-    private int repairLayerIndex;
-    private int opCardLayerIndex;
+    private int repairLayerIndex; //1
+    private int opCardLayerIndex; //2
     private int abyssLayerIndex;
     private int conveyorBeltLayerIndex; //4
     private int expressBeltLayerIndex; //5
@@ -104,6 +104,7 @@ public class LogicGrid {
         playerLayerIndex = map.getLayers().getIndex("Player");
 
         readTiledMapToPieceGrid();
+        removeUnusedFlags();
         createScoresForPositions();
 
     }
@@ -522,7 +523,6 @@ public class LogicGrid {
         ArrayList<ArrayList<List<Object>>> flagMapPositions = new ArrayList<>();
 
         for (Position flag : flags) {
-            if(flag == null)continue;
             ArrayList<List<Object>> mapPositions = new ArrayList<>();
             int moves = 0;
             List<Object> posAndScore = Arrays.asList(flag, moves);
@@ -586,6 +586,15 @@ public class LogicGrid {
             return true;
         }
         return false;
+    }
+
+    private void removeUnusedFlags(){
+        for(int i = 0; i < flagPositions.size();i++){
+            if(flagPositions.get(i) == null){
+                flagPositions.remove(i);
+                i--;
+            }
+        }
     }
 
 }

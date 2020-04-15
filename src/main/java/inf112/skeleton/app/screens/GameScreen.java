@@ -11,7 +11,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -73,6 +72,8 @@ public class GameScreen implements Screen {
     private boolean createdButtons = false;
     private Position respawnPos;
     private ArrayList<ImageButton> respawnButtons;
+    private ArrayList<Image> respawnImages;
+    private boolean createdImage = false;
 
 
     public GameScreen(String mapName, int numberOfPlayers, Difficulty difficulty) {
@@ -99,6 +100,8 @@ public class GameScreen implements Screen {
         uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game);
         clearLayer(boardLaserLayer); //lasers should only be shown when active
         this.respawnButtons = new ArrayList<>();
+        this.respawnImages = new ArrayList<>();
+
     }
 
     /**
@@ -153,6 +156,13 @@ public class GameScreen implements Screen {
      * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
+        if(!createdImage){
+            for(Player player : game.getListOfPlayers()){
+                createRespawnImage(player);
+            }
+            createdImage = true;
+
+        }
 
         if (game.isChoosingRespawn()) {
             if (!createdButtons) {
@@ -180,6 +190,9 @@ public class GameScreen implements Screen {
                 uiScreen.drawTimer(seconds + 1);
                 prevSeconds--;
             }
+        }
+        if (!movesToExecute() && !game.moreLaserToShoot()){
+            updateRespawnImages();
         }
         //only handle keyboard input if there are no moves to execute
         if (!movesToExecute() && !game.moreLaserToShoot() && !game.isChoosingRespawn()) {
@@ -510,6 +523,39 @@ public class GameScreen implements Screen {
         respawnButtons.clear();
         for (Position pos : player.getRespawnPositions()) {
             createRespawnButton(pos);
+        }
+    }
+
+    private void createRespawnImage(Player player){
+            TextureRegion textureRegion = player.getPlayerPiece().getPlayerCell().getTile().getTextureRegion();
+            TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(textureRegion);
+            Image image = new Image(myTexRegionDrawable);
+            image.setSize(80, 80);
+            Position pos = findPosition(player);
+            image.setPosition(pos.getX(), pos.getY());
+            stage.addActor(image);
+            respawnImages.add(image);
+    }
+
+    private Position findPosition(Player player){
+        Position respawnPosition = player.getSpawnPoint();
+        int spacing = (player.getPlayerNumber()-1)* (TILE_WIDTH_DPI/4);
+        int posX = respawnPosition.getX() * TILE_WIDTH_DPI;
+        int posY = respawnPosition.getY() * TILE_WIDTH_DPI + spacing;
+        if(player.getPlayerNumber() >= 5){
+            posX += TILE_WIDTH_DPI*0.75f;
+            spacing = (player.getPlayerNumber()-5)* (TILE_WIDTH_DPI/4);
+            posY = respawnPosition.getY() * TILE_WIDTH_DPI + spacing;
+        }
+        return new Position(posX, posY);
+    }
+
+    private void updateRespawnImages(){
+        for (int i = 0; i < respawnImages.size(); i++) {
+            Image image = respawnImages.get(i);
+            Player player = game.getListOfPlayers()[i];
+            Position pos = findPosition(player);
+            image.setPosition(pos.getX(),pos.getY());
         }
     }
 

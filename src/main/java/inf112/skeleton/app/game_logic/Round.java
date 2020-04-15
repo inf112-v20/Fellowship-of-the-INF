@@ -37,9 +37,8 @@ public class Round {
                 int number = 5 - numberOfLockedCards;
                 player.getSelectedCards()[number + j] = (player.getLockedCards().get(j));
             }
-            player.setSpawnPoint(new Position(4,4));
         }
-        //lockInCardsForComputers(true);
+        lockInCardsForComputers(true);
     }
 
     /**
