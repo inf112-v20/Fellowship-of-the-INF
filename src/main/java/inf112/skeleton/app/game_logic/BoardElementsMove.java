@@ -57,6 +57,7 @@ public class BoardElementsMove {
             return;
         }
         ConveyorBeltPiece conveyorBeltPiece = (ConveyorBeltPiece) logicGrid.getPieceType(player.getPos(), boardPiece.getClass());
+        System.out.println(player.toString() + " is moving on conveyorbelt at pos " + player.getPos() );
         Direction conveyorBeltDirection = conveyorBeltPiece.getDir();
         Position newPos = player.getPos().getPositionIn(conveyorBeltDirection);
         if (isPlayerInFront(player, game, onlyExpressBelt)) {
@@ -123,27 +124,12 @@ public class BoardElementsMove {
         BoardPiece boardPiece = player.getCurrentBoardPiece();
         LogicGrid logicGrid = game.getLogicGrid();
         Position newPos = player.getPos().getPositionIn(((ConveyorBeltPiece) boardPiece).getDir());
-        if (!logicGrid.isInBounds(newPos)) {
-            return false;
-        }
-        if (!logicGrid.positionIsFree(newPos, 12)) {
-            return true;
-        }
-        for (int i = 0; i < 4; i++) {
-            Position orthoPos;
-            if (i == 0) {
-                orthoPos = newPos.getPositionIn(NORTH);
-            } else if (i == 1) {
-                orthoPos = newPos.getPositionIn(EAST);
-            } else if (i == 2) {
-                orthoPos = newPos.getPositionIn(SOUTH);
-            } else {
-                orthoPos = newPos.getPositionIn(WEST);
-            }
-            if (!logicGrid.isInBounds(orthoPos) || orthoPos.equals(player.getPos())) {
-                continue;
-            }
-            if (!logicGrid.positionIsFree(orthoPos, 12) &&
+        if (!logicGrid.isInBounds(newPos)) { return false; }
+        if(game.getPlayerAt(newPos) != null) return  true;
+        for (Direction dir : Direction.values()) {
+            Position orthoPos = newPos.getPositionIn(dir);
+            if (!logicGrid.isInBounds(orthoPos) || orthoPos.equals(player.getPos())) { continue; }
+            if (game.getPlayerAt(newPos) != null &&
                     (!logicGrid.positionIsFree(orthoPos, 4) || !logicGrid.positionIsFree(orthoPos, 5))) {
                 if (!game.getPlayerAt(orthoPos).hasBeenMovedThisPhase()) {
                     if (onlyExpressBelt && boardPiece instanceof ExpressBeltPiece && !logicGrid.positionIsFree(orthoPos, 4)) {

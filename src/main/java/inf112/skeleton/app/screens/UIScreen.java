@@ -37,6 +37,7 @@ public class UIScreen {
     private ArrayList<Actor> gamelogActors = new ArrayList<>();
     private Label timerLabel = null;
     private Wav.Sound thudSound;
+    private Label respawnText;
 
 
     public UIScreen(final float width, Game game) {
@@ -66,8 +67,11 @@ public class UIScreen {
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (game.getRound().getPhaseNr() > 4) {
+                removeGameLog();
                 game.getRound().finishRound();
-                this.newRound();
+                if(!game.isChoosingRespawn()){
+                    this.newRound();
+                }
             } else {
                 if (game.getRound().getPhaseNr() == 0) {
                     executeLockInButton();
@@ -85,6 +89,9 @@ public class UIScreen {
      * Creates new cardbuttons for the new playerhand
      */
     public void newRound() {
+        if(respawnText != null){
+            respawnText.remove();
+        }
         game.executeRound();
         lockInButton.setTouchable(Touchable.disabled);
         if (player.getLockedCards().size() == 5) {
@@ -92,7 +99,6 @@ public class UIScreen {
             Color c = lockInButton.getColor();
             lockInButton.setColor(c.r, c.g, c.b, 1);
         }
-        removeGameLog();
         cardButton = new CardButton(player, width, height, stage, lockInButton);
     }
 
@@ -395,6 +401,12 @@ public class UIScreen {
     public CardButton getCardButton() { return cardButton; }
 
     public Label getTimerLabel(){return timerLabel;}
+
+    public void createRespawnText(){
+        String text = " Choose the direction to respawn in\n Rotate by using left or right arrow\n Press R to confirm and respawn.";
+        respawnText = drawText(text, 10, width*0.5f, height*0.5f, Color.BLACK);
+    }
+
 
 }
 

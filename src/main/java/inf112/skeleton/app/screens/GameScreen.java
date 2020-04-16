@@ -77,6 +77,7 @@ public class GameScreen implements Screen {
     private ArrayList<ImageButton> respawnButtons;
     private ArrayList<Image> respawnImages;
     private boolean createdImage = false;
+    private boolean hasUpdated = false;
 
 
     public GameScreen(String mapName, int numberOfPlayers, Difficulty difficulty) {
@@ -166,12 +167,12 @@ public class GameScreen implements Screen {
                 createRespawnImage(player);
             }
             createdImage = true;
-
         }
-
         if (game.isChoosingRespawn()) {
             if (!createdButtons) {
                 choosePosition();
+                uiScreen.removeGameLog();
+                uiScreen.createRespawnText();
                 createdButtons = true;
             }
             chooseDirection();
@@ -197,8 +198,9 @@ public class GameScreen implements Screen {
                 prevSeconds--;
             }
         }
-        if (!movesToExecute() && !game.moreLaserToShoot()){
+        if (!movesToExecute() && !game.moreLaserToShoot() && !hasUpdated){
             updateRespawnImages();
+            hasUpdated = true;
         }
         //only handle keyboard input if there are no moves to execute
         if (!movesToExecute() && !game.moreLaserToShoot() && !game.isChoosingRespawn()) {
@@ -207,9 +209,12 @@ public class GameScreen implements Screen {
                 game.setPhaseDone(false);
                 if (game.getRound().getPhaseNr() > 4) {
                     game.getRound().finishRound();
-                    uiScreen.newRound();
+                    if(!game.isChoosingRespawn()){
+                        uiScreen.newRound();
+                    }
                 } else {
                     game.getRound().nextPhase();
+                    hasUpdated = false;
                     uiScreen.updateGameLog();
                 }
             }
@@ -398,7 +403,7 @@ public class GameScreen implements Screen {
 
 
     /**
-     * Starts a timer counting down for 30 seconds
+     * Starts a timer counting down for 60 seconds
      */
     private void startTimer() {
         timer = new Timer();
@@ -497,7 +502,14 @@ public class GameScreen implements Screen {
             player.turnPlayerRight(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             player.turnPlayerLeft(moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+        }
+        game.performMoves(moves); //execute moves if there are any
+        for (Move move : moves) {
+            redrawPlayer(move); //redraw player if it needs to be redrawn
+        }
+        moves.clear();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             game.setChoosingRespawn(false);
             game.getPlayer().setPos(respawnPos);
             PlayerPiece playerPiece = player.getPlayerPiece();
@@ -510,13 +522,9 @@ public class GameScreen implements Screen {
             if (!game.getDeadPlayers().isEmpty()) {
                 game.getRound().respawnPlayers();
             }
-            return;
+            uiScreen.newRound();
         }
-        game.performMoves(moves);
-        for (Move move : moves) {
-            redrawPlayer(move);
-        }
-        moves.clear();
+
     }
 
     private void choosePosition() {

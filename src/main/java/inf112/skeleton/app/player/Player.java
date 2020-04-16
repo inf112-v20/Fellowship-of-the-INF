@@ -423,7 +423,11 @@ public class Player {
 
         //TODO Remove. Temporary fix to stop nullpointers
         for (ProgramCard selectedCard : selectedCards) {
-            if (selectedCard == null) pickRandomCards();
+            if (selectedCard == null) {
+                System.out.println("Couldn't find enough cards for AI Player using their preferred card choosing method\n" +
+                        "Picking random cards to fill their slots instead");
+                pickRandomCards();
+            }
         }
 
     }
@@ -668,27 +672,23 @@ public class Player {
      * Picks random cards for the remaining open slots in the register
      */
     public void pickRandomCards(){
-        if (playerHandDeck.isEmpty()) { return; }
-        ArrayList<Integer> numbers = new ArrayList<>();
-        boolean hasSelectedFiveCards = false;
-        while (!hasSelectedFiveCards){
-            if(numbers.size() == playerHandDeck.size()){
-                System.out.println("Error: Couldn't choose enough random cards");
-                return;
+        ArrayList<Integer> randomNumbers = new ArrayList<>();
+        for (int i = 0; i < playerHandDeck.size(); i++) {
+            if(isCardAvailable(playerHandDeck.get(i))){
+                randomNumbers.add(i);
             }
-            int randomNumber = (int)(Math.random()*playerHandDeck.size());
-            if(numbers.contains(randomNumber)){continue;}
+        }
+        Collections.shuffle(randomNumbers);
+        int missingCards = cardsMissing();
+        for (int i = 0; i < missingCards; i++) {
+            int randomNumber = randomNumbers.get(i);
             ProgramCard card = playerHandDeck.get(randomNumber);
-            if(isCardAvailable(card)){
-                for (int i = 0; i < selectedCards.length; i++) {
-                    if(selectedCards[i] == null){
-                        selectedCards[i] = card;
-                        break;
-                    }
-                    if(i == 4){hasSelectedFiveCards = true;}
+            for (int j = 0; j < selectedCards.length; j++) {
+                if(selectedCards[j] == null){
+                    selectedCards[j] = card;
+                    break;
                 }
             }
-            else{numbers.add(randomNumber);}
         }
         setLockedIn(true);
     }
@@ -717,5 +717,15 @@ public class Player {
 
     public boolean hasBeenPushedThisPhase() {
         return hasBeenPushedThisPhase;
+    }
+
+    private int cardsMissing(){
+        int counter = 0;
+        for (ProgramCard selectedCard : selectedCards) {
+            if (selectedCard == null) {
+                counter++;
+            }
+        }
+        return counter;
     }
 }

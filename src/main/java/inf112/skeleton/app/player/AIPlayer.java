@@ -583,41 +583,41 @@ public class AIPlayer extends Player {
              chooseRespawnDir(pos);
              int score =getScore(pos, chooseRespawnDir(pos), nextGoalFlag);
              if( score < bestScore){
-                 System.out.println("Pos " + pos + " score " + score + " is better than current best "
-                 + bestPos + " score " + bestScore);
+                 //System.out.println("Pos " + pos + " score " + score + " is better than current best "
+                 //+ bestPos + " score " + bestScore);
                  bestScore = score;
                  bestPos = pos;
              }
              else{
-                 System.out.println("Pos " + pos + " score " + score + " is NOT better than current best "
-                         + bestPos + " score " + bestScore);
+                 //System.out.println("Pos " + pos + " score " + score + " is NOT better than current best "
+                 //      + bestPos + " score " + bestScore);
              }
         }
-        System.out.println(toString() + " Best respawn pos is " + bestPos);
+        //System.out.println(toString() + " Best respawn pos is " + bestPos);
         return bestPos;
     }
 
     public Direction chooseRespawnDir(Position pos){
-        System.out.println("Choosing best dir for " + toString() + " at " + pos);
+        //System.out.println("Choosing best dir for " + toString() + " at " + pos);
         Direction bestDir = getPlayerPiece().getDir();
         int bestScore = 100;
         for(Direction dir : Direction.values()){
             Position posInFront = pos.getPositionIn(dir);
             if(logicGrid.isDeadMove(posInFront)){
-                System.out.println("Pos in front will result in death");
+               // System.out.println("Pos in front will result in death");
                 continue;
             }
             int score = getScore(posInFront, dir, nextGoalFlag);
             if(score < bestScore){
                 bestScore = score;
-                System.out.println("Dir " + dir + " is better than current best dir " + bestDir);
+                //System.out.println("Dir " + dir + " is better than current best dir " + bestDir);
                 bestDir = dir;
             }
             else {
-                System.out.println("Dir " + dir + " is NOT better than current best dir " + bestDir);
+                //System.out.println("Dir " + dir + " is NOT better than current best dir " + bestDir);
             }
         }
-        System.out.println(toString() + " Best respawn dir is " + bestDir);
+        //System.out.println(toString() + " Best respawn dir is " + bestDir);
         return bestDir;
     }
 
