@@ -47,7 +47,7 @@ public class UIScreen {
         height = width * 0.5f;
         player = game.getListOfPlayers()[0];
         stage = new Stage();
-        thudSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("sounds/reitanna__thunk.wav"));
+        thudSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/reitanna__thunk.wav"));
         Texture texture = new Texture(Gdx.files.internal("ui/background.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         createImage(textureRegion, 1, width * 0.5f, 0, 1);

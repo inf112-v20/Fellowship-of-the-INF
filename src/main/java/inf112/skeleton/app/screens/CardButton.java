@@ -47,7 +47,7 @@ public class CardButton {
         this.playerHand = player.getPlayerHandDeck();
         selectedCardPosY = height / 20;
         gap = new Texture((Gdx.files.internal("ui/cards/cardtemplate.png"))).getWidth() * 1.3f;
-        cardSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("sounds/reitanna__thunk.wav"));
+        cardSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/reitanna__thunk.wav"));
         createSelectedCardsImages();
         ArrayList<Stack> listOfCardButtons = createCardButtons(playerHand);
         cardButtons = new ArrayList<>();

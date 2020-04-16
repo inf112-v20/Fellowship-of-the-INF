@@ -3,6 +3,7 @@ package inf112.skeleton.app.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.backends.lwjgl.audio.Wav;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapProperties;
@@ -62,6 +63,8 @@ public class GameScreen implements Screen {
     private TiledMapTileLayer.Cell doubleHorizLaser;
     private TiledMapTileLayer.Cell doubleVerticalLaser;
     private TiledMapTileLayer.Cell emptyCell;
+    private Wav.Sound laserSound;
+    private Wav.Sound robotSound;
     final private int countdownTimer = 60;
     private int seconds = countdownTimer;
     private int prevSeconds = countdownTimer;
@@ -102,6 +105,8 @@ public class GameScreen implements Screen {
         this.respawnButtons = new ArrayList<>();
         this.respawnImages = new ArrayList<>();
 
+        laserSound = (Wav.Sound) Gdx.audio.newSound( Gdx.files.internal("assets/sounds/bubaproducer__laser-shot-silenced.wav"));
+        robotSound = (Wav.Sound) Gdx.audio.newSound( Gdx.files.internal("assets/sounds/meroleroman7__robot-jump-2.wav"));
     }
 
     /**
@@ -172,6 +177,7 @@ public class GameScreen implements Screen {
             chooseDirection();
         }
         if (boardLasersVisible) {
+            laserSound.play(0.5f,1.0f,1.0f);
             clearLayer(boardLaserLayer);
             boardLasersVisible = false;
         }
