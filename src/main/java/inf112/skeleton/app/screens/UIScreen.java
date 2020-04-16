@@ -89,7 +89,9 @@ public class UIScreen {
     public void newRound() {
         game.executeRound();
         lockInButton.setTouchable(Touchable.disabled);
-        if (player.getLockedCards().size() == 5) {
+        powerDownButton.setTouchable(Touchable.disabled);
+        //Check if the player had the correct number of cards on the hand
+        if (player.getLockedCards().size() == 5 || player.getLockedCards().size() == (9 - player.getDamage())) {
             lockInButton.setTouchable(Touchable.enabled);
             Color c = lockInButton.getColor();
             lockInButton.setColor(c.r, c.g, c.b, 1);
@@ -321,7 +323,6 @@ public class UIScreen {
      * @param lockInButton the button to create a clicklistener for
      */
     public void lockInButtonPressed(final ImageButton lockInButton) {
-
         lockInButton.addListener(new ClickListener() {
 
             @Override
@@ -330,7 +331,6 @@ public class UIScreen {
             }
 
         });
-
     }
 
     /**
@@ -402,7 +402,7 @@ public class UIScreen {
         }
     }
         for (int i = 0; i < 5; i++) {
-        cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
+            cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
         }
         Color c = lockInButton.getColor();
         lockInButton.setColor(c.r, c.g, c.b, 0.5f);
