@@ -24,12 +24,14 @@ public class Player {
     private ArrayList<ProgramCard> lockedCards = new ArrayList<>();
     private ArrayList<Position> laserPath = new ArrayList<>();
     private ArrayList<Player> playersPushed = new ArrayList<>();
+    private ArrayList<Position> respawnPositions = new ArrayList<>();
 
     private Position spawnPoint;
     private BoardPiece currentBoardPiece;
     private Direction latestMoveDirection;
     private boolean conveyorBeltMove = false;
     private boolean hasBeenMovedThisPhase = false;
+    private boolean hasBeenPushedThisPhase = false;
     private Position oldLaserPos;
     private Game game;
     private boolean isDead = false;
@@ -74,7 +76,7 @@ public class Player {
         playerPiece.setPos(new Position(x, y));
     }
 
-    private void setPos(Position positionIn) {
+    public void setPos(Position positionIn) {
         playerPiece.setPos(positionIn);
     }
 
@@ -146,7 +148,6 @@ public class Player {
                 movesLeft = 1;
             }
         }
-
     }
 
     /**
@@ -210,9 +211,11 @@ public class Player {
         }
     }
 
-    public void setSpawnPoint(int x, int y) {
-        spawnPoint = new Position(x, y);
+    public void setSpawnPoint(Position pos) {
+        this.spawnPoint = pos;
     }
+
+    public Position getSpawnPoint() { return  this.spawnPoint;}
 
     /**
      *Put the player back to it's respawn position, update boardPiece and moves
@@ -221,8 +224,24 @@ public class Player {
     public void respawnPlayer(MovesToExecuteSimultaneously moves) {
         game.performMoves(moves);
         Move respawnMove = new Move(this);
-        Position validSpawnPointPosition = logicGrid.getValidSpawnPointPosition(this, spawnPoint);
-        setPos(validSpawnPointPosition);
+        System.out.println("Finding spawn positions for " + toString());
+        respawnPositions = logicGrid.getValidSpawnPointPosition(spawnPoint);
+        if(this instanceof AIPlayer) {
+            AIPlayer aiPlayer = (AIPlayer) this;
+            Position newPos = aiPlayer.chooseRespawnPos(respawnPositions);
+            System.out.println("Respawning " + toString() + " at " + newPos);
+            setPos(newPos);
+            spawnPoint = newPos;
+            Direction newDir = aiPlayer.chooseRespawnDir(newPos);
+            getPlayerPiece().setDir(newDir);
+        }
+        else{
+            if(respawnPositions.size() == 1){
+                isDead = false;
+                playerPiece.showAlivePlayer();
+                return;
+            }
+        }
         respawnMove.updateMove();
         moves.add(respawnMove);
         isDead = false;
@@ -399,21 +418,14 @@ public class Player {
         for (int i = 0; i < cards.size() ; i++) {
             selectedCards[i] = cards.get(i);
         }
-    }
 
-
-    /** TODO remove? can be useful for testing maybe
-     * Picks the first cards in the hand so that selectedcards has 5 cards.
-
-    public void pickFirstFiveCards() {
-        for (int i = 0; i < 5 - lockedCards.size(); i++) {
-            if (playerHandDeck.size() == 0) {
-                continue;
-            }
-            selectedCards[i] = playerHandDeck.get(i);
+        //TODO Remove. Temporary fix to stop nullpointers
+        for (ProgramCard selectedCard : selectedCards) {
+            if (selectedCard == null) pickRandomCards();
         }
+
     }
-     */
+
 
     @Override
     public String toString() {
@@ -438,6 +450,7 @@ public class Player {
             lives--;
             damage = 10;
         }
+
         if (damage >= 5 && damage <= 9) {
             int number = amountOfDamage;
             if (damage - number < 5) {
@@ -452,6 +465,8 @@ public class Player {
                 playerHandDeck.remove(lockedCards.get(0));
             }
         }
+
+
     }
 
     /**
@@ -501,7 +516,7 @@ public class Player {
      */
     public void findFirstSpawnPoint() {
         ArrayList<Position> spawns = logicGrid.getSpawnPointPositions();
-        spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
+        this.spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
     }
 
     /**
@@ -616,6 +631,10 @@ public class Player {
 
     public void setKeyInput(boolean bool){ keyInput = bool; }
 
+    public ArrayList<Position> getRespawnPositions(){return respawnPositions; }
+
+    public Position getDeadPosition(){ return deadPosition; }
+
     /**
      * Shoot laser in the direction which the robot is pointing.
      * Lasers stops at walls and players, and will damage any player hit
@@ -698,4 +717,11 @@ public class Player {
         return true;
     }
 
+    public void setHasBeenPushedThisPhase(boolean hasBeenPushed) {
+        this.hasBeenPushedThisPhase = hasBeenPushed;
+    }
+
+    public boolean hasBeenPushedThisPhase() {
+        return hasBeenPushedThisPhase;
+    }
 }

@@ -7,6 +7,7 @@ import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -41,8 +42,8 @@ public class LogicGrid {
 
     //The indexes of the layers
     private int floorLayerIndex;
-    private int repairLayerIndex;
-    private int opCardLayerIndex;
+    private int repairLayerIndex; //1
+    private int opCardLayerIndex; //2
     private int abyssLayerIndex;
     private int conveyorBeltLayerIndex; //4
     private int expressBeltLayerIndex; //5
@@ -57,17 +58,20 @@ public class LogicGrid {
     //private BoardPiece[] [][] grid;
     private ArrayList<BoardPiece>[][] grid;
     private ArrayList<LaserSourcePiece> laserSourceList = new ArrayList<>();
+    private ArrayList<PusherPiece> pushersList = new ArrayList<>();
     private BoardPieceGenerator boardPieceGenerator;
 
 
     public LogicGrid(int width, int height, TiledMap map) {
         grid = new ArrayList[width][height];
-        this.width = grid[0].length;
-        this.height = grid.length;
+        this.width = grid.length;
+        this.height = grid[0].length;
+
         numberOfPlayers = 8;
 
-        //Make a list of what will be the first player spawns
+        //Make a lists for the location of spawns and flags
         initializeSpawns();
+        initializeFlagList();
 
         //extract each layer from the tiled map
         floorLayer = (TiledMapTileLayer) map.getLayers().get("Floor");
@@ -99,10 +103,10 @@ public class LogicGrid {
         flagLayerIndex = map.getLayers().getIndex("Flag");
         playerLayerIndex = map.getLayers().getIndex("Player");
 
-        this.flagPositions = new ArrayList<>();
         readTiledMapToPieceGrid();
-        sortFlagPositions();
+        removeUnusedFlags();
         createScoresForPositions();
+
     }
 
     /**
@@ -113,8 +117,8 @@ public class LogicGrid {
      * because of the way the grid is initialized.
      */
     public void readTiledMapToPieceGrid() {
-        for (int y = width - 1; y >= 0; y--) {
-            for (int x = 0; x < height; x++) {
+        for (int y = height - 1; y >= 0; y--) {
+            for (int x = 0; x < width; x++) {
                 grid[x][y] = new ArrayList<>();
                 //create new boardpieceGenerator for appropriate coordinate
                 boardPieceGenerator = new BoardPieceGenerator(x, y);
@@ -151,11 +155,15 @@ public class LogicGrid {
             //if cell in layer is not empty, generate the corresponding BoardPiece and add to grid
             BoardPiece piece = boardPieceGenerator.generate(id);
             if (layer == flagLayer) {
-                flagPositions.add(null);
+                //flagPositions.add(null);
+                addToListOfFlagsPos(piece, x, y);
             } else if (layer == laserSourceLayer && piece instanceof LaserSourcePiece) {
                 laserSourceList.add((LaserSourcePiece) piece);
+            } else if (layer == pusherLayer && piece instanceof PusherPiece) {
+                pushersList.add((PusherPiece) piece);
+            } else if (layer == floorLayer) {
+                addToListOfSpawnPos(piece, x, y);
             }
-            isThisASpawnPoint(piece, x, y);
 
             //check returned piece isn't a null
             grid[x][y].add(layerIndex, piece);
@@ -255,8 +263,7 @@ public class LogicGrid {
     }
 
     /**
-     * Create a list that is as long as the number of players,
-     * The list is only null pointers at initiation
+     * A method used to create the list of spawn points based on the number of players
      */
     private void initializeSpawns() {
         spawnPointPositions = new ArrayList<>();
@@ -276,7 +283,7 @@ public class LogicGrid {
      * @param x     coordinates for @param piece
      * @param y     coordinates for @param piece
      */
-    private void isThisASpawnPoint(BoardPiece piece, int x, int y) {
+    private void addToListOfSpawnPos(BoardPiece piece, int x, int y) {
         //If it is a spawnPoint tile, add it to a list of start positions
         int MIN_SPAWNPOINT_NUMBER = 121;
         int MAX_SPAWNPOINT_NUMBER = 132;
@@ -309,6 +316,11 @@ public class LogicGrid {
             //cannot leave if the laserSourcePiece player is standing on has a wall in the direction
             return (possibleLaserSourcePiece).canLeave(dir);
         }
+        PusherPiece possiblePusherPiece = getPieceType(currentPosition, PusherPiece.class);
+        if (possiblePusherPiece != null) {
+            //cannot leave if the pusherPiece player is standing on has a wall in the direction
+            return (possiblePusherPiece).canLeave(dir);
+        }
         return true;
     }
 
@@ -331,8 +343,13 @@ public class LogicGrid {
             }
             LaserSourcePiece possibleLaserSourcePiece = getPieceType(positionInFront, LaserSourcePiece.class);
             if (possibleLaserSourcePiece != null) {
-                //cannot go if WallPiece in front has a wall facing player
+                //cannot go if LaserSourcePiece in front has a wall facing player
                 return (possibleLaserSourcePiece).canGo(dir);
+            }
+            PusherPiece possiblePusherPiece = getPieceType(positionInFront, PusherPiece.class);
+            if (possiblePusherPiece != null) {
+                //cannot go if PusherPiece in front has a wall facing player
+                return (possiblePusherPiece).canGo(dir);
             }
         }
         return true;
@@ -348,10 +365,38 @@ public class LogicGrid {
         return pos.getY() < height && pos.getY() >= 0 && pos.getX() < width && pos.getX() >= 0;
     }
 
+    /**
+     * Method used for creating the list of flag locations
+     */
+    public void initializeFlagList() {
+        //Create an empty list with enough space for the max number of flags
+        int MAX_NUMBER_OF_FLAGS = 4;
+        flagPositions = new ArrayList<>();
+        for (int i=0; i < MAX_NUMBER_OF_FLAGS; i++) { flagPositions.add(null); }
+    }
+
+    /**
+     * Add a flag piece to the list of spawn points, where the location of the position in the list corresponds to
+     * flagNumber - 1. Meaning the position of flag 1 is located at flagPosition.get(0);
+     *
+     * @param piece The piece that may be a flag piece
+     * @param x The x coordinate of the location of the piece
+     * @param y The y coordinate of the location of the piece
+     */
+    public void addToListOfFlagsPos(BoardPiece piece, int x, int y) {
+        if (piece instanceof FlagPiece) {
+            flagPositions.set(((FlagPiece) piece).getFlagNumber() - 1, new Position(x,y));
+        }
+    }
+
     public ArrayList<Position> getFlagPositions() {
         return flagPositions;
     }
 
+    /**
+     * TODO I believe this method is no longer needed.
+     * The method addToListOfFlagsPos add to flagPositions as flag pieces are discovered during setPieceInGrid
+     */
     private void sortFlagPositions() {
         for (int y = width - 1; y >= 0; y--) {
             for (int x = 0; x < height; x++) {
@@ -373,31 +418,31 @@ public class LogicGrid {
      * @param spawnPoint check if it is valid
      * @return valid spawn point
      */
-    public Position getValidSpawnPointPosition(Player player, Position spawnPoint) {
+    public ArrayList<Position> getValidSpawnPointPosition(Position spawnPoint) {
         //if spawnPoint is valid, return spawnPoint
+        ArrayList<Position> availablePositions = new ArrayList<>();
         if (positionIsFree(spawnPoint, playerLayerIndex)) {
-            return spawnPoint;
+            System.out.println("OG Spawnpoint is available at" + spawnPoint);
+            availablePositions.add(spawnPoint);
+            return availablePositions;
         }
 
         //if spawnPoint is not valid, check the neighbouring positions.
         for (Direction dir : Direction.values()) {
-            if (positionIsFree(spawnPoint.getPositionIn(dir), playerLayerIndex)
-                    && spawnIsSafe(spawnPoint)) {
-                return spawnPoint.getPositionIn(dir);
+            Position pos = spawnPoint.getPositionIn(dir);
+            Position pos2 = pos.getPositionIn(dir.getRightTurnDirection());
+            if (positionIsFree(pos, playerLayerIndex)
+                    && spawnIsSafe(pos)) {
+                System.out.println("Spawnpoint1 is available at" + pos);
+                availablePositions.add(pos);
+            }
+            if (positionIsFree(pos2, playerLayerIndex)
+                    && spawnIsSafe(pos2)) {
+                System.out.println("Spawnpoint2 is available at" + pos2);
+                availablePositions.add(pos2);
             }
         }
-        //check the neighbouring positions of the neighbouring positions
-        for (Direction dir : Direction.values()) {
-            Position checkedPosition = spawnPoint.getPositionIn(dir);
-            for (Direction dir2 : Direction.values()) {
-                if (positionIsFree(checkedPosition.getPositionIn(dir2), playerLayerIndex)
-                        && spawnIsSafe(spawnPoint)) {
-                    return spawnPoint.getPositionIn(dir2);
-                }
-            }
-        }
-        System.out.println("Valid spawn point for player " + player.getPlayerNumber() + " not found.");
-        return spawnPoint;
+        return availablePositions;
     }
 
     /**
@@ -407,6 +452,7 @@ public class LogicGrid {
      * @return true if the player doesn't die by spawning there
      */
     private boolean spawnIsSafe(Position spawnPoint) {
+        if(!isInBounds(spawnPoint))return false;
         ArrayList<BoardPiece> boardPieceList = grid[spawnPoint.getX()][spawnPoint.getY()];
         for (BoardPiece piece : boardPieceList) {
             if (piece instanceof AbyssPiece) return false;
@@ -417,6 +463,10 @@ public class LogicGrid {
 
     public ArrayList<LaserSourcePiece> getLaserSourceList() {
         return laserSourceList;
+    }
+
+    public ArrayList<PusherPiece> getPushersList() {
+        return pushersList;
     }
 
     /**
@@ -473,7 +523,6 @@ public class LogicGrid {
         ArrayList<ArrayList<List<Object>>> flagMapPositions = new ArrayList<>();
 
         for (Position flag : flags) {
-
             ArrayList<List<Object>> mapPositions = new ArrayList<>();
             int moves = 0;
             List<Object> posAndScore = Arrays.asList(flag, moves);
@@ -484,7 +533,6 @@ public class LogicGrid {
                 int movesToPos = (Integer) mapPositions.get(j).get(1);
 
                 for (Direction dir : Direction.values()) {
-
                     Position neighborPos = pos.getPositionIn(dir);
                     if (isDeadMove(neighborPos)) {
                         continue;
@@ -496,8 +544,8 @@ public class LogicGrid {
                     posAndScore = Arrays.asList(neighborPos, movesToNeighborPos);
                     boolean alreadyChecked = false;
 
-                    for (int k = 0; k < mapPositions.size(); k++) {
-                        Position checkedPos = (Position) mapPositions.get(k).get(0);
+                    for (List<Object> mapPosition : mapPositions) {
+                        Position checkedPos = (Position) mapPosition.get(0);
                         if (checkedPos.equals(neighborPos)) {
                             alreadyChecked = true;
                             break;
@@ -538,6 +586,15 @@ public class LogicGrid {
             return true;
         }
         return false;
+    }
+
+    private void removeUnusedFlags(){
+        for(int i = 0; i < flagPositions.size();i++){
+            if(flagPositions.get(i) == null){
+                flagPositions.remove(i);
+                i--;
+            }
+        }
     }
 
 }

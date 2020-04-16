@@ -108,21 +108,21 @@ public class BoardPieceGenerator {
             case (54):
                 return new CogPiece(pos, id, true);
             case (1):
-                return new PusherPiece(pos, id, Direction.SOUTH, false);
-            case (2):
-                return new PusherPiece(pos, id, Direction.WEST, false);
-            case (3):
                 return new PusherPiece(pos, id, Direction.NORTH, false);
-            case (4):
+            case (2):
                 return new PusherPiece(pos, id, Direction.EAST, false);
-            case (9):
+            case (3):
                 return new PusherPiece(pos, id, Direction.SOUTH, true);
-            case (10):
-                return new PusherPiece(pos, id, Direction.WEST, true);
-            case (11):
+            case (4):
+                return new PusherPiece(pos, id, Direction.WEST, false);
+            case (9):
                 return new PusherPiece(pos, id, Direction.NORTH, true);
-            case (12):
+            case (10):
                 return new PusherPiece(pos, id, Direction.EAST, true);
+            case (11):
+                return new PusherPiece(pos, id, Direction.SOUTH, false);
+            case (12):
+                return new PusherPiece(pos, id, Direction.WEST, true);
             case (47):
                 return new LaserPiece(pos, id, Direction.NORTH, false, false);
             case (39):

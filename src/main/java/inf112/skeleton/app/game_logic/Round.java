@@ -1,5 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
+import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.RepairPiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
@@ -65,12 +66,7 @@ public class Round {
                 player.setPowerDownMode(false);
             }
         }
-        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
-        for(Player deadPlayer : game.getDeadPlayers()){
-            deadPlayer.checkForRespawn(moves);
-        }
-        game.executeMoves(moves);
-        game.getDeadPlayers().clear();
+        respawnPlayers();
     }
 
     public Phase getPhase() {
@@ -114,5 +110,25 @@ public class Round {
                 if(!lockInForAll){return;}
             }
         }
+    }
+
+    public void respawnPlayers(){
+        MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
+        for(int i = 0; i < game.getDeadPlayers().size(); i++){
+            Player deadPlayer = game.getDeadPlayers().get(i);
+            System.out.println("Respawning " + deadPlayer.toString());
+            if(deadPlayer.getPlayerNumber()==1){
+                game.executeMoves(moves);
+                System.out.println("Player 1 choose respawn pos and  dir");
+                deadPlayer.checkForRespawn(moves);
+                game.getDeadPlayers().remove(deadPlayer);
+                game.setChoosingRespawn(true);
+                return;
+            }
+            deadPlayer.checkForRespawn(moves);
+            game.getDeadPlayers().remove(deadPlayer);
+            i--;
+        }
+        game.executeMoves(moves);
     }
 }

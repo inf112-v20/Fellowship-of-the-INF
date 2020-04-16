@@ -9,12 +9,15 @@ import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.CogPiece;
 import inf112.skeleton.app.grid_objects.ConveyorBeltPiece;
 import inf112.skeleton.app.grid_objects.ExpressBeltPiece;
+import inf112.skeleton.app.grid_objects.LaserPiece;
 
 import java.util.*;
+
 
 public class AIPlayer extends Player {
     private Position newRobotPos;
     private Direction newRobotDir;
+    private int newRobotDamage;
     private int flagsVisitedInRound = 0;
     private int checkpointsVisited;
     private Position nextGoalPos;
@@ -25,7 +28,7 @@ public class AIPlayer extends Player {
     private ArrayList<ProgramCard> availableCardsLeft;
     private int cardsToPick;
     private ArrayList<ProgramCard> chosenCards;
-    public enum Difficulty{EASY, MEDIUM, HARD, EXPERT}
+    public enum Difficulty{EASY, MEDIUM, HARD, EXPERT, TESTING}
     private Difficulty difficulty;
 
 
@@ -35,12 +38,7 @@ public class AIPlayer extends Player {
         this.flagPositionScores = logicGrid.getFlagPositionScores();
         this.difficulty = difficulty;
         this.playerHandDeck = getPlayerHandDeck();
-        /*
-        for (int i = 0; i < getPlayerNumber()-1; i++) {
-            visitedCheckpoint();
-        }
 
-         */
     }
 
     /**
@@ -48,26 +46,20 @@ public class AIPlayer extends Player {
      */
     public void pickCards() {
         this.playerHandDeck = getPlayerHandDeck();
-/*
-        ArrayList<ProgramCard> hand = new ArrayList<>();
-        hand.add(new ProgramCard(1, CardType.MOVE1));
-        hand.add(new ProgramCard(2, CardType.MOVE1));
-        hand.add(new ProgramCard(3, CardType.MOVE2));
-        hand.add(new ProgramCard(4, CardType.ROTATERIGHT));
-        hand.add(new ProgramCard(5, CardType.ROTATELEFT));
-        hand.add(new ProgramCard(6, CardType.BACKUP));
-        hand.add(new ProgramCard(7, CardType.UTURN));
-        hand.add(new ProgramCard(8, CardType.UTURN));
-        hand.add(new ProgramCard(9, CardType.ROTATELEFT));
-        playerHandDeck = hand;
-
- */
         this.checkpointsVisited = getCheckpointsVisited();
         this.cardsToPick = 5 - getLockedCards().size();
         this.chosenCards = new ArrayList<>();
         this.availableCardsLeft = new ArrayList<>(playerHandDeck);
         this.newRobotPos = getPos();
         this.newRobotDir = getPlayerPiece().getDir();
+        this.newRobotDamage = getDamage();
+        this.nextGoalFlag = checkpointsVisited;
+        this.nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
+
+
+        if(difficulty.equals(Difficulty.TESTING)){
+            createTestPlayer();
+        }
 
         if (playerHandDeck.isEmpty()) {
             setLockedIn(true);
@@ -102,9 +94,11 @@ public class AIPlayer extends Player {
             List<Object> finalPosAndDir =  getPosFromCardMove(card, newRobotPos, newRobotDir);
             Position finalPos = (Position) finalPosAndDir.get(0);
             Direction finalDir = (Direction) finalPosAndDir.get(1);
-            if(logicGrid.isDeadMove(finalPos)){ continue; }
+            if(logicGrid.isDeadMove(finalPos)
+            || newRobotDamage + getLaserDamage(finalPos) >= 10){ continue; }
             newRobotPos = finalPos;
             newRobotDir = finalDir;
+            newRobotDamage = getLaserDamage(finalPos);
             chosenCards.add(card);
             if(chosenCards.size() == cardsToPick) {break;}
         }
@@ -126,7 +120,7 @@ public class AIPlayer extends Player {
      */
     private void pickGreedy() {
         for (int i = 0; i < cardsToPick ; i++) {
-            nextGoalFlag = updateGoalFlag(checkpointsVisited+flagsVisitedInRound);
+            nextGoalFlag = updateGoalFlag(nextGoalFlag+flagsVisitedInRound);
             nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
             ProgramCard bestCard = getBestCard();
             if (!(bestCard == null)) {
@@ -155,6 +149,7 @@ public class AIPlayer extends Player {
             List<Object> finalPosAndDir = getPosFromCardMove(card, newRobotPos, newRobotDir);
             newRobotPos = (Position) finalPosAndDir.get(0);
             newRobotDir = (Direction) finalPosAndDir.get(1);
+            newRobotDamage += getLaserDamage(newRobotPos);
             if (nextGoalPos.equals(newRobotPos)) { flagsVisitedInRound++; }
             return card;
         }
@@ -177,7 +172,7 @@ public class AIPlayer extends Player {
                 continue;
             }
             checkedCards.add(card);
-            if (isCardUseless(card, newRobotPos, newRobotDir)) {
+            if (isCardUseless(card, newRobotPos, newRobotDir, newRobotDamage)) {
                 cardAndScore.put(card, 100);
                 continue;
             }
@@ -237,12 +232,13 @@ public class AIPlayer extends Player {
      * Is used for picking cards at hard and expert difficulty.
      */
     private void pickOptimal(){
-        int goalFlag = updateGoalFlag(checkpointsVisited);
+        int goalFlag = updateGoalFlag(nextGoalFlag);
         int score = getScore(newRobotPos, newRobotDir, goalFlag);
+        int damage = getDamage();
         ArrayList<ArrayList<List<Object>>> path = new ArrayList<>();
         ArrayList<ProgramCard> chosenCards = new ArrayList<>();
         int[] totalScore = {goalFlag, 0, score};
-        List<Object> startNode = Arrays.asList(newRobotPos, newRobotDir, totalScore, chosenCards, playerHandDeck, goalFlag);
+        List<Object> startNode = Arrays.asList(newRobotPos, newRobotDir, totalScore, chosenCards, playerHandDeck, damage);
         ArrayList<List<Object>> startFrontier = new ArrayList<>();
         startFrontier.add(startNode);
         path.add(startFrontier);
@@ -257,6 +253,7 @@ public class AIPlayer extends Player {
                  int[] currentTotalScore = (int[]) frontierNode.get(2);
                  Position currentPos = (Position) frontierNode.get(0);
                  Direction currentDir = (Direction) frontierNode.get(1);
+                 int currentDamage = (int) frontierNode.get(5);
                  ArrayList<ProgramCard> currentAvailableCards = new ArrayList<ProgramCard>((ArrayList) frontierNode.get(4));
                  ArrayList<List<Object>> newFrontier = new ArrayList<>();
                  ArrayList<ProgramCard> checkedCards = new ArrayList<>();
@@ -268,11 +265,11 @@ public class AIPlayer extends Player {
                          continue;
                      }
                      checkedCards.add(card);
-                     if (isCardUseless(card, currentPos, currentDir)) {
+                     if (isCardUseless(card, currentPos, currentDir, currentDamage)) {
                          continue;
                      }
                      newFrontier.add(createNode(currentPos, currentDir, card, currentTotalScore,
-                             currentChosenCards, currentAvailableCards, goalFlag));
+                             currentChosenCards, currentAvailableCards, goalFlag, currentDamage));
                  }
 
                  for (int k = 0; k < newFrontier.size(); k++) {
@@ -312,10 +309,11 @@ public class AIPlayer extends Player {
      */
     private List<Object> createNode(Position pos, Direction dir, ProgramCard card, int[] totalScore,
                                     ArrayList<ProgramCard> cardsChosen, ArrayList<ProgramCard> cardsLeft,
-                                    int roundStartGoalFlag){
+                                    int roundStartGoalFlag, int damage){
         List<Object> finalPosAndDir = getPosFromCardMove(card, pos, dir);
         Position finalPos = (Position) finalPosAndDir.get(0);
         Direction finalDir = (Direction) finalPosAndDir.get(1);
+        int newDamage = damage + getLaserDamage(finalPos);
         ArrayList<ProgramCard> nodeChosenCards = new ArrayList<>(cardsChosen);
         ArrayList<ProgramCard> nodeAvailableCards = new ArrayList<>(cardsLeft);
         nodeChosenCards.add(card);
@@ -334,7 +332,7 @@ public class AIPlayer extends Player {
             moves = nodeChosenCards.size();
         }
         int[] newTotalScore = {goalFlag, moves , score};
-        return Arrays.asList(finalPos, finalDir, newTotalScore, nodeChosenCards, nodeAvailableCards);
+        return Arrays.asList(finalPos, finalDir, newTotalScore, nodeChosenCards, nodeAvailableCards, newDamage);
     }
 
 
@@ -375,11 +373,14 @@ public class AIPlayer extends Player {
      * @param dir the current direction
      * @return true if the card is useless, false otherwise.
      */
-    private boolean isCardUseless(ProgramCard card, Position pos, Direction dir){
+    private boolean isCardUseless(ProgramCard card, Position pos, Direction dir, int damage){
         List<Object> finalPosAndDir = getPosFromCardMove(card, pos, dir);
         Position newPos = (Position) finalPosAndDir.get(0);
         Direction newDir = (Direction) finalPosAndDir.get(1);
         if(pos.equals(newPos) && dir.equals(newDir)){ return true;}
+        if(damage + getLaserDamage(newPos) >= 10){
+            System.out.println("Card is useless at " + pos + ", new pos: " + newPos + " damage: " + damage + " laser damage: " + getLaserDamage(newPos));
+            return true;}
         return logicGrid.isDeadMove(newPos);
     }
 
@@ -547,5 +548,98 @@ public class AIPlayer extends Player {
         return true;
     }
 
+
+    private int getLaserDamage(Position pos){
+        if(!logicGrid.isInBounds(pos))return  0;
+        if(!logicGrid.positionIsFree(pos,3)) return 0;
+        int damage = 0;
+        if (logicGrid.getPieceType(pos, LaserPiece.class) != null){
+            damage++;
+            LaserPiece laser = logicGrid.getPieceType(pos, LaserPiece.class);
+            if (laser.isDoubleLaser() || laser.isCrossingLasers()) {
+                damage++;
+            }
+        }
+        return damage;
+    }
+
+    private void evaluatePowerDown(){
+        if (getDamage() < 5)return;
+        int random =(int) Math.random()*10;
+        if(random < getDamage()){
+            setPowerDownMode(true);
+        }
+    }
+
+    public Position chooseRespawnPos(ArrayList<Position> positions){
+        if(difficulty.equals(Difficulty.EASY)){
+            int random  = (int) Math.random()*positions.size();
+            return (positions.get(random));
+        }
+        Position bestPos = positions.get(0);
+        int bestScore = 100;
+        for (int i = 1; i < positions.size() ; i++) {
+            Position pos = positions.get(i);
+             chooseRespawnDir(pos);
+             int score =getScore(pos, chooseRespawnDir(pos), nextGoalFlag);
+             if( score < bestScore){
+                 System.out.println("Pos " + pos + " score " + score + " is better than current best "
+                 + bestPos + " score " + bestScore);
+                 bestScore = score;
+                 bestPos = pos;
+             }
+             else{
+                 System.out.println("Pos " + pos + " score " + score + " is NOT better than current best "
+                         + bestPos + " score " + bestScore);
+             }
+        }
+        System.out.println(toString() + " Best respawn pos is " + bestPos);
+        return bestPos;
+    }
+
+    public Direction chooseRespawnDir(Position pos){
+        System.out.println("Choosing best dir for " + toString() + " at " + pos);
+        Direction bestDir = getPlayerPiece().getDir();
+        int bestScore = 100;
+        for(Direction dir : Direction.values()){
+            Position posInFront = pos.getPositionIn(dir);
+            if(logicGrid.isDeadMove(posInFront)){
+                System.out.println("Pos in front will result in death");
+                continue;
+            }
+            int score = getScore(posInFront, dir, nextGoalFlag);
+            if(score < bestScore){
+                bestScore = score;
+                System.out.println("Dir " + dir + " is better than current best dir " + bestDir);
+                bestDir = dir;
+            }
+            else {
+                System.out.println("Dir " + dir + " is NOT better than current best dir " + bestDir);
+            }
+        }
+        System.out.println(toString() + " Best respawn dir is " + bestDir);
+        return bestDir;
+    }
+
+    private void createTestPlayer(){
+        if(getPlayerNumber() == 2) this.difficulty = Difficulty.MEDIUM;
+        else if(getPlayerNumber() == 3)this.difficulty = Difficulty.HARD;
+        else if(getPlayerNumber() == 4)this.difficulty = Difficulty.EXPERT;
+        else this.difficulty = Difficulty.EASY;
+        ArrayList<ProgramCard> hand = new ArrayList<>();
+        hand.add(new ProgramCard(1, CardType.MOVE1));
+        hand.add(new ProgramCard(2, CardType.MOVE1));
+        hand.add(new ProgramCard(3, CardType.MOVE2));
+        hand.add(new ProgramCard(4, CardType.ROTATERIGHT));
+        hand.add(new ProgramCard(5, CardType.ROTATELEFT));
+        hand.add(new ProgramCard(6, CardType.BACKUP));
+        hand.add(new ProgramCard(7, CardType.UTURN));
+        hand.add(new ProgramCard(8, CardType.UTURN));
+        hand.add(new ProgramCard(9, CardType.ROTATELEFT));
+        playerHandDeck = hand;
+        nextGoalFlag = getPlayerNumber()-1;
+        nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
+        availableCardsLeft = playerHandDeck;
+    }
 }
 

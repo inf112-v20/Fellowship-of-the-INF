@@ -2,6 +2,7 @@ package inf112.skeleton.app.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.backends.lwjgl.audio.Wav;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -33,6 +34,8 @@ public class CardButton {
     private ProgramCard[] selectedCards;
     private Image[] selectedCardImages = new Image[5];
 
+    private Wav.Sound cardSound;
+
     public CardButton(Player player, float width, float height, Stage stage, ImageButton lockInButton) {
         this.player = player;
         this.width = width;
@@ -44,6 +47,7 @@ public class CardButton {
         this.playerHand = player.getPlayerHandDeck();
         selectedCardPosY = height / 20;
         gap = new Texture((Gdx.files.internal("ui/cards/cardtemplate.png"))).getWidth() * 1.3f;
+        cardSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("sounds/reitanna__thunk.wav"));
         createSelectedCardsImages();
         ArrayList<Stack> listOfCardButtons = createCardButtons(playerHand);
         cardButtons = new ArrayList<>();
@@ -175,6 +179,7 @@ public class CardButton {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 addCard(tempButton);
+                cardSound.play();
             }
         });
     }
@@ -188,6 +193,7 @@ public class CardButton {
         cardButton.addListener(new ClickListener(Input.Buttons.RIGHT) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                cardSound.play(1.0f, 0.5f, 0.5f);
                 removeCard(tempButton);
             }
         });
