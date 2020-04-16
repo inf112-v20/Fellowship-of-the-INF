@@ -64,6 +64,7 @@ public class GameScreen implements Screen {
     private TiledMapTileLayer.Cell doubleVerticalLaser;
     private TiledMapTileLayer.Cell emptyCell;
     private Wav.Sound laserSound;
+    private Wav.Sound robotSound;
     final private int countdownTimer = 60;
     private int seconds = countdownTimer;
     private int prevSeconds = countdownTimer;
@@ -105,6 +106,7 @@ public class GameScreen implements Screen {
         this.respawnImages = new ArrayList<>();
 
         laserSound = (Wav.Sound) Gdx.audio.newSound( Gdx.files.internal("assets/sounds/bubaproducer__laser-shot-silenced.wav"));
+        robotSound = (Wav.Sound) Gdx.audio.newSound( Gdx.files.internal("assets/sounds/meroleroman7__robot-jump-2.wav"));
     }
 
     /**
