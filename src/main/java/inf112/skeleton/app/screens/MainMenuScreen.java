@@ -2,6 +2,7 @@ package inf112.skeleton.app.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.backends.lwjgl.audio.Wav;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -14,6 +15,7 @@ import inf112.skeleton.app.RoboRallyGame;
 
 public class MainMenuScreen implements Screen {
 
+    private Wav.Sound sound;
     private RoboRallyGame game;
     private float width;
     private float height;
@@ -24,6 +26,7 @@ public class MainMenuScreen implements Screen {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
+        sound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("sounds/reitanna__thunk.wav"));
     }
 
     @Override
@@ -55,6 +58,7 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                sound.play();
                 game.setScreen(new PlayerSelectionScreen(game));
             }
         });
@@ -69,6 +73,7 @@ public class MainMenuScreen implements Screen {
         testButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                sound.play();
                 game.setScreen(new TestMapSelectionScreen(game));
             }
         });
@@ -81,6 +86,7 @@ public class MainMenuScreen implements Screen {
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                sound.play();
                 Gdx.app.exit();
             }
         });

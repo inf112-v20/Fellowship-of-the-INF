@@ -2,6 +2,7 @@ package inf112.skeleton.app.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.backends.lwjgl.audio.Wav;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -22,6 +23,7 @@ public class PlayerSelectionScreen implements Screen {
     private float width;
     private float height;
     private Difficulty difficulty = Difficulty.EASY;
+    private Wav.Sound sound;
 
     private Stage stage;
 
@@ -29,6 +31,8 @@ public class PlayerSelectionScreen implements Screen {
         this.game = game;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
+        sound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("sounds/reitanna__thunk.wav"));
+
     }
 
     //TODO Lots of repeated code, maybe make button construction into methods?
@@ -61,6 +65,7 @@ public class PlayerSelectionScreen implements Screen {
         player1Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                sound.play();
                 game.setScreen(new StageSelectionScreen(game, 1, difficulty));
             }
         });
@@ -73,6 +78,7 @@ public class PlayerSelectionScreen implements Screen {
         player2Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                sound.play();
                 game.setScreen(new StageSelectionScreen(game, 2, difficulty));
             }
         });
@@ -85,6 +91,7 @@ public class PlayerSelectionScreen implements Screen {
         player3Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                sound.play();
                 game.setScreen(new StageSelectionScreen(game, 3, difficulty));
             }
         });
@@ -97,6 +104,7 @@ public class PlayerSelectionScreen implements Screen {
         player4Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                sound.play();
                 game.setScreen(new StageSelectionScreen(game, 4,difficulty));
             }
         });
@@ -109,6 +117,7 @@ public class PlayerSelectionScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                sound.play();
                 game.setScreen(new MainMenuScreen(game));
             }
         });
@@ -123,6 +132,7 @@ public class PlayerSelectionScreen implements Screen {
         dropDownMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                sound.play();
                 difficulty = (dropDownMenu.getSelected());
             }
         });
