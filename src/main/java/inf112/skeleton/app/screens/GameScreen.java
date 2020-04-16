@@ -177,7 +177,7 @@ public class GameScreen implements Screen {
             chooseDirection();
         }
         if (boardLasersVisible) {
-            laserSound.play(0.5f,1.0f,1.0f);
+            laserSound.play(0.25f,1.0f,1.0f);
             clearLayer(boardLaserLayer);
             boardLasersVisible = false;
         }
