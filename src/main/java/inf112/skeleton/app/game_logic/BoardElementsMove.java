@@ -145,6 +145,8 @@ public class BoardElementsMove {
             }
             if (!logicGrid.positionIsFree(orthoPos, 12) &&
                     (!logicGrid.positionIsFree(orthoPos, 4) || !logicGrid.positionIsFree(orthoPos, 5))) {
+                //TODO: Erlend, bugfix
+                if (game.getPlayerAt(orthoPos) == null) System.out.println("getPlayersatORtho is NULL");
                 if (!game.getPlayerAt(orthoPos).hasBeenMovedThisPhase()) {
                     if (onlyExpressBelt && boardPiece instanceof ExpressBeltPiece && !logicGrid.positionIsFree(orthoPos, 4)) {
                         return false;
