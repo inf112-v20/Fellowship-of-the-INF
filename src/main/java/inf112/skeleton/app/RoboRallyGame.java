@@ -29,6 +29,7 @@ public class RoboRallyGame extends Game {
         String musicPath = "sounds/patricklieberkind__futuristic-rhythmic-game-ambience.wav";
         backgroundMusic = (Wav.Music) Gdx.audio.newMusic(Gdx.files.internal(musicPath));
         backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0.6f);
         backgroundMusic.play();
     }
 }
