@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
         TiledMapTileSet tiles = map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_HEIGHT_DPI, camera);
-        camera.translate(MAP_WIDTH_DPI, MAP_WIDTH_DPI / 2);
+        camera.translate(MAP_WIDTH_DPI, MAP_HEIGHT_DPI / 2);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, map);
         game = new Game(logicGrid, this, numberOfPlayers, difficulty);
