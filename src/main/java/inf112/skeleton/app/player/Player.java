@@ -718,4 +718,7 @@ public class Player {
     public boolean hasBeenPushedThisPhase() {
         return hasBeenPushedThisPhase;
     }
+
+    public boolean isPermanentlyDead() {return isPermanentlyDead;
+    }
 }

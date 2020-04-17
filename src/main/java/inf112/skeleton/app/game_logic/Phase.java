@@ -1,5 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
+import com.badlogic.gdx.Gdx;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
@@ -8,6 +9,7 @@ import inf112.skeleton.app.grid_objects.*;
 import inf112.skeleton.app.player.Player;
 
 
+import javax.swing.*;
 import java.util.*;
 
 public class Phase {
@@ -18,6 +20,7 @@ public class Phase {
     HashMap<Player, Integer> playerAndPriority;
     private Game game;
     private LogicGrid logicGrid;
+    private Player victoriousPlayer;
 
     public Phase(Game game) {
         this.game = game;
@@ -25,6 +28,7 @@ public class Phase {
         this.listOfPlayers = game.getListOfPlayers();
         this.playerAndPriority = new HashMap<>();
         this.phaseNumber = 0;
+        this.victoriousPlayer = playerHasWon();
     }
 
     /**
@@ -41,6 +45,15 @@ public class Phase {
         rotateCogs();
         lasersFire();
         touchCheckPoints();
+        // TODO How we handle game overs and wins are subject to change
+        victoriousPlayer = playerHasWon();
+        if (victoriousPlayer != null){
+            JOptionPane.showMessageDialog(null, "Player " + victoriousPlayer.getPlayerNumber() + "won!");
+            Gdx.app.exit();
+        } if (isGameOver()){
+            JOptionPane.showMessageDialog(null, "Game over!\nAll players are out of lives!");
+            Gdx.app.exit();
+        }
         game.setPhaseDone(true);
     }
 
@@ -257,5 +270,26 @@ public class Phase {
         return phaseNumber;
     }
 
+    /**
+     * Method for checking if a player has won the game
+     * @return the player which has won, if no player has won, returns null
+     */
+    public Player playerHasWon() {
+        for (Player player: game.getListOfPlayers()){
+            if (player.getCheckpointsVisited() == logicGrid.getFlagPositions().size())
+                return player;
+        }
+        return null;
+    }
 
+    /**
+     * Method for cehcking if every player is permanently dead, aka the game is over
+     * @return true if game is over, else returns false
+     */
+    public boolean isGameOver(){
+        for (Player player: game.getListOfPlayers()){
+            if (!player.isPermanentlyDead()) return false;
+        }
+        return true;
+    }
 }
