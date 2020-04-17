@@ -668,4 +668,6 @@ public class Player {
     public void setHasBeenPushedThisPhase(boolean hasBeenPushed) { this.hasBeenPushedThisPhase = hasBeenPushed; }
 
     public boolean hasBeenPushedThisPhase() { return hasBeenPushedThisPhase; }
+
+    public boolean isPermanentlyDead() { return isPermanentlyDead; }
 }

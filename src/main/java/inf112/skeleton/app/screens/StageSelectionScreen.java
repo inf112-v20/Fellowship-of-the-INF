@@ -51,6 +51,12 @@ public class StageSelectionScreen implements Screen {
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
+        //Text that says choose map
+        picture = new Sprite(new Texture("menu/ChooseMap.png"));
+        Image chooseMap = new Image(new SpriteDrawable(picture));
+        chooseMap.setPosition((width - chooseMap.getWidth()) / 2, (height - yPadding*2 - logo.getHeight()));
+        stage.addActor(chooseMap);
+
         int xPadding = 100;
 
         ImageButton stage1Button;
@@ -150,7 +156,7 @@ public class StageSelectionScreen implements Screen {
         // Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
-        backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
+        backButton.setPosition((width - xPadding) - backButton.getWidth(), height-yPadding);
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
