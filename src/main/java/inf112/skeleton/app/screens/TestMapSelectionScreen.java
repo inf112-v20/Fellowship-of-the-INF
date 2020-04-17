@@ -104,7 +104,7 @@ public class TestMapSelectionScreen implements Screen {
         yPadding = 150;
         xPadding = 100;
         ImageButton startTestButton;
-        picture = new Sprite(new Texture("menu/navbuttons/Stage1Button.png"));
+        picture = new Sprite(new Texture("menu/navbuttons/TestButton.png"));
         startTestButton = new ImageButton(new SpriteDrawable(picture));
         startTestButton.setPosition(backButton.getX() - startTestButton.getWidth() - xPadding, backButton.getY());
         startTestButton.addListener(new ClickListener() {

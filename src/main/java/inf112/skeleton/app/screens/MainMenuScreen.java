@@ -64,10 +64,10 @@ public class MainMenuScreen implements Screen {
         });
         stage.addActor(playButton);
 
-        // Play button
+        // Test button
         yPadding = 100;
         xPadding = 100;
-        picture = new Sprite(new Texture("menu/navbuttons/PlayButton.png"));
+        picture = new Sprite(new Texture("menu/navbuttons/TestButton.png"));
         ImageButton testButton = new ImageButton(new SpriteDrawable(picture));
         testButton.setPosition(xPadding, yPadding);
         testButton.addListener(new ClickListener() {
