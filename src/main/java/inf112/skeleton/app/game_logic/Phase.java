@@ -1,6 +1,7 @@
 package inf112.skeleton.app.game_logic;
 
 import com.badlogic.gdx.Gdx;
+import inf112.skeleton.app.cards.CardType;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
@@ -211,6 +212,7 @@ public class Phase {
         for (Player player : listOfPlayers) {
             if(player.isDead()){continue;}
             if (player.isOnConveyorBelt()) {
+                System.out.println("Moving " + player.toString() + " on conveyorbelt");
                 if ((moveOnlyExpressBelts && !player.isOnExpressBelt()) || player.hasBeenMovedThisPhase()) {
                     continue;
                 }
