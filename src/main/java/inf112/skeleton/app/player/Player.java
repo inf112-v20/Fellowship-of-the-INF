@@ -112,6 +112,7 @@ public class Player {
             game.getDeadPlayers().add(this);
         }
         //if move is legal and player isn't dead, update logic grid
+        if (playerNumber == 1) System.out.println("Is dead: " + isDead);
         if (isLegalMoveInDirection(oldPosition, newDirection) && !isDead()) {
             //if the move results in pushing robots, add the resulting moves to the moves list
             addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
