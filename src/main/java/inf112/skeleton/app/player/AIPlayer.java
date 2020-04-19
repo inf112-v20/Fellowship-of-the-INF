@@ -573,7 +573,7 @@ public class AIPlayer extends Player {
 
     public Position chooseRespawnPos(ArrayList<Position> positions){
         if(difficulty.equals(Difficulty.EASY)){
-            int random  = (int) Math.random()*positions.size();
+            int random  = (int) (Math.random() * positions.size());
             return (positions.get(random));
         }
         Position bestPos = positions.get(0);
