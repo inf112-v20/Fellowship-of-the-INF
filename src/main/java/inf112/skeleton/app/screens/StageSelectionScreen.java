@@ -225,7 +225,7 @@ public class StageSelectionScreen implements Screen {
         // Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
-        backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
+        backButton.setPosition((width - xPadding) - backButton.getWidth(), height-yPadding);
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
