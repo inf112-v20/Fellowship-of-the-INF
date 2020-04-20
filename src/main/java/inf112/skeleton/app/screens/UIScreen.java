@@ -111,6 +111,7 @@ public class UIScreen {
         Phase phase = game.getRound().getPhase();
         gamelogActors.add(drawText("Round " + game.getRound().getRoundNumber() +
                 ":          Phase " + (phase.getPhaseNumber() + 1), 10, width * 0.52f, height * 0.7f, Color.GOLD));
+        //Go through the list of players with cards locked in and add them to the game log
         for (int i = 0; i < phase.getOrderedListOfPlayers().size(); i++) {
             Player player = phase.getOrderedListOfPlayers().get(i);
             ProgramCard card = player.getSelectedCards()[phase.getPhaseNumber()];
@@ -127,6 +128,22 @@ public class UIScreen {
             gamelogActors.add(createImage(playerPicture, 0.01f, posX, height * 0.55f, 1));
             posX = (width * 0.53f) + (i * gap);
             gamelogActors.add(drawText("" + (i + 1), 10, posX, height * 0.37f, Color.BLACK));
+        }
+        //Check for player that are in power down, and add them to the game log after the players wth cards
+        for (int i = 0; i < game.getListOfPlayers().length; i++) {
+            Player player = game.getListOfPlayers()[i];
+            if(player.isPowerDownMode()) {
+                float gap = powerDownButton.getWidth() * 1.4f;
+                float posX = (width * 0.51f) + ((phase.getOrderedListOfPlayers().size() + i) * gap);
+                Texture texture = new Texture(Gdx.files.internal("ui/powerdown.png"));
+                TextureRegion powerDownTexture = new TextureRegion(texture);
+                gamelogActors.add(createImage(powerDownTexture, 0.2f, posX, height * 0.4f, 1));
+                TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
+                posX = (width * 0.515f) + ((phase.getOrderedListOfPlayers().size() + i) * gap);
+                gamelogActors.add(createImage(playerPicture, 0.01f, posX, height * 0.55f, 1));
+                posX = (width * 0.53f) + ((phase.getOrderedListOfPlayers().size() + i) * gap);
+                gamelogActors.add(drawText("" + ((phase.getOrderedListOfPlayers().size() + i) + 1), 10, posX, height * 0.37f, Color.BLACK));
+            }
         }
     }
 
