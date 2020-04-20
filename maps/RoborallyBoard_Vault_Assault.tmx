@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="left-up" compressionlevel="0" width="12" height="16" tilewidth="300" tileheight="300" infinite="0" nextlayerid="14" nextobjectid="1">
- <tileset firstgid="1" source="robotileset.tsx"/>
- <layer id="1" name="Floor" width="12" height="16">
-  <data encoding="csv">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="-1" width="12" height="16" tilewidth="300" tileheight="300" infinite="0" nextlayerid="15" nextobjectid="1">
+	<tileset firstgid="1" source="robotileset.tsx"/>
+	<layer id="1" name="Floor" width="12" height="16">
+		<data encoding="csv">
+			
 5,5,5,5,5,5,5,5,5,5,5,5,
 5,5,5,5,5,5,5,5,5,5,5,5,
 5,5,5,5,5,5,5,5,5,5,5,5,
@@ -19,10 +20,12 @@
 5,129,5,5,5,5,5,5,5,5,130,5,
 5,5,5,123,5,5,5,5,124,5,5,5,
 5,5,5,5,5,121,122,5,5,5,5,5
-</data>
- </layer>
- <layer id="6" name="Repair" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Repair" width="12" height="16">
+		<data encoding="csv">
+			
 15,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
@@ -39,10 +42,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer id="11" name="OpCard" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="OpCard" width="12" height="16">
+		<data encoding="csv">
+			
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
@@ -59,10 +64,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer id="3" name="Abyss" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Abyss" width="12" height="16">
+		<data encoding="csv">
+			
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,6,0,0,0,0,6,0,0,0,
@@ -79,10 +86,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer id="4" name="Conveyor belt" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Conveyor belt" width="12" height="16">
+		<data encoding="csv">
+			
 0,0,0,0,0,0,0,0,0,0,49,0,
 0,0,0,0,0,0,0,0,0,0,49,0,
 50,0,0,0,0,0,0,0,0,0,49,0,
@@ -99,10 +108,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 52,52,36,0,0,0,0,0,0,33,51,51,
 0,0,41,52,52,0,0,51,51,44,0,0
-</data>
- </layer>
- <layer id="5" name="Express belt" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Express belt" width="12" height="16">
+		<data encoding="csv">
+			
 0,0,0,13,0,0,13,0,0,0,0,0,
 14,14,14,26,0,0,13,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
@@ -119,10 +130,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer id="9" name="Cog" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Cog" width="12" height="16">
+		<data encoding="csv">
+			
 0,0,0,0,0,0,0,0,0,0,0,0,
 54,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
@@ -139,30 +152,34 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer id="8" name="Pusher" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Pusher" width="12" height="16">
+		<data encoding="csv">
+			
+0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,12,0,0,0,0,0,0,
+0,0,0,0,0,0,3,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,12,0,0,
+0,0,10,0,0,0,0,0,0,12,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,9,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer id="2" name="Lasers" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Lasers" width="12" height="16">
+		<data encoding="csv">
+			
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
@@ -179,10 +196,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer id="12" name="Laser Source" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Laser Source" width="12" height="16">
+		<data encoding="csv">
+			
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
@@ -199,10 +218,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer id="7" name="Wall" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Wall" width="12" height="16">
+		<data encoding="csv">
+			
 0,0,31,0,31,0,0,31,0,31,0,0,
 0,0,0,0,0,30,0,0,0,0,0,0,
 30,0,0,0,0,29,29,0,0,0,0,23,
@@ -219,10 +240,12 @@
 0,30,30,0,0,0,0,0,0,23,23,0,
 0,0,0,0,0,0,30,0,0,0,0,0,
 0,0,0,0,0,0,30,0,0,0,0,0
-</data>
- </layer>
- <layer id="13" name="Flag" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Flag" width="12" height="16">
+		<data encoding="csv">
+			
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
@@ -239,10 +262,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer id="10" name="Player" width="12" height="16">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Player" width="12" height="16">
+		<data encoding="csv">
+			
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
@@ -259,10 +284,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
- <layer id="14" name="Robot Lasers" width="12" height="12">
-  <data encoding="csv">
+
+		</data>
+	</layer>
+	<layer id="1" name="Robot Lasers" width="12" height="12">
+		<data encoding="csv">
+			
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
@@ -275,6 +302,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0
-</data>
- </layer>
+
+		</data>
+	</layer>
 </map>
