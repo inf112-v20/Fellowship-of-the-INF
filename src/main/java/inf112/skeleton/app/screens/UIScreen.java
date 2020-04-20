@@ -56,7 +56,6 @@ public class UIScreen {
         createDamageTokens();
         createLifeTokens();
         createCheckPointTokens();
-        //createPowerDownImage();
         createPowerDownButton();
         this.newRound();
     }
@@ -259,17 +258,6 @@ public class UIScreen {
             Image damageTokenImage = createImage(textureRegion, 1.1f, posX, posY, 1);
             damageActors[i] = damageTokenImage;
         }
-    }
-
-    /**
-     * Creates the powerDown image
-     */
-    public void createPowerDownImage() {
-        Texture texture = new Texture(Gdx.files.internal("ui/powerdown.png"));
-        TextureRegion textureRegion = new TextureRegion(texture);
-        float posY = height * 0.08f;
-        float posX = width * 0.9f;
-        createImage(textureRegion, 0.5f, posX, posY, 1);
     }
 
     /**
