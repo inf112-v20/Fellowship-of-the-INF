@@ -112,6 +112,7 @@ public class Player {
             game.getDeadPlayers().add(this);
         }
         //if move is legal and player isn't dead, update logic grid
+        if (playerNumber == 1) System.out.println("Is dead: " + isDead);
         if (isLegalMoveInDirection(oldPosition, newDirection) && !isDead()) {
             //if the move results in pushing robots, add the resulting moves to the moves list
             addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
@@ -206,7 +207,6 @@ public class Player {
             moves.add(permaDeadMove);
             setPos(deadPosition);
             setPowerDownMode(true);
-            isDead = true;
             isPermanentlyDead = true;
         }
     }
@@ -256,8 +256,6 @@ public class Player {
     public boolean isPowerDownMode() {
         return powerDownMode;
     }
-
-
 
 
     /**
@@ -468,7 +466,6 @@ public class Player {
             }
         }
 
-
     }
 
     /**
@@ -516,100 +513,58 @@ public class Player {
     /**
      * Method for testing.
      */
-    public void gainLife() {
-        lives++;
-    }
+    public void gainLife() { lives++; }
 
-    public int getLives() {
-        return lives;
-    }
+    public int getLives() { return lives; }
 
     public void visitedCheckpoint() { checkpointsVisited++; }
 
     /**
      * Method for testing.
      */
-    public void removeCheckpoint() {
-        checkpointsVisited--;
-    }
+    public void removeCheckpoint() { checkpointsVisited--; }
 
-    public int getCheckpointsVisited() {
-        return checkpointsVisited;
-    }
+    public int getCheckpointsVisited() { return checkpointsVisited; }
 
     /**
      * Checks if a player is currently on a ConveyorBeltPiece
      *
      * @return true if a player is on a conveyorBelt, false otherwise.
      */
-    public boolean isOnConveyorBelt() {
-        return (currentBoardPiece instanceof ConveyorBeltPiece);
-    }
+    public boolean isOnConveyorBelt() { return (currentBoardPiece instanceof ConveyorBeltPiece); }
 
     /**
      * Checks if a player is currently on an ExpressBeltPiece
      *
      * @return true if a player is on an ExpressBelt, false otherwise.
      */
-    public boolean isOnExpressBelt() {
-        return (currentBoardPiece instanceof ExpressBeltPiece);
-    }
+    public boolean isOnExpressBelt() { return (currentBoardPiece instanceof ExpressBeltPiece); }
 
     /**
      * Checks if a player is currently on a CogPiece
      *
      * @return true if a player is on a cog, false otherwise.
      */
-    public boolean isOnCog() {
-        return currentBoardPiece instanceof CogPiece;
-    }
+    public boolean isOnCog() { return currentBoardPiece instanceof CogPiece; }
 
-
-    public ArrayList<ProgramCard> getLockedCards() {
-        return lockedCards;
-    }
+    public ArrayList<ProgramCard> getLockedCards() { return lockedCards; }
 
     /**
      * Removes all cards from the players selected cards
      */
-    public void removeSelectedCards() {
-        Arrays.fill(selectedCards, null);
-    }
+    public void removeSelectedCards() { Arrays.fill(selectedCards, null); }
 
-    public BoardPiece getCurrentBoardPiece() {
-        return currentBoardPiece;
-    }
+    public BoardPiece getCurrentBoardPiece() { return currentBoardPiece; }
 
-    /**
-     * Gets the last playermove direction
-     *
-     * @return the direction of the last movement of the player (movement can be from cards or map objects)
-     */
-    public Direction latestMoveDirection() {
-        return latestMoveDirection;
-    }
+    public Direction latestMoveDirection() { return latestMoveDirection; }
 
-    /**
-     * @param move true if the last movement of the player was by a conveyorbelt/expressbelt, false otherwise
-     */
-    public void setConveyorBeltMove(boolean move) {
-        conveyorBeltMove = move;
-    }
+    public void setConveyorBeltMove(boolean move) { conveyorBeltMove = move; }
 
-    /**
-     * @return true if the last last movement of the player was by a conveyorbelt/expressbelt, false otherwise
-     */
-    public boolean isLatestMoveConveyorBelt() {
-        return conveyorBeltMove;
-    }
+    public boolean isLatestMoveConveyorBelt() { return conveyorBeltMove; }
 
-    public void setHasBeenMovedThisPhase(boolean bool) {
-        hasBeenMovedThisPhase = bool;
-    }
+    public void setHasBeenMovedThisPhase(boolean bool) { hasBeenMovedThisPhase = bool; }
 
-    public Boolean hasBeenMovedThisPhase() {
-        return hasBeenMovedThisPhase;
-    }
+    public Boolean hasBeenMovedThisPhase() { return hasBeenMovedThisPhase; }
 
     public ArrayList<Position> getLaserPath() { return laserPath; }
 
@@ -711,11 +666,7 @@ public class Player {
         return true;
     }
 
-    public void setHasBeenPushedThisPhase(boolean hasBeenPushed) {
-        this.hasBeenPushedThisPhase = hasBeenPushed;
-    }
+    public void setHasBeenPushedThisPhase(boolean hasBeenPushed) { this.hasBeenPushedThisPhase = hasBeenPushed; }
 
-    public boolean hasBeenPushedThisPhase() {
-        return hasBeenPushedThisPhase;
-    }
+    public boolean hasBeenPushedThisPhase() { return hasBeenPushedThisPhase; }
 }

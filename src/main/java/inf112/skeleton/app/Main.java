@@ -6,10 +6,10 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 public class Main {
     public static void main(String[] args) {
-        LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-        cfg.title = "Roborally";
-        cfg.width = 1200;
-        cfg.height = 1200;
-        new LwjglApplication(new RoboRallyGame(), cfg);
+            LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+            cfg.title = "Roborally";
+            cfg.width = 1200;
+            cfg.height = 1200;
+            new LwjglApplication(new RoboRallyGame(), cfg);
     }
 }
