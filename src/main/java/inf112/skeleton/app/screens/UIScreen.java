@@ -89,7 +89,8 @@ public class UIScreen {
     public void newRound() {
         game.executeRound();
         lockInButton.setTouchable(Touchable.disabled);
-        powerDownButton.setTouchable(Touchable.disabled);
+        powerDownButton.setColor(powerDownButton.getColor().r, powerDownButton.getColor().g, powerDownButton.getColor().b, 1f);
+        powerDownButton.setTouchable(Touchable.enabled);
         //Check if the player had the correct number of cards on the hand
         if (player.getLockedCards().size() == 5 || player.getLockedCards().size() == (9 - player.getDamage())) {
             lockInButton.setTouchable(Touchable.enabled);
@@ -317,7 +318,6 @@ public class UIScreen {
     }
 
     /**
-     * TODO Can this be made generic with the powerDown Button, or do we need 2 listeners?
      * Clicklistener for the lockinbutton
      *
      * @param lockInButton the button to create a clicklistener for
@@ -367,9 +367,17 @@ public class UIScreen {
         return textLabel;
     }
 
+    /**
+     * Removes the cards from the player hand,
+     * and sets the player in power down mode.
+     * This means that it repairs itself of all damage,
+     * but do not move during this round.
+     * It can still shoot lasers and take damage again.
+     */
     private void executePowerDownButton() {
         if(game.getRound().getPhaseNr() != 0 ){return;}
-        System.out.println("Powerdown pressed");
+        Color c = powerDownButton.getColor();
+        powerDownButton.setColor(c.r, c.g, c.b, 0.5f);
         powerDownButton.setTouchable(Touchable.disabled);
         removeUnusedCardsFromScreen();
         player.doPowerDown();
