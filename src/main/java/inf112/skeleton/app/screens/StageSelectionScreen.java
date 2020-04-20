@@ -52,16 +52,13 @@ public class StageSelectionScreen implements Screen {
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
-        int xPadding = 60;
-        yPadding = 100;
+        //Text that says choose map
+        picture = new Sprite(new Texture("menu/ChooseMap.png"));
+        Image chooseMap = new Image(new SpriteDrawable(picture));
+        chooseMap.setPosition((width - chooseMap.getWidth()) / 2, (height - yPadding*2 - logo.getHeight()));
+        stage.addActor(chooseMap);
 
-        picture = new Sprite(new Texture("menu/navButtons/chooseAMap.png"));
-        Image chooseAMapText = new Image(new SpriteDrawable(picture));
-        chooseAMapText.setSize(chooseAMapText.getWidth() * 0.5f, chooseAMapText.getHeight() * 0.5f);
-        chooseAMapText.setPosition(xPadding, logo.getY()-yPadding);
-        stage.addActor(chooseAMapText);
-
-        xPadding = 100;
+        int xPadding = 100;
 
         ImageButton stage1Button;
         ImageButton stageTestButton;
