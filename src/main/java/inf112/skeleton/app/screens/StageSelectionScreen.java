@@ -22,6 +22,7 @@ public class StageSelectionScreen implements Screen {
     private int playerCount;
     private Difficulty difficulty;
     private Stage stage;
+    private float mapScale = 0.25f;
 
     public StageSelectionScreen(RoboRallyGame game, int playerCount, Difficulty difficulty) {
         this.game = game;
@@ -51,31 +52,48 @@ public class StageSelectionScreen implements Screen {
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
-        int xPadding = 100;
+        int xPadding = 60;
+        yPadding = 100;
+
+        picture = new Sprite(new Texture("menu/navButtons/chooseAMap.png"));
+        Image chooseAMapText = new Image(new SpriteDrawable(picture));
+        chooseAMapText.setSize(chooseAMapText.getWidth() * 0.5f, chooseAMapText.getHeight() * 0.5f);
+        chooseAMapText.setPosition(xPadding, logo.getY()-yPadding);
+        stage.addActor(chooseAMapText);
+
+        xPadding = 100;
 
         ImageButton stage1Button;
         ImageButton stageTestButton;
         ImageButton stage2Button;
+        ImageButton stage3Button;
+        ImageButton stage4Button;
+        ImageButton stage5Button;
+        ImageButton stage6Button;
+
         if (playerCount < 5) {
             //Stage 1 button
             yPadding = 400;
-            picture = new Sprite(new Texture("menu/navbuttons/Stage1Button.png"));
+            picture = new Sprite(new Texture("menu/mapButtons/Spin.png"));
             stage1Button = new ImageButton(new SpriteDrawable(picture));
+            stage1Button.setTransform(true);
+            stage1Button.setScale(mapScale);
             stage1Button.setPosition(xPadding, yPadding);
             stage1Button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     //Original map: RoborallyBoard_debugged.tmx
                     //Test map for conveyorbelts: conveyorBeltTestMap.tmx
-                    game.setScreen(new GameScreen("maps/RoborallyBoard_debugged.tmx", playerCount, difficulty));
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Spin.tmx", playerCount, difficulty));
                 }
             });
-
             stage.addActor(stage1Button);
             // Stage 2 button
-            picture = new Sprite(new Texture("menu/navbuttons/Stage2Button.png"));
+            picture = new Sprite(new Texture("menu/mapButtons/Vault_Assault.png"));
             stage2Button = new ImageButton(new SpriteDrawable(picture));
-            stage2Button.setPosition((width - xPadding) - stage2Button.getWidth(), yPadding);
+            stage2Button.setPosition(stage1Button.getX() + xPadding + stage2Button.getWidth()*mapScale, yPadding);
+            stage2Button.setTransform(true);
+            stage2Button.setScale(mapScale);
             stage2Button.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -83,6 +101,66 @@ public class StageSelectionScreen implements Screen {
                 }
             });
             stage.addActor(stage2Button);
+
+            // Stage 3 button
+            picture = new Sprite(new Texture("menu/mapButtons/Exchange.png"));
+            stage3Button = new ImageButton(new SpriteDrawable(picture));
+            stage3Button.setPosition(stage2Button.getX() + stage3Button.getWidth()*mapScale, yPadding);
+            stage3Button.setTransform(true);
+            stage3Button.setScale(mapScale);
+            stage3Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Exchange.tmx", playerCount, difficulty));
+                }
+            });
+            stage.addActor(stage3Button);
+
+            // Stage 4 button
+            picture = new Sprite(new Texture("menu/mapButtons/Debugged.png"));
+            stage4Button = new ImageButton(new SpriteDrawable(picture));
+            stage4Button.setPosition(stage3Button.getX() + stage4Button.getWidth()*mapScale+xPadding/2, yPadding);
+            stage4Button.setTransform(true);
+            stage4Button.setScale(mapScale);
+            stage4Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Debugged.tmx", playerCount, difficulty));
+                }
+            });
+            stage.addActor(stage4Button);
+
+            yPadding -= stage1Button.getHeight()*mapScale + 50;
+
+            // Stage 5 button
+            picture = new Sprite(new Texture("menu/mapButtons/Maelstrom.png"));
+            stage5Button = new ImageButton(new SpriteDrawable(picture));
+            stage5Button.setPosition(stage1Button.getX(), yPadding);
+            stage5Button.setTransform(true);
+            stage5Button.setScale(mapScale);
+            stage5Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Maelstrom.tmx", playerCount, difficulty));
+                }
+            });
+            stage.addActor(stage5Button);
+
+            // Stage 6 button
+            picture = new Sprite(new Texture("menu/mapButtons/Vault.png"));
+            stage6Button = new ImageButton(new SpriteDrawable(picture));
+            stage6Button.setPosition(stage5Button.getX() + stage6Button.getWidth()*mapScale + xPadding, yPadding);
+            stage6Button.setTransform(true);
+            stage6Button.setScale(mapScale);
+            stage6Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault.tmx", playerCount, difficulty));
+                }
+            });
+            stage.addActor(stage6Button);
+
+
 
             if (playerCount == 1) {
                 // testStage button
