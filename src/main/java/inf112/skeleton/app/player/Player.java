@@ -469,6 +469,14 @@ public class Player {
     }
 
     /**
+     * Method to be used when the player decides to enter power down mode
+     */
+    public void doPowerDown() {
+        setPowerDownMode(true);
+        repairDamage(damage);
+    }
+
+    /**
      * Heals a player a given amount.
      * Will unlock a players selected cards (from left to right)
      * if the player already have locked cards.

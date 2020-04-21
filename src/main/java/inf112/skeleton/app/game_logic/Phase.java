@@ -75,9 +75,11 @@ public class Phase {
         playerAndPriority = new HashMap<>();
         orderedListOfPlayers = new ArrayList<>();
         for (Player player : listOfPlayers) {
-            ProgramCard programCardThisPhase = player.getSelectedCards()[phaseNumber];
-            Integer cardPriority = programCardThisPhase.getPriority();
-            playerAndPriority.put(player, cardPriority);
+            if (!player.isPowerDownMode()) {
+                ProgramCard programCardThisPhase = player.getSelectedCards()[phaseNumber];
+                Integer cardPriority = programCardThisPhase.getPriority();
+                playerAndPriority.put(player, cardPriority);
+            }
         }
         Object[] a = playerAndPriority.entrySet().toArray();
         Arrays.sort(a, new Comparator() {
