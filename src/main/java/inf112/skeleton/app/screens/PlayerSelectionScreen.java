@@ -15,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import inf112.skeleton.app.RoboRallyGame;
-import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
 public class PlayerSelectionScreen implements Screen {
@@ -57,14 +56,14 @@ public class PlayerSelectionScreen implements Screen {
         stage.addActor(logo);
 
         //Text that says choose amount of players
+        int xPadding = 80;
         picture = new Sprite(new Texture("menu/ChoosePlayers.png"));
         Image choosePlayers = new Image(new SpriteDrawable(picture));
-        choosePlayers.setPosition((width - choosePlayers.getWidth()) / 2 - 50, (height - yPadding*2 - logo.getHeight()));
+        choosePlayers.setPosition(width/2 - choosePlayers.getWidth()/2- xPadding,  logo.getY()-yPadding-choosePlayers.getHeight());
         stage.addActor(choosePlayers);
 
         // 1 Players button
         yPadding = 400;
-        int xPadding = 80;
         picture = new Sprite(new Texture("menu/playerbuttons/1Player.png"));
         ImageButton player1Button = new ImageButton(new SpriteDrawable(picture));
         player1Button.setPosition(xPadding, yPadding);
@@ -72,7 +71,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 1, difficulty));
+                game.setScreen(new MapSelectionScreen(game, 1, difficulty));
             }
         });
         stage.addActor(player1Button);
@@ -85,7 +84,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 2, difficulty));
+                game.setScreen(new MapSelectionScreen(game, 2, difficulty));
             }
         });
         stage.addActor(player2Button);
@@ -98,7 +97,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 3, difficulty));
+                game.setScreen(new MapSelectionScreen(game, 3, difficulty));
             }
         });
         stage.addActor(player3Button);
@@ -111,7 +110,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 4,difficulty));
+                game.setScreen(new MapSelectionScreen(game, 4,difficulty));
             }
         });
         stage.addActor(player4Button);
@@ -124,7 +123,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 5,difficulty));
+                game.setScreen(new MapSelectionScreen(game, 5,difficulty));
             }
         });
         stage.addActor(player5Button);
@@ -137,7 +136,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 6,difficulty));
+                game.setScreen(new MapSelectionScreen(game, 6,difficulty));
             }
         });
         stage.addActor(player6Button);
@@ -150,7 +149,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 7,difficulty));
+                game.setScreen(new MapSelectionScreen(game, 7,difficulty));
             }
         });
         stage.addActor(player7Button);
@@ -163,7 +162,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 8,difficulty));
+                game.setScreen(new MapSelectionScreen(game, 8,difficulty));
             }
         });
         stage.addActor(player8Button);
