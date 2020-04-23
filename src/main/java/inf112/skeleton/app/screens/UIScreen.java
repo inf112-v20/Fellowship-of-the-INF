@@ -30,6 +30,7 @@ public class UIScreen {
     private CardButton cardButton;
     private Game game;
     private ImageButton lockInButton;
+    private ImageButton powerDownButton;
     private Player player;
     private Actor[] lifeActors = new Actor[3];
     private Actor[] checkpointActors = new Actor[3];
@@ -56,7 +57,7 @@ public class UIScreen {
         createDamageTokens();
         createLifeTokens();
         createCheckPointTokens();
-        createPowerDownImage();
+        createPowerDownButton();
         this.newRound();
     }
 
@@ -94,7 +95,10 @@ public class UIScreen {
         }
         game.executeRound();
         lockInButton.setTouchable(Touchable.disabled);
-        if (player.getLockedCards().size() == 5) {
+        powerDownButton.setColor(powerDownButton.getColor().r, powerDownButton.getColor().g, powerDownButton.getColor().b, 1f);
+        powerDownButton.setTouchable(Touchable.enabled);
+        //Check if the player had the correct number of cards on the hand
+        if (player.getLockedCards().size() == 5 || player.getLockedCards().size() == (9 - player.getDamage())) {
             lockInButton.setTouchable(Touchable.enabled);
             Color c = lockInButton.getColor();
             lockInButton.setColor(c.r, c.g, c.b, 1);
@@ -112,6 +116,7 @@ public class UIScreen {
         Phase phase = game.getRound().getPhase();
         gamelogActors.add(drawText("Round " + game.getRound().getRoundNumber() +
                 ":          Phase " + (phase.getPhaseNumber() + 1), 10, width * 0.52f, height * 0.7f, Color.GOLD));
+        //Go through the list of players with cards locked in and add them to the game log
         for (int i = 0; i < phase.getOrderedListOfPlayers().size(); i++) {
             Player player = phase.getOrderedListOfPlayers().get(i);
             ProgramCard card = player.getSelectedCards()[phase.getPhaseNumber()];
@@ -128,6 +133,22 @@ public class UIScreen {
             gamelogActors.add(createImage(playerPicture, 0.01f, posX, height * 0.55f, 1));
             posX = (width * 0.53f) + (i * gap);
             gamelogActors.add(drawText("" + (i + 1), 10, posX, height * 0.37f, Color.BLACK));
+        }
+        //Check for player that are in power down, and add them to the game log after the players wth cards
+        for (int i = 0; i < game.getListOfPlayers().length; i++) {
+            Player player = game.getListOfPlayers()[i];
+            if(player.isPowerDownMode()) {
+                float gap = powerDownButton.getWidth() * 1.4f;
+                float posX = (width * 0.51f) + ((phase.getOrderedListOfPlayers().size() + i) * gap);
+                Texture texture = new Texture(Gdx.files.internal("ui/powerdown.png"));
+                TextureRegion powerDownTexture = new TextureRegion(texture);
+                gamelogActors.add(createImage(powerDownTexture, 0.2f, posX, height * 0.4f, 1));
+                TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
+                posX = (width * 0.515f) + ((phase.getOrderedListOfPlayers().size() + i) * gap);
+                gamelogActors.add(createImage(playerPicture, 0.01f, posX, height * 0.55f, 1));
+                posX = (width * 0.53f) + ((phase.getOrderedListOfPlayers().size() + i) * gap);
+                gamelogActors.add(drawText("" + ((phase.getOrderedListOfPlayers().size() + i) + 1), 10, posX, height * 0.37f, Color.BLACK));
+            }
         }
     }
 
@@ -246,14 +267,14 @@ public class UIScreen {
     }
 
     /**
-     * Creates the powerdown image
+     * Creates the powerDown button
      */
-    public void createPowerDownImage() {
+    public void createPowerDownButton() {
         Texture texture = new Texture(Gdx.files.internal("ui/powerdown.png"));
-        TextureRegion textureRegion = new TextureRegion(texture);
-        float posY = height * 0.08f;
-        float posX = width * 0.9f;
-        createImage(textureRegion, 0.5f, posX, posY, 1);
+        powerDownButton = createButton(texture, 0.5f, width * 0.9f, height * 0.08f);
+        Color c = powerDownButton.getColor();
+        powerDownButton.setColor(c.r, c.g, c.b, 1f);
+        powerDownButtonPressed(powerDownButton);
     }
 
     /**
@@ -313,7 +334,6 @@ public class UIScreen {
      * @param lockInButton the button to create a clicklistener for
      */
     public void lockInButtonPressed(final ImageButton lockInButton) {
-
         lockInButton.addListener(new ClickListener() {
 
             @Override
@@ -322,7 +342,19 @@ public class UIScreen {
             }
 
         });
+    }
 
+    /**
+     * Clicklistener for the powerDownButton
+     *
+     * @param powerDownButton the button to  create a clicklistener for
+     */
+    public void powerDownButtonPressed(ImageButton powerDownButton) {
+        powerDownButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) { executePowerDownButton();
+            }
+        });
     }
 
     /**
@@ -344,6 +376,25 @@ public class UIScreen {
         textLabel.setPosition(posX, posY);
         stage.addActor(textLabel);
         return textLabel;
+    }
+
+    /**
+     * Removes the cards from the player hand,
+     * and sets the player in power down mode.
+     * This means that it repairs itself of all damage,
+     * but do not move during this round.
+     * It can still shoot lasers and take damage again.
+     */
+    private void executePowerDownButton() {
+        if(game.getRound().getPhaseNr() != 0 ){return;}
+        Color c = powerDownButton.getColor();
+        powerDownButton.setColor(c.r, c.g, c.b, 0.5f);
+        powerDownButton.setTouchable(Touchable.disabled);
+        removeUnusedCardsFromScreen();
+        player.doPowerDown();
+        player.setLockedIn(true);
+        game.getRound().nextPhase();
+        updateGameLog();
     }
 
     /**
@@ -370,19 +421,26 @@ public class UIScreen {
         }
     }
         for (int i = 0; i < 5; i++) {
-        cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
+            cardButton.getSelectedCardButtons()[i].setTouchable(Touchable.disabled);
         }
         Color c = lockInButton.getColor();
         lockInButton.setColor(c.r, c.g, c.b, 0.5f);
         lockInButton.setTouchable(Touchable.disabled);
+        removeUnusedCardsFromScreen();
+        player.setLockedIn(true);
+        game.getRound().nextPhase();
+        updateGameLog();
+    }
+
+    /**
+     * Removes the cards that are not used from the UI
+     */
+    public void removeUnusedCardsFromScreen() {
         for (int i = 0; i < cardButton.getLeftOverCardButtons().size(); i++) {
             if (cardButton.getLeftOverCardButtons().get(i) != null) {
                 cardButton.getLeftOverCardButtons().get(i).remove();
             }
         }
-        player.setLockedIn(true);
-        game.getRound().nextPhase();
-        updateGameLog();
     }
 
     /**

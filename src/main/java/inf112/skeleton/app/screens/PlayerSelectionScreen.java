@@ -15,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import inf112.skeleton.app.RoboRallyGame;
-import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
 public class PlayerSelectionScreen implements Screen {
@@ -56,9 +55,15 @@ public class PlayerSelectionScreen implements Screen {
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
+        //Text that says choose amount of players
+        int xPadding = 80;
+        picture = new Sprite(new Texture("menu/ChoosePlayers.png"));
+        Image choosePlayers = new Image(new SpriteDrawable(picture));
+        choosePlayers.setPosition(width/2 - choosePlayers.getWidth()/2- xPadding,  logo.getY()-yPadding-choosePlayers.getHeight());
+        stage.addActor(choosePlayers);
+
         // 1 Players button
         yPadding = 400;
-        int xPadding = 80;
         picture = new Sprite(new Texture("menu/playerbuttons/1Player.png"));
         ImageButton player1Button = new ImageButton(new SpriteDrawable(picture));
         player1Button.setPosition(xPadding, yPadding);
@@ -66,7 +71,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 1, difficulty));
+                game.setScreen(new MapSelectionScreen(game, 1, difficulty));
             }
         });
         stage.addActor(player1Button);
@@ -79,7 +84,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 2, difficulty));
+                game.setScreen(new MapSelectionScreen(game, 2, difficulty));
             }
         });
         stage.addActor(player2Button);
@@ -92,7 +97,7 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 3, difficulty));
+                game.setScreen(new MapSelectionScreen(game, 3, difficulty));
             }
         });
         stage.addActor(player3Button);
@@ -105,15 +110,67 @@ public class PlayerSelectionScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sound.play();
-                game.setScreen(new StageSelectionScreen(game, 4,difficulty));
+                game.setScreen(new MapSelectionScreen(game, 4,difficulty));
             }
         });
         stage.addActor(player4Button);
 
+        //5 Players button
+        picture = new Sprite(new Texture("menu/playerbuttons/5Players.png"));
+        ImageButton player5Button = new ImageButton(new SpriteDrawable(picture));
+        player5Button.setPosition(xPadding, yPadding/4);
+        player5Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sound.play();
+                game.setScreen(new MapSelectionScreen(game, 5,difficulty));
+            }
+        });
+        stage.addActor(player5Button);
+
+        //6 Players button
+        picture = new Sprite(new Texture("menu/playerbuttons/6Players.png"));
+        ImageButton player6Button = new ImageButton(new SpriteDrawable(picture));
+        player6Button.setPosition(2 * xPadding + player1Button.getWidth(), yPadding/4);
+        player6Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sound.play();
+                game.setScreen(new MapSelectionScreen(game, 6,difficulty));
+            }
+        });
+        stage.addActor(player6Button);
+
+        //7 Players button
+        picture = new Sprite(new Texture("menu/playerbuttons/7Players.png"));
+        ImageButton player7Button = new ImageButton(new SpriteDrawable(picture));
+        player7Button.setPosition(3 * xPadding + player1Button.getWidth() + player2Button.getWidth(), yPadding/4);
+        player7Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sound.play();
+                game.setScreen(new MapSelectionScreen(game, 7,difficulty));
+            }
+        });
+        stage.addActor(player7Button);
+
+        //8 Players button
+        picture = new Sprite(new Texture("menu/playerbuttons/8Players.png"));
+        ImageButton player8Button = new ImageButton(new SpriteDrawable(picture));
+        player8Button.setPosition(width - xPadding - player8Button.getWidth(), yPadding/4);
+        player8Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sound.play();
+                game.setScreen(new MapSelectionScreen(game, 8,difficulty));
+            }
+        });
+        stage.addActor(player8Button);
+
         //Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
-        backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
+        backButton.setPosition((width - xPadding) - backButton.getWidth(), height-yPadding);
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -128,7 +185,7 @@ public class PlayerSelectionScreen implements Screen {
         Skin skin = new Skin(Gdx.files.internal("menu/navbuttons/uiskin.json"), dropdownAtlas);
         final SelectBox<Difficulty> dropDownMenu = new SelectBox<>(skin);
         dropDownMenu.setSize(100,50);
-        dropDownMenu.setPosition(player1Button.getX(), player1Button.getY() * 0.5f);
+        dropDownMenu.setPosition(player1Button.getX(), height-yPadding);
         dropDownMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

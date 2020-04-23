@@ -22,6 +22,8 @@ public class Game {
     private GameDeck gameDeck;
     private Player player1;
     private Player[] playerList;
+    private final int maxNumberOfLives = 3;
+    private final int maxNumberOfDamage = 9;
     private int numberOfPlayers;
     private int roundNumber = 0;
     private Round round;
@@ -276,5 +278,9 @@ public class Game {
     public boolean isChoosingRespawn(){
         return  choosingRespawn;
     }
+
+    public int getMaxNumberOfLives(){ return maxNumberOfLives; }
+
+    public int getMaxNumberOfDamage(){ return  maxNumberOfDamage; }
 
 }

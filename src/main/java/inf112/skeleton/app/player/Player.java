@@ -258,8 +258,6 @@ public class Player {
     }
 
 
-
-
     /**
      * Updates currentBoardPiece based on what type of tile the player is standing on.
      *
@@ -472,7 +470,14 @@ public class Player {
             }
         }
 
+    }
 
+    /**
+     * Method to be used when the player decides to enter power down mode
+     */
+    public void doPowerDown() {
+        setPowerDownMode(true);
+        repairDamage(damage);
     }
 
     /**
@@ -672,6 +677,8 @@ public class Player {
     public void setHasBeenPushedThisPhase(boolean hasBeenPushed) { this.hasBeenPushedThisPhase = hasBeenPushed; }
 
     public boolean hasBeenPushedThisPhase() { return hasBeenPushedThisPhase; }
+
+    public boolean isPermanentlyDead() { return isPermanentlyDead; }
 
     private int cardsMissing(){
         int counter = 0;

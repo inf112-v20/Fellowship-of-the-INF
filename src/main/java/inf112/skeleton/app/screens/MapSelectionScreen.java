@@ -22,6 +22,7 @@ public class MapSelectionScreen implements Screen {
     private int playerCount;
     private Difficulty difficulty;
     private Stage stage;
+    private float mapScale = 0.25f;
 
     public MapSelectionScreen(RoboRallyGame game, int playerCount, Difficulty difficulty) {
         this.game = game;
@@ -51,84 +52,27 @@ public class MapSelectionScreen implements Screen {
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
+        //Text that says choose map
+        picture = new Sprite(new Texture("menu/ChooseMap.png"));
+        Image chooseMap = new Image(new SpriteDrawable(picture));
+        chooseMap.setPosition((width - chooseMap.getWidth()) / 2, logo.getY()-yPadding-chooseMap.getHeight()/2);
+        stage.addActor(chooseMap);
+
         int xPadding = 100;
 
         ImageButton stage1Button;
         ImageButton stageTestButton;
         ImageButton stage2Button;
-        if (playerCount < 5) {
-            //Stage 1 button
-            yPadding = 400;
-            picture = new Sprite(new Texture("menu/mapButtons/Spin.png"));
-            stage1Button = new ImageButton(new SpriteDrawable(picture));
-            stage1Button.setPosition(xPadding, yPadding);
-            stage1Button.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    //Original map: RoborallyBoard_debugged.tmx
-                    //Test map for conveyorbelts: conveyorBeltTestMap.tmx
-                    game.setScreen(new GameScreen("maps/RoborallyBoard_Spin.tmx", playerCount, difficulty));
-                }
-            });
+        ImageButton stage3Button;
+        ImageButton stage4Button;
+        ImageButton stage5Button;
+        ImageButton stage6Button;
 
-            stage.addActor(stage1Button);
-            // Stage 2 button
-            picture = new Sprite(new Texture("menu/navbuttons/Stage2Button.png"));
-            stage2Button = new ImageButton(new SpriteDrawable(picture));
-            stage2Button.setPosition((width - xPadding) - stage2Button.getWidth(), yPadding);
-            stage2Button.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx", playerCount, difficulty));
-                }
-            });
-            stage.addActor(stage2Button);
-
-            if (playerCount == 1) {
-                // testStage button
-                picture = new Sprite(new Texture("menu/navbuttons/TestStageButton.png"));
-                stageTestButton = new ImageButton(new SpriteDrawable(picture));
-                stageTestButton.setPosition(width / 2 - stageTestButton.getWidth() / 2, yPadding);
-                stageTestButton.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        game.setScreen(new GameScreen("maps/TestMap.tmx", playerCount, difficulty));
-                    }
-                });
-                stage.addActor(stageTestButton);
-            }
-        } else {
-            //Stage 1 button
-            yPadding = 400;
-            picture = new Sprite(new Texture("menu/navbuttons/Stage1Button.png"));
-            stage1Button = new ImageButton(new SpriteDrawable(picture));
-            stage1Button.setPosition(xPadding, yPadding);
-            stage1Button.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    //Original map: RoborallyBoard_debugged.tmx
-                    //Test map for conveyorbelts: conveyorBeltTestMap.tmx
-                    game.setScreen(new GameScreen("maps/RoborallyBoard_debugged.tmx", playerCount, difficulty));
-                }
-            });
-
-            stage.addActor(stage1Button);
-            // Stage 2 button
-            picture = new Sprite(new Texture("menu/navbuttons/Stage2Button.png"));
-            stage2Button = new ImageButton(new SpriteDrawable(picture));
-            stage2Button.setPosition((width - xPadding) - stage2Button.getWidth(), yPadding);
-            stage2Button.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx", playerCount, difficulty));
-                }
-            });
-            stage.addActor(stage2Button);
-
+        if (playerCount == 1) {
             // testStage button
             picture = new Sprite(new Texture("menu/navbuttons/TestStageButton.png"));
             stageTestButton = new ImageButton(new SpriteDrawable(picture));
-            stageTestButton.setPosition(width / 2 - stageTestButton.getWidth() / 2, yPadding);
+            stageTestButton.setPosition(width / 2 - stageTestButton.getWidth() / 2, height/2-stageTestButton.getHeight());
             stageTestButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -144,13 +88,99 @@ public class MapSelectionScreen implements Screen {
                 }
             });
             stage.addActor(stageTestButton);
+    } else {
+            //Stage 1 button
+            yPadding = 400;
+            picture = new Sprite(new Texture("menu/mapButtons/Spin.png"));
+            stage1Button = new ImageButton(new SpriteDrawable(picture));
+            stage1Button.setTransform(true);
+            stage1Button.setScale(mapScale);
+            stage1Button.setPosition(xPadding, yPadding);
+            stage1Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    //Original map: RoborallyBoard_debugged.tmx
+                    //Test map for conveyorbelts: conveyorBeltTestMap.tmx
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Spin.tmx", playerCount, difficulty));
+                }
+            });
+            stage.addActor(stage1Button);
+            // Stage 2 button
+            picture = new Sprite(new Texture("menu/mapButtons/Vault_Assault.png"));
+            stage2Button = new ImageButton(new SpriteDrawable(picture));
+            stage2Button.setPosition(stage1Button.getX() + xPadding + stage2Button.getWidth()*mapScale, yPadding);
+            stage2Button.setTransform(true);
+            stage2Button.setScale(mapScale);
+            stage2Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault_Assault.tmx", playerCount, difficulty));
+                }
+            });
+            stage.addActor(stage2Button);
 
+            // Stage 3 button
+            picture = new Sprite(new Texture("menu/mapButtons/Exchange.png"));
+            stage3Button = new ImageButton(new SpriteDrawable(picture));
+            stage3Button.setPosition(stage2Button.getX() + stage3Button.getWidth()*mapScale, yPadding);
+            stage3Button.setTransform(true);
+            stage3Button.setScale(mapScale);
+            stage3Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Exchange.tmx", playerCount, difficulty));
+                }
+            });
+            stage.addActor(stage3Button);
 
+            // Stage 4 button
+            picture = new Sprite(new Texture("menu/mapButtons/Debugged.png"));
+            stage4Button = new ImageButton(new SpriteDrawable(picture));
+            stage4Button.setPosition(stage3Button.getX() + stage4Button.getWidth()*mapScale+xPadding/2, yPadding);
+            stage4Button.setTransform(true);
+            stage4Button.setScale(mapScale);
+            stage4Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Debugged.tmx", playerCount, difficulty));
+                }
+            });
+            stage.addActor(stage4Button);
+
+            yPadding -= stage1Button.getHeight()*mapScale + 50;
+
+            // Stage 5 button
+            picture = new Sprite(new Texture("menu/mapButtons/Maelstrom.png"));
+            stage5Button = new ImageButton(new SpriteDrawable(picture));
+            stage5Button.setPosition(stage1Button.getX(), yPadding);
+            stage5Button.setTransform(true);
+            stage5Button.setScale(mapScale);
+            stage5Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Maelstrom.tmx", playerCount, difficulty));
+                }
+            });
+            stage.addActor(stage5Button);
+
+            // Stage 6 button
+            picture = new Sprite(new Texture("menu/mapButtons/Vault.png"));
+            stage6Button = new ImageButton(new SpriteDrawable(picture));
+            stage6Button.setPosition(stage5Button.getX() + stage6Button.getWidth()*mapScale + xPadding, yPadding);
+            stage6Button.setTransform(true);
+            stage6Button.setScale(mapScale);
+            stage6Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    game.setScreen(new GameScreen("maps/RoborallyBoard_Vault.tmx", playerCount, difficulty));
+                }
+            });
+            stage.addActor(stage6Button);
         }
         // Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
-        backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
+        backButton.setPosition((width - xPadding) - backButton.getWidth(), yPadding);
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
