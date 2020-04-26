@@ -105,11 +105,8 @@ public class Player {
         if (isLegalMoveInDirection(oldPosition, newDirection) && logicGrid.isDeadMove(newPosition)) {
             latestMoveDirection = newDirection;
             loseLife();
-            lastPosAlive = oldPosition;
-            setPos(deadPosition);
             move.updateMove();
             moves.add(move);
-            game.getDeadPlayers().add(this);
         }
         //if move is legal and player isn't dead, update logic grid
         if (playerNumber == 1) System.out.println("Is dead: " + isDead);
@@ -199,15 +196,6 @@ public class Player {
         if (lives >= 0 && isDead()) {
             respawnPlayer(moves);
             setPowerDownMode(true);
-        }
-
-        //Handle what happens if the player runs out of lives
-        else if (lives < 0 && isDead()) {
-            Move permaDeadMove = new Move(playerPiece, lastPosAlive, deadPosition, playerPiece.getDir(), playerPiece.getDir());
-            moves.add(permaDeadMove);
-            setPos(deadPosition);
-            setPowerDownMode(true);
-            isPermanentlyDead = true;
         }
     }
 
@@ -449,26 +437,21 @@ public class Player {
      * @param amountOfDamage the number of damage the player takes
      */
     public void takeDamage(int amountOfDamage) {
-        damage += amountOfDamage;
-        if (damage >= 10) {
-            lives--;
-            damage = 10;
+        if(amountOfDamage <= 0){
+            return;
         }
-
-        if (damage >= 5 && damage <= 9) {
-            int number = amountOfDamage;
-            if (damage - number < 5) {
-                number = damage - 4;
-            }
-            if (number > 5 - lockedCards.size()) {
-                number = 5 - lockedCards.size();
-            }
-            for (int i = 0; i < number; i++) {
-                lockedCards.add(0, selectedCards[(8 - (damage - number)) - i]);
-                System.out.println("Locking card" + selectedCards[(8 - (damage - number)) - i]);
-                playerHandDeck.remove(lockedCards.get(0));
-            }
+        this.damage++;
+        if(damage >= 10){
+            loseLife();
+            return;
         }
+        if(damage >= 5){
+            ProgramCard cardToLock = selectedCards[9-damage];
+            lockedCards.add(cardToLock);
+            System.out.println("Locking card " + cardToLock);
+            playerHandDeck.remove(cardToLock);
+        }
+        takeDamage(amountOfDamage-1);
 
     }
 
@@ -488,17 +471,15 @@ public class Player {
      * @param amountOfRepairs the number of damage to remove from the player
      */
     public void repairDamage(int amountOfRepairs) {
-        damage -= amountOfRepairs;
-        if (damage < 0) {
-            damage = 0;
+        if(damage == 0 || amountOfRepairs == 0)return;
+        if(damage >= 5){
+            ProgramCard cardToUnlock = selectedCards[9-damage];
+            lockedCards.remove(cardToUnlock);
+            System.out.println("Unlocking card " + cardToUnlock);
+            playerHandDeck.add(cardToUnlock);
         }
-        int numberOfCardsToUnlock = lockedCards.size() - (damage - 4);
-        if (numberOfCardsToUnlock > 0 && lockedCards.size() > 0) {
-            for (int i = 0; i < numberOfCardsToUnlock; i++) {
-                playerHandDeck.add(lockedCards.get(0));
-                lockedCards.remove(0);
-            }
-        }
+        damage--;
+        repairDamage(amountOfRepairs-1);
     }
 
     public int getDamage() {
@@ -512,6 +493,24 @@ public class Player {
         lives--;
         isDead = true;
         playerPiece.showDeadPlayer();
+        lastPosAlive = getPos();
+        if (lives < 0) {
+            MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
+            Move permaDeadMove = new Move(playerPiece, lastPosAlive, deadPosition, playerPiece.getDir(), playerPiece.getDir());
+            moves.add(permaDeadMove);
+            setPos(deadPosition);
+            setPowerDownMode(true);
+            isPermanentlyDead = true;
+            permaDeadMove.updateMove();
+            moves.add(permaDeadMove);
+            game.executeMoves(moves);
+            return;
+        }
+        lockedCards.clear();
+        setPos(deadPosition);
+        game.getDeadPlayers().add(this);
+        damage = 2;
+        //Handle what happens if the player runs out of lives
     }
 
     /**
@@ -543,21 +542,36 @@ public class Player {
      *
      * @return true if a player is on a conveyorBelt, false otherwise.
      */
-    public boolean isOnConveyorBelt() { return (currentBoardPiece instanceof ConveyorBeltPiece); }
+    public boolean isOnConveyorBelt() {
+        if(!logicGrid.isInBounds(this.getPos())){
+            return false;
+        }
+        return !logicGrid.positionIsFree(this.getPos(), 4);
+    }
 
     /**
      * Checks if a player is currently on an ExpressBeltPiece
      *
      * @return true if a player is on an ExpressBelt, false otherwise.
      */
-    public boolean isOnExpressBelt() { return (currentBoardPiece instanceof ExpressBeltPiece); }
+    public boolean isOnExpressBelt() {
+        if(!logicGrid.isInBounds(this.getPos())){
+            return false;
+        }
+        return !logicGrid.positionIsFree(this.getPos(), 5);
+    }
 
     /**
      * Checks if a player is currently on a CogPiece
      *
      * @return true if a player is on a cog, false otherwise.
      */
-    public boolean isOnCog() { return currentBoardPiece instanceof CogPiece; }
+    public boolean isOnCog() {
+        if(!logicGrid.isInBounds(this.getPos())){
+            return false;
+        }
+        return !logicGrid.positionIsFree(this.getPos(), 6);
+    }
 
     public ArrayList<ProgramCard> getLockedCards() { return lockedCards; }
 
@@ -643,6 +657,8 @@ public class Player {
         }
         Collections.shuffle(randomNumbers);
         int missingCards = cardsMissing();
+        System.out.println(toString() + " damage: " + damage + " cards missing: " + missingCards + " random numbers size: "
+                + randomNumbers.size() + " player hand deck size: " + playerHandDeck.size());
         for (int i = 0; i < missingCards; i++) {
             int randomNumber = randomNumbers.get(i);
             ProgramCard card = playerHandDeck.get(randomNumber);

@@ -33,7 +33,7 @@ public class UIScreen {
     private ImageButton powerDownButton;
     private Player player;
     private Actor[] lifeActors = new Actor[3];
-    private Actor[] checkpointActors = new Actor[3];
+    private Actor[] checkpointActors;
     private Actor[] damageActors = new Actor[10];
     private ArrayList<Actor> gamelogActors = new ArrayList<>();
     private Label timerLabel = null;
@@ -45,6 +45,7 @@ public class UIScreen {
         this.width = width;
         this.game = game;
         this.scoreBoardScreen = new ScoreBoardScreen(game);
+        this.checkpointActors= new Actor[game.getLogicGrid().getFlagPositions().size()];
         height = width * 0.5f;
         player = game.getListOfPlayers()[0];
         stage = new Stage();
@@ -61,28 +62,6 @@ public class UIScreen {
         this.newRound();
     }
 
-    /**
-     * Press ENTER to play the next phase.
-     * Starts a new round if the last phase was phase number 5
-     */
-    public void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if (game.getRound().getPhaseNr() > 4) {
-                removeGameLog();
-                game.getRound().finishRound();
-                if(!game.isChoosingRespawn()){
-                    this.newRound();
-                }
-            } else {
-                if (game.getRound().getPhaseNr() == 0) {
-                    executeLockInButton();
-                    return;
-                }
-                game.getRound().nextPhase();
-                updateGameLog();
-            }
-        }
-    }
 
     /**
      * Starts a new round
@@ -93,6 +72,7 @@ public class UIScreen {
         if(respawnText != null){
             respawnText.remove();
         }
+        removeGameLog();
         game.executeRound();
         lockInButton.setTouchable(Touchable.disabled);
         powerDownButton.setColor(powerDownButton.getColor().r, powerDownButton.getColor().g, powerDownButton.getColor().b, 1f);
@@ -245,7 +225,7 @@ public class UIScreen {
         Texture texture = new Texture(Gdx.files.internal("ui/checkpointtoken.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         float posY = height * 0.75f;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < checkpointActors.length; i++) {
             float posX = (width * 0.6f) + (i * texture.getWidth() * 1.8f);
             Image checkpointTokenImage = createImage(textureRegion, 0.25f, posX, posY, 0.2f);
             checkpointActors[i] = checkpointTokenImage;

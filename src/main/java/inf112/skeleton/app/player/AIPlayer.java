@@ -55,7 +55,7 @@ public class AIPlayer extends Player {
         this.newRobotDamage = getDamage();
         this.nextGoalFlag = checkpointsVisited;
         this.nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
-
+        System.out.println(toString() + difficulty + " playerhand: " + playerHandDeck);
 
         if(difficulty.equals(Difficulty.TESTING)){
             createTestPlayer();
@@ -74,7 +74,7 @@ public class AIPlayer extends Player {
                 pickOptimal(); break;
         }
         setLockedIn(true);
-        System.out.println(toString() + difficulty + " playerhand: " + playerHandDeck);
+
         System.out.println(toString() + difficulty +" chose " + Arrays.toString(getSelectedCards()) + "\n");
     }
 
@@ -641,5 +641,6 @@ public class AIPlayer extends Player {
         nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
         availableCardsLeft = playerHandDeck;
     }
+    
 }
 

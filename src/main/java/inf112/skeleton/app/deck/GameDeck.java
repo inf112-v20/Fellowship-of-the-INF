@@ -32,7 +32,7 @@ public class GameDeck {
         } else {
             //First draw the remaining cards from the draw deck, then reset discard and draw pile
             int remainingInDraw = drawDeck.size();
-            drawNumberOfCardsFromPile(playerHand, remainingInDraw - 1);
+            drawNumberOfCardsFromPile(playerHand, remainingInDraw);
             resetDrawAndDiscard();
             drawNumberOfCardsFromPile(playerHand, numberOfCards - remainingInDraw);
         }
@@ -41,7 +41,7 @@ public class GameDeck {
 
     //Check to see if you can draw a hand without the drawDeck running out of cards
     private boolean canDrawFullHand(int numberOfCards) {
-        return numberOfCards <= drawDeck.size() - 1;
+        return numberOfCards <= drawDeck.size();
     }
 
     private void resetDrawAndDiscard() {

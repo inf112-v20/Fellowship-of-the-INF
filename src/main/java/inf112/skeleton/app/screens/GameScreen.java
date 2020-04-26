@@ -198,13 +198,15 @@ public class GameScreen implements Screen {
                 prevSeconds--;
             }
         }
-        if (!movesToExecute() && !game.moreLaserToShoot() && !hasUpdated){
+        if (!movesToExecute() && !game.moreLaserToShoot()&& !hasUpdated){
             updateRespawnImages();
             hasUpdated = true;
+
         }
         //only handle keyboard input if there are no moves to execute
         if (!movesToExecute() && !game.moreLaserToShoot() && !game.isChoosingRespawn()) {
             uiScreen.update();
+
             if (game.isPhaseDone() && game.isAutoStartNextPhaseOn()) {
                 game.setPhaseDone(false);
                 if (game.getRound().getPhaseNr() > 4) {
@@ -214,12 +216,10 @@ public class GameScreen implements Screen {
                     }
                 } else {
                     game.getRound().nextPhase();
-                    hasUpdated = false;
                     uiScreen.updateGameLog();
                 }
             }
             game.handleKeyBoardInput();
-            uiScreen.handleInput();
         }
         //only execute moves if there are any, the the current one hasn't been executed yet
         if (movesToExecute() && currentMoveIsExecuted) {
@@ -315,7 +315,6 @@ public class GameScreen implements Screen {
     /**
      * Handling UI options
      */
-
     public void handleKeyboardInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.TAB)) {
             stage = scoreBoardScreen.getStage();
@@ -327,6 +326,24 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.graphics.setWindowedMode(600, 600);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                if (game.getRound().getPhaseNr() > 4) {
+                    uiScreen.removeGameLog();
+                    game.getRound().finishRound();
+                    if(!game.isChoosingRespawn()){
+                        uiScreen.newRound();
+                    }
+                } else {
+                    hasUpdated = false;
+                    if (game.getRound().getPhaseNr() == 0) {
+                        uiScreen.executeLockInButton();
+                        return;
+                    }
+                    game.getRound().nextPhase();
+                    uiScreen.updateGameLog();
+                }
+        }
+
     }
 
 
@@ -553,18 +570,26 @@ public class GameScreen implements Screen {
 
     private Position findPosition(Player player){
         Position respawnPosition = player.getSpawnPoint();
-        int spacing = (player.getPlayerNumber()-1)* (TILE_WIDTH_DPI/4);
         int posX = respawnPosition.getX() * TILE_WIDTH_DPI;
+        int playersOnSameTile = 0;
+        for(int i = 0; i < game.getListOfPlayers().length; i++){
+            Player gamePlayer = game.getListOfPlayers()[i];
+            if(!player.equals(gamePlayer) && gamePlayer.getSpawnPoint().equals(respawnPosition)){
+                playersOnSameTile++;
+            }
+        }
+        int spacing = playersOnSameTile* (TILE_WIDTH_DPI/4);
         int posY = respawnPosition.getY() * TILE_WIDTH_DPI + spacing;
-        if(player.getPlayerNumber() >= 5){
+        if(playersOnSameTile > 4){
             posX += TILE_WIDTH_DPI*0.75f;
-            spacing = (player.getPlayerNumber()-5)* (TILE_WIDTH_DPI/4);
+            spacing = playersOnSameTile-5* (TILE_WIDTH_DPI/4);
             posY = respawnPosition.getY() * TILE_WIDTH_DPI + spacing;
         }
         return new Position(posX, posY);
     }
 
     private void updateRespawnImages(){
+        System.out.println("Updating respawn images");
         for (int i = 0; i < respawnImages.size(); i++) {
             Image image = respawnImages.get(i);
             Player player = game.getListOfPlayers()[i];
@@ -572,5 +597,6 @@ public class GameScreen implements Screen {
             image.setPosition(pos.getX(),pos.getY());
         }
     }
+
 
 }

@@ -132,6 +132,7 @@ public class Phase {
             else if(!logicGrid.positionIsFree(player.getPos(), 1) ||
                     !logicGrid.positionIsFree(player.getPos(), 2)){
                 player.setSpawnPoint(player.getPos());
+                System.out.println("Setting "+ player.toString() + " spawn point to " + player.getPos());
             }
         }
     }
@@ -213,7 +214,7 @@ public class Phase {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
             if(player.isDead()){continue;}
-            if (player.isOnConveyorBelt()) {
+            if (player.isOnConveyorBelt() || player.isOnExpressBelt()) {
                 System.out.println("Moving " + player.toString() + " on conveyorbelt");
                 if ((moveOnlyExpressBelts && !player.isOnExpressBelt()) || player.hasBeenMovedThisPhase()) {
                     continue;

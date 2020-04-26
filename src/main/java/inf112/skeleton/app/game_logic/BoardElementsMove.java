@@ -7,7 +7,6 @@ import inf112.skeleton.app.grid_objects.*;
 import inf112.skeleton.app.player.Player;
 
 
-import static inf112.skeleton.app.grid.Direction.*;
 
 public class BoardElementsMove {
 
@@ -35,7 +34,7 @@ public class BoardElementsMove {
      * Creates a recursive call if there is a robot standing directly in front of the first robot
      * that can be moved away (i.e. that robot is also standing on conveyorbelt facing away from the first robot).
      * Will also rotate the player if the conveyorBelt is a turn and the last movement of the player was by a conveyorbelt.
-     * Will not move a player if there is another player standing in the way that cant be moved away.
+     * Will not move a player if there is another player standing in the way that can't be moved away.
      *
      * @param player          The player that is currently standing on the BoardPiece.
      * @param game            the current game
