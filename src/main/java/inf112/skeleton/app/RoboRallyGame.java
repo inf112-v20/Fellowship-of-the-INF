@@ -3,7 +3,6 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.audio.Wav;
-import com.badlogic.gdx.files.FileHandle;
 import inf112.skeleton.app.screens.MainMenuScreen;
 
 /**
