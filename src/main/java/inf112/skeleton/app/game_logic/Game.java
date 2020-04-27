@@ -13,6 +13,7 @@ import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -35,6 +36,8 @@ public class Game {
     private boolean autoStartNextPhase = false;
     private boolean choosingRespawn;
     private Difficulty difficulty;
+    private ArrayList<Player> respawnOrder = new ArrayList<>();
+
 
     public Game(LogicGrid logicGrid, GameScreen gameScreen, int numberOfPlayers, Difficulty difficulty) {
         this.numberOfPlayers = numberOfPlayers;
@@ -49,11 +52,13 @@ public class Game {
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
         this.moves = new LinkedList<>();
+        respawnOrder.add(player1);
     }
 
     public void initiateComputerPlayers() {
         for (int playerNumber = 2; playerNumber <= numberOfPlayers; playerNumber++) {
             Player playerToBeInitiated = new AIPlayer(playerNumber, this, difficulty);
+            respawnOrder.add(playerToBeInitiated);
             playerList[playerNumber - 1] = playerToBeInitiated;
             logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
@@ -282,5 +287,9 @@ public class Game {
     public int getMaxNumberOfLives(){ return maxNumberOfLives; }
 
     public int getMaxNumberOfDamage(){ return  maxNumberOfDamage; }
+
+    public ArrayList<Player> getRespawnOrder(){
+        return respawnOrder;
+    }
 
 }
