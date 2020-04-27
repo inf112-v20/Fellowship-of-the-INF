@@ -61,11 +61,14 @@ public class AIPlayer extends Player {
         }
         System.out.println(toString() + difficulty + " playerhand: " + playerHandDeck);
 
+        evaluatePowerDown();
+        if(isPowerDownMode())return;
 
         if (playerHandDeck.isEmpty()) {
             setLockedIn(true);
             return;
         }
+
 
         switch (difficulty){
             case EASY: pickRandom(); break;
@@ -580,8 +583,9 @@ public class AIPlayer extends Player {
     private void evaluatePowerDown(){
         if (getDamage() < 5)return;
         int random =(int) Math.random()*10;
-        if(random < getDamage()){
-            setPowerDownMode(true);
+        if(random <= getDamage()){
+            System.out.println(toString() + " powered down with a " + (getDamage()*10) + "% chance to do so");
+            doPowerDown();
         }
     }
 

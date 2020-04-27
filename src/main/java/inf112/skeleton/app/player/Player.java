@@ -461,6 +461,7 @@ public class Player {
     public void doPowerDown() {
         setPowerDownMode(true);
         repairDamage(damage);
+        setLockedIn(true);
     }
 
     /**
@@ -510,7 +511,6 @@ public class Player {
         setPos(deadPosition);
         game.getDeadPlayers().add(this);
         damage = 2;
-        //Handle what happens if the player runs out of lives
     }
 
     /**
