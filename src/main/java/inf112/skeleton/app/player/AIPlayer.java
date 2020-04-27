@@ -102,13 +102,14 @@ public class AIPlayer extends Player {
             chosenCards.add(card);
             if(chosenCards.size() == cardsToPick) {break;}
         }
-
+        System.out.println("Chosen cards size: " + chosenCards.size() + " cards to pick: " + cardsToPick);
         if(chosenCards.size() != cardsToPick) {
-            int cardsMissing = chosenCards.size() - cardsToPick;
+            int cardsMissing = cardsToPick - chosenCards.size();
             for (int i = 0; i < cardsMissing ; i++) {
                 chosenCards.add(getFirstAvailableCard());
             }
         }
+        System.out.println("Chosen cards size: " + chosenCards.size());
 
         addCardsToSelectedCards(chosenCards);
     }
@@ -168,7 +169,7 @@ public class AIPlayer extends Player {
         HashMap<ProgramCard, Integer> cardAndScore = new HashMap<>();
         ArrayList<ProgramCard> checkedCards = new ArrayList<>();
         for (ProgramCard card : availableCardsLeft) {
-            if (isCardChecked(checkedCards, card)) {
+            if (isCardTypeChecked(checkedCards, card)) {
                 continue;
             }
             checkedCards.add(card);
@@ -261,7 +262,7 @@ public class AIPlayer extends Player {
 
                  for (int k = 0; k < currentAvailableCards.size(); k++) {
                      ProgramCard card = currentAvailableCards.get(k);
-                     if (isCardChecked(checkedCards, card)) {
+                     if (isCardTypeChecked(checkedCards, card)) {
                          continue;
                      }
                      checkedCards.add(card);
@@ -358,9 +359,16 @@ public class AIPlayer extends Player {
      * @param card the ProgramCard to check
      * @return true if it is already in the list, false otherwise
      */
-    private boolean isCardChecked(ArrayList<ProgramCard> checkedCards, ProgramCard card){
+    private boolean isCardTypeChecked(ArrayList<ProgramCard> checkedCards, ProgramCard card){
         for (ProgramCard checkedCard : checkedCards) {
             if (checkedCard.getCommand().equals(card.getCommand())) return true;
+        }
+        return false;
+    }
+
+    private boolean isProgramCardChecked(ArrayList<ProgramCard> checkedCards, ProgramCard card){
+        for (ProgramCard checkedCard : checkedCards) {
+            if (checkedCard.equals(card)) return true;
         }
         return false;
     }
@@ -404,7 +412,7 @@ public class AIPlayer extends Player {
      */
     private ProgramCard getFirstAvailableCard(){
         for (ProgramCard programCard : playerHandDeck) {
-            if (!isCardChecked(chosenCards, programCard)) {
+            if (!isProgramCardChecked(chosenCards, programCard)) {
                 return programCard;
             }
         }
