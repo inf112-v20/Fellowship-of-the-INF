@@ -55,11 +55,12 @@ public class AIPlayer extends Player {
         this.newRobotDamage = getDamage();
         this.nextGoalFlag = checkpointsVisited;
         this.nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
-        System.out.println(toString() + difficulty + " playerhand: " + playerHandDeck);
 
         if(difficulty.equals(Difficulty.TESTING)){
             createTestPlayer();
         }
+        System.out.println(toString() + difficulty + " playerhand: " + playerHandDeck);
+
 
         if (playerHandDeck.isEmpty()) {
             setLockedIn(true);
@@ -266,9 +267,12 @@ public class AIPlayer extends Player {
                          continue;
                      }
                      checkedCards.add(card);
+                     /*
                      if (isCardUseless(card, currentPos, currentDir, currentDamage)) {
                          continue;
                      }
+
+                      */
                      newFrontier.add(createNode(currentPos, currentDir, card, currentTotalScore,
                              currentChosenCards, currentAvailableCards, goalFlag, currentDamage));
                  }
@@ -281,11 +285,16 @@ public class AIPlayer extends Player {
                      if (nodeScore < bestNodeScore) {
                          bestNodeScore = score;
                      }
+                     /*
                      if ((nodeScore > bestNodeScore) && nodeScore > currentTotalScore[2] &&
                      flag <= currentTotalScore[0]) {
                          newFrontier.remove(k);
                          k--;
                      }
+
+                      */
+
+
                      if (cardsInFrontier.size() == cardsToPick && isCurrentBetter(bestFinalTotalScore, nodeTotalScore)){
                          bestFinalTotalScore = nodeTotalScore;
                          chosenCards = cardsInFrontier;
@@ -387,7 +396,7 @@ public class AIPlayer extends Player {
         Direction newDir = (Direction) finalPosAndDir.get(1);
         if(pos.equals(newPos) && dir.equals(newDir)){ return true;}
         if(damage + getLaserDamage(newPos) >= 10){
-            System.out.println("Card is useless at " + pos + ", new pos: " + newPos + " damage: " + damage + " laser damage: " + getLaserDamage(newPos));
+            System.out.println( card.toString() + " is useless at " + pos + ", new pos: " + newPos + " damage: " + damage + " laser damage: " + getLaserDamage(newPos));
             return true;}
         return logicGrid.isDeadMove(newPos);
     }
@@ -643,6 +652,7 @@ public class AIPlayer extends Player {
         hand.add(new ProgramCard(7, CardType.UTURN));
         hand.add(new ProgramCard(8, CardType.UTURN));
         hand.add(new ProgramCard(9, CardType.ROTATELEFT));
+
         playerHandDeck = hand;
         nextGoalFlag = getPlayerNumber()-1;
         nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
