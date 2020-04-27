@@ -455,7 +455,6 @@ public class AIPlayer extends Player {
         }
         Position finalPos = pos;
         Direction finalDir = dir;
-
         if (!logicGrid.positionIsFree(pos, 5)) {
             ExpressBeltPiece expressBelt = logicGrid.getPieceType(pos, ExpressBeltPiece.class);
             if (expressBelt.isTurn()) {

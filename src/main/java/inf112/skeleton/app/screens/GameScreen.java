@@ -76,6 +76,7 @@ public class GameScreen implements Screen {
     private ArrayList<Image> respawnImages;
     private boolean createdImage = false;
     private boolean hasUpdated = false;
+    private int currentPhaseNr = 0;
 
 
     public GameScreen(String mapName, int numberOfPlayers, Difficulty difficulty) {
@@ -199,7 +200,6 @@ public class GameScreen implements Screen {
         if (!movesToExecute() && !game.moreLaserToShoot()&& !hasUpdated){
             updateRespawnImages();
             hasUpdated = true;
-
         }
         //only handle keyboard input if there are no moves to execute
         if (!movesToExecute() && !game.moreLaserToShoot() && !game.isChoosingRespawn()) {
@@ -229,6 +229,10 @@ public class GameScreen implements Screen {
             shootRobotLasers();
             showBoardLasers();
             delayForSeconds(150);
+        }
+        if(currentPhaseNr != game.getRound().getPhaseNr()){
+            hasUpdated = false;
+            currentPhaseNr = game.getRound().getPhaseNr();
         }
     }
 
@@ -332,7 +336,6 @@ public class GameScreen implements Screen {
                         uiScreen.newRound();
                     }
                 } else {
-                    hasUpdated = false;
                     if (game.getRound().getPhaseNr() == 0) {
                         uiScreen.executeLockInButton();
                         return;
