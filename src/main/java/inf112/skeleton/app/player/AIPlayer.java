@@ -103,14 +103,12 @@ public class AIPlayer extends Player {
             chosenCards.add(card);
             if(chosenCards.size() == cardsToPick) {break;}
         }
-        System.out.println("Chosen cards size: " + chosenCards.size() + " cards to pick: " + cardsToPick);
         if(chosenCards.size() != cardsToPick) {
             int cardsMissing = cardsToPick - chosenCards.size();
             for (int i = 0; i < cardsMissing ; i++) {
                 chosenCards.add(getFirstAvailableCard());
             }
         }
-        System.out.println("Chosen cards size: " + chosenCards.size());
 
         addCardsToSelectedCards(chosenCards);
     }
