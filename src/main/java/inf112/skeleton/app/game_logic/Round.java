@@ -1,6 +1,5 @@
 package inf112.skeleton.app.game_logic;
 
-import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.RepairPiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;

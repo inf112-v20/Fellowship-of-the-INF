@@ -3,11 +3,9 @@ package inf112.skeleton.app.grid;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.grid_objects.*;
-import inf112.skeleton.app.player.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 

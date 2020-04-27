@@ -1,7 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
 import com.badlogic.gdx.Gdx;
-import inf112.skeleton.app.cards.CardType;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
