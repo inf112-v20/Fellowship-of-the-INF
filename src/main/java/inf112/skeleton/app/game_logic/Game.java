@@ -13,7 +13,6 @@ import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 

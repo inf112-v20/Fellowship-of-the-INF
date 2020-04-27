@@ -569,7 +569,6 @@ public class GameScreen implements Screen {
     }
 
     private Position findPosition(Player player, HashMap posCounter){
-        System.out.println("Finding pos for " + player.toString() + " map size: " + posCounter.size());
         Position respawnPosition = player.getSpawnPoint();
         int posX = respawnPosition.getX() * TILE_WIDTH_DPI;
         Integer playersOnSameTile = 0;
@@ -577,7 +576,6 @@ public class GameScreen implements Screen {
         if(posCounter.containsKey(spawnString)){
           playersOnSameTile = (Integer) posCounter.get(spawnString);
         }
-        System.out.println("Respawn pos: " + respawnPosition + " num: " + playersOnSameTile);
         posCounter.put(spawnString, playersOnSameTile+1);
         int spacing = playersOnSameTile* (TILE_WIDTH_DPI/4);
         int posY = respawnPosition.getY() * TILE_WIDTH_DPI + spacing;
@@ -590,7 +588,6 @@ public class GameScreen implements Screen {
     }
 
     private void updateRespawnImages(){
-        System.out.println("Updating respawn images");
         HashMap<String, Integer> posCounter = new HashMap<>();
         for (int i = 0; i < game.getRespawnOrder().size(); i++) {
             Player player = game.getRespawnOrder().get(i);
