@@ -227,7 +227,6 @@ public class Player {
             Position newPos = aiPlayer.chooseRespawnPos(respawnPositions);
             System.out.println("Respawning " + toString() + " at " + newPos);
             setPos(newPos);
-            spawnPoint = newPos;
             Direction newDir = aiPlayer.chooseRespawnDir(newPos);
             getPlayerPiece().setDir(newDir);
         }

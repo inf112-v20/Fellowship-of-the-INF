@@ -171,13 +171,11 @@ public class GameScreen implements Screen {
                 uiScreen.removeCards();
             }
             if(game.getPlayer().isDead()){
-                System.out.println("Player 1 is dead");
                 game.getPlayer().setIsDead(false);
                 createdButtons = false;
 
             }
             if (!createdButtons) {
-                System.out.println("creating buttons and respawn text");
                 choosePosition();
                 uiScreen.removeGameLog();
                 uiScreen.update();

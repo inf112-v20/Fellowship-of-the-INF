@@ -438,7 +438,7 @@ public class LogicGrid {
         //if spawnPoint is valid, return spawnPoint
         ArrayList<Position> availablePositions = new ArrayList<>();
         if (positionIsFree(spawnPoint, playerLayerIndex)) {
-            System.out.println("OG Spawnpoint is available at" + spawnPoint);
+            System.out.println("Actual spawnpoint is available at " + spawnPoint);
             availablePositions.add(spawnPoint);
             return availablePositions;
         }
@@ -449,12 +449,12 @@ public class LogicGrid {
             Position pos2 = pos.getPositionIn(dir.getRightTurnDirection());
             if (positionIsFree(pos, playerLayerIndex)
                     && spawnIsSafe(pos)) {
-                System.out.println("Spawnpoint1 is available at" + pos);
+                System.out.println("Spawnpoint1 is available at " + pos);
                 availablePositions.add(pos);
             }
             if (positionIsFree(pos2, playerLayerIndex)
                     && spawnIsSafe(pos2)) {
-                System.out.println("Spawnpoint2 is available at" + pos2);
+                System.out.println("Spawnpoint2 is available at " + pos2);
                 availablePositions.add(pos2);
             }
         }
