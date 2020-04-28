@@ -47,6 +47,7 @@ public class Player {
     private Position deadPosition;
     private int movesLeft = 1;
     private boolean keyInput = false;
+    private Player pusherStarter = null;
 
     public Player(int playerNumber, Game game) {
         this.playerNumber = playerNumber;
@@ -100,13 +101,11 @@ public class Player {
         //check if the move kills the player, if so lose a life
         if (isLegalMoveInDirection(oldPosition, newDirection) && logicGrid.isDeadMove(newPosition)) {
             latestMoveDirection = newDirection;
-            System.out.println(toString() + " is dead");
             loseLife();
             move.updateMove();
             moves.add(move);
         }
         //if move is legal and player isn't dead, update logic grid
-        if (playerNumber == 1) System.out.println("Is dead: " + isDead);
         if (isLegalMoveInDirection(oldPosition, newDirection) && !isDead()) {
             //if the move results in pushing robots, add the resulting moves to the moves list
             addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
@@ -133,9 +132,11 @@ public class Player {
             movesLeft--;
             if (movesLeft == 0) {
                 for (int i = 0; i < playersPushed.size(); i++) {
+                    System.out.println(playersPushed);
                     Player pushedPlayer = playersPushed.get(i);
                     pushedPlayer.isPushed = false;
                     if (pushedPlayer.isDead()) {
+                        System.out.println(toString()+  " checks for respawn after being pushed");
                         pushedPlayer.checkForRespawn(moves);
                         pushedPlayer.playersPushed.clear();
                     }
@@ -146,6 +147,7 @@ public class Player {
                 }
                 movesLeft = 1;
             }
+            pusherStarter = null;
         }
     }
 
@@ -166,7 +168,12 @@ public class Player {
                 return;
             }
             playertoPush.isPushed = true;
-            playersPushed.add(0, playertoPush);
+            if(!isPushed){
+                setPusherStarter(this);
+            }
+            Player pusherStarter = getPusherStarter();
+            playertoPush.setPusherStarter(pusherStarter);
+            pusherStarter.playersPushed.add(0, playertoPush);
             playertoPush.tryToGo(dir, moves);
         }
     }
@@ -634,5 +641,13 @@ public class Player {
 
     public void setIsDead(boolean bool){
         isDead = bool;
+    }
+
+    private void setPusherStarter(Player pusherStarter){
+        this.pusherStarter = pusherStarter;
+    }
+
+    private Player getPusherStarter(){
+        return pusherStarter;
     }
 }
