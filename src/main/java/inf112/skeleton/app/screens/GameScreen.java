@@ -515,10 +515,11 @@ public class GameScreen implements Screen {
     private void chooseDirection() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         Player player = game.getPlayer();
+        PlayerPiece playerPiece = player.getPlayerPiece();
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            player.turnPlayerRight(moves);
+            playerPiece.turnRight(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            player.turnPlayerLeft(moves);
+            playerPiece.turnLeft(moves);
         }
         game.performMoves(moves); //execute moves if there are any
         for (Move move : moves) {
@@ -529,7 +530,6 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             game.setChoosingRespawn(false);
             game.getPlayer().setPos(respawnPos);
-            PlayerPiece playerPiece = player.getPlayerPiece();
             game.getLogicGrid().movePlayerToNewPosition(playerPiece, player.getDeadPosition(), respawnPos);
             System.out.println("Player 1 has respawned at " + respawnPos + " in dir " + player.getPlayerPiece().getDir());
             for (ImageButton buttons : respawnButtons) {

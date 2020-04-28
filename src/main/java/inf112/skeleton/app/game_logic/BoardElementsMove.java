@@ -23,9 +23,9 @@ public class BoardElementsMove {
     public static void rotateCog(Player player, MovesToExecuteSimultaneously moves) {
         BoardPiece boardPiece = player.getCurrentBoardPiece();
         if (((CogPiece) boardPiece).isRotateClockwise()) {
-            player.turnPlayerRight(moves);
+            player.getPlayerPiece().turnRight(moves);
         } else {
-            player.turnPlayerLeft(moves);
+            player.getPlayerPiece().turnLeft(moves);
         }
     }
 
@@ -69,9 +69,9 @@ public class BoardElementsMove {
         if ((conveyorBeltPiece.isTurn() && player.isLatestMoveConveyorBelt()
                 && player.latestMoveDirection() != conveyorBeltDirection)) {
             if (player.latestMoveDirection().getRightTurnDirection() == conveyorBeltDirection) {
-                player.turnPlayerRight(moves);
+                player.getPlayerPiece().turnRight(moves);
             } else if (player.latestMoveDirection().getLeftTurnDirection() == conveyorBeltDirection) {
-                player.turnPlayerLeft(moves);
+                player.getPlayerPiece().turnLeft(moves);
             }
         }
         player.tryToGo(conveyorBeltDirection, moves);

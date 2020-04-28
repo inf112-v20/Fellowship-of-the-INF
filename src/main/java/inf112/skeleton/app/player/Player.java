@@ -325,16 +325,16 @@ public class Player {
                 tryToGo(getPlayerPiece().getDir(), moves);
                 break;
             case UTURN:
-                turnPlayerAround(moves);
+                if (!isDead) playerPiece.turnAround(moves);
                 break;
             case BACKUP:
                 tryToGo(getPlayerPiece().getDir().getOppositeDirection(), moves);
                 break;
             case ROTATELEFT:
-                turnPlayerLeft(moves);
+                if (!isDead) playerPiece.turnLeft(moves);
                 break;
             case ROTATERIGHT:
-                turnPlayerRight(moves);
+                if (!isDead) playerPiece.turnRight(moves);
                 break;
             default:
                 break;
@@ -355,36 +355,7 @@ public class Player {
         return playerPiece;
     }
 
-    public void turnPlayerAround(MovesToExecuteSimultaneously moves) {
-        if (!isDead()) {
-            Move move = new Move(this);
-            playerPiece.turnAround();
-            move.updateMove();
-            moves.add(move);
-        }
-    }
 
-    /**
-     * If the player is not dead, player is turned around
-     * @param moves list to update
-     */
-    public void turnPlayerLeft(MovesToExecuteSimultaneously moves) {
-        if (!isDead())  {
-            Move move = new Move(this);
-            playerPiece.turnLeft();
-            move.updateMove();
-            moves.add(move);
-        }
-    }
-
-    public void turnPlayerRight(MovesToExecuteSimultaneously moves) {
-        if (!isDead()) {
-            Move move = new Move(this);
-            playerPiece.turnRight();
-            move.updateMove();
-            moves.add(move);
-        }
-    }
 
     public ArrayList<ProgramCard> getPlayerHandDeck() {
         return playerHandDeck;

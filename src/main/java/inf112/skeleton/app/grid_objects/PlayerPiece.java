@@ -2,6 +2,8 @@ package inf112.skeleton.app.grid_objects;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import inf112.skeleton.app.game_logic.Move;
+import inf112.skeleton.app.game_logic.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
@@ -35,6 +37,32 @@ public class PlayerPiece extends DirectionedPiece {
 
     public TiledMapTileLayer.Cell getPlayerCell() {
         return playerCell;
+    }
+
+    public void turnAround(MovesToExecuteSimultaneously moves) {
+            Move move = new Move(this);
+            turnPieceInOppositeDirection();
+            move.updateMove();
+            moves.add(move);
+    }
+
+    /**
+     * If the player is not dead, player is turned around
+     * @param moves list to update
+     */
+    public void turnLeft(MovesToExecuteSimultaneously moves) {
+            Move move = new Move(this);
+            rotatePieceLeft();
+            move.updateMove();
+            moves.add(move);
+        }
+
+
+    public void turnRight(MovesToExecuteSimultaneously moves) {
+            Move move = new Move(this);
+            rotatePieceRight();
+            move.updateMove();
+            moves.add(move);
     }
 
     public void turnAround() {

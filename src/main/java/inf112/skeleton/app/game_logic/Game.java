@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
@@ -92,6 +93,8 @@ public class Game {
         Player player2 = player1;
         if (numberOfPlayers > 1) player2 = playerList[1];
 
+        PlayerPiece player1Piece = player1.getPlayerPiece();
+        PlayerPiece player2Piece = player2.getPlayerPiece();
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.setKeyInput(true);
             player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
@@ -99,11 +102,11 @@ public class Game {
             player1.setKeyInput(true);
             player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            player1.turnPlayerLeft(moves);
+            player1Piece.turnLeft(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            player1.turnPlayerRight(moves);
+            player1Piece.turnRight(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            player1.turnPlayerAround(moves);
+            player1Piece.turnAround(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             player1.shootLaser();
             gameScreen.shootRobotLasers();
@@ -126,8 +129,6 @@ public class Game {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
             }
         }
-
-
         //second player moves get handled
         else if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
             player2.setKeyInput(true);
@@ -136,11 +137,11 @@ public class Game {
             player2.setKeyInput(true);
             player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            player2.turnPlayerLeft(moves);
+            player2Piece.turnLeft(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            player2.turnPlayerRight(moves);
+            player2Piece.turnRight(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-            player2.turnPlayerAround(moves);
+            player2Piece.turnAround(moves);
         }
         //execution of moves
         performMoves(moves); //execute moves if there are any
