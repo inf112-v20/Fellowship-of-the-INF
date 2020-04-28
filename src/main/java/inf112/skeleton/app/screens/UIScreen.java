@@ -125,7 +125,6 @@ public class UIScreen {
                 TextureRegion powerDownTexture = new TextureRegion(texture);
                 gamelogActors.add(createImage(powerDownTexture, 0.2f, posX, height * 0.43f, 1));
                 TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
-                posX = (width * 0.515f) + ((phase.getOrderedListOfPlayers().size() + i) * gap);
                 gamelogActors.add(createImage(playerPicture, 0.01f, posX, height * 0.55f, 1));
                 poweredDownPlayers.add(player);
             }
@@ -441,7 +440,11 @@ public class UIScreen {
     public Label getTimerLabel(){return timerLabel;}
 
     public void createRespawnText(){
-        String text = " Choose the direction to respawn in\n Rotate by using left or right arrow\n Press R to confirm and respawn.";
+        String dirText = "";
+        if(game.getPlayer().getRespawnPositions().size() > 1){
+            dirText = " Left click on the tile you want respawn in\n";
+        }
+        String text = dirText + " Choose the direction to respawn in\n Rotate by using left or right arrow\n Press R to confirm and respawn.";
         respawnText = drawText(text, 10, width*0.5f, height*0.5f, Color.BLACK);
     }
 
@@ -452,6 +455,7 @@ public class UIScreen {
     }
 
     public void addCards(){
+        respawnText.remove();
         for(Stack cardButton : cardButton.getCardButtons()){
             stage.addActor(cardButton);
         }

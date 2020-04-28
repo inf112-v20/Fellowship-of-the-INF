@@ -135,14 +135,14 @@ public class Player {
                     System.out.println(playersPushed);
                     Player pushedPlayer = playersPushed.get(i);
                     pushedPlayer.isPushed = false;
-                    if (pushedPlayer.isDead()) {
+                    if (pushedPlayer.isDead() && game.getRound().getPhaseNr() == 0) {
                         System.out.println(toString()+  " checks for respawn after being pushed");
                         pushedPlayer.checkForRespawn(moves);
                         pushedPlayer.playersPushed.clear();
                     }
                 }
                 playersPushed.clear();
-                if (isDead) {
+                if (isDead && game.getRound().getPhaseNr() == 0) {
                     checkForRespawn(moves);
                 }
                 movesLeft = 1;
@@ -203,7 +203,6 @@ public class Player {
         //If the player still have lives left, respawn it, but set it in shutdown mode
         if (lives > 0 && isDead()) {
             respawnPlayer(moves);
-            setPowerDownMode(true);
         }
     }
 
@@ -648,5 +647,9 @@ public class Player {
 
     private Player getPusherStarter(){
         return pusherStarter;
+    }
+
+    public boolean isKeyInput() {
+        return keyInput;
     }
 }

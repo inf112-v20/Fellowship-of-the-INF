@@ -549,7 +549,11 @@ public class GameScreen implements Screen {
             if (!game.getDeadPlayers().isEmpty()) {
                 game.getRound().respawnPlayers();
             }
-            uiScreen.newRound();
+            if(!game.getPlayer().isKeyInput()){
+                uiScreen.newRound();
+            }else{
+                uiScreen.addCards();
+            }
         }
 
     }
