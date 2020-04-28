@@ -417,7 +417,8 @@ public class GameScreen implements Screen {
         Position newPos = move.getNewPos();
         Direction newDir = move.getNewDir();
         Position lastPosAlive = playerPieceToUpdate.getPlayer().getLastPosAlive();
-        if (!game.getLogicGrid().isInBounds(oldPos) && game.getLogicGrid().positionIsFree(lastPosAlive, playerLayerIndex)) {
+        if (!game.getLogicGrid().isInBounds(oldPos) && game.getLogicGrid().positionIsFree(lastPosAlive, playerLayerIndex)
+        && !game.isChoosingRespawn()) {
             playerLayer.setCell(lastPosAlive.getX(), lastPosAlive.getY(), null);
         }
         if (game.getLogicGrid().positionIsFree(oldPos, playerLayerIndex)) { //check that you are not erasing another player
