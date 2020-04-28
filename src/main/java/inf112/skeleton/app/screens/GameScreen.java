@@ -74,7 +74,6 @@ public class GameScreen implements Screen {
     private Position respawnPos;
     private ArrayList<ImageButton> respawnButtons;
     private ArrayList<Image> respawnImages;
-    private boolean createdImage = false;
     private boolean hasUpdated = false;
     private int currentPhaseNr = 0;
 
@@ -101,12 +100,17 @@ public class GameScreen implements Screen {
         currentMoveIsExecuted = true;
         //UI gets game deck from game class
         uiScreen = new UIScreen(MAP_WIDTH_DPI * 2, game);
+        stage = uiScreen.getStage();
         clearLayer(boardLaserLayer); //lasers should only be shown when active
         this.respawnButtons = new ArrayList<>();
         this.respawnImages = new ArrayList<>();
+        for(Player player : game.getRespawnOrder()){
+            createRespawnImage(player);
+        }
 
         laserSound = (Wav.Sound) Gdx.audio.newSound( Gdx.files.internal("assets/sounds/bubaproducer__laser-shot-silenced.wav"));
         robotSound = (Wav.Sound) Gdx.audio.newSound( Gdx.files.internal("assets/sounds/meroleroman7__robot-jump-2.wav"));
+
     }
 
     /**
@@ -161,16 +165,22 @@ public class GameScreen implements Screen {
      * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
-        if(!createdImage){
-            for(Player player : game.getRespawnOrder()){
-                createRespawnImage(player);
-            }
-            createdImage = true;
-        }
         if (game.isChoosingRespawn()) {
+
+            if(game.getRound().getPhaseNr()==0){
+                uiScreen.removeCards();
+            }
+            if(game.getPlayer().isDead()){
+                System.out.println("Player 1 is dead");
+                game.getPlayer().setIsDead(false);
+                createdButtons = false;
+
+            }
             if (!createdButtons) {
+                System.out.println("creating buttons and respawn text");
                 choosePosition();
                 uiScreen.removeGameLog();
+                uiScreen.update();
                 uiScreen.createRespawnText();
                 createdButtons = true;
             }
@@ -546,6 +556,7 @@ public class GameScreen implements Screen {
     }
 
     private void choosePosition() {
+
         Player player = game.getPlayer();
         if (player.getRespawnPositions().size() == 1) {
             respawnPos = player.getRespawnPositions().get(0);

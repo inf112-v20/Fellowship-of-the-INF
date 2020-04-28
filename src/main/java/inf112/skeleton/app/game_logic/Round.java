@@ -37,7 +37,7 @@ public class Round {
                 player.getSelectedCards()[number + j] = (player.getLockedCards().get(j));
             }
         }
-        lockInCardsForComputers(true);
+        //lockInCardsForComputers(true);
     }
 
     /**

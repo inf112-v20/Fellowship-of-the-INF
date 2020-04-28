@@ -100,6 +100,7 @@ public class Player {
         //check if the move kills the player, if so lose a life
         if (isLegalMoveInDirection(oldPosition, newDirection) && logicGrid.isDeadMove(newPosition)) {
             latestMoveDirection = newDirection;
+            System.out.println(toString() + " is dead");
             loseLife();
             move.updateMove();
             moves.add(move);
@@ -193,7 +194,7 @@ public class Player {
      */
     public void checkForRespawn(MovesToExecuteSimultaneously moves) {
         //If the player still have lives left, respawn it, but set it in shutdown mode
-        if (lives >= 0 && isDead()) {
+        if (lives > 0 && isDead()) {
             respawnPlayer(moves);
             setPowerDownMode(true);
         }
@@ -224,17 +225,18 @@ public class Player {
             getPlayerPiece().setDir(newDir);
         }
         else{
-            if(respawnPositions.size() == 1){
-                isDead = false;
-                playerPiece.showAlivePlayer();
-                return;
+            playerPiece.showAlivePlayer();
+            if(keyInput){
+                game.getDeadPlayers().clear();
+                game.setChoosingRespawn(true);
             }
+            return;
         }
         respawnMove.updateMove();
         moves.add(respawnMove);
         isDead = false;
         playerPiece.showAlivePlayer();
-        if(keyInput){game.getDeadPlayers().clear();}
+
     }
 
     public void setPowerDownMode(boolean a) {
@@ -455,7 +457,7 @@ public class Player {
         isDead = true;
         playerPiece.showDeadPlayer();
         lastPosAlive = getPos();
-        if (lives < 0) {
+        if (lives == 0) {
             MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
             Move permaDeadMove = new Move(playerPiece, lastPosAlive, deadPosition, playerPiece.getDir(), playerPiece.getDir());
             moves.add(permaDeadMove);
@@ -628,5 +630,9 @@ public class Player {
             }
         }
         return counter;
+    }
+
+    public void setIsDead(boolean bool){
+        isDead = bool;
     }
 }

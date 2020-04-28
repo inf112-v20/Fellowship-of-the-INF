@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.game_logic.Game;
@@ -442,6 +443,18 @@ public class UIScreen {
     public void createRespawnText(){
         String text = " Choose the direction to respawn in\n Rotate by using left or right arrow\n Press R to confirm and respawn.";
         respawnText = drawText(text, 10, width*0.5f, height*0.5f, Color.BLACK);
+    }
+
+    public void removeCards(){
+       for(Stack cardButton : cardButton.getCardButtons()){
+           cardButton.remove();
+       }
+    }
+
+    public void addCards(){
+        for(Stack cardButton : cardButton.getCardButtons()){
+            stage.addActor(cardButton);
+        }
     }
 
 

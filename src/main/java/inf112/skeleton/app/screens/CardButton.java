@@ -315,4 +315,8 @@ public class CardButton {
         }
     }
 
+    public ArrayList<Stack> getCardButtons(){
+        return cardButtons;
+    }
+
 }
