@@ -213,9 +213,12 @@ public class Phase {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
             if(player.isDead()){continue;}
-            if (player.isOnConveyorBelt() || player.isOnExpressBelt()) {
+            boolean playerIsOnConveyorBelt = logicGrid.positionHasPieceType(player.getPos(), ConveyorBeltPiece.class);
+            boolean playerIsOnExpressBelt =  logicGrid.positionHasPieceType(player.getPos(), ExpressBeltPiece.class);
+            if (playerIsOnConveyorBelt
+                    || playerIsOnExpressBelt ) {
                 System.out.println("Moving " + player.toString() + " on conveyorbelt");
-                if ((moveOnlyExpressBelts && !player.isOnExpressBelt()) || player.hasBeenMovedThisPhase()) {
+                if ((moveOnlyExpressBelts && !playerIsOnExpressBelt || player.hasBeenMovedThisPhase())) {
                     continue;
                 }
                 BoardElementsMove.moveConveyorBelt(player, game, moveOnlyExpressBelts, moves);
@@ -235,7 +238,8 @@ public class Phase {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
             if(player.isDead()){continue;}
-            if (player.isOnCog()) {
+            boolean playerIsOnCog = logicGrid.positionHasPieceType(player.getPos(), CogPiece.class);
+            if (playerIsOnCog) {
                 BoardElementsMove.rotateCog(player, moves);
             }
         }

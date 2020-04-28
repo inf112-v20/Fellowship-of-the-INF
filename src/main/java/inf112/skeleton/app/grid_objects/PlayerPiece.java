@@ -65,18 +65,6 @@ public class PlayerPiece extends DirectionedPiece {
             moves.add(move);
     }
 
-    public void turnAround() {
-        turnPieceInOppositeDirection();
-    }
-
-    public void turnLeft() {
-        rotatePieceLeft();
-    }
-
-    public void turnRight() {
-        rotatePieceRight();
-    }
-
     public void turnCellInDirection(Direction newDir) {
         switch (newDir) {
             case NORTH:

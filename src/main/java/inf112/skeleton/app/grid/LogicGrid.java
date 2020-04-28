@@ -245,6 +245,7 @@ public class LogicGrid {
         return grid[pos.getX()][pos.getY()];
     }
 
+
     /**
      * Remember to check that this method does not return null
      *
@@ -254,11 +255,28 @@ public class LogicGrid {
      * @return piece if it is there, null otherwise
      */
     public <T extends BoardPiece> T getPieceType(Position pos, Class<T> type) {
+        if (!isInBounds(pos)) return null;
         for (BoardPiece piece : grid[pos.getX()][pos.getY()]) {
             if (piece.getClass().equals(type)) return (T) piece;
         }
         return null;
     }
+
+    /**
+     * Checks if there is a certain type of piece in the given position
+     * @param pos position to check for piece type
+     * @param type piece type to check for
+     * @return true if there is a piece of that type in the position
+     */
+    public boolean positionHasPieceType(Position pos, Class type) {
+        if (!isInBounds(pos)) return false;
+        for (BoardPiece piece : grid[pos.getX()][pos.getY()]) {
+            if (piece.getClass().equals(type)) return true;
+        }
+        return false;
+    }
+
+
 
     /**
      * A method used to create the list of spawn points based on the number of players

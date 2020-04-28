@@ -72,10 +72,6 @@ public class Player {
         return playerPiece.getPos();
     }
 
-    public void setPos(int x, int y) {
-        playerPiece.setPos(new Position(x, y));
-    }
-
     public void setPos(Position positionIn) {
         playerPiece.setPos(positionIn);
     }
@@ -121,13 +117,17 @@ public class Player {
             this.conveyorBeltMove = false;
         }
 
-        //TODO: read comment:
-        /*
-         * According to the Roborally rules respawns only happen at round end, so this code is only useful for
-         * immediately respawning a player after using keyboard inputs to move the player.  Perhaps this code
-         * can be removed then? Currently players are respawned at round end in finishRound() in Round.java.
-         * Anyways, it should work as intended using keyboard inputs also.
-         */
+        checkForRespawnAfterKeyBoardInput(moves); //checks if respawn should be called
+    }
+
+    /**
+     *According to the Roborally rules respawns only happen at round end, so this code is only useful for
+     * immediately respawning a player after using keyboard inputs to move the player.
+     *Currently players are respawned at round end in finishRound() in Round.java.
+     * Anyways, it should work as intended using keyboard inputs also.
+     * @param moves list of moves to update
+     */
+    public void checkForRespawnAfterKeyBoardInput(MovesToExecuteSimultaneously moves) {
         if(!this.isPushed && keyInput) {
             movesLeft--;
             if (movesLeft == 0) {
@@ -309,7 +309,6 @@ public class Player {
      */
     public void executeCardAction(ProgramCard programCard, MovesToExecuteSimultaneously moves) {
         keyInput = false;
-        //Move rotateMove = new Move(this);
         movesLeft = programCard.getMovement();
         switch (programCard.getCommand()) {
             case MOVE1:
@@ -339,8 +338,6 @@ public class Player {
             default:
                 break;
         }
-        //rotateMove.updateMove(); //complete rotateMove object
-        //moves.add(rotateMove);
     }
 
     public int getPlayerNumber() {
@@ -355,8 +352,6 @@ public class Player {
         return playerPiece;
     }
 
-
-
     public ArrayList<ProgramCard> getPlayerHandDeck() {
         return playerHandDeck;
     }
@@ -367,10 +362,6 @@ public class Player {
 
     public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) {
         this.playerHandDeck = playerHandDeck;
-    }
-
-    public void setSelectedCards(ProgramCard[] selectedCards) {
-        this.selectedCards = selectedCards;
     }
 
     public void addCardsToSelectedCards(ArrayList<ProgramCard> cards){
@@ -396,8 +387,6 @@ public class Player {
                 "playerNumber=" + playerNumber +
                 '}';
     }
-
-
 
     /**
      * Damages a player a given amount
@@ -507,42 +496,6 @@ public class Player {
     public void removeCheckpoint() { checkpointsVisited--; }
 
     public int getCheckpointsVisited() { return checkpointsVisited; }
-
-    /**
-     * Checks if a player is currently on a ConveyorBeltPiece
-     *
-     * @return true if a player is on a conveyorBelt, false otherwise.
-     */
-    public boolean isOnConveyorBelt() {
-        if(!logicGrid.isInBounds(this.getPos())){
-            return false;
-        }
-        return !logicGrid.positionIsFree(this.getPos(), 4);
-    }
-
-    /**
-     * Checks if a player is currently on an ExpressBeltPiece
-     *
-     * @return true if a player is on an ExpressBelt, false otherwise.
-     */
-    public boolean isOnExpressBelt() {
-        if(!logicGrid.isInBounds(this.getPos())){
-            return false;
-        }
-        return !logicGrid.positionIsFree(this.getPos(), 5);
-    }
-
-    /**
-     * Checks if a player is currently on a CogPiece
-     *
-     * @return true if a player is on a cog, false otherwise.
-     */
-    public boolean isOnCog() {
-        if(!logicGrid.isInBounds(this.getPos())){
-            return false;
-        }
-        return !logicGrid.positionIsFree(this.getPos(), 6);
-    }
 
     public ArrayList<ProgramCard> getLockedCards() { return lockedCards; }
 
