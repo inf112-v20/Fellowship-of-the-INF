@@ -120,10 +120,10 @@ public class Phase {
     private void touchCheckPoints() {
         for (Player player : listOfPlayers) {
             if(player.isDead()){continue;}
+            Position oldSpawnPoint = player.getSpawnPoint();
             if (player.getCurrentBoardPiece() instanceof FlagPiece) {
                 FlagPiece flag = (FlagPiece) player.getCurrentBoardPiece();
                 player.setSpawnPoint(player.getPos());
-                System.out.println("Setting "+ player.toString() + " spawn point to " + player.getPos());
                 if (player.getCheckpointsVisited() + 1 == flag.getFlagNumber()) {
                     player.visitedCheckpoint();
                 }
@@ -133,6 +133,12 @@ public class Phase {
                 player.setSpawnPoint(player.getPos());
                 System.out.println("Setting "+ player.toString() + " spawn point to " + player.getPos());
             }
+            if(!oldSpawnPoint.equals(player.getSpawnPoint())){
+                ArrayList<Player> respawnOrder = game.getRespawnOrder();
+                respawnOrder.remove(player);
+                respawnOrder.add(player);
+            }
+
         }
     }
 

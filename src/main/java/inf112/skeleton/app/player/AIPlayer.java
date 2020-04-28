@@ -55,16 +55,20 @@ public class AIPlayer extends Player {
         this.newRobotDamage = getDamage();
         this.nextGoalFlag = checkpointsVisited;
         this.nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
-        System.out.println(toString() + difficulty + " playerhand: " + playerHandDeck);
 
         if(difficulty.equals(Difficulty.TESTING)){
             createTestPlayer();
         }
+        System.out.println(toString() + difficulty + " playerhand: " + playerHandDeck);
+
+        evaluatePowerDown();
+        if(isPowerDownMode())return;
 
         if (playerHandDeck.isEmpty()) {
             setLockedIn(true);
             return;
         }
+
 
         switch (difficulty){
             case EASY: pickRandom(); break;
@@ -102,9 +106,8 @@ public class AIPlayer extends Player {
             chosenCards.add(card);
             if(chosenCards.size() == cardsToPick) {break;}
         }
-
         if(chosenCards.size() != cardsToPick) {
-            int cardsMissing = chosenCards.size() - cardsToPick;
+            int cardsMissing = cardsToPick - chosenCards.size();
             for (int i = 0; i < cardsMissing ; i++) {
                 chosenCards.add(getFirstAvailableCard());
             }
@@ -168,7 +171,7 @@ public class AIPlayer extends Player {
         HashMap<ProgramCard, Integer> cardAndScore = new HashMap<>();
         ArrayList<ProgramCard> checkedCards = new ArrayList<>();
         for (ProgramCard card : availableCardsLeft) {
-            if (isCardChecked(checkedCards, card)) {
+            if (isCardTypeChecked(checkedCards, card)) {
                 continue;
             }
             checkedCards.add(card);
@@ -261,13 +264,16 @@ public class AIPlayer extends Player {
 
                  for (int k = 0; k < currentAvailableCards.size(); k++) {
                      ProgramCard card = currentAvailableCards.get(k);
-                     if (isCardChecked(checkedCards, card)) {
+                     if (isCardTypeChecked(checkedCards, card)) {
                          continue;
                      }
                      checkedCards.add(card);
+                     /*
                      if (isCardUseless(card, currentPos, currentDir, currentDamage)) {
                          continue;
                      }
+
+                      */
                      newFrontier.add(createNode(currentPos, currentDir, card, currentTotalScore,
                              currentChosenCards, currentAvailableCards, goalFlag, currentDamage));
                  }
@@ -280,11 +286,16 @@ public class AIPlayer extends Player {
                      if (nodeScore < bestNodeScore) {
                          bestNodeScore = score;
                      }
+                     /*
                      if ((nodeScore > bestNodeScore) && nodeScore > currentTotalScore[2] &&
                      flag <= currentTotalScore[0]) {
                          newFrontier.remove(k);
                          k--;
                      }
+
+                      */
+
+
                      if (cardsInFrontier.size() == cardsToPick && isCurrentBetter(bestFinalTotalScore, nodeTotalScore)){
                          bestFinalTotalScore = nodeTotalScore;
                          chosenCards = cardsInFrontier;
@@ -358,9 +369,16 @@ public class AIPlayer extends Player {
      * @param card the ProgramCard to check
      * @return true if it is already in the list, false otherwise
      */
-    private boolean isCardChecked(ArrayList<ProgramCard> checkedCards, ProgramCard card){
+    private boolean isCardTypeChecked(ArrayList<ProgramCard> checkedCards, ProgramCard card){
         for (ProgramCard checkedCard : checkedCards) {
             if (checkedCard.getCommand().equals(card.getCommand())) return true;
+        }
+        return false;
+    }
+
+    private boolean isProgramCardChecked(ArrayList<ProgramCard> checkedCards, ProgramCard card){
+        for (ProgramCard checkedCard : checkedCards) {
+            if (checkedCard.equals(card)) return true;
         }
         return false;
     }
@@ -379,7 +397,7 @@ public class AIPlayer extends Player {
         Direction newDir = (Direction) finalPosAndDir.get(1);
         if(pos.equals(newPos) && dir.equals(newDir)){ return true;}
         if(damage + getLaserDamage(newPos) >= 10){
-            System.out.println("Card is useless at " + pos + ", new pos: " + newPos + " damage: " + damage + " laser damage: " + getLaserDamage(newPos));
+            System.out.println( card.toString() + " is useless at " + pos + ", new pos: " + newPos + " damage: " + damage + " laser damage: " + getLaserDamage(newPos));
             return true;}
         return logicGrid.isDeadMove(newPos);
     }
@@ -404,7 +422,7 @@ public class AIPlayer extends Player {
      */
     private ProgramCard getFirstAvailableCard(){
         for (ProgramCard programCard : playerHandDeck) {
-            if (!isCardChecked(chosenCards, programCard)) {
+            if (!isProgramCardChecked(chosenCards, programCard)) {
                 return programCard;
             }
         }
@@ -455,7 +473,6 @@ public class AIPlayer extends Player {
         }
         Position finalPos = pos;
         Direction finalDir = dir;
-
         if (!logicGrid.positionIsFree(pos, 5)) {
             ExpressBeltPiece expressBelt = logicGrid.getPieceType(pos, ExpressBeltPiece.class);
             if (expressBelt.isTurn()) {
@@ -566,8 +583,9 @@ public class AIPlayer extends Player {
     private void evaluatePowerDown(){
         if (getDamage() < 5)return;
         int random =(int) Math.random()*10;
-        if(random < getDamage()){
-            setPowerDownMode(true);
+        if(random <= getDamage()){
+            System.out.println(toString() + " powered down with a " + (getDamage()*10) + "% chance to do so");
+            doPowerDown();
         }
     }
 
@@ -636,6 +654,7 @@ public class AIPlayer extends Player {
         hand.add(new ProgramCard(7, CardType.UTURN));
         hand.add(new ProgramCard(8, CardType.UTURN));
         hand.add(new ProgramCard(9, CardType.ROTATELEFT));
+
         playerHandDeck = hand;
         nextGoalFlag = getPlayerNumber()-1;
         nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);

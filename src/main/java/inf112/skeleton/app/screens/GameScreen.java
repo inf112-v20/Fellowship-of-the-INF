@@ -32,9 +32,7 @@ import inf112.skeleton.app.player.AIPlayer.Difficulty;
 import inf112.skeleton.app.player.Player;
 
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static inf112.skeleton.app.grid.Direction.*;
@@ -78,6 +76,7 @@ public class GameScreen implements Screen {
     private ArrayList<Image> respawnImages;
     private boolean createdImage = false;
     private boolean hasUpdated = false;
+    private int currentPhaseNr = 0;
 
 
     public GameScreen(String mapName, int numberOfPlayers, Difficulty difficulty) {
@@ -163,7 +162,7 @@ public class GameScreen implements Screen {
      */
     public void update() {
         if(!createdImage){
-            for(Player player : game.getListOfPlayers()){
+            for(Player player : game.getRespawnOrder()){
                 createRespawnImage(player);
             }
             createdImage = true;
@@ -201,7 +200,6 @@ public class GameScreen implements Screen {
         if (!movesToExecute() && !game.moreLaserToShoot()&& !hasUpdated){
             updateRespawnImages();
             hasUpdated = true;
-
         }
         //only handle keyboard input if there are no moves to execute
         if (!movesToExecute() && !game.moreLaserToShoot() && !game.isChoosingRespawn()) {
@@ -231,6 +229,10 @@ public class GameScreen implements Screen {
             shootRobotLasers();
             showBoardLasers();
             delayForSeconds(150);
+        }
+        if(currentPhaseNr != game.getRound().getPhaseNr()){
+            hasUpdated = false;
+            currentPhaseNr = game.getRound().getPhaseNr();
         }
     }
 
@@ -334,7 +336,6 @@ public class GameScreen implements Screen {
                         uiScreen.newRound();
                     }
                 } else {
-                    hasUpdated = false;
                     if (game.getRound().getPhaseNr() == 0) {
                         uiScreen.executeLockInButton();
                         return;
@@ -562,22 +563,23 @@ public class GameScreen implements Screen {
             TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(textureRegion);
             Image image = new Image(myTexRegionDrawable);
             image.setSize(80, 80);
-            Position pos = findPosition(player);
+            HashMap<String, Integer> posCounter = new HashMap<>();
+            Position pos = findPosition(player, posCounter);
             image.setPosition(pos.getX(), pos.getY());
+            image.setName(player.toString());
             stage.addActor(image);
             respawnImages.add(image);
     }
 
-    private Position findPosition(Player player){
+    private Position findPosition(Player player, HashMap posCounter){
         Position respawnPosition = player.getSpawnPoint();
         int posX = respawnPosition.getX() * TILE_WIDTH_DPI;
-        int playersOnSameTile = 0;
-        for(int i = 0; i < game.getListOfPlayers().length; i++){
-            Player gamePlayer = game.getListOfPlayers()[i];
-            if(!player.equals(gamePlayer) && gamePlayer.getSpawnPoint().equals(respawnPosition)){
-                playersOnSameTile++;
-            }
+        Integer playersOnSameTile = 0;
+        String spawnString = respawnPosition.toString();
+        if(posCounter.containsKey(spawnString)){
+          playersOnSameTile = (Integer) posCounter.get(spawnString);
         }
+        posCounter.put(spawnString, playersOnSameTile+1);
         int spacing = playersOnSameTile* (TILE_WIDTH_DPI/4);
         int posY = respawnPosition.getY() * TILE_WIDTH_DPI + spacing;
         if(playersOnSameTile > 4){
@@ -589,11 +591,17 @@ public class GameScreen implements Screen {
     }
 
     private void updateRespawnImages(){
-        System.out.println("Updating respawn images");
-        for (int i = 0; i < respawnImages.size(); i++) {
-            Image image = respawnImages.get(i);
-            Player player = game.getListOfPlayers()[i];
-            Position pos = findPosition(player);
+        HashMap<String, Integer> posCounter = new HashMap<>();
+        for (int i = 0; i < game.getRespawnOrder().size(); i++) {
+            Player player = game.getRespawnOrder().get(i);
+            Image image = respawnImages.get(0);
+            for (Image respawnImage : respawnImages) {
+                image = respawnImage;
+                if (image.getName().equals(player.toString())) {
+                    break;
+                }
+            }
+            Position pos = findPosition(player, posCounter);
             image.setPosition(pos.getX(),pos.getY());
         }
     }

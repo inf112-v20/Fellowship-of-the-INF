@@ -114,19 +114,19 @@ public class UIScreen {
             gamelogActors.add(drawText("" + (i + 1), 10, posX, height * 0.37f, Color.BLACK));
         }
         //Check for player that are in power down, and add them to the game log after the players wth cards
+        ArrayList<Player> poweredDownPlayers = new ArrayList<>();
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
             if(player.isPowerDownMode()) {
                 float gap = powerDownButton.getWidth() * 1.4f;
-                float posX = (width * 0.51f) + ((phase.getOrderedListOfPlayers().size() + i) * gap);
+                float posX = (width * 0.51f) + ((phase.getOrderedListOfPlayers().size() + poweredDownPlayers.size()) * gap);
                 Texture texture = new Texture(Gdx.files.internal("ui/powerdown.png"));
                 TextureRegion powerDownTexture = new TextureRegion(texture);
-                gamelogActors.add(createImage(powerDownTexture, 0.2f, posX, height * 0.4f, 1));
+                gamelogActors.add(createImage(powerDownTexture, 0.2f, posX, height * 0.43f, 1));
                 TextureRegion playerPicture = player.getPlayerCell().getTile().getTextureRegion();
                 posX = (width * 0.515f) + ((phase.getOrderedListOfPlayers().size() + i) * gap);
                 gamelogActors.add(createImage(playerPicture, 0.01f, posX, height * 0.55f, 1));
-                posX = (width * 0.53f) + ((phase.getOrderedListOfPlayers().size() + i) * gap);
-                gamelogActors.add(drawText("" + ((phase.getOrderedListOfPlayers().size() + i) + 1), 10, posX, height * 0.37f, Color.BLACK));
+                poweredDownPlayers.add(player);
             }
         }
     }
