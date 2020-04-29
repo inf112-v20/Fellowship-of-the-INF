@@ -56,7 +56,7 @@ public class BoardElementsMove {
             return;
         }
         ConveyorBeltPiece conveyorBeltPiece = (ConveyorBeltPiece) logicGrid.getPieceType(player.getPos(), boardPiece.getClass());
-        System.out.println(player.toString() + " is moving on conveyorbelt at pos " + player.getPos() );
+        //System.out.println(player.toString() + " is moving on conveyorbelt at pos " + player.getPos() );
         Direction conveyorBeltDirection = conveyorBeltPiece.getDir();
         Position newPos = player.getPos().getPositionIn(conveyorBeltDirection);
         if (isPlayerInFront(player, game, onlyExpressBelt)) {

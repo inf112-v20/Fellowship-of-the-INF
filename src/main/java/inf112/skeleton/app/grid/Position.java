@@ -10,21 +10,22 @@ public class Position {
         this.y = y;
     }
 
-    public int getY() {
-        return y;
-    }
+    /*
+    Getters
+     */
 
-    public void setY(int y) {
-        this.y = y;
-    }
+    public int getY() { return this.y; }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
+    /*
+    Setters
+    */
+    public void setY(int y) { this.y = y; }
+
+    public void setX(int x) { this.x = x; }
 
     @Override
     public String toString() {

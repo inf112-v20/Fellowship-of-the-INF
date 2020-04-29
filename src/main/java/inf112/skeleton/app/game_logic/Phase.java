@@ -30,6 +30,16 @@ public class Phase {
         this.phaseNumber = 0;
         this.victoriousPlayer = playerHasWon();
     }
+    /*
+    Getters
+     */
+    public ArrayList<Player> getOrderedListOfPlayers() {
+        return this.orderedListOfPlayers;
+    }
+
+    public int getPhaseNumber() {
+        return this.phaseNumber;
+    }
 
     /**
      * Executes a phase based on RoboRally ruleset.
@@ -89,8 +99,8 @@ public class Phase {
         });
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
-            orderedListOfPlayers.add(player);
             if(player.isDead()){continue;}
+            orderedListOfPlayers.add(player);
             // if(player.getPlayerNumber() == 1 || player.getPlayerNumber() == 2){continue;}
             MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
@@ -223,7 +233,7 @@ public class Phase {
             boolean playerIsOnExpressBelt =  logicGrid.positionHasPieceType(player.getPos(), ExpressBeltPiece.class);
             if (playerIsOnConveyorBelt
                     || playerIsOnExpressBelt ) {
-                System.out.println("Moving " + player.toString() + " on conveyorbelt");
+                //System.out.println("Moving " + player.toString() + " on conveyorbelt");
                 if ((moveOnlyExpressBelts && !playerIsOnExpressBelt || player.hasBeenMovedThisPhase())) {
                     continue;
                 }
@@ -276,13 +286,6 @@ public class Phase {
         }
     }
 
-    public ArrayList<Player> getOrderedListOfPlayers() {
-        return orderedListOfPlayers;
-    }
-
-    public int getPhaseNumber() {
-        return phaseNumber;
-    }
 
     /**
      * Method for checking if a player has won the game
@@ -297,7 +300,7 @@ public class Phase {
     }
 
     /**
-     * Method for cehcking if every player is permanently dead, aka the game is over
+     * Method for checking if every player is permanently dead, aka the game is over
      * @return true if game is over, else returns false
      */
     public boolean isGameOver(){

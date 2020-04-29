@@ -49,6 +49,10 @@ public class ScoreBoardScreen {
         update();
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+
     public void update() {
         table.clear();
         table.setWidth(3000);
@@ -144,7 +148,4 @@ public class ScoreBoardScreen {
         return new Image(textureRegionDrawable);
     }
 
-    public Stage getStage() {
-        return stage;
-    }
 }

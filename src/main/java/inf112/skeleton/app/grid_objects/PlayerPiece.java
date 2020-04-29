@@ -25,24 +25,39 @@ public class PlayerPiece extends DirectionedPiece {
         initiatePlayerPieceCells();
     }
 
+    /*
+    Getters
+     */
+    public TiledMapTileLayer.Cell getCurrentCell() {
+        return this.currentCell;
+    }
+
+    public TiledMapTileLayer.Cell getPlayerCell() {
+        return this.playerCell;
+    }
+
+    public int getPlayerNumber() {
+        return this.playerNumber;
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+
+    @Override
+    public String toString() {
+        return "PlayerPiece{" +
+                "playerNumber=" + playerNumber +
+                '}';
+    }
+
     public void initiatePlayerPieceCells() {
         playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 0)));
         deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 1)));
         currentCell = playerCell; //appearance starts as normal player
     }
 
-    public TiledMapTileLayer.Cell getCurrentCell() {
-        return currentCell;
-    }
-
-    public TiledMapTileLayer.Cell getPlayerCell() {
-        return playerCell;
-    }
-
-    /**
-     * Turns the player around.
-     * @param moves list to update
-     */
     public void turnAround(MovesToExecuteSimultaneously moves) {
             Move move = new Move(this);
             turnPieceInOppositeDirection();
@@ -98,18 +113,8 @@ public class PlayerPiece extends DirectionedPiece {
         currentCell = deadPlayerCell;
     }
 
-    @Override
-    public String toString() {
-        return "PlayerPiece{" +
-                "playerNumber=" + playerNumber +
-                '}';
-    }
-
     public void showAlivePlayer() {
         currentCell = playerCell;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
 }

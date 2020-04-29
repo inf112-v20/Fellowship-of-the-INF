@@ -109,6 +109,42 @@ public class LogicGrid {
 
     }
 
+    /*
+    Getters
+     */
+    public ArrayList<ArrayList<List<Object>>> getFlagPositionScores(){
+        return this.flagPositionsScores;
+    }
+
+    public int getWidth() {
+        return this.width;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
+
+    public ArrayList<BoardPiece>[][] getGrid() {
+        return this.grid;
+    }
+
+    public ArrayList<Position> getSpawnPointPositions() {
+        return this.spawnPointPositions;
+    }
+
+    public ArrayList<Position> getFlagPositions() {
+        return this.flagPositions;
+    }
+
+    public ArrayList<LaserSourcePiece> getLaserSourceList() {
+        return this.laserSourceList;
+    }
+
+    public ArrayList<PusherPiece> getPushersList() {
+        return this.pushersList;
+    }
+
+
     /**
      * For each position in the grid, the corresponding cell in each layer is checked.
      * If the cell is non-empty, the corresponding BoardPiece is added to the PieceGrid
@@ -173,17 +209,6 @@ public class LogicGrid {
         grid[x][y].add(new NullPiece(new Position(x, y), -1));
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public ArrayList<BoardPiece>[][] getGrid() {
-        return grid;
-    }
 
     /**
      * Adds a new PlayerPiece to the logic grid
@@ -309,9 +334,7 @@ public class LogicGrid {
         }
     }
 
-    public ArrayList<Position> getSpawnPointPositions() {
-        return spawnPointPositions;
-    }
+
 
     /**
      * Checks if robot is allowed to leave its current position in a certain direction.
@@ -405,25 +428,6 @@ public class LogicGrid {
         }
     }
 
-    public ArrayList<Position> getFlagPositions() {
-        return flagPositions;
-    }
-
-    /**
-     * TODO I believe this method is no longer needed.
-     * The method addToListOfFlagsPos add to flagPositions as flag pieces are discovered during setPieceInGrid
-     */
-    private void sortFlagPositions() {
-        for (int y = width - 1; y >= 0; y--) {
-            for (int x = 0; x < height; x++) {
-                Position pos = new Position(x, y);
-                if (!positionIsFree(pos, flagLayerIndex)) {
-                    FlagPiece flagPiece = (FlagPiece) grid[x][y].get(flagLayerIndex);
-                    flagPositions.set(flagPiece.getFlagNumber() - 1, pos);
-                }
-            }
-        }
-    }
 
     /**
      * Finds a valid spawn point.
@@ -438,7 +442,7 @@ public class LogicGrid {
         //if spawnPoint is valid, return spawnPoint
         ArrayList<Position> availablePositions = new ArrayList<>();
         if (positionIsFree(spawnPoint, playerLayerIndex)) {
-            System.out.println("Actual spawnpoint is available at " + spawnPoint);
+            //System.out.println("Actual spawnpoint is available at " + spawnPoint);
             availablePositions.add(spawnPoint);
             return availablePositions;
         }
@@ -449,12 +453,12 @@ public class LogicGrid {
             Position pos2 = pos.getPositionIn(dir.getRightTurnDirection());
             if (positionIsFree(pos, playerLayerIndex)
                     && spawnIsSafe(pos)) {
-                System.out.println("Spawnpoint1 is available at " + pos);
+                //System.out.println("Spawnpoint1 is available at " + pos);
                 availablePositions.add(pos);
             }
             if (positionIsFree(pos2, playerLayerIndex)
                     && spawnIsSafe(pos2)) {
-                System.out.println("Spawnpoint2 is available at " + pos2);
+                //System.out.println("Spawnpoint2 is available at " + pos2);
                 availablePositions.add(pos2);
             }
         }
@@ -477,13 +481,6 @@ public class LogicGrid {
         return true;
     }
 
-    public ArrayList<LaserSourcePiece> getLaserSourceList() {
-        return laserSourceList;
-    }
-
-    public ArrayList<PusherPiece> getPushersList() {
-        return pushersList;
-    }
 
     /**
      * Checks of the position the laser wan't to enter is
@@ -576,9 +573,7 @@ public class LogicGrid {
         flagPositionsScores = flagMapPositions;
     }
 
-    public ArrayList<ArrayList<List<Object>>> getFlagPositionScores(){
-        return flagPositionsScores;
-    }
+
 
 
     /**

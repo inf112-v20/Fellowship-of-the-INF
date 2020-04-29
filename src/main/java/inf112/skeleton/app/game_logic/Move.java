@@ -51,6 +51,9 @@ public class Move {
         this.oldDir = playerPiece.getDir();
         this.newDir = playerPiece.getDir();
     }
+    /*
+    Getters
+     */
 
     public PlayerPiece getPlayerPiece() {
         return playerPiece;

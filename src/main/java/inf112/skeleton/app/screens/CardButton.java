@@ -59,21 +59,28 @@ public class CardButton {
         createLockedCardButtons();
     }
 
+    /*
+    Getters
+     */
+
     public Image[] getSelectedCardImages() {
-        return selectedCardImages;
+        return this.selectedCardImages;
     }
 
     public ArrayList<Stack> getLeftOverCardButtons() {
-        return leftOverCardButtons;
+        return this.leftOverCardButtons;
     }
 
-    public ProgramCard[] getSelectedCards() {
-        return selectedCards;
-    }
+    public ProgramCard[] getSelectedCards() { return this.selectedCards; }
 
     public Stack[] getSelectedCardButtons() {
-        return selectedCardButtons;
+        return this.selectedCardButtons;
     }
+
+    public ArrayList<Stack> getCardButtons(){
+        return this.cardButtons;
+    }
+
 
     /**
      * Sets the position of a cardbutton
@@ -267,7 +274,7 @@ public class CardButton {
     }
 
     /**
-     * Creates a Label. Is used to draw the prioritynumber on the cardbuttons.
+     * Creates a Label. Is used to draw the priority number on the cardbuttons.
      *
      * @param text the text to be made into a label
      * @return the label that is created
@@ -315,8 +322,5 @@ public class CardButton {
         }
     }
 
-    public ArrayList<Stack> getCardButtons(){
-        return cardButtons;
-    }
 
 }

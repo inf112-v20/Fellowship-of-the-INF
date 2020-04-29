@@ -19,6 +19,29 @@ public class Round {
         this.game = game;
     }
 
+    /*
+    Getters
+     */
+    public Phase getPhase() {
+        return this.phase;
+    }
+
+    public int getRoundNumber() {
+        return this.roundNumber;
+    }
+
+    public int getPhaseNr() {
+        return this.phaseNr;
+    }
+
+    /*
+    Setters
+     */
+    public void setRoundNumber(int number) {
+        this.roundNumber = number;
+    }
+
+
     /**
      * Starts a new round.
      * Gives every player in the game a new hand of cards with respect to their damage
@@ -29,6 +52,9 @@ public class Round {
     public void startRound() {
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
+            if(player.isPermanentlyDead()){
+                continue;
+            }
             player.setPlayerHandDeck(game.getGameDeck().drawHand(player.getPlayerHandDeck(), player.getDamage()));
             player.removeSelectedCards();
             int numberOfLockedCards = player.getLockedCards().size();
@@ -58,7 +84,9 @@ public class Round {
     public void finishRound() {
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
-            player.setLockedIn(false);
+            if(!player.isPermanentlyDead()){
+                player.setLockedIn(false);
+            }
             // Repairs
             checkForRepair(player);
             if (player.isPowerDownMode() && player.getLives() >= 0) {
@@ -66,22 +94,6 @@ public class Round {
             }
         }
         respawnPlayers();
-    }
-
-    public Phase getPhase() {
-        return phase;
-    }
-
-    public void setRoundNumber(int number) {
-        this.roundNumber = number;
-    }
-
-    public int getRoundNumber() {
-        return roundNumber;
-    }
-
-    public int getPhaseNr() {
-        return phaseNr;
     }
 
     /**
@@ -103,7 +115,7 @@ public class Round {
      */
     public void lockInCardsForComputers(boolean lockInForAll){
         for (Player player : game.getListOfPlayers()) {
-            if(player instanceof AIPlayer && !player.hasLockedIn()) {
+            if(player instanceof AIPlayer && !player.hasLockedIn() && !player.isPermanentlyDead()) {
                 AIPlayer aiPlayer = (AIPlayer) player;
                 aiPlayer.pickCards();
                 if(!lockInForAll){return;}

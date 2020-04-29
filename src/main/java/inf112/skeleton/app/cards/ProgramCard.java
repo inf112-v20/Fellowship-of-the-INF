@@ -16,6 +16,49 @@ public class ProgramCard implements IProgramCard {
         this.priority = priority;
         createImage();
     }
+    /*
+    Getters
+     */
+
+    @Override
+    public int getPriority() {
+        return priority;
+    }
+
+    @Override
+    public CardType getCommand() {
+        return cardType;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public boolean isMoveCard() {
+        return moveCard;
+    }
+
+    public int getMovement() {
+        return movement;
+    }
+
+
+    @Override
+    public String toString() {
+        //TODO Remember to change this back
+        return cardType + ": " + priority + " ";
+
+        /*
+        return "ProgramCard{" +
+                "priority=" + priority +
+                ", cardType=" + cardType +
+                '}';
+
+         */
+    }
+
+
 
 
     private void createImage() {
@@ -53,42 +96,6 @@ public class ProgramCard implements IProgramCard {
         }
     }
 
-    @Override
-    public int getPriority() {
-        return priority;
-    }
-
-    @Override
-    public CardType getCommand() {
-        return cardType;
-    }
-
-    @Override
-    public Texture getTexture() {
-        return texture;
-    }
-
-    @Override
-    public String toString() {
-        //TODO Remember to change this back
-        return cardType + ": " + priority + " ";
-
-        /*
-        return "ProgramCard{" +
-                "priority=" + priority +
-                ", cardType=" + cardType +
-                '}';
-
-         */
-    }
-
-    public boolean isMoveCard() {
-        return moveCard;
-    }
-
-    public int getMovement() {
-        return movement;
-    }
 
 
 }
