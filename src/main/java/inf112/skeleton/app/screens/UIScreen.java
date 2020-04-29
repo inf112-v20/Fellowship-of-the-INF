@@ -62,6 +62,17 @@ public class UIScreen {
         this.newRound();
     }
 
+    /*
+    Getters
+     */
+    public Stage getStage() { return this.stage; }
+
+    public ScoreBoardScreen getScoreBoardScreen() { return this.scoreBoardScreen; }
+
+    public CardButton getCardButton() { return this.cardButton; }
+
+    public Label getTimerLabel(){return this.timerLabel;}
+
 
     /**
      * Starts a new round
@@ -430,14 +441,6 @@ public class UIScreen {
         if(timerLabel != null){ timerLabel.remove();}
         if(seconds>= 0) timerLabel = drawText(String.valueOf(seconds), 30, width*0.9f, height*0.9f, Color.BLACK);
     }
-
-    public Stage getStage() { return stage; }
-
-    public ScoreBoardScreen getScoreBoardScreen() { return scoreBoardScreen; }
-
-    public CardButton getCardButton() { return cardButton; }
-
-    public Label getTimerLabel(){return timerLabel;}
 
     public void createRespawnText(){
         String dirText = "";

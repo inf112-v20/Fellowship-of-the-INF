@@ -565,11 +565,7 @@ public class Player {
             setPos(deadPosition);
             setPowerDownMode(true);
             isPermanentlyDead = true;
-            System.out.println("Playerdeck: " + playerHandDeck);
-            System.out.println("Discard deck: " + game.getGameDeck().getDiscardDeck());
             game.getGameDeck().moveAll(game.getGameDeck().getDiscardDeck(), playerHandDeck);
-            System.out.println("Playerdeck: " + playerHandDeck);
-            System.out.println("Discard deck: " + game.getGameDeck().getDiscardDeck());
             permaDeadMove.updateMove();
             moves.add(permaDeadMove);
             game.executeMoves(moves);

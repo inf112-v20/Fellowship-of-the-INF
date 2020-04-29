@@ -19,6 +19,29 @@ public class Round {
         this.game = game;
     }
 
+    /*
+    Getters
+     */
+    public Phase getPhase() {
+        return this.phase;
+    }
+
+    public int getRoundNumber() {
+        return this.roundNumber;
+    }
+
+    public int getPhaseNr() {
+        return this.phaseNr;
+    }
+
+    /*
+    Setters
+     */
+    public void setRoundNumber(int number) {
+        this.roundNumber = number;
+    }
+
+
     /**
      * Starts a new round.
      * Gives every player in the game a new hand of cards with respect to their damage
@@ -71,22 +94,6 @@ public class Round {
             }
         }
         respawnPlayers();
-    }
-
-    public Phase getPhase() {
-        return phase;
-    }
-
-    public void setRoundNumber(int number) {
-        this.roundNumber = number;
-    }
-
-    public int getRoundNumber() {
-        return roundNumber;
-    }
-
-    public int getPhaseNr() {
-        return phaseNr;
     }
 
     /**

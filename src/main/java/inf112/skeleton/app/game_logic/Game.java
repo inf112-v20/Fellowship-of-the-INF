@@ -70,6 +70,72 @@ public class Game {
         this.frontendMoves = new LinkedList<>();
 
     }
+    /*
+    Getters
+     */
+
+    public LogicGrid getLogicGrid() {
+        return this.logicGrid;
+    }
+
+    public GameDeck getGameDeck() {
+        return this.gameDeck;
+    }
+
+    public Player getPlayer() {
+        return this.player1;
+    }
+
+    public Round getRound() {
+        return this.round;
+    }
+
+    public Player[] getListOfPlayers() {
+        return this.playerList;
+    }
+
+    public Player getPlayerRemaining(){ return this.playerRemaining; }
+
+    public ArrayList<Player> getDeadPlayers(){return this.deadPlayers;}
+
+    public boolean isPhaseDone(){return this.phaseDone;}
+
+    public boolean isAutoStartNextPhaseOn(){return this.autoStartNextPhase;}
+
+    public boolean isChoosingRespawn(){
+        return this.choosingRespawn;
+    }
+
+    public ArrayList<Player> getRespawnOrder(){
+        return this.respawnOrder;
+    }
+
+    public int getMaxNumberOfLives(){ return this.maxNumberOfLives; }
+
+    public int getMaxNumberOfDamage(){ return this.maxNumberOfDamage; }
+
+    /**
+     * This method is called by GameScreen so that it can show the moves that have been executed in backend.
+     * @return a queue of the frontend moves that need to be shown
+     */
+    public Queue<MovesToExecuteSimultaneously> getFrontendMoves() {
+        return this.frontendMoves;
+    }
+
+    /*
+    Setters
+     */
+    public void setLogicGrid(LogicGrid logicGrid) {
+        this.logicGrid = logicGrid;
+    }
+
+    public void setPlayer(Player player) {
+        this.player1 = player;
+    }
+
+    public void setPhaseDone(boolean bool){ this.phaseDone = bool; }
+
+    public void setChoosingRespawn(boolean bool){ this.choosingRespawn = bool; }
 
     /**
      * The computer players are initiated and added to the playerList and position in the logicGrid
@@ -81,31 +147,6 @@ public class Game {
             playerList[playerNumber - 1] = playerToBeInitiated;
             logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
         }
-    }
-
-
-    public LogicGrid getLogicGrid() {
-        return logicGrid;
-    }
-
-    public void setLogicGrid(LogicGrid logicGrid) {
-        this.logicGrid = logicGrid;
-    }
-
-    public GameDeck getGameDeck() {
-        return gameDeck;
-    }
-
-    public Player getPlayer() {
-        return player1;
-    }
-
-    public void setPlayer(Player player) {
-        this.player1 = player;
-    }
-
-    public Round getRound() {
-        return round;
     }
 
     /**
@@ -197,10 +238,6 @@ public class Game {
         }
     }
 
-    public Player[] getListOfPlayers() {
-        return playerList;
-    }
-
     /**
      * Creates a new round, increments the round number and start the new round.
      */
@@ -210,14 +247,6 @@ public class Game {
         roundNumber++;
         round.setRoundNumber(roundNumber);
         round.startRound();
-    }
-
-    /**
-     * This method is called by GameScreen so that it can show the moves that have been executed in backend.
-     * @return a queue of the frontend moves that need to be shown
-     */
-    public Queue<MovesToExecuteSimultaneously> getFrontendMoves() {
-        return frontendMoves;
     }
 
     /**
@@ -287,36 +316,6 @@ public class Game {
             }
         }
         return (lockedInPlayers == playerList.length-1);
-    }
-
-    /**
-     * Get player that hasn't locked card
-     * @return the one player that hasn't locked in cards for the next round
-     */
-    public Player getPlayerRemaining(){ return playerRemaining; }
-
-    public ArrayList<Player> getDeadPlayers(){return deadPlayers;}
-
-    public void setPhaseDone(boolean bool){ phaseDone = bool; }
-
-    public boolean isPhaseDone(){return phaseDone;}
-
-    public boolean isAutoStartNextPhaseOn(){return autoStartNextPhase;}
-
-    public void setChoosingRespawn(boolean bool){
-        choosingRespawn = bool;
-    }
-
-    public boolean isChoosingRespawn(){
-        return  choosingRespawn;
-    }
-
-    public int getMaxNumberOfLives(){ return maxNumberOfLives; }
-
-    public int getMaxNumberOfDamage(){ return  maxNumberOfDamage; }
-
-    public ArrayList<Player> getRespawnOrder(){
-        return respawnOrder;
     }
 
 }
