@@ -93,7 +93,7 @@ public class Player {
      * @param moves        list that moves created can be added to
      */
     public void tryToGo(Direction newDirection, MovesToExecuteSimultaneously moves) {
-        Position oldPosition = playerPiece.getPos();
+        Position oldPosition = getPos();
         //if the move is illegal, the robot does not move
         if (!isLegalMoveInDirection(oldPosition, newDirection)) return;
         Position newPosition = oldPosition.getPositionIn(newDirection);
@@ -111,7 +111,7 @@ public class Player {
             //if the move results in pushing robots, add the resulting moves to the moves list
             addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
             setCurrentBoardPiece(newPosition.getX(), newPosition.getY()); //update currentBoardPiece
-            playerPiece.setPos(newPosition);
+            setPos(newPosition);
             move.updateMove();
             moves.add(move);
             latestMoveDirection = newDirection;
@@ -217,7 +217,6 @@ public class Player {
     /**
      *Put the player back to it's respawn position, update boardPiece and moves
      * @param moves list to update
-     * TODO: @Erlend could perhaps AIPlayer have a super respawnPlayer()?
      */
     public void respawnPlayer(MovesToExecuteSimultaneously moves) {
         game.performMoves(moves);
@@ -348,10 +347,6 @@ public class Player {
             default:
                 break;
         }
-    }
-
-    public int getPlayerNumber() {
-        return playerNumber;
     }
 
     public boolean isDead() {
@@ -638,6 +633,10 @@ public class Player {
             }
         }
         return counter;
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
     }
 
     public void setIsDead(boolean bool){
