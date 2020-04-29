@@ -27,7 +27,46 @@
 0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="3" name="Wall" width="9" height="9">
+  <layer id="3" name="Conveyor belt" width="9" height="9">
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+ </data>
+  </layer>
+  <layer id="4" name="Express belt" width="9" height="9">
+   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+ </data>
+  </layer>
+   <layer id="5" name="Cog" width="9" height="9">
+    <data encoding="csv">
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0
+  </data>
+   </layer>
+ <layer id="6" name="Wall" width="9" height="9">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,
@@ -40,7 +79,7 @@
 0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="4" name="Flag" width="9" height="9">
+ <layer id="7" name="Flag" width="9" height="9">
   <data encoding="csv">
 55,63,71,79,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,
@@ -53,7 +92,7 @@
 0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="5" name="Player" width="9" height="9">
+ <layer id="8" name="Player" width="9" height="9">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,
@@ -66,7 +105,7 @@
 0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="6" name="Robot Lasers" width="9" height="9">
+ <layer id="9" name="Robot Lasers" width="9" height="9">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,

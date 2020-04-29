@@ -52,6 +52,8 @@ public class TestMapSelectionScreen implements Screen {
                 "pushers_test_map_2",
                 "pushers_test_map_3",
                 "pushers_test_map_4",
+                "pushers_test_map_5",
+                "pushers_test_map_6",
                 "robot_pushing_test_map_1",
                 "robot_pushing_test_map_2",
                 "robot_pushing_test_map_3"

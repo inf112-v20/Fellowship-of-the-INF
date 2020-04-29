@@ -2,53 +2,86 @@
 ### Setups
 
 #### Setup nr. 1 TODO: map 1
-* Press the Play button in the menu screen.
-* Press the Test Stage button in the stage selection screen.
+* Run Main.
+* Press the Test button in the menu screen.
+* Select the map "pushers_test_map_1" from the dropdown menu
+* Press the "Start Test" button
 
 #### Setup nr. 2
-TODO: map 2
+* Run Main.
+* Press the Test button in the menu screen.
+* Select the map "pushers_test_map_2" from the dropdown menu
+* Press the "Start Test" button
 
 #### Setup nr. 3
+* Run Main.
+* Press the Test button in the menu screen.
+* Select the map "pushers_test_map_3" from the dropdown menu
+* Press the "Start Test" button
 
+#### Setup nr. 4
+* Run Main.
+* Press the Test button in the menu screen.
+* Select the map "pushers_test_map_4" from the dropdown menu
+* Press the "Start Test" button
 
 ### Tests
 
+#### Test for pusher pushing two robots
+* Complete setup nr. 1
+* Pick cards so that you do not change position in the next phase (rotate cards). 
+* Execute as many phases (by pressing ENTER) as rotation cards you selected.
+* *Assert: player one was pushed by the pusher, which resulted in player 2 also being pushed*
+
+
 #### Test for pushing in correct direction pt1
 * Complete setup nr. 3
-* Pick cards so that you do not change position in the next phase (rotate cards).
-* Press 0 , then the lock in button.
-* Wait for one phase to be executed
+* Pick cards so that you do not change position in the next phase (rotate cards). If you run out of rotation cards, select move cards last.
+* Press the lock in button.
+* Execute as many phases (by pressing ENTER) as rotation cards you selected.
 * *Assert: player one is being pushed in circles by the pushers.*
 
 
 #### Test for pushing in correct direction pt2
 * Complete setup nr. 4
 * Pick cards so that you do not change position in the next phase (rotate cards).
-* Press 0 , then the lock in button.
+* Press the lock in button.
 * Wait for one phase to be executed
 * *Assert: player one is being pushed in circles by the pushers.*
+
+The point of having pt 1 and 2, is that once both of these tests has been complete, the pushing ability of all the possible pusher pieces has been tested.
 
 #### Test odd-numberes pushers are only active during odd-numbered rounds
 * Complete setup nr. 5
 * Pick cards so that you do not change position in the next phase (choose rotate cards).
-* Press 0 , then the lock in button.
+* Press lock in button.
 * Wait for one phase to be executed
-* *Assert: player one is being pushed in circles by the pushers.*
+* *Assert: has been pushed by the odd-numbered pusher.*
+* Execute another phase (by pressing ENTER), so that an even-numbered phase is executed.
+* *Assert: player one has not been pushed by the odd-numbered pusher.*
 
-#### Test even-numberes pushers are only active during even-numbered rounds
+If you have picked enough rotation cards you can keep executing phases and see that the robot is only being pushed during odd-numbered phases as there are only odd-numbered pushers.
+
+
+#### Test even-numbered pushers are only active during even-numbered rounds
 * Complete setup nr. 6
 * Pick cards so that you do not change position in the next phase (choose rotate cards).
-* Press 0 , then the lock in button.
+* Press the lock in button.
 * Wait for one phase to be executed
-* *Assert: player one is being pushed in circles by the pushers.*
+* *Assert: player one has not been pushed by the even-numbered pusher.*
+* Execute another phase (by pressing ENTER), so that an even-numbered phase is executed.
+* *Assert: player one has been pushed by the even-numbered pusher.*
+ 
+ If you have picked enough rotation cards you can keep executing phases and see that the robot is only being pushed during even-numbered phases as there are only even-numbered pushers.
 
 
 #### Test for only being pushed once by pushers per phase
-* Complete setup nr. 2 (map 2)
+* Complete setup nr. 2
 * Pick cards so that you do not change position.
-* Press 0 , then the lock in button.
+* Press the lock in button.
 * Wait for one phase to be executed
 * *Assert: player 1 has only been pushed once by the pushers.*
+
 
 #### Test for blocking-functionality of pushers
 * Complete setup nr. 2
@@ -91,43 +124,4 @@ TODO: map 2
 
 * Press DOWN key four times.
 * *Assert: Robot 1 could not go through the pusher.*
-
-#### Test for pushing robot by backing up into it
-* Complete setup nr. 1
-* Press the DOWN key once
-* *Assert: the green robot has been pushed one space down by the pink robot.*
-
-#### Test for pushing robot into abyss
-* Complete setup nr. 1
-* Press the DOWN key twice
-* *Assert: the green robot has been pushed into the abyss by the rink robot.*
-
-#### Test for pushing robot into wall
-* Complete setup nr. 1
-* Press the RIGHT key once.
-* Press the UP key once.
-* *Assert: the pink robot did not push the blue robot.*
-
-#### Test for non-pushing movement
-* Complete setup nr. 1
-* Press the LEFT key once.
-* Press the UP key twice.
-* Press the DOWN key twice.
-* *Assert: none of the robots have been pushed by the pink robot.*
-
-#### Test for pushing multiple robots
-* Complete setup nr. 2.
-* Press the UP key once.
-* *Assert: the pink robot has pushed all the other robots one cell upwards.*
-
-#### Test for pushing multiple robots into wall
-* Complete setup nr. 2.
-* Press the UP key three times.
-* *Assert: the line of robots has not been pushed past the wall.*
-
-#### Test for pushing multiple robots into wall
-* Complete setup nr. 3.
-* Press the UP key six times.
-* *Assert: all of the other robots have been pushed off the board by the pink robot.*
-
 

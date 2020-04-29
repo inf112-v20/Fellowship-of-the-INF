@@ -2,22 +2,22 @@
 ### Setups
 
 #### Setup nr. 1
-* Go to line 82 in the class StageSelectionScreen, it's in the screens package. Comment out line 82 and uncomment line 84.
 * Run Main.
-* Press the Play button in the menu screen.
-* Press the Test Stage button in the stage selection screen.
+* Press the Test button in the menu screen.
+* Select the map "robot_pusing_test_map_1" from the dropdown menu
+* Press the "Start Test" button
 
 #### Setup nr. 2
-* Go to line 84 in the class StageSelectionScreen, it's in the screens package. Comment out line 84 and uncomment line 86.
 * Run Main.
-* Press the Play button in the menu screen.
-* Press the Test Stage button in the stage selection screen.
+* Press the Test button in the menu screen.
+* Select the map "robot_pusing_test_map_2" from the dropdown menu
+* Press the "Start Test" button
 
 #### Setup nr. 3
-* Go to line 86 in the class StageSelectionScreen, it's in the screens package. Comment out line 86 and uncomment line 88.
 * Run Main.
-* Press the Play button in the menu screen.
-* Press the Test Stage button in the stage selection screen.
+* Press the Test button in the menu screen.
+* Select the map "robot_pusing_test_map_3" from the dropdown menu
+* Press the "Start Test" button
 
 ### Tests
 
@@ -64,7 +64,7 @@
 * Press the UP key three times.
 * *Assert: the line of robots has not been pushed past the wall.*
 
-#### Test for pushing multiple robots into wall
+#### Test for pushing multiple robots off map
 * Complete setup nr. 3.
 * Press the UP key six times.
 * *Assert: all of the other robots have been pushed off the board by the pink robot.*
