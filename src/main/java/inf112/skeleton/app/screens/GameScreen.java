@@ -424,6 +424,9 @@ public class GameScreen implements Screen {
         if (game.getLogicGrid().positionIsFree(oldPos, playerLayerIndex)) { //check that you are not erasing another player
             playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
         }
+        if(oldPos.equals(playerPieceToUpdate.getPos())){
+            playerLayer.setCell(oldPos.getX(), oldPos.getY(), null);
+        }
         playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
         playerLayer.setCell(newPos.getX(), newPos.getY(), playerPieceToUpdate.getPlayerCell()); //repaint at new position
     }
