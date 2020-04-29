@@ -19,7 +19,6 @@ public class AIPlayer extends Player {
     private Direction newRobotDir;
     private int newRobotDamage;
     private int flagsVisitedInRound = 0;
-    private int checkpointsVisited;
     private Position nextGoalPos;
     private int nextGoalFlag;
     private LogicGrid logicGrid;
@@ -46,14 +45,13 @@ public class AIPlayer extends Player {
      */
     public void pickCards() {
         this.playerHandDeck = getPlayerHandDeck();
-        this.checkpointsVisited = getCheckpointsVisited();
         this.cardsToPick = 5 - getLockedCards().size();
         this.chosenCards = new ArrayList<>();
         this.availableCardsLeft = new ArrayList<>(playerHandDeck);
         this.newRobotPos = getPos();
         this.newRobotDir = getPlayerPiece().getDir();
         this.newRobotDamage = getDamage();
-        this.nextGoalFlag = checkpointsVisited;
+        this.nextGoalFlag = getCheckpointsVisited();
         this.nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
 
         if(difficulty.equals(Difficulty.TESTING)){
@@ -282,7 +280,7 @@ public class AIPlayer extends Player {
                      ArrayList<ProgramCard> cardsInFrontier = (ArrayList) newFrontier.get(k).get(3);
                      int[] nodeTotalScore = (int[]) newFrontier.get(k).get(2);
                      int nodeScore = nodeTotalScore[2];
-                     int flag = nodeTotalScore[0];
+                     int flag = nodeTotalScore[0]; //TODO: @Erlend remove?
                      if (nodeScore < bestNodeScore) {
                          bestNodeScore = score;
                      }

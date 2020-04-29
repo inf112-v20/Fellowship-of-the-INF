@@ -24,8 +24,6 @@ public class Game {
     private GameDeck gameDeck;
     private Player player1;
     private Player[] playerList;
-    private final int maxNumberOfLives = 3;
-    private final int maxNumberOfDamage = 9;
     private int numberOfPlayers;
     private int roundNumber = 0;
     private Round round;
@@ -109,10 +107,6 @@ public class Game {
     public ArrayList<Player> getRespawnOrder(){
         return this.respawnOrder;
     }
-
-    public int getMaxNumberOfLives(){ return this.maxNumberOfLives; }
-
-    public int getMaxNumberOfDamage(){ return this.maxNumberOfDamage; }
 
     /**
      * This method is called by GameScreen so that it can show the moves that have been executed in backend.
