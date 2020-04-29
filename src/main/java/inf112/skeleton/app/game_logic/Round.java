@@ -111,6 +111,9 @@ public class Round {
         }
     }
 
+    /**
+     * TODO: @Erlend add comments
+     */
     public void respawnPlayers(){
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for(int i = 0; i < game.getDeadPlayers().size(); i++){

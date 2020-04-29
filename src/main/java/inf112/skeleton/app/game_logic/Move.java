@@ -74,8 +74,7 @@ public class Move {
 
     @Override
     public String toString() {
-        return "Move player " + playerPiece.getPlayerNumber() +
-                " (" + oldPos +
+        return "Move player from (" + oldPos +
                 ", " + oldDir +
                 ") to (" + newPos +
                 ", " + newDir +
