@@ -29,7 +29,7 @@ public class Game {
     private int numberOfPlayers;
     private int roundNumber = 0;
     private Round round;
-    private Queue<MovesToExecuteSimultaneously> moves;
+    private Queue<MovesToExecuteSimultaneously> frontendMoves;
     private GameScreen gameScreen;
     private Player playerRemaining;
     private ArrayList<Player> deadPlayers;
@@ -39,7 +39,21 @@ public class Game {
     private Difficulty difficulty;
     private ArrayList<Player> respawnOrder = new ArrayList<>();
 
-
+    /**
+     * The Game object acts like the main control center of the backend side of the game, and also as the bridge between
+     * backend and frontent.
+     * When robots execute actions in the backend, a list of MovesToExecuteSimultaneously objects is generated.
+     * This is then sent to Game, which executed it backend-wise. This is done in the method executeMoves(), which moves
+     * robots to their new position in the logic grid, and adds the executed MovesToExecuteSimultaneously object to
+     * the queue called frontendMoved.
+     * When render() is called in GameScreen, the class calls getMoves() in Game so that it recieves the queue of moves
+     * that need to be shown, and then shows the moves and clears the moves that have been shown from frontendMoves.
+     *
+     * @param logicGrid the grid containing information about the board in the game
+     * @param gameScreen screen showing the game
+     * @param numberOfPlayers number of players in the game
+     * @param difficulty the level of intelligence the AI players have
+     */
     public Game(LogicGrid logicGrid, GameScreen gameScreen, int numberOfPlayers, Difficulty difficulty) {
         this.numberOfPlayers = numberOfPlayers;
         this.difficulty = difficulty;
@@ -52,10 +66,13 @@ public class Game {
         playerList[0] = player1;
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
-        this.moves = new LinkedList<>();
+        this.frontendMoves = new LinkedList<>();
         respawnOrder.add(player1);
     }
 
+    /**
+     * The computer players are initiated and added to the playerList and position in the logicGrid
+     */
     public void initiateComputerPlayers() {
         for (int playerNumber = 2; playerNumber <= numberOfPlayers; playerNumber++) {
             Player playerToBeInitiated = new AIPlayer(playerNumber, this, difficulty);
@@ -91,7 +108,7 @@ public class Game {
     }
 
     /**
-     * Handles keyboard input for manually moving Player 1 around.
+     * Handles keyboard input for manually moving Player 1 and player 2 around
      */
     public void handleKeyBoardInput() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();//initiate moves to be done
@@ -183,6 +200,9 @@ public class Game {
         return playerList;
     }
 
+    /**
+     * Creates a new round, increments the round number and start the new round.
+     */
     public void executeRound() {
         // If there are moves to execute, then don't start new round
         this.round = new Round(this);
@@ -191,8 +211,12 @@ public class Game {
         round.startRound();
     }
 
-    public Queue<MovesToExecuteSimultaneously> getMoves() {
-        return moves;
+    /**
+     * This method is called by GameScreen so that it can show the moves that have been executed in backend.
+     * @return a queue of the frontend moves that need to be shown
+     */
+    public Queue<MovesToExecuteSimultaneously> getFrontendMoves() {
+        return frontendMoves;
     }
 
     /**
@@ -216,7 +240,7 @@ public class Game {
      */
     public void executeMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //backend execution
-        this.moves.add(moves);//add to list of things to do in frontend
+        this.frontendMoves.add(moves);//add to list of things to do in frontend
     }
 
     /**

@@ -248,19 +248,19 @@ public class GameScreen implements Screen {
      * @return true if there are frontend moves to execute
      */
     public boolean movesToExecute() {
-        return !game.getMoves().isEmpty();
+        return !game.getFrontendMoves().isEmpty();
     }
 
     /**
      * This method executed the list of moves in the front end of the movesToExecute queue.
      */
     public void executeMove() {
-        MovesToExecuteSimultaneously firstSetOfMoves = game.getMoves().peek();
+        MovesToExecuteSimultaneously firstSetOfMoves = game.getFrontendMoves().peek();
         assert firstSetOfMoves != null;
         for (Move currentMove : firstSetOfMoves) {
             redrawPlayer(currentMove);
         }
-        game.getMoves().poll(); //remove set of moves once they have been executed
+        game.getFrontendMoves().poll(); //remove set of moves once they have been executed
         currentMoveIsExecuted = true;
     }
 

@@ -5,6 +5,10 @@ import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.Player;
 
+/**
+ * A move object is used log player movement, so that the game screen can recieve Move objects in order, thereby
+ * showing robot movement in the correct order.
+ */
 public class Move {
 
     private PlayerPiece playerPiece;
@@ -35,6 +39,11 @@ public class Move {
         this.newDir = playerPiece.getDir();
     }
 
+    /**
+     * Strictly speaking, the player piece holds all the important information, so the it can be used in the
+     * constructor as well.
+     * @param playerPiece
+     */
     public Move(PlayerPiece playerPiece) {
         this.playerPiece = playerPiece;
         this.oldPos = playerPiece.getPos();
@@ -82,7 +91,6 @@ public class Move {
 
     /**
      * updates the move object with the players new position and direction
-     *
      */
     public void updateMove() {
         newPos = playerPiece.getPos();
