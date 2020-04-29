@@ -593,14 +593,14 @@ public class GameScreen implements Screen {
         if(posCounter.containsKey(spawnString)){
           playersOnSameTile = (Integer) posCounter.get(spawnString);
         }
-        posCounter.put(spawnString, playersOnSameTile+1);
         int spacing = playersOnSameTile* (TILE_WIDTH_DPI/4);
         int posY = respawnPosition.getY() * TILE_WIDTH_DPI + spacing;
-        if(playersOnSameTile > 4){
+        if(playersOnSameTile >= 4){
             posX += TILE_WIDTH_DPI*0.75f;
-            spacing = playersOnSameTile-5* (TILE_WIDTH_DPI/4);
+            spacing = (playersOnSameTile-4)* (TILE_WIDTH_DPI/4);
             posY = respawnPosition.getY() * TILE_WIDTH_DPI + spacing;
         }
+        posCounter.put(spawnString, playersOnSameTile+1);
         return new Position(posX, posY);
     }
 

@@ -64,10 +64,11 @@ public class Game {
         this.playerList = new Player[numberOfPlayers];
         this.deadPlayers = new ArrayList<>();
         playerList[0] = player1;
+        respawnOrder.add(player1);
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
         this.frontendMoves = new LinkedList<>();
-        respawnOrder.add(player1);
+
     }
 
     /**
