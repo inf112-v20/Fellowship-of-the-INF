@@ -63,28 +63,178 @@ public class Player {
         this.deadPosition = new Position(playerNumber*100, playerNumber*100);
     }
 
-
-    /**
-     * Getter for position
-     *
-     * @return position of player
+    /*
+    Getters
      */
+
     public Position getPos() {
-        return playerPiece.getPos();
+        return this.playerPiece.getPos();
     }
+
+    public TiledMapTileLayer.Cell getPlayerCell() {
+        return this.playerPiece.getCurrentCell();
+    }
+
+    public Position getSpawnPoint() {
+        return this.spawnPoint;
+    }
+
+    public boolean isPowerDownMode() {
+        return this.powerDownMode;
+    }
+
+    public int getPlayerNumber() {
+        return this.playerNumber;
+    }
+
+    public boolean isDead() {
+        return this.isDead;
+    }
+
+    public PlayerPiece getPlayerPiece() {
+        return this.playerPiece;
+    }
+
+    public ArrayList<ProgramCard> getPlayerHandDeck() {
+        return this.playerHandDeck;
+    }
+
+    public ProgramCard[] getSelectedCards() {
+        return this.selectedCards;
+    }
+
+    public int getDamage() {
+        return this.damage;
+    }
+
+    public int getLives() {
+        return this.lives;
+    }
+
+    public boolean hasBeenPushedThisPhase() {
+        return this.hasBeenPushedThisPhase;
+    }
+
+    public boolean isPermanentlyDead() {
+        return this.isPermanentlyDead;
+    }
+
+    private Player getPusherStarter(){
+        return this.pusherStarter;
+    }
+
+    public boolean isKeyInput() {
+        return this.keyInput;
+    }
+
+    public int getCheckpointsVisited() {
+        return this.checkpointsVisited;
+    }
+
+    public ArrayList<ProgramCard> getLockedCards() {
+        return this.lockedCards;
+    }
+
+    public BoardPiece getCurrentBoardPiece() {
+        return this.currentBoardPiece;
+    }
+
+    public Direction latestMoveDirection() {
+        return this.latestMoveDirection;
+    }
+
+    public boolean isLatestMoveConveyorBelt() {
+        return this.conveyorBeltMove;
+    }
+
+    public Boolean hasBeenMovedThisPhase() {
+        return this.hasBeenMovedThisPhase;
+    }
+
+    public ArrayList<Position> getLaserPath() {
+        return this.laserPath;
+    }
+
+    public Position getOldLaserPos() {
+        return this.oldLaserPos;
+    }
+
+    public boolean hasLockedIn(){
+        return this.hasLockedIn;
+    }
+
+    public Position getLastPosAlive(){
+        return this.lastPosAlive;
+    }
+
+    public ArrayList<Position> getRespawnPositions(){
+        return this.respawnPositions;
+    }
+
+    public Position getDeadPosition(){
+        return this.deadPosition;
+    }
+
+
+    /*
+    Setters
+     */
 
     public void setPos(Position positionIn) {
-        playerPiece.setPos(positionIn);
+        this.playerPiece.setPos(positionIn);
     }
 
-    /**
-     * Getter for player
-     *
-     * @return player
-     */
-    public TiledMapTileLayer.Cell getPlayerCell() {
-        return playerPiece.getCurrentCell();
+    public void setSpawnPoint(Position pos) {
+        this.spawnPoint = pos;
     }
+
+    public void setPowerDownMode(boolean a) {
+        this.powerDownMode = a;
+    }
+
+    public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) {
+        this.playerHandDeck = playerHandDeck;
+    }
+
+    public void setIsDead(boolean bool){
+       this.isDead = bool;
+    }
+
+    private void setPusherStarter(Player pusherStarter){
+        this.pusherStarter = pusherStarter;
+    }
+
+    public void setHasBeenPushedThisPhase(boolean hasBeenPushed) {
+        this.hasBeenPushedThisPhase = hasBeenPushed;
+    }
+
+    public void setConveyorBeltMove(boolean move) {
+        this.conveyorBeltMove = move;
+    }
+
+    public void setHasBeenMovedThisPhase(boolean bool) {
+        this.hasBeenMovedThisPhase = bool;
+    }
+
+    public void setOldLaserPos(Position pos) {
+        this.oldLaserPos = pos;
+    }
+
+    public void setLockedIn(boolean bool){
+        this.hasLockedIn = bool;
+    }
+
+    public void setKeyInput(boolean bool){
+        this.keyInput = bool;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "playerNumber=" + playerNumber +
+                '}';
+    }
+
 
     /**
      * Tries to move the player in a new direction
@@ -206,12 +356,6 @@ public class Player {
         }
     }
 
-    public void setSpawnPoint(Position pos) {
-        this.spawnPoint = pos;
-    }
-
-    public Position getSpawnPoint() { return  this.spawnPoint;}
-
     /**
      *Put the player back to it's respawn position, update boardPiece and moves
      * @param moves list to update
@@ -244,13 +388,6 @@ public class Player {
 
     }
 
-    public void setPowerDownMode(boolean a) {
-        powerDownMode = a;
-    }
-
-    public boolean isPowerDownMode() {
-        return powerDownMode;
-    }
 
 
     /**
@@ -347,29 +484,7 @@ public class Player {
         }
     }
 
-    public int getPlayerNumber() {
-        return playerNumber;
-    }
 
-    public boolean isDead() {
-        return isDead;
-    }
-
-    public PlayerPiece getPlayerPiece() {
-        return playerPiece;
-    }
-
-    public ArrayList<ProgramCard> getPlayerHandDeck() {
-        return playerHandDeck;
-    }
-
-    public ProgramCard[] getSelectedCards() {
-        return selectedCards;
-    }
-
-    public void setPlayerHandDeck(ArrayList<ProgramCard> playerHandDeck) {
-        this.playerHandDeck = playerHandDeck;
-    }
 
     public void addCardsToSelectedCards(ArrayList<ProgramCard> cards){
         for (int i = 0; i < cards.size() ; i++) {
@@ -388,12 +503,6 @@ public class Player {
     }
 
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "playerNumber=" + playerNumber +
-                '}';
-    }
 
     /**
      * Damages a player a given amount
@@ -450,10 +559,6 @@ public class Player {
         repairDamage(amountOfRepairs-1);
     }
 
-    public int getDamage() {
-        return damage;
-    }
-
     /**
      * Remove a life from the life counter, and turn the player cell into a dead player cell
      */
@@ -493,8 +598,6 @@ public class Player {
      */
     public void gainLife() { lives++; }
 
-    public int getLives() { return lives; }
-
     public void visitedCheckpoint() { checkpointsVisited++; }
 
     /**
@@ -502,44 +605,9 @@ public class Player {
      */
     public void removeCheckpoint() { checkpointsVisited--; }
 
-    public int getCheckpointsVisited() { return checkpointsVisited; }
-
-    public ArrayList<ProgramCard> getLockedCards() { return lockedCards; }
-
-    /**
-     * Removes all cards from the players selected cards
-     */
     public void removeSelectedCards() { Arrays.fill(selectedCards, null); }
 
-    public BoardPiece getCurrentBoardPiece() { return currentBoardPiece; }
 
-    public Direction latestMoveDirection() { return latestMoveDirection; }
-
-    public void setConveyorBeltMove(boolean move) { conveyorBeltMove = move; }
-
-    public boolean isLatestMoveConveyorBelt() { return conveyorBeltMove; }
-
-    public void setHasBeenMovedThisPhase(boolean bool) { hasBeenMovedThisPhase = bool; }
-
-    public Boolean hasBeenMovedThisPhase() { return hasBeenMovedThisPhase; }
-
-    public ArrayList<Position> getLaserPath() { return laserPath; }
-
-    public Position getOldLaserPos() { return oldLaserPos; }
-
-    public void setOldLaserPos(Position pos) { oldLaserPos = pos; }
-
-    public void setLockedIn(boolean bool){ hasLockedIn = bool; }
-
-    public boolean hasLockedIn(){ return hasLockedIn; }
-
-    public Position getLastPosAlive(){return  lastPosAlive;}
-
-    public void setKeyInput(boolean bool){ keyInput = bool; }
-
-    public ArrayList<Position> getRespawnPositions(){return respawnPositions; }
-
-    public Position getDeadPosition(){ return deadPosition; }
 
     /**
      * Shoot laser in the direction which the robot is pointing.
@@ -621,12 +689,6 @@ public class Player {
         return true;
     }
 
-    public void setHasBeenPushedThisPhase(boolean hasBeenPushed) { this.hasBeenPushedThisPhase = hasBeenPushed; }
-
-    public boolean hasBeenPushedThisPhase() { return hasBeenPushedThisPhase; }
-
-    public boolean isPermanentlyDead() { return isPermanentlyDead; }
-
     private int cardsMissing(){
         int counter = 0;
         for (ProgramCard selectedCard : selectedCards) {
@@ -637,19 +699,4 @@ public class Player {
         return counter;
     }
 
-    public void setIsDead(boolean bool){
-        isDead = bool;
-    }
-
-    private void setPusherStarter(Player pusherStarter){
-        this.pusherStarter = pusherStarter;
-    }
-
-    private Player getPusherStarter(){
-        return pusherStarter;
-    }
-
-    public boolean isKeyInput() {
-        return keyInput;
-    }
 }
