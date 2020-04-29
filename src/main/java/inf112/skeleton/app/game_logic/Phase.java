@@ -89,8 +89,8 @@ public class Phase {
         });
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
-            orderedListOfPlayers.add(player);
             if(player.isDead()){continue;}
+            orderedListOfPlayers.add(player);
             // if(player.getPlayerNumber() == 1 || player.getPlayerNumber() == 2){continue;}
             MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show

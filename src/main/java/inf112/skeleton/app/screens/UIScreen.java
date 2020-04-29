@@ -118,7 +118,7 @@ public class UIScreen {
         ArrayList<Player> poweredDownPlayers = new ArrayList<>();
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
-            if(player.isPowerDownMode()) {
+            if(player.isPowerDownMode() && !player.isPermanentlyDead()) {
                 float gap = powerDownButton.getWidth() * 1.4f;
                 float posX = (width * 0.51f) + ((phase.getOrderedListOfPlayers().size() + poweredDownPlayers.size()) * gap);
                 Texture texture = new Texture(Gdx.files.internal("ui/powerdown.png"));
@@ -151,7 +151,7 @@ public class UIScreen {
 
         float alpha; //opacity of the image
         Color c = lifeActors[0].getColor();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < lifeActors.length; i++) {
             if (i > player.getLives() - 1) {
                 alpha = 0.2f;
             } else {
@@ -160,7 +160,7 @@ public class UIScreen {
             lifeActors[i].setColor(c.r, c.g, c.b, alpha);
         }
         c = checkpointActors[0].getColor();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < checkpointActors.length; i++) {
             if (i > player.getCheckpointsVisited() - 1) {
                 alpha = 0.2f;
             } else {
@@ -169,7 +169,7 @@ public class UIScreen {
             checkpointActors[i].setColor(c.r, c.g, c.b, alpha);
         }
         c = damageActors[0].getColor();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < damageActors.length; i++) {
             if (i > player.getDamage() - 1) {
                 alpha = 0.2f;
             } else {

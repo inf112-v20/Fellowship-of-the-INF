@@ -39,6 +39,10 @@ public class GameDeck {
         return playerHand;
     }
 
+    public ArrayList<ProgramCard> getDiscardDeck(){
+        return this.discardDeck;
+    }
+
     //Check to see if you can draw a hand without the drawDeck running out of cards
     private boolean canDrawFullHand(int numberOfCards) {
         return numberOfCards <= drawDeck.size();
@@ -56,7 +60,7 @@ public class GameDeck {
         }
     }
 
-    private void moveAll(ArrayList<ProgramCard> toDeck, ArrayList<ProgramCard> fromDeck) {
+    public void moveAll(ArrayList<ProgramCard> toDeck, ArrayList<ProgramCard> fromDeck) {
         int deckSize = fromDeck.size();
         for (int i = 0; i < deckSize; i++) {
             toDeck.add(fromDeck.get(0));

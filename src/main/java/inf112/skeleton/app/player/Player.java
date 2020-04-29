@@ -67,13 +67,9 @@ public class Player {
     Getters
      */
 
-    public Position getPos() {
-        return this.playerPiece.getPos();
-    }
+    public Position getPos() { return this.playerPiece.getPos(); }
 
-    public TiledMapTileLayer.Cell getPlayerCell() {
-        return this.playerPiece.getCurrentCell();
-    }
+    public TiledMapTileLayer.Cell getPlayerCell() { return this.playerPiece.getCurrentCell(); }
 
     public Position getSpawnPoint() {
         return this.spawnPoint;
@@ -111,9 +107,7 @@ public class Player {
         return this.lives;
     }
 
-    public boolean hasBeenPushedThisPhase() {
-        return this.hasBeenPushedThisPhase;
-    }
+    public boolean hasBeenPushedThisPhase() { return this.hasBeenPushedThisPhase; }
 
     public boolean isPermanentlyDead() {
         return this.isPermanentlyDead;
@@ -123,9 +117,7 @@ public class Player {
         return this.pusherStarter;
     }
 
-    public boolean isKeyInput() {
-        return this.keyInput;
-    }
+    public boolean isKeyInput() { return this.keyInput; }
 
     public int getCheckpointsVisited() {
         return this.checkpointsVisited;
@@ -216,9 +208,7 @@ public class Player {
         this.hasBeenMovedThisPhase = bool;
     }
 
-    public void setOldLaserPos(Position pos) {
-        this.oldLaserPos = pos;
-    }
+    public void setOldLaserPos(Position pos) { this.oldLaserPos = pos; }
 
     public void setLockedIn(boolean bool){
         this.hasLockedIn = bool;
@@ -227,6 +217,7 @@ public class Player {
     public void setKeyInput(boolean bool){
         this.keyInput = bool;
     }
+
 
     @Override
     public String toString() {
@@ -574,6 +565,11 @@ public class Player {
             setPos(deadPosition);
             setPowerDownMode(true);
             isPermanentlyDead = true;
+            System.out.println("Playerdeck: " + playerHandDeck);
+            System.out.println("Discard deck: " + game.getGameDeck().getDiscardDeck());
+            game.getGameDeck().moveAll(game.getGameDeck().getDiscardDeck(), playerHandDeck);
+            System.out.println("Playerdeck: " + playerHandDeck);
+            System.out.println("Discard deck: " + game.getGameDeck().getDiscardDeck());
             permaDeadMove.updateMove();
             moves.add(permaDeadMove);
             game.executeMoves(moves);
@@ -597,6 +593,7 @@ public class Player {
      * Method for testing.
      */
     public void gainLife() { lives++; }
+
 
     public void visitedCheckpoint() { checkpointsVisited++; }
 
