@@ -226,6 +226,7 @@ public class GameScreen implements Screen {
                 }
             }
             game.handleKeyBoardInput();
+            handleEnterInput();
         }
         //only execute moves if there are any, the the current one hasn't been executed yet
         if (movesToExecute() && currentMoveIsExecuted) {
@@ -336,23 +337,25 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.graphics.setWindowedMode(600, 600);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-                if (game.getRound().getPhaseNr() > 4) {
-                    uiScreen.removeGameLog();
-                    game.getRound().finishRound();
-                    if(!game.isChoosingRespawn()){
-                        uiScreen.newRound();
-                    }
-                } else {
-                    if (game.getRound().getPhaseNr() == 0) {
-                        uiScreen.executeLockInButton();
-                        return;
-                    }
-                    game.getRound().nextPhase();
-                    uiScreen.updateGameLog();
-                }
-        }
+    }
 
+    private void handleEnterInput(){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (game.getRound().getPhaseNr() > 4) {
+                uiScreen.removeGameLog();
+                game.getRound().finishRound();
+                if (!game.isChoosingRespawn()) {
+                    uiScreen.newRound();
+                }
+            } else {
+                if (game.getRound().getPhaseNr() == 0) {
+                    uiScreen.executeLockInButton();
+                    return;
+                }
+                game.getRound().nextPhase();
+                uiScreen.updateGameLog();
+            }
+        }
     }
 
 
