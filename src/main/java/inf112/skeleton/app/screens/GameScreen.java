@@ -51,7 +51,6 @@ public class GameScreen implements Screen {
     private Game game;
     private boolean currentMoveIsExecuted;
     private ScoreBoardScreen scoreBoardScreen;
-    private TiledMap map;
     private TiledMapTileLayer playerLayer;
     private int playerLayerIndex;
     private TiledMapTileLayer robotLasersLayer;
@@ -62,7 +61,7 @@ public class GameScreen implements Screen {
     private TiledMapTileLayer.Cell doubleVerticalLaser;
     private TiledMapTileLayer.Cell emptyCell;
     private Wav.Sound laserSound;
-    private Wav.Sound robotSound;
+    private Wav.Sound robotSound; //TODO: @Lena remove?
     final private int countdownTimer = 60;
     private int seconds = countdownTimer;
     private int prevSeconds = countdownTimer;
@@ -80,7 +79,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(String mapName, int numberOfPlayers, Difficulty difficulty) {
         TmxMapLoader mapLoader = new TmxMapLoader();
-        map = mapLoader.load(mapName); //roborally board
+        TiledMap map = mapLoader.load(mapName); //roborally board
         initializeCellsAndLayers(map);
         MapProperties mapProperties = map.getProperties();
         int MAP_WIDTH = mapProperties.get("width", Integer.class); //dimensions of board
@@ -89,7 +88,6 @@ public class GameScreen implements Screen {
         int MAP_WIDTH_DPI = MAP_WIDTH * TILE_WIDTH_DPI; //total width of map in pixels
         int MAP_HEIGHT_DPI = MAP_HEIGHT * TILE_WIDTH_DPI; //total height of map in pixels
 
-        TiledMapTileSet tiles = map.getTileSets().getTileSet("tileset.png");
         camera = new OrthographicCamera();
         gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_HEIGHT_DPI, camera);
         camera.translate(MAP_WIDTH_DPI, MAP_HEIGHT_DPI / 2);
@@ -384,18 +382,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
 
-    }
-
-    public void erasePlayers() {
-        for (Player player : game.getListOfPlayers()) {
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), null);
-        }
-    }
-
-    public void repaintPlayers() {
-        for (Player player : game.getListOfPlayers()) {
-            playerLayer.setCell(player.getPos().getX(), player.getPos().getY(), player.getPlayerCell());
-        }
     }
 
     /**

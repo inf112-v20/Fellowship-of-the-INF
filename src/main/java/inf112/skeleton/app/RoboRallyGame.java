@@ -10,7 +10,6 @@ import inf112.skeleton.app.screens.MainMenuScreen;
  * Has gameScreen, which contains all the logic. This of course will be changed later.
  */
 public class RoboRallyGame extends Game {
-    private Wav.Music backgroundMusic;
 
     @Override
     public void create() {
@@ -26,7 +25,7 @@ public class RoboRallyGame extends Game {
 
     private void startMusic() {
         String musicPath = "sounds/patricklieberkind__futuristic-rhythmic-game-ambience.wav";
-        backgroundMusic = (Wav.Music) Gdx.audio.newMusic(Gdx.files.internal(musicPath));
+        Wav.Music backgroundMusic = (Wav.Music) Gdx.audio.newMusic(Gdx.files.internal(musicPath));
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(0.6f);
         backgroundMusic.play();

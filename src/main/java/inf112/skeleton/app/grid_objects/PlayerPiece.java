@@ -66,7 +66,7 @@ public class PlayerPiece extends DirectionedPiece {
     }
 
     /**
-     * If the player is not dead, player is turned around
+     * Turn the player to the left
      * @param moves list to update
      */
     public void turnLeft(MovesToExecuteSimultaneously moves) {
@@ -76,7 +76,10 @@ public class PlayerPiece extends DirectionedPiece {
             moves.add(move);
         }
 
-
+    /**
+     * Turns the player to the right
+     * @param moves list to update
+     */
     public void turnRight(MovesToExecuteSimultaneously moves) {
             Move move = new Move(this);
             rotatePieceRight();
@@ -84,6 +87,10 @@ public class PlayerPiece extends DirectionedPiece {
             moves.add(move);
     }
 
+    /**
+     * Turns the sprite of the robot in the new direction.
+     * @param newDir the new direction the player should face
+     */
     public void turnCellInDirection(Direction newDir) {
         switch (newDir) {
             case NORTH:

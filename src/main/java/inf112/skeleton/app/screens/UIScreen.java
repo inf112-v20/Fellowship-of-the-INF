@@ -37,7 +37,7 @@ public class UIScreen {
     private Actor[] damageActors = new Actor[10];
     private ArrayList<Actor> gamelogActors = new ArrayList<>();
     private Label timerLabel = null;
-    private Wav.Sound thudSound;
+    private Wav.Sound thudSound; //TODO: @Lena remove?
     private Label respawnText;
 
 

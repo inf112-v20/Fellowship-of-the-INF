@@ -10,7 +10,7 @@ import inf112.skeleton.app.player.Player;
 
 public class BoardElementsMove {
 
-    public static void pusherPushesPlayer(PusherPiece pusherPiece, Player player, MovesToExecuteSimultaneously moves) {
+    public static void pusherPushesPlayer(PusherPiece pusherPiece, Player player, MovesToExecuteSimultaneously moves) { //TODO: @Erlend remove?
         player.tryToGo(pusherPiece.getDir(), moves);
     }
 

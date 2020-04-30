@@ -42,7 +42,7 @@ public class Move {
     /**
      * Strictly speaking, the player piece holds all the important information, so the it can be used in the
      * constructor as well.
-     * @param playerPiece
+     * @param playerPiece the player piece that is being moved
      */
     public Move(PlayerPiece playerPiece) {
         this.playerPiece = playerPiece;
@@ -63,10 +63,6 @@ public class Move {
         return oldPos;
     }
 
-    public Direction getOldDir() {
-        return oldDir;
-    }
-
     public Position getNewPos() {
         return newPos;
     }
@@ -77,8 +73,7 @@ public class Move {
 
     @Override
     public String toString() {
-        return "Move player " + playerPiece.getPlayerNumber() +
-                " (" + oldPos +
+        return "Move player from (" + oldPos +
                 ", " + oldDir +
                 ") to (" + newPos +
                 ", " + newDir +
@@ -100,12 +95,4 @@ public class Move {
         newDir = playerPiece.getDir();
     }
 
-    /**
-     * @return an ArrayList containing only this move
-     */
-    public MovesToExecuteSimultaneously toMovesList() {
-        MovesToExecuteSimultaneously listWithSingleMove = new MovesToExecuteSimultaneously();
-        listWithSingleMove.add(this);
-        return listWithSingleMove;
-    }
 }

@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * The backend representation of the game board. It is a 2d grid of ArrayList<BoardPiece>.
+ */
 public class LogicGrid {
     //dimensions of grid
     private int width;
@@ -300,8 +302,6 @@ public class LogicGrid {
         }
         return false;
     }
-
-
 
     /**
      * A method used to create the list of spawn points based on the number of players

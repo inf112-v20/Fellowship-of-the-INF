@@ -22,7 +22,6 @@ public class MapSelectionScreen implements Screen {
     private int playerCount;
     private Difficulty difficulty;
     private Stage stage;
-    private float mapScale = 0.25f;
 
     public MapSelectionScreen(RoboRallyGame game, int playerCount, Difficulty difficulty) {
         this.game = game;
@@ -34,6 +33,7 @@ public class MapSelectionScreen implements Screen {
 
     @Override
     public void show() {
+        float mapScale = 0.25f;
         stage = new Stage();
 
         // picture = all actors on stage

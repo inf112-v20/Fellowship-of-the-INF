@@ -234,20 +234,21 @@ public class Player {
      * @param moves        list that moves created can be added to
      */
     public void tryToGo(Direction newDirection, MovesToExecuteSimultaneously moves) {
-
-        Move move = new Move(this);
-        Position oldPosition = playerPiece.getPos();
+        Position oldPosition = getPos();
+        //if the move is illegal, the robot does not move
+        if (!isLegalMoveInDirection(oldPosition, newDirection)) return;
         Position newPosition = oldPosition.getPositionIn(newDirection);
+        Move move = new Move(this);
 
         //check if the move kills the player, if so lose a life
-        if (isLegalMoveInDirection(oldPosition, newDirection) && logicGrid.isDeadMove(newPosition)) {
+        if (logicGrid.isDeadMove(newPosition)) {
             latestMoveDirection = newDirection;
             loseLife();
             move.updateMove();
             moves.add(move);
         }
-        //if move is legal and player isn't dead, update logic grid
-        if (isLegalMoveInDirection(oldPosition, newDirection) && !isDead()) {
+        //if the player isn't dead, update logic grid
+        if (!isDead()) {
             //if the move results in pushing robots, add the resulting moves to the moves list
             addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
             setCurrentBoardPiece(newPosition.getX(), newPosition.getY()); //update currentBoardPiece
@@ -260,6 +261,7 @@ public class Player {
 
         checkForRespawnAfterKeyBoardInput(moves); //checks if respawn should be called
     }
+
 
     /**
      *According to the Roborally rules respawns only happen at round end, so this code is only useful for
@@ -360,7 +362,7 @@ public class Player {
             AIPlayer aiPlayer = (AIPlayer) this;
             Position newPos = aiPlayer.chooseRespawnPos(respawnPositions);
             System.out.println("Respawning " + toString() + " at " + newPos);
-            setPos(newPos);
+            playerPiece.setPos(newPos);
             Direction newDir = aiPlayer.chooseRespawnDir(newPos);
             getPlayerPiece().setDir(newDir);
         }
