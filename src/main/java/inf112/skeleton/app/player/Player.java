@@ -517,7 +517,7 @@ public class Player {
         if(damage >= 5){
             ProgramCard cardToLock = selectedCards[9-damage];
             lockedCards.add(cardToLock);
-            System.out.println("Locking card " + cardToLock);
+            //System.out.println("Locking card " + cardToLock);
             playerHandDeck.remove(cardToLock);
         }
         takeDamage(amountOfDamage-1);
@@ -545,7 +545,7 @@ public class Player {
         if(damage >= 5){
             ProgramCard cardToUnlock = selectedCards[9-damage];
             lockedCards.remove(cardToUnlock);
-            System.out.println("Unlocking card " + cardToUnlock);
+            //System.out.println("Unlocking card " + cardToUnlock);
             playerHandDeck.add(cardToUnlock);
         }
         damage--;
@@ -651,8 +651,8 @@ public class Player {
         }
         Collections.shuffle(randomNumbers);
         int missingCards = cardsMissing();
-        System.out.println(toString() + " damage: " + damage + " cards missing: " + missingCards + " random numbers size: "
-                + randomNumbers.size() + " player hand deck size: " + playerHandDeck.size());
+        //System.out.println(toString() + " damage: " + damage + " cards missing: " + missingCards + " random numbers size: "
+          //      + randomNumbers.size() + " player hand deck size: " + playerHandDeck.size());
         for (int i = 0; i < missingCards; i++) {
             int randomNumber = randomNumbers.get(i);
             ProgramCard card = playerHandDeck.get(randomNumber);

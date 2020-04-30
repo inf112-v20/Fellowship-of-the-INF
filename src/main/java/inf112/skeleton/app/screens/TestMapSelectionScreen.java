@@ -20,7 +20,7 @@ import inf112.skeleton.app.RoboRallyGame;
 import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
 /*
-Screen for selection of test map
+Screen for selection of test map. A test map will always have 4 players.
  */
 public class TestMapSelectionScreen implements Screen {
     private RoboRallyGame game;
@@ -47,7 +47,10 @@ public class TestMapSelectionScreen implements Screen {
         mapNameList = new String[]{
                 //add more test maps here
                 "conveyorbelt_test_map",
+                "cogs_test_map",
                 "ai_test_map",
+                "win_condition_test_map",
+                "lose_condition_test_map",
                 "pushers_test_map_1",
                 "pushers_test_map_2",
                 "pushers_test_map_3",
