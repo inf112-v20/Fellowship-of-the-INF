@@ -39,7 +39,7 @@ public class Game {
 
     /**
      * The Game object acts like the main control center of the backend side of the game, and also as the bridge between
-     * backend and frontent.
+     * backend and frontend.
      * When robots execute actions in the backend, a list of MovesToExecuteSimultaneously objects is generated.
      * This is then sent to Game, which executed it backend-wise. This is done in the method executeMoves(), which moves
      * robots to their new position in the logic grid, and adds the executed MovesToExecuteSimultaneously object to

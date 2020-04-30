@@ -1,16 +1,23 @@
 package inf112.skeleton.app.game_logic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import inf112.skeleton.app.RoboRallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
 import inf112.skeleton.app.player.Player;
+import inf112.skeleton.app.screens.MainMenuScreen;
 
 
 import javax.swing.*;
 import java.util.*;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.hide;
 
 public class Phase {
 
@@ -21,6 +28,7 @@ public class Phase {
     private Game game;
     private LogicGrid logicGrid;
     private Player victoriousPlayer;
+    private Object[] options = {"Exit", "Main Menu"};
 
     public Phase(Game game) {
         this.game = game;
@@ -55,14 +63,33 @@ public class Phase {
         rotateCogs();
         lasersFire();
         touchCheckPoints();
-        // TODO How we handle game overs and wins are subject to change
         victoriousPlayer = playerHasWon();
         if (victoriousPlayer != null){
-            JOptionPane.showMessageDialog(null, "Player " + victoriousPlayer.getPlayerNumber() + "won!");
-            Gdx.app.exit();
+            int winDialog = JOptionPane.showOptionDialog(null,
+                    "Player" + victoriousPlayer + "Won!",
+                    "Player" + victoriousPlayer + "Won!",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[1]);
+            if (winDialog == 0){
+                RoboRallyGame newGame = new RoboRallyGame();
+                newGame.setScreen(new MainMenuScreen(newGame));
+            } else Gdx.app.exit();
         } if (isGameOver()){
-            JOptionPane.showMessageDialog(null, "Game over!\nAll players are out of lives!");
-            Gdx.app.exit();
+            int gameOverDialog = JOptionPane.showOptionDialog(null,
+                    "All the players are dead!",
+                    "Game over!",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[1]);
+            if (gameOverDialog == 0) {
+                RoboRallyGame newGame = new RoboRallyGame();
+                newGame.setScreen(new MainMenuScreen(newGame));
+            } else Gdx.app.exit();
         }
         game.setPhaseDone(true);
     }
