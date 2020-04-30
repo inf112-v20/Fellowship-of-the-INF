@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
         camera.translate(MAP_WIDTH_DPI, MAP_HEIGHT_DPI / 2);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, map);
-        game = new Game(logicGrid, this, numberOfPlayers, difficulty);
+        game = new Game(logicGrid, this, numberOfPlayers, difficulty, mapName);
         initializePlayers();
         currentMoveIsExecuted = true;
         //UI gets game deck from game class
@@ -224,6 +224,7 @@ public class GameScreen implements Screen {
                 }
             }
             game.handleKeyBoardInput();
+            handleEnterInput();
         }
         //only execute moves if there are any, the the current one hasn't been executed yet
         if (movesToExecute() && currentMoveIsExecuted) {
@@ -334,23 +335,25 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.graphics.setWindowedMode(600, 600);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-                if (game.getRound().getPhaseNr() > 4) {
-                    uiScreen.removeGameLog();
-                    game.getRound().finishRound();
-                    if(!game.isChoosingRespawn()){
-                        uiScreen.newRound();
-                    }
-                } else {
-                    if (game.getRound().getPhaseNr() == 0) {
-                        uiScreen.executeLockInButton();
-                        return;
-                    }
-                    game.getRound().nextPhase();
-                    uiScreen.updateGameLog();
-                }
-        }
+    }
 
+    private void handleEnterInput(){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (game.getRound().getPhaseNr() > 4) {
+                uiScreen.removeGameLog();
+                game.getRound().finishRound();
+                if (!game.isChoosingRespawn()) {
+                    uiScreen.newRound();
+                }
+            } else {
+                if (game.getRound().getPhaseNr() == 0) {
+                    uiScreen.executeLockInButton();
+                    return;
+                }
+                game.getRound().nextPhase();
+                uiScreen.updateGameLog();
+            }
+        }
     }
 
 
