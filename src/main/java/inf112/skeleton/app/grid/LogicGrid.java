@@ -140,9 +140,7 @@ public class LogicGrid {
         return this.laserSourceList;
     }
 
-    public ArrayList<PusherPiece> getPushersList() {
-        return this.pushersList;
-    }
+    public ArrayList<PusherPiece> getPushersList() { return this.pushersList; }
 
 
     /**

@@ -47,6 +47,7 @@ public class TestMapSelectionScreen implements Screen {
         mapNameList = new String[]{
                 //add more test maps here
                 "conveyorbelt_test_map",
+                "cogs_test_map",
                 "ai_test_map",
                 "pushers_test_map_1",
                 "pushers_test_map_2",

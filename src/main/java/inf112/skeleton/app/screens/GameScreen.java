@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
         camera.translate(MAP_WIDTH_DPI, MAP_HEIGHT_DPI / 2);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
         LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, map);
-        game = new Game(logicGrid, this, numberOfPlayers, difficulty);
+        game = new Game(logicGrid, this, numberOfPlayers, difficulty, mapName);
         initializePlayers();
         currentMoveIsExecuted = true;
         //UI gets game deck from game class

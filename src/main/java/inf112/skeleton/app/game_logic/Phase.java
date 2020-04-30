@@ -101,7 +101,6 @@ public class Phase {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
             if(player.isDead()){continue;}
             orderedListOfPlayers.add(player);
-            // if(player.getPlayerNumber() == 1 || player.getPlayerNumber() == 2){continue;}
             MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
         }
@@ -228,9 +227,9 @@ public class Phase {
     public void moveConveyorBelts(boolean moveOnlyExpressBelts) {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
-            if(player.isDead()){continue;}
-            boolean playerIsOnConveyorBelt = logicGrid.positionHasPieceType(player.getPos(), ConveyorBeltPiece.class);
-            boolean playerIsOnExpressBelt =  logicGrid.positionHasPieceType(player.getPos(), ExpressBeltPiece.class);
+            if(player.isDead() || !logicGrid.isInBounds(player.getPos())){continue;}
+            boolean playerIsOnConveyorBelt = !logicGrid.positionIsFree(player.getPos(), 4);
+            boolean playerIsOnExpressBelt =  !logicGrid.positionIsFree(player.getPos(), 5);
             if (playerIsOnConveyorBelt
                     || playerIsOnExpressBelt ) {
                 //System.out.println("Moving " + player.toString() + " on conveyorbelt");
@@ -254,9 +253,10 @@ public class Phase {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
             if(player.isDead()){continue;}
-            boolean playerIsOnCog = logicGrid.positionHasPieceType(player.getPos(), CogPiece.class);
+            boolean playerIsOnCog = !logicGrid.positionIsFree(player.getPos(), 6);
             if (playerIsOnCog) {
-                BoardElementsMove.rotateCog(player, moves);
+                CogPiece cogPiece = game.getLogicGrid().getPieceType(player.getPos(), CogPiece.class);
+                BoardElementsMove.rotateCog(player, moves, cogPiece);
             }
         }
         game.executeMoves(moves);

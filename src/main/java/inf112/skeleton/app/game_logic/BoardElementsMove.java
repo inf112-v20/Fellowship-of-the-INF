@@ -20,9 +20,8 @@ public class BoardElementsMove {
      * @param player The player that is currently standing on the BoardPiece.
      * @param moves list to update with rotate move
      */
-    public static void rotateCog(Player player, MovesToExecuteSimultaneously moves) {
-        BoardPiece boardPiece = player.getCurrentBoardPiece();
-        if (((CogPiece) boardPiece).isRotateClockwise()) {
+    public static void rotateCog(Player player, MovesToExecuteSimultaneously moves, CogPiece cogPiece) {
+        if (cogPiece.isRotateClockwise()) {
             player.getPlayerPiece().turnRight(moves);
         } else {
             player.getPlayerPiece().turnLeft(moves);
@@ -41,25 +40,15 @@ public class BoardElementsMove {
      * @param onlyExpressBelt true if only expressbelt are moving at this point in the phase
      */
     public static void moveConveyorBelt(Player player, Game game, boolean onlyExpressBelt, MovesToExecuteSimultaneously moves) {
-        if (player == null || player.getCurrentBoardPiece() == null) {
-            System.out.println("Error: couldn't move player on conveyorbelt");
-            return;
-        }
-        BoardPiece boardPiece = player.getCurrentBoardPiece();
-        if (!(boardPiece instanceof ConveyorBeltPiece)) {
-            System.out.println("Error: couldn't move player on conveyorbelt");
-            return;
-        }
+
         LogicGrid logicGrid = game.getLogicGrid();
-        if (!logicGrid.isInBounds(player.getPos())) {
-            System.out.println("Error: conveyorbelt can't move " + player.toString() + " because they are out of bounds");
-            return;
+        ConveyorBeltPiece conveyorBeltPiece = logicGrid.getPieceType(player.getPos(),  ConveyorBeltPiece.class);
+        if(!logicGrid.positionIsFree(player.getPos(), 5)){
+            conveyorBeltPiece = logicGrid.getPieceType(player.getPos(), ExpressBeltPiece.class);
         }
-        ConveyorBeltPiece conveyorBeltPiece = (ConveyorBeltPiece) logicGrid.getPieceType(player.getPos(), boardPiece.getClass());
-        //System.out.println(player.toString() + " is moving on conveyorbelt at pos " + player.getPos() );
         Direction conveyorBeltDirection = conveyorBeltPiece.getDir();
         Position newPos = player.getPos().getPositionIn(conveyorBeltDirection);
-        if (isPlayerInFront(player, game, onlyExpressBelt)) {
+        if (isPlayerInFront(player, game, onlyExpressBelt, conveyorBeltPiece)) {
             moveConveyorBelt(game.getPlayerAt(newPos), game, onlyExpressBelt, moves);
             game.performMoves(moves);
         }
@@ -88,25 +77,23 @@ public class BoardElementsMove {
      * @return true if there is player in front (in the direction of the conveyorbelt), and that player is standing
      * on a conveyorbelt that is not facing towards the first conveyorbelt, false otherwise
      */
-    private static boolean isPlayerInFront(Player player, Game game, boolean onlyExpressBelt) {
-        BoardPiece boardPiece = player.getCurrentBoardPiece();
+    private static boolean isPlayerInFront(Player player, Game game, boolean onlyExpressBelt, ConveyorBeltPiece conveyorBeltPiece) {
         LogicGrid logicGrid = game.getLogicGrid();
-        Position newPos = player.getPos().getPositionIn(((ConveyorBeltPiece) boardPiece).getDir());
+        Position newPos = player.getPos().getPositionIn(conveyorBeltPiece.getDir());
         if (!logicGrid.isInBounds(newPos)) {
             return false;
         }
-        //12 = playerindex, 4 = conveyorbeltindex, 5 = expressbeltindex
-        if (!logicGrid.positionIsFree(newPos, 12) &&
+        // 4 = conveyorbeltindex, 5 = expressbeltindex
+        if (game.getPlayerAt(newPos) != null &&
                 (!logicGrid.positionIsFree(newPos, 4) || !logicGrid.positionIsFree(newPos, 5))) {
-            ConveyorBeltPiece piece = logicGrid.getPieceType(newPos, ConveyorBeltPiece.class);
-            if (!logicGrid.positionIsFree(newPos, 5)) {
-                piece = logicGrid.getPieceType(newPos, ExpressBeltPiece.class);
+            ConveyorBeltPiece conveyorBeltPieceInFront = logicGrid.getPieceType(newPos, ConveyorBeltPiece.class);
+            if(!logicGrid.positionIsFree(newPos, 5)){
+                conveyorBeltPieceInFront = logicGrid.getPieceType(newPos, ExpressBeltPiece.class);
             }
-            if (onlyExpressBelt && boardPiece instanceof ExpressBeltPiece && !(piece instanceof ExpressBeltPiece)) {
+            if (onlyExpressBelt && conveyorBeltPiece instanceof ExpressBeltPiece && !(conveyorBeltPieceInFront instanceof ExpressBeltPiece)) {
                 return false;
             }
-
-            return piece.getDir().getOppositeDirection() != ((ConveyorBeltPiece) boardPiece).getDir();
+            return conveyorBeltPieceInFront.getDir().getOppositeDirection() != conveyorBeltPiece.getDir();
         }
         return false;
     }

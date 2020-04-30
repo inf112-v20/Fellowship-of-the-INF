@@ -36,6 +36,7 @@ public class Game {
     private boolean choosingRespawn;
     private Difficulty difficulty;
     private ArrayList<Player> respawnOrder = new ArrayList<>();
+    private String mapName;
 
     /**
      * The Game object acts like the main control center of the backend side of the game, and also as the bridge between
@@ -52,7 +53,7 @@ public class Game {
      * @param numberOfPlayers number of players in the game
      * @param difficulty the level of intelligence the AI players have
      */
-    public Game(LogicGrid logicGrid, GameScreen gameScreen, int numberOfPlayers, Difficulty difficulty) {
+    public Game(LogicGrid logicGrid, GameScreen gameScreen, int numberOfPlayers, Difficulty difficulty, String mapName) {
         this.numberOfPlayers = numberOfPlayers;
         this.difficulty = difficulty;
         this.logicGrid = logicGrid;
@@ -61,6 +62,7 @@ public class Game {
         this.player1 = new Player(1, this);
         this.playerList = new Player[numberOfPlayers];
         this.deadPlayers = new ArrayList<>();
+        findMapName(mapName);
         playerList[0] = player1;
         respawnOrder.add(player1);
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
@@ -108,6 +110,8 @@ public class Game {
         return this.respawnOrder;
     }
 
+    public String getMapName(){ return this.mapName;}
+
     /**
      * This method is called by GameScreen so that it can show the moves that have been executed in backend.
      * @return a queue of the frontend moves that need to be shown
@@ -130,6 +134,7 @@ public class Game {
     public void setPhaseDone(boolean bool){ this.phaseDone = bool; }
 
     public void setChoosingRespawn(boolean bool){ this.choosingRespawn = bool; }
+
 
     /**
      * The computer players are initiated and added to the playerList and position in the logicGrid
@@ -310,6 +315,16 @@ public class Game {
             }
         }
         return (lockedInPlayers == playerList.length-1);
+    }
+
+    private void findMapName(String mapName){
+        for(int i = mapName.length()-1; i >= 0; i--){
+            char c = mapName.charAt(i);
+            if(c == '/'){
+                this.mapName = mapName.substring(i+1, mapName.length()-4);
+                return;
+            }
+        }
     }
 
 }

@@ -29,14 +29,17 @@ public class AIPlayer extends Player {
     private ArrayList<ProgramCard> chosenCards;
     public enum Difficulty{EASY, MEDIUM, HARD, EXPERT, TESTING}
     private Difficulty difficulty;
+    private Game game;
 
 
     public AIPlayer(int playerNumber, Game game, Difficulty difficulty) {
         super(playerNumber, game);
+        this.game = game;
         this.logicGrid = game.getLogicGrid();
         this.flagPositionScores = logicGrid.getFlagPositionScores();
         this.difficulty = difficulty;
         this.playerHandDeck = getPlayerHandDeck();
+        checkIfTestMap();
 
     }
 
@@ -657,6 +660,15 @@ public class AIPlayer extends Player {
         nextGoalFlag = getPlayerNumber()-1;
         nextGoalPos = logicGrid.getFlagPositions().get(nextGoalFlag);
         availableCardsLeft = playerHandDeck;
+    }
+
+    private void checkIfTestMap(){
+        String mapName = game.getMapName();
+        String cogMap = "cogs_test_map";
+        String conveyorbeltMap = "conveyorbelt_test_map";
+        if(mapName.equals(conveyorbeltMap) || mapName.equals(cogMap)){
+            doPowerDown();
+        }
     }
     
 }
