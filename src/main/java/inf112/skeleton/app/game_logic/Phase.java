@@ -66,14 +66,14 @@ public class Phase {
         victoriousPlayer = playerHasWon();
         if (victoriousPlayer != null){
             int winDialog = JOptionPane.showOptionDialog(null,
-                    "Player" + victoriousPlayer + "Won!",
-                    "Player" + victoriousPlayer + "Won!",
+                    "Player" + victoriousPlayer.getPlayerNumber() + "Won!",
+                    "Player" + victoriousPlayer.getPlayerNumber() + "Won!",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.PLAIN_MESSAGE,
                     null,
                     options,
                     options[1]);
-            if (winDialog == 0){
+            if (winDialog == 1){
                 RoboRallyGame newGame = new RoboRallyGame();
                 newGame.setScreen(new MainMenuScreen(newGame));
             } else Gdx.app.exit();
@@ -86,7 +86,7 @@ public class Phase {
                     null,
                     options,
                     options[1]);
-            if (gameOverDialog == 0) {
+            if (gameOverDialog == 1) {
                 RoboRallyGame newGame = new RoboRallyGame();
                 newGame.setScreen(new MainMenuScreen(newGame));
             } else Gdx.app.exit();
