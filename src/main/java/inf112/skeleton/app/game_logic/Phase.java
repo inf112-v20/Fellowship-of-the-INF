@@ -1,9 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import inf112.skeleton.app.RoboRallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.grid.Direction;
@@ -17,7 +14,6 @@ import inf112.skeleton.app.screens.MainMenuScreen;
 import javax.swing.*;
 import java.util.*;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.hide;
 
 public class Phase {
 
@@ -63,35 +59,20 @@ public class Phase {
         rotateCogs();
         lasersFire();
         touchCheckPoints();
-        victoriousPlayer = playerHasWon();
-        if (victoriousPlayer != null){
-            int winDialog = JOptionPane.showOptionDialog(null,
-                    "Player" + victoriousPlayer.getPlayerNumber() + "Won!",
-                    "Player" + victoriousPlayer.getPlayerNumber() + "Won!",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    options,
-                    options[1]);
-            if (winDialog == 1){
-                RoboRallyGame newGame = new RoboRallyGame();
-                newGame.setScreen(new MainMenuScreen(newGame));
-            } else Gdx.app.exit();
-        } if (isGameOver()){
-            int gameOverDialog = JOptionPane.showOptionDialog(null,
-                    "All the players are dead!",
-                    "Game over!",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    options,
-                    options[1]);
-            if (gameOverDialog == 1) {
-                RoboRallyGame newGame = new RoboRallyGame();
-                newGame.setScreen(new MainMenuScreen(newGame));
-            } else Gdx.app.exit();
-        }
+        checkForGameCompletion();
         game.setPhaseDone(true);
+    }
+
+    /**
+     * Checks if the game is over.
+     * Game is over if a player has won or player 1 is permanently dead.
+     */
+    public void checkForGameCompletion() {
+        victoriousPlayer = playerHasWon();
+        if (victoriousPlayer != null){ //if a player has won
+            game.setVictoriousPlayer(victoriousPlayer);
+        } else if (isGameOver()) //if all players are dead
+            game.setGameOver(true);
     }
 
     /**

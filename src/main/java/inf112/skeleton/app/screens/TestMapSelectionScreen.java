@@ -23,7 +23,7 @@ import inf112.skeleton.app.player.AIPlayer.Difficulty;
 Screen for selection of test map. A test map will always have 4 players.
  */
 public class TestMapSelectionScreen implements Screen {
-    private RoboRallyGame game;
+    private RoboRallyGame roborallyGame;
     private float width;
     private float height;
     private String[] mapNameList;
@@ -32,8 +32,8 @@ public class TestMapSelectionScreen implements Screen {
 
     private Stage stage;
 
-    public TestMapSelectionScreen(RoboRallyGame game) {
-        this.game = game;
+    public TestMapSelectionScreen(RoboRallyGame roboRallyGame) {
+        this.roborallyGame = roboRallyGame;
         this.width = Gdx.graphics.getWidth(); // width and height from Main.java
         this.height = Gdx.graphics.getHeight();
         generateMapNameList();
@@ -100,7 +100,7 @@ public class TestMapSelectionScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(game));
+                roborallyGame.setScreen(new MainMenuScreen(roborallyGame));
             }
         });
         stage.addActor(backButton);
@@ -115,7 +115,7 @@ public class TestMapSelectionScreen implements Screen {
         startTestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen("maps/testMaps/" + mapName + ".tmx", 4, difficulty));
+                roborallyGame.setScreen(new GameScreen(roborallyGame,"maps/testMaps/" + mapName + ".tmx", 4, difficulty));
             }
         });
 
