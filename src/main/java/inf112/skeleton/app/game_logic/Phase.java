@@ -1,16 +1,19 @@
 package inf112.skeleton.app.game_logic;
 
 import com.badlogic.gdx.Gdx;
+import inf112.skeleton.app.RoboRallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
 import inf112.skeleton.app.player.Player;
+import inf112.skeleton.app.screens.MainMenuScreen;
 
 
 import javax.swing.*;
 import java.util.*;
+
 
 public class Phase {
 
@@ -21,6 +24,7 @@ public class Phase {
     private Game game;
     private LogicGrid logicGrid;
     private Player victoriousPlayer;
+    private Object[] options = {"Exit", "Main Menu"};
 
     public Phase(Game game) {
         this.game = game;
@@ -62,16 +66,20 @@ public class Phase {
         rotateCogs();
         lasersFire();
         touchCheckPoints();
-        // TODO How we handle game overs and wins are subject to change
-        victoriousPlayer = playerHasWon();
-        if (victoriousPlayer != null){
-            JOptionPane.showMessageDialog(null, "Player " + victoriousPlayer.getPlayerNumber() + "won!");
-            Gdx.app.exit();
-        } if (isGameOver()){
-            JOptionPane.showMessageDialog(null, "Game over!\nAll players are out of lives!");
-            Gdx.app.exit();
-        }
+        checkForGameCompletion();
         game.setPhaseDone(true);
+    }
+
+    /**
+     * Checks if the game is over.
+     * Game is over if a player has won or player 1 is permanently dead.
+     */
+    public void checkForGameCompletion() {
+        victoriousPlayer = playerHasWon();
+        if (victoriousPlayer != null){ //if a player has won
+            game.setVictoriousPlayer(victoriousPlayer);
+        } else if (isGameOver()) //if all players are dead
+            game.setGameOver(true);
     }
 
     /**

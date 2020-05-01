@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -20,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import inf112.skeleton.app.RoboRallyGame;
 import inf112.skeleton.app.game_logic.Move;
 import inf112.skeleton.app.game_logic.Game;
 import inf112.skeleton.app.game_logic.MovesToExecuteSimultaneously;
@@ -32,7 +32,9 @@ import inf112.skeleton.app.player.AIPlayer.Difficulty;
 import inf112.skeleton.app.player.Player;
 
 
+import javax.swing.*;
 import java.util.*;
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import static inf112.skeleton.app.grid.Direction.*;
@@ -49,6 +51,7 @@ public class GameScreen implements Screen {
     private Stage stage;
     private UIScreen uiScreen;
     private Game game;
+    private RoboRallyGame roborallyGame;
     private boolean currentMoveIsExecuted;
     private ScoreBoardScreen scoreBoardScreen;
     private TiledMapTileLayer playerLayer;
@@ -77,7 +80,8 @@ public class GameScreen implements Screen {
     private int currentPhaseNr = 0;
 
 
-    public GameScreen(String mapName, int numberOfPlayers, Difficulty difficulty) {
+    public GameScreen(RoboRallyGame roborallyGame, String mapName, int numberOfPlayers, Difficulty difficulty) {
+        this.roborallyGame = roborallyGame;
         TmxMapLoader mapLoader = new TmxMapLoader();
         TiledMap map = mapLoader.load(mapName); //roborally board
         initializeCellsAndLayers(map);
@@ -102,12 +106,12 @@ public class GameScreen implements Screen {
         clearLayer(boardLaserLayer); //lasers should only be shown when active
         this.respawnButtons = new ArrayList<>();
         this.respawnImages = new ArrayList<>();
-        for(Player player : game.getRespawnOrder()){
+        for (Player player : game.getRespawnOrder()) {
             createRespawnImage(player);
         }
 
-        laserSound = (Wav.Sound) Gdx.audio.newSound( Gdx.files.internal("assets/sounds/bubaproducer__laser-shot-silenced.wav"));
-        robotSound = (Wav.Sound) Gdx.audio.newSound( Gdx.files.internal("assets/sounds/meroleroman7__robot-jump-2.wav"));
+        laserSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bubaproducer__laser-shot-silenced.wav"));
+        robotSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/meroleroman7__robot-jump-2.wav"));
 
     }
 
@@ -157,6 +161,7 @@ public class GameScreen implements Screen {
     }
 
     /**
+     * TODO: @Erlend @Johanna this metod is way to big and needs to be split into smaller methods
      * Update all changes to board
      * <p>
      * If there are moves to execute, they are executed with a delay.
@@ -164,14 +169,12 @@ public class GameScreen implements Screen {
      */
     public void update() {
         if (game.isChoosingRespawn()) {
-
-            if(game.getRound().getPhaseNr()==0){
+            if (game.getRound().getPhaseNr() == 0) {
                 uiScreen.removeCards();
             }
-            if(game.getPlayer().isDead()){
+            if (game.getPlayer().isDead()) {
                 game.getPlayer().setIsDead(false);
                 createdButtons = false;
-
             }
             if (!createdButtons) {
                 choosePosition();
@@ -183,7 +186,7 @@ public class GameScreen implements Screen {
             chooseDirection();
         }
         if (boardLasersVisible) {
-            laserSound.play(0.25f,1.0f,1.0f);
+            laserSound.play(0.25f, 1.0f, 1.0f);
             clearLayer(boardLaserLayer);
             boardLasersVisible = false;
         }
@@ -203,19 +206,18 @@ public class GameScreen implements Screen {
                 prevSeconds--;
             }
         }
-        if (!movesToExecute() && !game.moreLaserToShoot()&& !hasUpdated){
+        if (!movesToExecute() && !game.moreLaserToShoot() && !hasUpdated) {
             updateRespawnImages();
             hasUpdated = true;
         }
         //only handle keyboard input if there are no moves to execute
         if (!movesToExecute() && !game.moreLaserToShoot() && !game.isChoosingRespawn()) {
             uiScreen.update();
-
             if (game.isPhaseDone() && game.isAutoStartNextPhaseOn()) {
                 game.setPhaseDone(false);
                 if (game.getRound().getPhaseNr() > 4) {
                     game.getRound().finishRound();
-                    if(!game.isChoosingRespawn()){
+                    if (!game.isChoosingRespawn()) {
                         uiScreen.newRound();
                     }
                 } else {
@@ -232,14 +234,42 @@ public class GameScreen implements Screen {
             executeMove();
             delayForSeconds(500); //add delay
         }
+        if (!movesToExecute() && !game.moreLaserToShoot())
+            checkForEndGame();
         if (!movesToExecute() && game.moreLaserToShoot()) {
             shootRobotLasers();
             showBoardLasers();
             delayForSeconds(150);
         }
-        if(currentPhaseNr != game.getRound().getPhaseNr()){
+        if (currentPhaseNr != game.getRound().getPhaseNr()) {
             hasUpdated = false;
             currentPhaseNr = game.getRound().getPhaseNr();
+        }
+    }
+
+    /**
+     * Checks if the game is over, and if so shows the appropriate message to the user
+     */
+    public void checkForEndGame() {
+        Player victoriousPlayer = game.getVictoriousPlayer();
+        Object[] options = {"Exit", "Main Menu"}; //opiton to exit or restart
+        String message = "Error, game needs to be restarted"; //this should never be shown
+        if (victoriousPlayer != null)
+            message = "Player " + victoriousPlayer.getPlayerNumber() + " won!";
+        else if (game.isGameOver())
+            message = "All the players are dead!";
+        if (victoriousPlayer != null || game.isGameOver()) {
+            int gameOverDialog = JOptionPane.showOptionDialog(null,
+                    message,
+                    message,
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[1]);
+            if (gameOverDialog == 1) {
+                roborallyGame.setScreen(new MainMenuScreen(roborallyGame));
+            } else Gdx.app.exit();
         }
     }
 
@@ -301,7 +331,12 @@ public class GameScreen implements Screen {
         boardLasersVisible = true;
     }
 
-
+    /**
+     * TODO: @Johanna add comments
+     *
+     * @param laserSource
+     * @return
+     */
     private TiledMapTileLayer.Cell getLaserCell(LaserSourcePiece laserSource) {
         Direction laserDirection = laserSource.getLaserDir();
         TiledMapTileLayer.Cell laserId = horizontalLaser;
@@ -337,7 +372,7 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void handleEnterInput(){
+    private void handleEnterInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (game.getRound().getPhaseNr() > 4) {
                 uiScreen.removeGameLog();
@@ -407,13 +442,13 @@ public class GameScreen implements Screen {
         Direction newDir = move.getNewDir();
         Position lastPosAlive = playerPieceToUpdate.getPlayer().getLastPosAlive();
         if (!game.getLogicGrid().isInBounds(oldPos) && game.getLogicGrid().positionIsFree(lastPosAlive, playerLayerIndex)
-        && !game.isChoosingRespawn()) {
+                && !game.isChoosingRespawn()) {
             playerLayer.setCell(lastPosAlive.getX(), lastPosAlive.getY(), null);
         }
         if (game.getLogicGrid().positionIsFree(oldPos, playerLayerIndex)) { //check that you are not erasing another player
             playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
         }
-        if(oldPos.equals(playerPieceToUpdate.getPos())){
+        if (oldPos.equals(playerPieceToUpdate.getPos())) {
             playerLayer.setCell(oldPos.getX(), oldPos.getY(), null);
         }
         playerPieceToUpdate.turnCellInDirection(newDir); //turn the cell in the new direction
@@ -541,9 +576,9 @@ public class GameScreen implements Screen {
             if (!game.getDeadPlayers().isEmpty()) {
                 game.getRound().respawnPlayers();
             }
-            if(!game.getPlayer().isKeyInput()){
+            if (!game.getPlayer().isKeyInput()) {
                 uiScreen.newRound();
-            }else{
+            } else {
                 uiScreen.addCards();
             }
         }
@@ -564,39 +599,39 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void createRespawnImage(Player player){
-            TextureRegion textureRegion = player.getPlayerPiece().getPlayerCell().getTile().getTextureRegion();
-            TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(textureRegion);
-            Image image = new Image(myTexRegionDrawable);
-            image.setSize(80, 80);
-            HashMap<String, Integer> posCounter = new HashMap<>();
-            Position pos = findPosition(player, posCounter);
-            image.setPosition(pos.getX(), pos.getY());
-            image.setName(player.toString());
-            stage.addActor(image);
-            respawnImages.add(image);
+    private void createRespawnImage(Player player) {
+        TextureRegion textureRegion = player.getPlayerPiece().getPlayerCell().getTile().getTextureRegion();
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(textureRegion);
+        Image image = new Image(myTexRegionDrawable);
+        image.setSize(80, 80);
+        HashMap<String, Integer> posCounter = new HashMap<>();
+        Position pos = findPosition(player, posCounter);
+        image.setPosition(pos.getX(), pos.getY());
+        image.setName(player.toString());
+        stage.addActor(image);
+        respawnImages.add(image);
     }
 
-    private Position findPosition(Player player, HashMap posCounter){
+    private Position findPosition(Player player, HashMap posCounter) {
         Position respawnPosition = player.getSpawnPoint();
         int posX = respawnPosition.getX() * TILE_WIDTH_DPI;
         Integer playersOnSameTile = 0;
         String spawnString = respawnPosition.toString();
-        if(posCounter.containsKey(spawnString)){
-          playersOnSameTile = (Integer) posCounter.get(spawnString);
+        if (posCounter.containsKey(spawnString)) {
+            playersOnSameTile = (Integer) posCounter.get(spawnString);
         }
-        int spacing = playersOnSameTile* (TILE_WIDTH_DPI/4);
+        int spacing = playersOnSameTile * (TILE_WIDTH_DPI / 4);
         int posY = respawnPosition.getY() * TILE_WIDTH_DPI + spacing;
-        if(playersOnSameTile >= 4){
-            posX += TILE_WIDTH_DPI*0.75f;
-            spacing = (playersOnSameTile-4)* (TILE_WIDTH_DPI/4);
+        if (playersOnSameTile >= 4) {
+            posX += TILE_WIDTH_DPI * 0.75f;
+            spacing = (playersOnSameTile - 4) * (TILE_WIDTH_DPI / 4);
             posY = respawnPosition.getY() * TILE_WIDTH_DPI + spacing;
         }
-        posCounter.put(spawnString, playersOnSameTile+1);
+        posCounter.put(spawnString, playersOnSameTile + 1);
         return new Position(posX, posY);
     }
 
-    private void updateRespawnImages(){
+    private void updateRespawnImages() {
         HashMap<String, Integer> posCounter = new HashMap<>();
         for (int i = 0; i < game.getRespawnOrder().size(); i++) {
             Player player = game.getRespawnOrder().get(i);
@@ -608,7 +643,7 @@ public class GameScreen implements Screen {
                 }
             }
             Position pos = findPosition(player, posCounter);
-            image.setPosition(pos.getX(),pos.getY());
+            image.setPosition(pos.getX(), pos.getY());
         }
     }
 
