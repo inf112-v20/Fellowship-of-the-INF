@@ -234,14 +234,13 @@ public class GameScreen implements Screen {
             executeMove();
             delayForSeconds(500); //add delay
         }
+        if (!movesToExecute() && !game.moreLaserToShoot())
+            checkForEndGame();
         if (!movesToExecute() && game.moreLaserToShoot()) {
             shootRobotLasers();
             showBoardLasers();
             delayForSeconds(150);
         }
-        if (!movesToExecute() && !game.moreLaserToShoot())
-            checkForEndGame();
-
         if (currentPhaseNr != game.getRound().getPhaseNr()) {
             hasUpdated = false;
             currentPhaseNr = game.getRound().getPhaseNr();
