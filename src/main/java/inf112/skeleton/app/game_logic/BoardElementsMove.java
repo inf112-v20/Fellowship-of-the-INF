@@ -107,18 +107,21 @@ public class BoardElementsMove {
      * @return true if player is going to end up on the same tile as another player, false otherwise
      */
     private static boolean isPlayerGoingToCrash(Player player, Game game, boolean onlyExpressBelt) {
-        BoardPiece boardPiece = player.getCurrentBoardPiece();
         LogicGrid logicGrid = game.getLogicGrid();
-        Position newPos = player.getPos().getPositionIn(((ConveyorBeltPiece) boardPiece).getDir());
+        ConveyorBeltPiece conveyorBeltPiece = logicGrid.getPieceType(player.getPos(),  ConveyorBeltPiece.class);
+        if(!logicGrid.positionIsFree(player.getPos(), 5)){
+            conveyorBeltPiece = logicGrid.getPieceType(player.getPos(), ExpressBeltPiece.class);
+        }
+        Position newPos = player.getPos().getPositionIn(conveyorBeltPiece.getDir());
         if (!logicGrid.isInBounds(newPos)) { return false; }
         if(game.getPlayerAt(newPos) != null) return  true;
         for (Direction dir : Direction.values()) {
             Position orthoPos = newPos.getPositionIn(dir);
             if (!logicGrid.isInBounds(orthoPos) || orthoPos.equals(player.getPos())) { continue; }
-            if (game.getPlayerAt(newPos) != null &&
+            if (game.getPlayerAt(orthoPos) != null &&
                     (!logicGrid.positionIsFree(orthoPos, 4) || !logicGrid.positionIsFree(orthoPos, 5))) {
                 if (!game.getPlayerAt(orthoPos).hasBeenMovedThisPhase()) {
-                    if (onlyExpressBelt && boardPiece instanceof ExpressBeltPiece && !logicGrid.positionIsFree(orthoPos, 4)) {
+                    if (onlyExpressBelt && conveyorBeltPiece instanceof ExpressBeltPiece && !logicGrid.positionIsFree(orthoPos, 4)) {
                         return false;
                     }
                     ConveyorBeltPiece piece = logicGrid.getPieceType(orthoPos, ConveyorBeltPiece.class);

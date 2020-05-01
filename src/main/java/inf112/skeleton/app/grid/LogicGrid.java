@@ -3,6 +3,7 @@ package inf112.skeleton.app.grid;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.grid_objects.*;
+import inf112.skeleton.app.player.AIPlayer.Difficulty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +63,7 @@ public class LogicGrid {
     private BoardPieceGenerator boardPieceGenerator;
 
 
-    public LogicGrid(int width, int height, TiledMap map) {
+    public LogicGrid(int width, int height, TiledMap map, Difficulty difficulty) {
         grid = new ArrayList[width][height];
         this.width = grid.length;
         this.height = grid[0].length;
@@ -105,7 +106,9 @@ public class LogicGrid {
 
         readTiledMapToPieceGrid();
         removeUnusedFlags();
-        createScoresForPositions();
+        if(difficulty.equals(Difficulty.EXPERT) || difficulty.equals(Difficulty.TESTING)) {
+            createScoresForPositions();
+        }
 
     }
 

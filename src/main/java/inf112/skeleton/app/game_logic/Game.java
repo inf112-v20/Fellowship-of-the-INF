@@ -7,6 +7,7 @@ import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.ConveyorBeltPiece;
+import inf112.skeleton.app.grid_objects.ExpressBeltPiece;
 import inf112.skeleton.app.grid_objects.PlayerPiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.AIPlayer.Difficulty;
@@ -189,7 +190,8 @@ public class Game {
             player1.removeCheckpoint();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
             boolean playerIsOnConveyorBeltPiece = logicGrid.positionHasPieceType(player1Piece.getPos(), ConveyorBeltPiece.class);
-            if (playerIsOnConveyorBeltPiece) {
+            boolean playerIsOnExpressBeltPiece = logicGrid.positionHasPieceType(player1Piece.getPos(), ExpressBeltPiece.class);
+            if (playerIsOnConveyorBeltPiece || playerIsOnExpressBeltPiece) {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
             }
         }

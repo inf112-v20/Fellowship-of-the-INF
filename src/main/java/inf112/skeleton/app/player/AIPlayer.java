@@ -582,10 +582,10 @@ public class AIPlayer extends Player {
     }
 
     private void evaluatePowerDown(){
-        if (getDamage() < 5)return;
-        int random =(int) Math.random()*10;
-        if(random <= getDamage()){
-            System.out.println(toString() + " powered down with a " + (getDamage()*10) + "% chance to do so");
+        if (getDamage() < 5 || logicGrid.positionIsFree(getPos(), 8) || logicGrid.positionIsFree(getPos(), 9))return;
+        int random = (int) (Math.random()*10);
+        if(random < getDamage()){
+            System.out.println(toString() + " powered down with a " + (getDamage()*10) + "% chance to do so.");
             doPowerDown();
         }
     }

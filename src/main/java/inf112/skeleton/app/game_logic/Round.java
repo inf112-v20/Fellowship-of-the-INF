@@ -63,6 +63,8 @@ public class Round {
                 player.getSelectedCards()[number + j] = (player.getLockedCards().get(j));
             }
         }
+        System.out.println(game.getPlayer().toString() + " playerhand: " + game.getPlayer().getPlayerHandDeck());
+
         lockInCardsForComputers(true);
     }
 

@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
     private TiledMapTileLayer.Cell emptyCell;
     private Wav.Sound laserSound;
     private Wav.Sound robotSound; //TODO: @Lena remove?
-    final private int countdownTimer = 2;
+    final private int countdownTimer = 60;
     private int seconds = countdownTimer;
     private int prevSeconds = countdownTimer;
     private Timer timer;
@@ -92,7 +92,7 @@ public class GameScreen implements Screen {
         gridPort = new StretchViewport(MAP_WIDTH_DPI * 2, MAP_HEIGHT_DPI, camera);
         camera.translate(MAP_WIDTH_DPI, MAP_HEIGHT_DPI / 2);
         mapRenderer = new OrthogonalTiledMapRenderer(map);
-        LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, map);
+        LogicGrid logicGrid = new LogicGrid(MAP_WIDTH, MAP_HEIGHT, map, difficulty);
         game = new Game(logicGrid, this, numberOfPlayers, difficulty, mapName);
         initializePlayers();
         currentMoveIsExecuted = true;

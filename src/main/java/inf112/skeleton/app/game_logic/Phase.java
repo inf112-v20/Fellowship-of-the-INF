@@ -47,6 +47,13 @@ public class Phase {
      * @param phaseNumber the current phase number
      */
     public void executePhase(int phaseNumber) {
+        System.out.println("ROUND: " +game.getRound().getRoundNumber() + ", PHASE: " + (phaseNumber+1));
+        if(game.getGameDeck().getDrawDeck().contains(null)){
+            System.out.println("DRAW DECK CONTAINS NULL CARD");
+        }
+        if(game.getGameDeck().getDiscardDeck().contains(null)){
+            System.out.println("DISCARD DECK CONTAINS NULL CARD");
+        }
         startPhase(phaseNumber);
         moveRobots();
         moveConveyorBelts(true);
@@ -84,8 +91,15 @@ public class Phase {
         playerAndPriority = new HashMap<>();
         orderedListOfPlayers = new ArrayList<>();
         for (Player player : listOfPlayers) {
-            if (!player.isPowerDownMode()) {
+            if (!player.isPowerDownMode() && !player.isPermanentlyDead()) {
                 ProgramCard programCardThisPhase = player.getSelectedCards()[phaseNumber];
+                if(programCardThisPhase == null){
+                    System.out.println(player.toString() + " card in phase " + phaseNumber + " is null. Selected cards: "
+                    + Arrays.toString(player.getSelectedCards()));
+                    System.out.println("Powerdown? " + player.isPowerDownMode() + ", dead? " + player.isDead()
+                            + ", permadead? " + player.isPermanentlyDead() + ", damage :" + player.getDamage()
+                    + ", lives: " + player.getLives() + ", pos: " + player.getPos());
+                }
                 Integer cardPriority = programCardThisPhase.getPriority();
                 playerAndPriority.put(player, cardPriority);
             }

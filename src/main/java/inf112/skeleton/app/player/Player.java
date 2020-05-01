@@ -1,5 +1,6 @@
 package inf112.skeleton.app.player;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.game_logic.Game;
 import inf112.skeleton.app.game_logic.Move;
@@ -545,12 +546,13 @@ public class Player {
      * @param amountOfRepairs the number of damage to remove from the player
      */
     public void repairDamage(int amountOfRepairs) {
-        if(damage == 0 || amountOfRepairs == 0)return;
+        if(damage <= 0 || amountOfRepairs <= 0)return;
         if(damage >= 5){
             ProgramCard cardToUnlock = selectedCards[9-damage];
-            lockedCards.remove(cardToUnlock);
-            //System.out.println("Unlocking card " + cardToUnlock);
-            playerHandDeck.add(cardToUnlock);
+            if(cardToUnlock != null){
+                lockedCards.remove(cardToUnlock);
+                playerHandDeck.add(cardToUnlock);
+            }
         }
         damage--;
         repairDamage(amountOfRepairs-1);
@@ -568,6 +570,7 @@ public class Player {
         playerHandDeck.addAll(lockedCards);
         lockedCards.clear();
         if (lives == 0) {
+            System.out.println(toString() + " is dead and out of the game");
             MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
             Move permaDeadMove = new Move(playerPiece, lastPosAlive, deadPosition, playerPiece.getDir(), playerPiece.getDir());
             moves.add(permaDeadMove);
@@ -594,7 +597,6 @@ public class Player {
      */
     public void gainLife() { lives++; }
 
-
     public void visitedCheckpoint() { checkpointsVisited++; }
 
     /**
@@ -603,7 +605,6 @@ public class Player {
     public void removeCheckpoint() { checkpointsVisited--; }
 
     public void removeSelectedCards() { Arrays.fill(selectedCards, null); }
-
 
 
     /**

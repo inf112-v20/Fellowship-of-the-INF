@@ -47,7 +47,7 @@ public class UIScreen {
         this.scoreBoardScreen = new ScoreBoardScreen(game);
         this.checkpointActors= new Actor[game.getLogicGrid().getFlagPositions().size()];
         height = width * 0.5f;
-        player = game.getListOfPlayers()[0];
+        player = game.getPlayer();
         stage = new Stage();
         thudSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/reitanna__thunk.wav"));
         Texture texture = new Texture(Gdx.files.internal("ui/background.png"));
@@ -382,8 +382,13 @@ public class UIScreen {
         powerDownButton.setTouchable(Touchable.disabled);
         removeUnusedCardsFromScreen();
         player.doPowerDown();
-        player.setLockedIn(true);
         game.getRound().nextPhase();
+        for(Stack cardButton: cardButton.getSelectedCardButtons()){
+            if(cardButton != null){
+                cardButton.remove();
+            }
+        }
+        update();
         updateGameLog();
     }
 
