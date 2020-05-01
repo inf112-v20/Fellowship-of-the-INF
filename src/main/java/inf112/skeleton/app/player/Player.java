@@ -280,7 +280,6 @@ public class Player {
                     Player pushedPlayer = playersPushed.get(i);
                     pushedPlayer.isPushed = false;
                     if (pushedPlayer.isDead() && game.getRound().getPhaseNr() == 0) {
-                        System.out.println(toString()+  " checks for respawn after being pushed");
                         pushedPlayer.checkForRespawn(moves);
                         pushedPlayer.playersPushed.clear();
                     }

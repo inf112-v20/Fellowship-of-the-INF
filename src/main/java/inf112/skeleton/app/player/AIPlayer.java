@@ -210,12 +210,12 @@ public class AIPlayer extends Player {
      * @return the score calculated for a position with the direction given
      */
     private int getScore (Position pos, Direction dir, int goalFlag){
-        ArrayList<List<Object>> flagPosScores =  flagPositionScores.get(goalFlag);
-        Position goalPos = (Position) flagPosScores.get(0).get(0);
+        Position goalPos = logicGrid.getFlagPositions().get(goalFlag);
         int score =  getDistanceAway(pos, goalPos);
         if(!isPosCloserToGoal(pos, pos.getPositionIn(dir), goalPos)){score++;}
         if(difficulty.equals(Difficulty.MEDIUM) || difficulty.equals(Difficulty.HARD)){return score;}
 
+        ArrayList<List<Object>> flagPosScores =  flagPositionScores.get(goalFlag);
         for (List<Object> flagPosScore : flagPosScores) {
             Position mapPos = (Position) flagPosScore.get(0);
             if (pos.equals(mapPos)) {
@@ -600,7 +600,7 @@ public class AIPlayer extends Player {
         for (int i = 1; i < positions.size() ; i++) {
             Position pos = positions.get(i);
              chooseRespawnDir(pos);
-             int score =getScore(pos, chooseRespawnDir(pos), nextGoalFlag);
+             int score = getScore(pos, chooseRespawnDir(pos), nextGoalFlag);
              if( score < bestScore){
                  //System.out.println("Pos " + pos + " score " + score + " is better than current best "
                  //+ bestPos + " score " + bestScore);
@@ -618,6 +618,10 @@ public class AIPlayer extends Player {
 
     public Direction chooseRespawnDir(Position pos){
         //System.out.println("Choosing best dir for " + toString() + " at " + pos);
+        int random = (int) (Math.random()*4);
+        if(difficulty.equals(Difficulty.EASY)){
+            return Direction.values()[random];
+        }
         Direction bestDir = getPlayerPiece().getDir();
         int bestScore = 100;
         for(Direction dir : Direction.values()){
