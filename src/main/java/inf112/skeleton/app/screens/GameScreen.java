@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
     private TiledMapTileLayer.Cell emptyCell;
     private Wav.Sound laserSound;
     private Wav.Sound robotSound; //TODO: @Lena remove?
-    final private int countdownTimer = 60;
+    final private int countdownTimer = 2;
     private int seconds = countdownTimer;
     private int prevSeconds = countdownTimer;
     private Timer timer;

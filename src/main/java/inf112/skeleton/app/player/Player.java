@@ -564,21 +564,19 @@ public class Player {
         isDead = true;
         playerPiece.showDeadPlayer();
         lastPosAlive = getPos();
+        setPos(deadPosition);
+        playerHandDeck.addAll(lockedCards);
+        lockedCards.clear();
         if (lives == 0) {
             MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
             Move permaDeadMove = new Move(playerPiece, lastPosAlive, deadPosition, playerPiece.getDir(), playerPiece.getDir());
             moves.add(permaDeadMove);
-            setPos(deadPosition);
             setPowerDownMode(true);
             isPermanentlyDead = true;
             game.getGameDeck().moveAll(game.getGameDeck().getDiscardDeck(), playerHandDeck);
-            permaDeadMove.updateMove();
-            moves.add(permaDeadMove);
             game.executeMoves(moves);
             return;
         }
-        lockedCards.clear();
-        setPos(deadPosition);
         game.getDeadPlayers().add(this);
         damage = 2;
     }

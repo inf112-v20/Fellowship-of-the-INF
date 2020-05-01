@@ -15,6 +15,13 @@ public class GameDeck {
         generateDeck(drawDeck);
     }
 
+
+    public ArrayList<ProgramCard> getDiscardDeck(){
+        return this.discardDeck;
+    }
+
+    public ArrayList<ProgramCard> getDrawDeck() { return this.drawDeck;}
+
     /**
      * Draw a new hand based on the damage you have taken. Will also handle if you are running out of cards.
      * Number of cards are calculated by subtracting the number of damage you have taken from the maximum number of cards
@@ -37,10 +44,6 @@ public class GameDeck {
             drawNumberOfCardsFromPile(playerHand, numberOfCards - remainingInDraw);
         }
         return playerHand;
-    }
-
-    public ArrayList<ProgramCard> getDiscardDeck(){
-        return this.discardDeck;
     }
 
     //Check to see if you can draw a hand without the drawDeck running out of cards
