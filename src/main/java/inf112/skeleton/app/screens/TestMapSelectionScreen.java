@@ -48,6 +48,7 @@ public class TestMapSelectionScreen implements Screen {
                 //add more test maps here
                 "conveyorbelt_test_map",
                 "cogs_test_map",
+                "locked_cards_test_map",
                 "ai_test_map",
                 "pushers_test_map_1",
                 "pushers_test_map_2",

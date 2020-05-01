@@ -1,34 +1,27 @@
-# Manual tests for congs
-#### Setup 
-* Comment out line 70 in Phase.java if it isn't already.  
+# Manual tests for locked cards
+#### Setup   
 * Run Main.
-* Press the Play button in the menu screen.
-* Press the Stage 1 button in the stage selection screen.
+* Press the Test button in the menu screen
+* Choose "locked_cards_test_map" in the dropdown list and press start test. 
 
 
-### Tests
-#### Test1 for locking cards and unlocking cards
+
+#### Test for locking and unlocking cards
 * Complete setup.
-* Pick any 5 cards that won't kill robot 1 and lock in.
-* Press 1 on your keyboard to take damage so that you have at least 5 or more damage.
-* Press 2 to remove damage.
-* Assert: The cards are locked(red outline) from right to left when having 5 or more damage.
-A card is unlocked(white outline) from left to right when removing 1 damage. 
-
-#### Test2 for locking cards
-* Complete setup.
-* Pick any 5 cards that won't kill robot 1 and lock in.
-* Press 1 on your keyboard to take damage so that you have at least 5 or more damage so that you have some locked cards.
-* Press ENTER five times to play through all the phases and start the next round.  
-* Assert: The locked cards from last round are still in the register at the correct position. 
-You can't remove them (i.e rightclick them).
-
-#### Test3 for locking and unlocking cards
-* Do the same as test 2. 
-* Select the given cards for round 2 so that you have 5 selected cards and press lock in.
-* Press 2 to remove damage so that all the selected cards are unlocked
-* Press ENTER five times to play through all the phases and start the next round.
-* Assert: At the start of round 3 there should be no locked cards and register is empty.   
+* Pick any 5 cards and lock in.
+* Press 1 to add 1 damage to player 1 and press 2 to remove 1 damage from player 1
+(this can only be done when there isn't an ongoing phase).
+* Confirm that when player 1 has more than 5 damage the cards will be locked (red outline) from right to left.
+If you remove damage the cards should get unlocked (white outline) from left to right.
+* Play through the rest of the round by pressing ENTER at the end of each phase or press P to the let the phases
+run automatically. Make sure to have at least one card locked at the end of the round.
+* When round 2 starts the locked card should remain in the card slots at the correct position and it is not possible
+to remove them from the register (i.e rightclicking them).
+* Select the rest of the cards so that you have 5 selected card and lock in.
+* Remove damage from player 1 so he doesn't have any locked cards (if you pressed P earlier you need to press
+P again to be able to remove damage).
+* Play through round 2 the same way as before.
+* Confirm at the start of round 3 that all slots are available.
 
 
 

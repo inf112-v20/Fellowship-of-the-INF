@@ -512,6 +512,10 @@ public class Player {
         this.damage++;
         if(damage >= 10){
             loseLife();
+            MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
+            Move deadMove = new Move(playerPiece, lastPosAlive, deadPosition, playerPiece.getDir(), playerPiece.getDir());
+            moves.add(deadMove);
+            game.executeMoves(moves);
             return;
         }
         if(damage >= 5){
