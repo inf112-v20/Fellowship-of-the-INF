@@ -86,6 +86,10 @@ public class UIScreen {
         removeGameLog();
         game.executeRound();
         lockInButton.setTouchable(Touchable.disabled);
+        if(player.isPermanentlyDead()){
+            executePowerDownButton();
+            return;
+        }
         powerDownButton.setColor(powerDownButton.getColor().r, powerDownButton.getColor().g, powerDownButton.getColor().b, 1f);
         powerDownButton.setTouchable(Touchable.enabled);
         //Check if the player had the correct number of cards on the hand
@@ -95,6 +99,7 @@ public class UIScreen {
             lockInButton.setColor(c.r, c.g, c.b, 1);
         }
         cardButton = new CardButton(player, width, height, stage, lockInButton);
+
     }
 
     /**
