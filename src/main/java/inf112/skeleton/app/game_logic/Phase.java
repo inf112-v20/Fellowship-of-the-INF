@@ -52,12 +52,6 @@ public class Phase {
      */
     public void executePhase(int phaseNumber) {
         System.out.println("ROUND: " +game.getRound().getRoundNumber() + ", PHASE: " + (phaseNumber+1));
-        if(game.getGameDeck().getDrawDeck().contains(null)){
-            System.out.println("DRAW DECK CONTAINS NULL CARD");
-        }
-        if(game.getGameDeck().getDiscardDeck().contains(null)){
-            System.out.println("DISCARD DECK CONTAINS NULL CARD");
-        }
         startPhase(phaseNumber);
         moveRobots();
         moveConveyorBelts(true);
@@ -102,6 +96,7 @@ public class Phase {
             if (!player.isPowerDownMode() && !player.isPermanentlyDead()) {
                 ProgramCard programCardThisPhase = player.getSelectedCards()[phaseNumber];
                 if(programCardThisPhase == null){
+                    //TODO remove
                     System.out.println(player.toString() + " card in phase " + phaseNumber + " is null. Selected cards: "
                     + Arrays.toString(player.getSelectedCards()));
                     System.out.println("Powerdown? " + player.isPowerDownMode() + ", dead? " + player.isDead()

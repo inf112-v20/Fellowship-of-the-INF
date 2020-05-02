@@ -152,6 +152,8 @@ public class Game {
 
     public void setChoosingRespawn(boolean bool){ this.choosingRespawn = bool; }
 
+    public void setAutoStartNextPhase(boolean bool){ this.autoStartNextPhase = bool;}
+
 
     /**
      * The computer players are initiated and added to the playerList and position in the logicGrid

@@ -78,6 +78,7 @@ public class GameScreen implements Screen {
     private ArrayList<Image> respawnImages;
     private boolean hasUpdated = false;
     private int currentPhaseNr = 0;
+    private boolean keepWatching = false;
 
 
     public GameScreen(RoboRallyGame roborallyGame, String mapName, int numberOfPlayers, Difficulty difficulty) {
@@ -234,8 +235,10 @@ public class GameScreen implements Screen {
             executeMove();
             delayForSeconds(500); //add delay
         }
-        if (!movesToExecute() && !game.moreLaserToShoot())
+        if (!movesToExecute() && !game.moreLaserToShoot()) {
             checkForEndGame();
+            checkIfPlayer1Died();
+        }
         if (!movesToExecute() && game.moreLaserToShoot()) {
             shootRobotLasers();
             showBoardLasers();
@@ -270,6 +273,30 @@ public class GameScreen implements Screen {
             if (gameOverDialog == 1) {
                 roborallyGame.setScreen(new MainMenuScreen(roborallyGame));
             } else Gdx.app.exit();
+        }
+    }
+
+    public void checkIfPlayer1Died() {
+        Object[] options = {"Exit", "Main Menu", "Keep Watching"};
+        String message = "Error, game needs to be restarted";
+        if (game.getPlayer().isPermanentlyDead() && !keepWatching) {
+            message = "You are dead!";
+            int gameOverDialog = JOptionPane.showOptionDialog(null,
+                    message,
+                    message,
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[2]);
+            if (gameOverDialog == 1) {
+                roborallyGame.setScreen(new MainMenuScreen(roborallyGame));
+            } else if(gameOverDialog == 2) {
+                keepWatching = true;
+                game.setAutoStartNextPhase(true);
+            } else {
+            Gdx.app.exit();
+            }
         }
     }
 
