@@ -66,7 +66,7 @@ public class PlayerSelectionScreen implements Screen {
         picture = new Sprite(new Texture("menu/playerbuttons/1Players.png"));
         ImageButton playerButtonSize = new ImageButton(new SpriteDrawable(picture));
 
-        // Constructing all buttons
+        // Constructing all buttons and saving them as ImageButton objects for reference.
         ImageButton player2Button = createPlayerButton(2,xPadding, yPadding);
         ImageButton player3Button = createPlayerButton(3, 2 * xPadding + playerButtonSize.getWidth(), yPadding);
         ImageButton player4Button = createPlayerButton(4,3 * xPadding + playerButtonSize.getWidth() + playerButtonSize.getWidth(), yPadding);
