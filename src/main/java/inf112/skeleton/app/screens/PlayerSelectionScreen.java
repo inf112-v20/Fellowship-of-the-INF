@@ -58,7 +58,7 @@ public class PlayerSelectionScreen implements Screen {
         int xPadding = 80;
         picture = new Sprite(new Texture("menu/ChoosePlayers.png"));
         Image choosePlayers = new Image(new SpriteDrawable(picture));
-        choosePlayers.setPosition(width/2 - choosePlayers.getWidth()/2- xPadding,  logo.getY()-yPadding-choosePlayers.getHeight());
+        choosePlayers.setPosition(width/2 - choosePlayers.getWidth()/2,  logo.getY()-yPadding-choosePlayers.getHeight());
         stage.addActor(choosePlayers);
 
         // Reference for size of player buttons, they are all the same
