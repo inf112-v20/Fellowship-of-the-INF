@@ -34,7 +34,6 @@ public class PlayerSelectionScreen implements Screen {
 
     }
 
-    //TODO Lots of repeated code, maybe make button construction into methods?
     @Override
     public void show() {
         stage = new Stage();
@@ -62,115 +61,24 @@ public class PlayerSelectionScreen implements Screen {
         choosePlayers.setPosition(width/2 - choosePlayers.getWidth()/2- xPadding,  logo.getY()-yPadding-choosePlayers.getHeight());
         stage.addActor(choosePlayers);
 
-        // 1 Players button
+        // Reference for size of player buttons, they are all the same
         yPadding = 400;
-        picture = new Sprite(new Texture("menu/playerbuttons/1Player.png"));
-        ImageButton player1Button = new ImageButton(new SpriteDrawable(picture));
-        player1Button.setPosition(xPadding, yPadding);
-        player1Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                sound.play();
-                game.setScreen(new MapSelectionScreen(game, 1, difficulty));
-            }
-        });
-        stage.addActor(player1Button);
+        picture = new Sprite(new Texture("menu/playerbuttons/1Players.png"));
+        ImageButton playerButtonSize = new ImageButton(new SpriteDrawable(picture));
 
-        // 2 Players button
-        picture = new Sprite(new Texture("menu/playerbuttons/2Players.png"));
-        ImageButton player2Button = new ImageButton(new SpriteDrawable(picture));
-        player2Button.setPosition(2 * xPadding + player1Button.getWidth(), yPadding);
-        player2Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                sound.play();
-                game.setScreen(new MapSelectionScreen(game, 2, difficulty));
-            }
-        });
-        stage.addActor(player2Button);
-
-        //3 Players button
-        picture = new Sprite(new Texture("menu/playerbuttons/3Players.png"));
-        ImageButton player3Button = new ImageButton(new SpriteDrawable(picture));
-        player3Button.setPosition(3 * xPadding + player1Button.getWidth() + player2Button.getWidth(), yPadding);
-        player3Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                sound.play();
-                game.setScreen(new MapSelectionScreen(game, 3, difficulty));
-            }
-        });
-        stage.addActor(player3Button);
-
-        //4 Players button
-        picture = new Sprite(new Texture("menu/playerbuttons/4Players.png"));
-        ImageButton player4Button = new ImageButton(new SpriteDrawable(picture));
-        player4Button.setPosition(width - xPadding - player4Button.getWidth(), yPadding);
-        player4Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                sound.play();
-                game.setScreen(new MapSelectionScreen(game, 4,difficulty));
-            }
-        });
-        stage.addActor(player4Button);
-
-        //5 Players button
-        picture = new Sprite(new Texture("menu/playerbuttons/5Players.png"));
-        ImageButton player5Button = new ImageButton(new SpriteDrawable(picture));
-        player5Button.setPosition(xPadding, yPadding/4);
-        player5Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                sound.play();
-                game.setScreen(new MapSelectionScreen(game, 5,difficulty));
-            }
-        });
-        stage.addActor(player5Button);
-
-        //6 Players button
-        picture = new Sprite(new Texture("menu/playerbuttons/6Players.png"));
-        ImageButton player6Button = new ImageButton(new SpriteDrawable(picture));
-        player6Button.setPosition(2 * xPadding + player1Button.getWidth(), yPadding/4);
-        player6Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                sound.play();
-                game.setScreen(new MapSelectionScreen(game, 6,difficulty));
-            }
-        });
-        stage.addActor(player6Button);
-
-        //7 Players button
-        picture = new Sprite(new Texture("menu/playerbuttons/7Players.png"));
-        ImageButton player7Button = new ImageButton(new SpriteDrawable(picture));
-        player7Button.setPosition(3 * xPadding + player1Button.getWidth() + player2Button.getWidth(), yPadding/4);
-        player7Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                sound.play();
-                game.setScreen(new MapSelectionScreen(game, 7,difficulty));
-            }
-        });
-        stage.addActor(player7Button);
-
-        //8 Players button
-        picture = new Sprite(new Texture("menu/playerbuttons/8Players.png"));
-        ImageButton player8Button = new ImageButton(new SpriteDrawable(picture));
-        player8Button.setPosition(width - xPadding - player8Button.getWidth(), yPadding/4);
-        player8Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                sound.play();
-                game.setScreen(new MapSelectionScreen(game, 8,difficulty));
-            }
-        });
-        stage.addActor(player8Button);
+        // Constructing all buttons
+        ImageButton player2Button = createPlayerButton(2,xPadding, yPadding);
+        ImageButton player3Button = createPlayerButton(3, 2 * xPadding + playerButtonSize.getWidth(), yPadding);
+        ImageButton player4Button = createPlayerButton(4,3 * xPadding + playerButtonSize.getWidth() + playerButtonSize.getWidth(), yPadding);
+        ImageButton player5Button = createPlayerButton(5,width - xPadding - playerButtonSize.getWidth(), yPadding);
+        ImageButton player6Button = createPlayerButton(6,xPadding, yPadding/4);
+        ImageButton player7Button = createPlayerButton(7,2 * xPadding + playerButtonSize.getWidth(), yPadding/4);
+        ImageButton player8Button = createPlayerButton(8,3 * xPadding + playerButtonSize.getWidth() + playerButtonSize.getWidth(), yPadding/4);
 
         //Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
-        backButton.setPosition((width - xPadding) - backButton.getWidth(), height-yPadding);
+        backButton.setPosition(width - xPadding - playerButtonSize.getWidth(), yPadding/4);
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -185,7 +93,7 @@ public class PlayerSelectionScreen implements Screen {
         Skin skin = new Skin(Gdx.files.internal("menu/navbuttons/uiskin.json"), dropdownAtlas);
         final SelectBox<Difficulty> dropDownMenu = new SelectBox<>(skin);
         dropDownMenu.setSize(100,50);
-        dropDownMenu.setPosition(player1Button.getX(), height-yPadding);
+        dropDownMenu.setPosition(player2Button.getX(), height-yPadding);
         dropDownMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -197,6 +105,28 @@ public class PlayerSelectionScreen implements Screen {
         stage.addActor(dropDownMenu);
 
         Gdx.input.setInputProcessor(stage);
+    }
+
+    /** Method for constructing and showing functional buttons for choosing players, will send appropriate
+     * amount of players to MapSelectionScreen.
+     * @param numberOfPlayers Amount of players the button is supposed to show and send to MapSelectionScreen
+     * @param x x position of button
+     * @param y y position of button
+     * @return returns an ImageButton for reference if needed for positioning of other buttons
+     */
+    public ImageButton createPlayerButton(final int numberOfPlayers, float x, float y){
+        Sprite picture = new Sprite(new Texture("menu/playerbuttons/" + numberOfPlayers + "Players.png"));
+        ImageButton playerButton = new ImageButton(new SpriteDrawable(picture));
+        playerButton.setPosition(x, y);
+        playerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sound.play();
+                game.setScreen(new MapSelectionScreen(game, numberOfPlayers,difficulty));
+            }
+        });
+        stage.addActor(playerButton);
+        return playerButton;
     }
 
     @Override
