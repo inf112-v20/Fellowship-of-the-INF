@@ -49,6 +49,7 @@ public class TestMapSelectionScreen implements Screen {
                 "conveyorbelt_test_map",
                 "cogs_test_map",
                 "locked_cards_test_map",
+                "respawn_test_map",
                 "ai_test_map",
                 "win_condition_test_map",
                 "lose_condition_test_map",

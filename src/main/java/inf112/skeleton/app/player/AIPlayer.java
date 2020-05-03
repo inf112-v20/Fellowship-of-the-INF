@@ -62,6 +62,7 @@ public class AIPlayer extends Player {
         }
         System.out.println(toString() + difficulty + " playerhand: " + playerHandDeck);
 
+        checkIfTestMap();
         evaluatePowerDown();
         if(isPowerDownMode())return;
 
@@ -670,7 +671,8 @@ public class AIPlayer extends Player {
         String mapName = game.getMapName();
         String cogMap = "cogs_test_map";
         String conveyorbeltMap = "conveyorbelt_test_map";
-        if(mapName.equals(conveyorbeltMap) || mapName.equals(cogMap)){
+        String respawnMap = "respawn_test_map";
+        if(mapName.equals(conveyorbeltMap) || mapName.equals(cogMap) || mapName.equals(respawnMap)){
             doPowerDown();
         }
     }
