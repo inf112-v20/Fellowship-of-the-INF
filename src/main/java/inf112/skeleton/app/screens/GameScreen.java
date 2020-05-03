@@ -484,7 +484,7 @@ public class GameScreen implements Screen {
 
 
     /**
-     * Starts a timer counting down for 60 seconds
+     * Starts a timer counting down from 60 seconds
      */
     private void startTimer() {
         timer = new Timer();
@@ -534,6 +534,7 @@ public class GameScreen implements Screen {
     }
 
     private void createRespawnButton(Position pos) {
+        respawnPos = null;
         Texture texture = new Texture("white.png");
         TextureRegion myTextureRegion = new TextureRegion(texture);
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
