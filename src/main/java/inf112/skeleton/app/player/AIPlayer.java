@@ -13,7 +13,18 @@ import inf112.skeleton.app.grid_objects.LaserPiece;
 
 import java.util.*;
 
-
+/**
+ * Brief description of the different levels of AI:
+ * -Easy: Will pick random cards as long as it doesn't kill itself from the move.
+ * -Medium: Will always pick the best available card for that phase.
+ * Does not look at how good the position is at the of the round, just how good it is at the end of the phase.
+ * -Hard: Will pick the cards that will put them closest to the goal at the end of the round.
+ * When calculating how far a position is from the goal it uses manhattan distance (sum of absolute value of differences of x and y values of two positions).
+ * The manhattan distance at the round end positions doesn't factor in holes and walls, so it can mislead the robot in a map with many walls and holes.
+ * -Expert: Will pick the cards that will put them closest to the goal at the end of the round.
+ * When calculating how far a position is from the goal it knows exactly how many moves it takes to reach the goal from there,
+ * even factoring holes and walls. It will always choose the most optimal route (or cards rather).
+ */
 public class AIPlayer extends Player {
     private Position newRobotPos;
     private Direction newRobotDir;
