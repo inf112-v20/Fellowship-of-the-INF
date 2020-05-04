@@ -2,10 +2,13 @@
 
 ## Part 1: Team and Project
 ### Roles
+We decided to continue the role delegation from earlier itterations as we felt the different roles where working, and did not feel the need to change anything.
 
 ### Project methodology and retrospective
 
 ### Problems we've had
+* The current situation in the world has made it challenging working together as a team, when we have been unable to see each other in person at all during this itteration. This has led to what may be less than ideal comunication, compared to what we would have been able to do otherwise. Despite this, we feel that we have been able to do the best in a bad situation, using the tools that using discord has provided us, by being able to, among other things, share a live feed of our own screen to the rest of the group, to show our code, and explain what we have been doing.
+* In the code it self, we have been experiencing bloating in certain classes, the player.java class among them. It works at the moment, but idealy it would have been devided up into at least two classes, where one of them would take care of rules, while the other would handle player information and behavior.
 
 ### How we tackled the points of improvement
 * Actually reflect upon the previous iteration before planning the next one.
@@ -19,7 +22,7 @@
 
 
 ### Meeting logs
-Meeting logs can be found in a seperate MD file called MeetingLogsIteration4. (TODO)
+Meeting logs can be found in a seperate MD file called MeetingLogsIteration4.md
 
 ## Part 2: Requirements
 ### Requirements for Fourth Iteration
