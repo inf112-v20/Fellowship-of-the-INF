@@ -1,7 +1,6 @@
 package inf112.skeleton.app.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.audio.Wav;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -37,7 +36,6 @@ public class UIScreen {
     private Actor[] damageActors = new Actor[10];
     private ArrayList<Actor> gamelogActors = new ArrayList<>();
     private Label timerLabel = null;
-    private Wav.Sound thudSound; //TODO: @Lena remove?
     private Label respawnText;
 
 
@@ -49,7 +47,6 @@ public class UIScreen {
         height = width * 0.5f;
         player = game.getPlayer();
         stage = new Stage();
-        thudSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/reitanna__thunk.wav"));
         Texture texture = new Texture(Gdx.files.internal("ui/background.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         createImage(textureRegion, 1, width * 0.5f, 0, 1);
