@@ -1,19 +1,23 @@
-# Manual tests respawning
+# Manual tests respawning and flags
 ### Setup
 * Run Main.
 * Press the Test button in the menu screen
 * Choose "respawn_test_map" in the dropdown list and press start test. 
 
 
-#### 1. Test for updating spawnpoint
+#### 1. Test for updating spawnpoint and flag
 * Each robot has a small image in the lower left corner of the tile their spawnpoint is.
 * If a robot stands on a flag or a repair site at the end of the phase their spawnpoint is updated to that position.
 * Press the powerdown button.
 * Confirm that the spawnpoint image for robot 1 is updated to flag 1 at the end of phase 1.
+* Since flag 1 was also the flag robot 1 was supposed to get he also picked up that flag. The UI should be updated by 
+highlighting the first flag.
 * If you press ENTER after each phase you can go through all the phases and see that the spawnpoint image for each 
- robot is updated properly.(You can also press P to run the phases automatically).
+ robot is updated properly.(You can also press P to run the phases automatically). You can use TAB to see that all the
+ other robots also picked up the flag.
  * At the end of phase 5 robot 1's spawnpoint image should update to flag 3 and all the spawnpoint images at flag 1
- should update properly as well. 
+ should update properly as well. Since flag 3 is not the next flag for robot 1 to get the UI should not  highlight 
+ the second flag. 
  
  #### 2. Test for respawning
  * Continue on from test 1 by powering down for round 2.

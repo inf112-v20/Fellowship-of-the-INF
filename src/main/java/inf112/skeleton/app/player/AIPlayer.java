@@ -23,7 +23,7 @@ import java.util.*;
  * The manhattan distance at the round end positions doesn't factor in holes and walls, so it can mislead the robot in a map with many walls and holes.
  * -Expert: Will pick the cards that will put them closest to the goal at the end of the round.
  * When calculating how far a position is from the goal it knows exactly how many moves it takes to reach the goal from there,
- * even factoring holes and walls. It will always choose the most optimal route (or cards rather).
+ * even factoring in holes and walls. It will always choose the most optimal route (or cards rather).
  */
 public class AIPlayer extends Player {
     private Position newRobotPos;
@@ -683,7 +683,9 @@ public class AIPlayer extends Player {
         String cogMap = "cogs_test_map";
         String conveyorbeltMap = "conveyorbelt_test_map";
         String respawnMap = "respawn_test_map";
-        if(mapName.equals(conveyorbeltMap) || mapName.equals(cogMap) || mapName.equals(respawnMap)){
+        String laserMap = "laser_test_map";
+        if(mapName.equals(conveyorbeltMap) || mapName.equals(cogMap)
+                || mapName.equals(respawnMap) || mapName.equals(laserMap)){
             doPowerDown();
         }
     }
