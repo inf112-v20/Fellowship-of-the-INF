@@ -21,7 +21,7 @@
     * Expert chooses the cards that will get them to the position that has the least distance to the next goal flag
     (the distance is the actual distance)
 * When checking how good a card is, it checks what position and direction the player will end up on at the end of the 
-phase (after conveyorbelts, cogs etc. are activated) by using that card (it will not check if it will be pushed or not).
+phase (after conveyorbelts, cogs etc. are activated) by using that car. It will not check if it will be pushed or not.
 The card is given a score by how good that position and direction is relative to the next goal flag position. 
 Players at every difficulty will avoid picking cards that will kill them (e.g. walking into pits) unless they don't have
 any other option.

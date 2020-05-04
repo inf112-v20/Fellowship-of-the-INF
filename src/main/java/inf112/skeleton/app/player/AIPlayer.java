@@ -251,9 +251,10 @@ public class AIPlayer extends Player {
         int goalFlag = updateGoalFlag(nextGoalFlag);
         int score = getScore(newRobotPos, newRobotDir, goalFlag);
         int damage = getDamage();
+        int movesToFlag = 0;
         ArrayList<ArrayList<List<Object>>> path = new ArrayList<>();
         ArrayList<ProgramCard> chosenCards = new ArrayList<>();
-        int[] totalScore = {goalFlag, 0, score};
+        int[] totalScore = {goalFlag, movesToFlag, score};
         List<Object> startNode = Arrays.asList(newRobotPos, newRobotDir, totalScore, chosenCards, playerHandDeck, damage);
         ArrayList<List<Object>> startFrontier = new ArrayList<>();
         startFrontier.add(startNode);
@@ -281,12 +282,6 @@ public class AIPlayer extends Player {
                          continue;
                      }
                      checkedCards.add(card);
-                     /*
-                     if (isCardUseless(card, currentPos, currentDir, currentDamage)) {
-                         continue;
-                     }
-
-                      */
                      newFrontier.add(createNode(currentPos, currentDir, card, currentTotalScore,
                              currentChosenCards, currentAvailableCards, goalFlag, currentDamage));
                  }
@@ -295,20 +290,9 @@ public class AIPlayer extends Player {
                      ArrayList<ProgramCard> cardsInFrontier = (ArrayList) newFrontier.get(k).get(3);
                      int[] nodeTotalScore = (int[]) newFrontier.get(k).get(2);
                      int nodeScore = nodeTotalScore[2];
-                     int flag = nodeTotalScore[0]; //TODO: @Erlend remove?
                      if (nodeScore < bestNodeScore) {
                          bestNodeScore = score;
                      }
-                     /*
-                     if ((nodeScore > bestNodeScore) && nodeScore > currentTotalScore[2] &&
-                     flag <= currentTotalScore[0]) {
-                         newFrontier.remove(k);
-                         k--;
-                     }
-
-                      */
-
-
                      if (cardsInFrontier.size() == cardsToPick && isCurrentBetter(bestFinalTotalScore, nodeTotalScore)){
                          bestFinalTotalScore = nodeTotalScore;
                          chosenCards = cardsInFrontier;
@@ -355,6 +339,10 @@ public class AIPlayer extends Player {
             score = getScore(finalPos, finalDir, goalFlag);
             moves = nodeChosenCards.size();
         }
+        if (isCardUseless(card, pos, dir, damage)) {
+            score = 100;
+        }
+
         int[] newTotalScore = {goalFlag, moves , score};
         return Arrays.asList(finalPos, finalDir, newTotalScore, nodeChosenCards, nodeAvailableCards, newDamage);
     }
