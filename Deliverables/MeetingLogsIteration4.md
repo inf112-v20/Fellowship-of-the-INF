@@ -112,3 +112,41 @@ __For next time:__
 * Erlend: 
 * Martin: Make it possible to choose back to main menu or exit game on win/lose
 * Henrik:
+
+
+## 23.04.2020
+__Attendance:__ Erlend, Henrik, Martin, Johanna
+
+__On the meeting:__
+* Johanna went through the new map selecetion screen.
+* Talked about bugs, Erlend seemed to have fixed some
+
+__For next time:__
+* Johanna: Make demo presentation
+* Martin: Make it possible to choose back to main menu on a win or loss
+* Henrik: Bugs and checking code
+* Lena: Copy the Meeting logs from google document to .md
+
+## 27.04.2020
+__Attendance:__ Everyone
+
+__On the meeting:__
+* Johanna showed presentation, rest gave input
+* Henrik: Everyone should go over classes and add documentation for classes and functions
+* Johanna: Generally do clean up, use codacy to check
+* Next Thursday the meeting will be held at 10 o'clock
+
+__For next time:__ 
+* Lena: Keep writing markdown, make tests for power down
+* Everyone:
+ * Check that you have commented your code
+ * Check that your tests from previous iterations still work
+ * Check for errors in code that you have authored on codacy
+ * Move code from large classes (Player, LogicGrid, Game) to smaller classes or create new classes
+ 
+ ## 30.04.2020
+ __Attendance:__ Everyone
+ 
+ __On the meeting:__
+ * The goal is for the program to be done by the presentation on Monday
+ * The documentation to be done for Thursday at the latest, to be sure that we do not have something breaking mere hours before the deadline
