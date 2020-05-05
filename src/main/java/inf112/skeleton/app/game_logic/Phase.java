@@ -6,11 +6,9 @@ import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
-import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 
 
-import javax.swing.*;
 import java.util.*;
 
 /**
@@ -24,7 +22,6 @@ public class Phase {
     HashMap<Player, Integer> playerAndPriority;
     private Game game;
     private LogicGrid logicGrid;
-    private Player victoriousPlayer;
 
 
     /*
@@ -40,7 +37,6 @@ public class Phase {
         this.listOfPlayers = game.getListOfPlayers();
         this.playerAndPriority = new HashMap<>();
         this.phaseNumber = 0;
-        this.victoriousPlayer = game.playerHasWon();
     }
 
     /*

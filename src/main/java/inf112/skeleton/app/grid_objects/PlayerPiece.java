@@ -36,10 +36,6 @@ public class PlayerPiece extends DirectionedPiece {
         return this.playerCell;
     }
 
-    public int getPlayerNumber() {
-        return this.playerNumber;
-    }
-
     public Player getPlayer() {
         return this.player;
     }

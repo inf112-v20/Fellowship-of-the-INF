@@ -268,15 +268,6 @@ public class LogicGrid {
         return (grid[position.getX()][position.getY()].get(layerIndex) instanceof NullPiece);
     }
 
-    /** //TODO @Johanna Remove? - Erlend
-     * @param pos position you are getting a list of piece from
-     * @return list of piece in the position you are checking
-     */
-    public ArrayList<BoardPiece> getAllPieces(Position pos) {
-        return grid[pos.getX()][pos.getY()];
-    }
-
-
     /**
      * Remember to check that this method does not return null
      *
