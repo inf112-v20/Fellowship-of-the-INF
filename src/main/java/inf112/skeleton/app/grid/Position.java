@@ -1,5 +1,8 @@
 package inf112.skeleton.app.grid;
 
+/**
+ * Coordinates representing where various objects in the game are placed in LogicGrid.
+ */
 public class Position {
 
     private int x;

@@ -3,6 +3,9 @@ package inf112.skeleton.app.cards;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
+/**
+ * The programcards to be used in the game.
+ */
 public class ProgramCard implements IProgramCard {
 
     private int priority;

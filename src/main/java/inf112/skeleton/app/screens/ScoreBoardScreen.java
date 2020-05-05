@@ -13,7 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.game_logic.Game;
 import inf112.skeleton.app.player.Player;
 
-
+/**
+ * TODO: doc
+ */
 public class ScoreBoardScreen {
     private Stage stage;
     private Table table;

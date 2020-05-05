@@ -7,6 +7,9 @@ import inf112.skeleton.app.cards.ProgramCard;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * The deck of programcards used to draw from and put in hands players.
+ */
 public class GameDeck {
     private ArrayList<ProgramCard> drawDeck = new ArrayList<>();
     private ArrayList<ProgramCard> discardDeck = new ArrayList<>();
@@ -15,6 +18,9 @@ public class GameDeck {
         generateDeck(drawDeck);
     }
 
+    /*
+    Getters
+     */
 
     public ArrayList<ProgramCard> getDiscardDeck(){
         return this.discardDeck;

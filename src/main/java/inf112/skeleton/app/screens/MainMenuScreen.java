@@ -14,6 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import inf112.skeleton.app.Main;
 import inf112.skeleton.app.RoboRallyGame;
 
+/**
+ * The main menu of the game.
+ */
 public class MainMenuScreen implements Screen {
 
     private Wav.Sound sound;
@@ -25,7 +28,7 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(RoboRallyGame game) {
         this.game = game;
-        this.width = Gdx.graphics.getWidth(); // width and height from Main.java
+        this.width = Gdx.graphics.getWidth(); // width and height from tmx maps
         this.height = Gdx.graphics.getHeight();
         sound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/reitanna__thunk.wav"));
     }

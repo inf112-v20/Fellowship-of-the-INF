@@ -4,8 +4,9 @@ import inf112.skeleton.app.grid_objects.RepairPiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 
-
-
+/**
+ * The rounds within a RoboRally game. Consists of 5 phases.
+ */
 public class Round {
 
     final int NUMBER_OF_PHASES = 5;

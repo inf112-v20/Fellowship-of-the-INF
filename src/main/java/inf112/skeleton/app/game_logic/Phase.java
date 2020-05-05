@@ -14,7 +14,9 @@ import inf112.skeleton.app.screens.MainMenuScreen;
 import javax.swing.*;
 import java.util.*;
 
-
+/**
+ * The phases within a round in a RoboRally game.
+ */
 public class Phase {
 
     private Player[] listOfPlayers;
