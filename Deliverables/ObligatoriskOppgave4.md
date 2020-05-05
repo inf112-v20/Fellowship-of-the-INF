@@ -82,6 +82,24 @@ Due to being unable to meet and play multiplayer over LAN, our team decided to i
 
 ---
 
+### Show the board lasers when they are active
+**Usecase**: The user of the game wants to be able to see the board lasers when they are active, so that they can see when a robot gets hit by a laser.
+
+
+**Acceptance criteria**
+* Board lasers are:
+   * only shown when active
+   * shown with the correct cell (horizontal lasers are drawn as horizontal lasers etc.)
+   * not drawn places that the laser beam does not reach (fex if blocked by a robot)
+
+**Tasks to complete**
+
+* Implement graphics for the board lasers so they are seen.
+* Integrate the display of board lasers with the display of robot lasers, so they happen at the same time.
+* Implement block functionality (the lasers can be blocked).
+
+---
+
 ### Functional repair sites (single-wrench fields)
 **Usecase**: The user of the game would like the robots standing on single-wrench repair fields to discard damage
 tokens in accordance to the rules of Roborally.
