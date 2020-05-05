@@ -12,9 +12,12 @@ We decided to continue the role delegation from earlier itterations as we felt t
 
 ### How we tackled the points of improvement
 * Actually reflect upon the previous iteration before planning the next one.
-  *
+  * We discussed this in the first meeting of iteration 4 and reached a few key points:
+     * It is more difficult to work with the code base now, as it is so large. Therefore clean and well-documented code is even more important now.
+     * Testing should be done continuously throughout an iteration. To make this possible, manual tests can't be dependent on commenting in/out lines of code.
+     * Communication has become more difficult now that the university is closed. Being reachable on Discord and being present at meetings is important.
 * Plan meetings better, so that everyone is available at the agreed upon time.
-  *
+  * At the end of each meeting we all agree on the time of the next meeting (usually at 14.00 on Mondays and Thursdays).
 * Testing should be done either before or immediately after implementation, not toward the end of an iteration.
   * In order for this to be possible we had to remove our very impracticle system of commenting out/in lines of code to run certian tests. We created a practical UI where the appropriate test map could be selected, and made it simple for developers to add a test map to the list. With this new system in place, manual testing was easy to do before or immediately after implementation.
   ![alt text](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/TestMapSelectionScreen_Screenshot.png "Screen shot")
