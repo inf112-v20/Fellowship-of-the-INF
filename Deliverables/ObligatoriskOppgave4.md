@@ -4,7 +4,32 @@
 ### Roles
 We decided to continue the role delegation from earlier itterations as we felt the different roles where working, and did not feel the need to change anything.
 
-### Project methodology and retrospective
+### Project methodology
+We have mainly followed the XP-methodology throughout the project, and it has worked quite well for us. Points from the methodology that were especially useful were:
+•	Iterations
+•	Pair-programming
+•	Continuous code review
+•	Reflections on previous iteration
+The most useful aspect was definitely the use of iterations, which helped us to plan the project, distribute work, ensure a level of quality and urge us to reflect upon previous work.
+
+
+### Reflection on our communcation
+Early on in the project we put too much focus on keeping everyone up to date with everything. Meetings lasted far too long, as everyone had to talk about everything they had done since last time. We could have saved ourselves a lot of time and been a lot more productive early on if we had understood that everyone doesn’t need to know everything. A lot of things that were said in meetings should have been written in the documentation instead.
+
+
+### Project retrospective
+Overall we are satisfied with the results of the project. We have all become better programmers and communicators (project-wise) as a result of the work. As a result we have reached a list of things we’d do differently if we were to start a new project:
+ * More thorough planning
+ * Use effective working practices earlier:
+    *	Pair-programming
+    *	Role distribution 
+    *	Codacy
+    *	Reflections on previous work
+    *	Proper user stories
+    *	Continuous testing
+ *	Better abstraction (Rules-class, Cleanup-class, separation between Grid and Game Map)
+ *	Better use of Project board, issue tracking system
+
 
 ### Problems we've had
 * The current situation in the world has made it challenging working together as a team, when we have been unable to see each other in person at all during this itteration. This has led to what may be less than ideal comunication, compared to what we would have been able to do otherwise. Despite this, we feel that we have been able to do the best in a bad situation, using the tools that using discord has provided us, by being able to, among other things, share a live feed of our own screen to the rest of the group, to show our code, and explain what we have been doing.
