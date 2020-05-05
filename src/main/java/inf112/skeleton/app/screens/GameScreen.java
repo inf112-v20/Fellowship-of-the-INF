@@ -234,7 +234,6 @@ public class GameScreen implements Screen {
         }
         if (!movesToExecute() && !game.moreLaserToShoot()) {
             checkForEndGame();
-            checkIfPlayer1Died();
         }
         if (!movesToExecute() && game.moreLaserToShoot()) {
             shootRobotLasers();
@@ -248,7 +247,8 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Checks if the game is over, and if so shows the appropriate message to the user
+     * Checks if the game is over (all players are dead or there is a winner),
+     * and if so shows the appropriate message to the user
      */
     public void checkForEndGame() {
         Player victoriousPlayer = game.getVictoriousPlayer();
@@ -270,9 +270,16 @@ public class GameScreen implements Screen {
             if (gameOverDialog == 1) {
                 roborallyGame.setScreen(new MainMenuScreen(roborallyGame));
             } else Gdx.app.exit();
+        } else {
+            checkIfPlayer1Died();
         }
     }
 
+    /**
+     * This method is only called if there isn't a winner and all players aren't dead.
+     * If player 1 is dead, but there are still some AI's alive, then the user has the option of continuing to watch
+     * the game.
+     */
     public void checkIfPlayer1Died() {
         Object[] options = {"Exit", "Main Menu", "Keep Watching"};
         String message = "Error, game needs to be restarted";

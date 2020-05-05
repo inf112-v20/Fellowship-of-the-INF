@@ -91,18 +91,6 @@ public class Game {
 
     public Player getVictoriousPlayer() {return victoriousPlayer;}
 
-    public void setVictoriousPlayer(Player victoriousPlayer) {
-        this.victoriousPlayer = victoriousPlayer;
-    }
-
-    public void setGameOver(boolean gameIsOver) {
-        this.gameOver = gameIsOver;
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
     public Round getRound() {
         return this.round;
     }
@@ -153,6 +141,10 @@ public class Game {
     public void setChoosingRespawn(boolean bool){ this.choosingRespawn = bool; }
 
     public void setAutoStartNextPhase(boolean bool){ this.autoStartNextPhase = bool;}
+
+    public void setGameOver(boolean gameIsOver) { this.gameOver = gameIsOver; }
+
+    public boolean isGameOver() { return gameOver; }
 
 
     /**
@@ -233,6 +225,8 @@ public class Game {
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
         }
         moves.clear();
+        //check for game completion
+        checkForGameCompletion();
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
             if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
@@ -336,7 +330,7 @@ public class Game {
         }
         return (lockedInPlayers == playerList.length-1);
     }
-
+ //TODO: @Erlend comment
     private void findMapName(String mapName){
         for(int i = mapName.length()-1; i >= 0; i--){
             char c = mapName.charAt(i);
@@ -347,4 +341,43 @@ public class Game {
         }
     }
 
+    /**
+     * Checks if the game is over.
+     * Game is over if a player has won or player 1 is permanently dead.
+     */
+    public void checkForGameCompletion() {
+        System.out.println("Checking for game completion");
+        victoriousPlayer = playerHasWon();
+        if (playerHasWon() != null) { //if a player has won
+            victoriousPlayer = playerHasWon();
+        } else if (checkForGameOver()) {//if all players are dead
+            setGameOver(true);
+            System.out.println("Setting game over");
+        }
+    }
+
+    /**
+     * Method for checking if a player has won the game
+     *
+     * @return the player which has won, if no player has won, returns null
+     */
+    public Player playerHasWon() {
+        for (Player player : getListOfPlayers()) {
+            if (player.getCheckpointsVisited() == logicGrid.getFlagPositions().size())
+                return player;
+        }
+        return null;
+    }
+
+    /**
+     * Method for checking if every player is permanently dead, aka the game is over
+     *
+     * @return true if game is over, else returns false
+     */
+    public boolean checkForGameOver() {
+        for (Player player : getListOfPlayers()) {
+            if (!player.isPermanentlyDead()) return false;
+        }
+        return true;
+    }
 }

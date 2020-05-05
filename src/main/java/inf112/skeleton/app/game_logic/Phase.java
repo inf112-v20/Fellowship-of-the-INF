@@ -7,6 +7,7 @@ import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
+import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.MainMenuScreen;
 
@@ -34,8 +35,9 @@ public class Phase {
         this.listOfPlayers = game.getListOfPlayers();
         this.playerAndPriority = new HashMap<>();
         this.phaseNumber = 0;
-        this.victoriousPlayer = playerHasWon();
+        this.victoriousPlayer = game.playerHasWon();
     }
+
     /*
     Getters
      */
@@ -53,7 +55,7 @@ public class Phase {
      * @param phaseNumber the current phase number
      */
     public void executePhase(int phaseNumber) {
-        System.out.println("ROUND: " +game.getRound().getRoundNumber() + ", PHASE: " + (phaseNumber+1));
+        System.out.println("ROUND: " + game.getRound().getRoundNumber() + ", PHASE: " + (phaseNumber + 1));
         startPhase(phaseNumber);
         moveRobots();
         moveConveyorBelts(true);
@@ -62,20 +64,8 @@ public class Phase {
         rotateCogs();
         lasersFire();
         touchCheckPoints();
-        checkForGameCompletion();
+        game.checkForGameCompletion();
         game.setPhaseDone(true);
-    }
-
-    /**
-     * Checks if the game is over.
-     * Game is over if a player has won or player 1 is permanently dead.
-     */
-    public void checkForGameCompletion() {
-        victoriousPlayer = playerHasWon();
-        if (victoriousPlayer != null){ //if a player has won
-            game.setVictoriousPlayer(victoriousPlayer);
-        } else if (isGameOver()) //if all players are dead
-            game.setGameOver(true);
     }
 
     /**
@@ -97,13 +87,13 @@ public class Phase {
         for (Player player : listOfPlayers) {
             if (!player.isPowerDownMode() && !player.isPermanentlyDead()) {
                 ProgramCard programCardThisPhase = player.getSelectedCards()[phaseNumber];
-                if(programCardThisPhase == null){
+                if (programCardThisPhase == null) {
                     //TODO remove
                     System.out.println(player.toString() + " card in phase " + phaseNumber + " is null. Selected cards: "
-                    + Arrays.toString(player.getSelectedCards()));
+                            + Arrays.toString(player.getSelectedCards()));
                     System.out.println("Powerdown? " + player.isPowerDownMode() + ", dead? " + player.isDead()
                             + ", permadead? " + player.isPermanentlyDead() + ", damage :" + player.getDamage()
-                    + ", lives: " + player.getLives() + ", pos: " + player.getPos());
+                            + ", lives: " + player.getLives() + ", pos: " + player.getPos());
                 }
                 Integer cardPriority = programCardThisPhase.getPriority();
                 playerAndPriority.put(player, cardPriority);
@@ -118,7 +108,9 @@ public class Phase {
         });
         for (Object e : a) {
             Player player = ((Map.Entry<Player, Integer>) e).getKey();
-            if(player.isDead()){continue;}
+            if (player.isDead()) {
+                continue;
+            }
             orderedListOfPlayers.add(player);
             MovesToExecuteSimultaneously movesToExecuteTogether = generateMovesToExecuteTogether(player);
             game.executeMoves(movesToExecuteTogether); //executes backend, and adds to list of frontend moves to show
@@ -147,7 +139,9 @@ public class Phase {
      */
     private void touchCheckPoints() {
         for (Player player : listOfPlayers) {
-            if(player.isDead()){continue;}
+            if (player.isDead()) {
+                continue;
+            }
             Position oldSpawnPoint = player.getSpawnPoint();
             if (player.getCurrentBoardPiece() instanceof FlagPiece) {
                 FlagPiece flag = (FlagPiece) player.getCurrentBoardPiece();
@@ -155,13 +149,12 @@ public class Phase {
                 if (player.getCheckpointsVisited() + 1 == flag.getFlagNumber()) {
                     player.visitedCheckpoint();
                 }
-            }
-            else if(!logicGrid.positionIsFree(player.getPos(), 1) ||
-                    !logicGrid.positionIsFree(player.getPos(), 2)){
+            } else if (!logicGrid.positionIsFree(player.getPos(), 1) ||
+                    !logicGrid.positionIsFree(player.getPos(), 2)) {
                 player.setSpawnPoint(player.getPos());
-                System.out.println("Setting "+ player.toString() + " spawn point to " + player.getPos());
+                System.out.println("Setting " + player.toString() + " spawn point to " + player.getPos());
             }
-            if(!oldSpawnPoint.equals(player.getSpawnPoint())){
+            if (!oldSpawnPoint.equals(player.getSpawnPoint())) {
                 ArrayList<Player> respawnOrder = game.getRespawnOrder();
                 respawnOrder.remove(player);
                 respawnOrder.add(player);
@@ -178,7 +171,9 @@ public class Phase {
     private void lasersFire() {
         // Static lasers (from walls)
         for (Player player : listOfPlayers) {
-            if(player.isDead()){continue;}
+            if (player.isDead()) {
+                continue;
+            }
             player.shootLaser();
             int damage = 1;
             LaserPiece laser;
@@ -188,14 +183,12 @@ public class Phase {
                     if (!logicGrid.positionIsFree(player.getPos(), 8)
                             && logicGrid.positionIsFree(player.getPos(), 9)) {
                         if (isPlayerBlocking(player.getPos(), laser.getDir())) {
-                            //  System.out.println("Someone is blocking a laser for " + player.toString());
                             continue;
                         }
                     }
                     if (laser.isDoubleLaser() || laser.isCrossingLasers()) {
                         damage += 1;
                     }
-                    //System.out.println(player.toString() + " was hit by a laser");
                     player.takeDamage(damage);
                 }
             }
@@ -207,8 +200,9 @@ public class Phase {
      * Since all horizontal lasers point west, and all vertical lasers point north
      * it is not certain we find the lasersource by following the laser direction,
      * if so we call the method again checking for the lasersource in the other direction.
+     *
      * @param playerPos the position of a player that is standing on a laser.
-     * @param laserDir the direction of the laser.
+     * @param laserDir  the direction of the laser.
      * @return true if a player is standing between the player on the laser and the lasersource, false otherwise.
      */
     private boolean isPlayerBlocking(Position playerPos, Direction laserDir) {
@@ -219,7 +213,6 @@ public class Phase {
             if (!logicGrid.isInBounds(laserPos)) {
                 break;
             }
-            //System.out.println(laserPos);
             if (!logicGrid.positionIsFree(laserPos, 12)) {
                 playerBetween = true;
             }
@@ -227,8 +220,6 @@ public class Phase {
                 if (logicGrid.getPieceType(laserPos, LaserSourcePiece.class) != null) {
                     LaserSourcePiece laserSource = logicGrid.getPieceType(laserPos, LaserSourcePiece.class);
                     if (laserSource.getDir().equals(laserDir)) {
-                        //System.out.println("Source for laser is at " + laserPos + " pointing " + laserDir.getOppositeDirection());
-                        //System.out.println("Player blocking? " + playerBetween);
                         return playerBetween;
                     }
                 }
@@ -246,11 +237,13 @@ public class Phase {
     public void moveConveyorBelts(boolean moveOnlyExpressBelts) {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
-            if(player.isDead() || !logicGrid.isInBounds(player.getPos())){continue;}
+            if (player.isDead() || !logicGrid.isInBounds(player.getPos())) {
+                continue;
+            }
             boolean playerIsOnConveyorBelt = !logicGrid.positionIsFree(player.getPos(), 4);
-            boolean playerIsOnExpressBelt =  !logicGrid.positionIsFree(player.getPos(), 5);
+            boolean playerIsOnExpressBelt = !logicGrid.positionIsFree(player.getPos(), 5);
             if (playerIsOnConveyorBelt
-                    || playerIsOnExpressBelt ) {
+                    || playerIsOnExpressBelt) {
                 //System.out.println("Moving " + player.toString() + " on conveyorbelt");
                 if ((moveOnlyExpressBelts && !playerIsOnExpressBelt || player.hasBeenMovedThisPhase())) {
                     continue;
@@ -271,7 +264,9 @@ public class Phase {
     public void rotateCogs() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
-            if(player.isDead()){continue;}
+            if (player.isDead()) {
+                continue;
+            }
             boolean playerIsOnCog = !logicGrid.positionIsFree(player.getPos(), 6);
             if (playerIsOnCog) {
                 CogPiece cogPiece = game.getLogicGrid().getPieceType(player.getPos(), CogPiece.class);
@@ -286,9 +281,9 @@ public class Phase {
      */
     public void pushersPush() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
-        boolean isOddPhase = ((phaseNumber+1) % 2) != 0;
+        boolean isOddPhase = ((phaseNumber + 1) % 2) != 0;
         for (PusherPiece pusher : logicGrid.getPushersList()) {
-            if (pusher.isActiveWhenOddPhase() == isOddPhase){
+            if (pusher.isActiveWhenOddPhase() == isOddPhase) {
                 PlayerPiece possiblePlayer = logicGrid.getPieceType(pusher.getPos(), PlayerPiece.class);
                 if (possiblePlayer != null) {
                     Player player = possiblePlayer.getPlayer();
@@ -303,29 +298,5 @@ public class Phase {
         for (Player player : listOfPlayers) {
             player.setHasBeenPushedThisPhase(false);
         }
-    }
-
-
-    /**
-     * Method for checking if a player has won the game
-     * @return the player which has won, if no player has won, returns null
-     */
-    public Player playerHasWon() {
-        for (Player player: game.getListOfPlayers()){
-            if (player.getCheckpointsVisited() == logicGrid.getFlagPositions().size())
-                return player;
-        }
-        return null;
-    }
-
-    /**
-     * Method for checking if every player is permanently dead, aka the game is over
-     * @return true if game is over, else returns false
-     */
-    public boolean isGameOver(){
-        for (Player player: game.getListOfPlayers()){
-            if (!player.isPermanentlyDead()) return false;
-        }
-        return true;
     }
 }

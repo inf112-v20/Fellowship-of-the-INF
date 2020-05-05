@@ -54,6 +54,7 @@ public class TestMapSelectionScreen implements Screen {
                 "ai_test_map",
                 "win_condition_test_map",
                 "lose_condition_test_map",
+                "lose_condition_death_by_lasers_test_map",
                 "pushers_test_map_1",
                 "pushers_test_map_2",
                 "pushers_test_map_3",
