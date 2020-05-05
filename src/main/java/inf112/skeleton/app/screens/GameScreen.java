@@ -157,30 +157,15 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * TODO: @Erlend @Johanna this metod is way to big and needs to be split into smaller methods
+     * TODO: @Erlend this metod is way too big and needs to be split into smaller methods
      * Update all changes to board
      * <p>
      * If there are moves to execute, they are executed with a delay.
      * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
-        if (game.isChoosingRespawn()) {
-            if (game.getRound().getPhaseNr() == 0) {
-                uiScreen.removeCards();
-            }
-            if (game.getPlayer().isDead()) {
-                game.getPlayer().setIsDead(false);
-                createdButtons = false;
-            }
-            if (!createdButtons) {
-                choosePosition();
-                uiScreen.removeGameLog();
-                uiScreen.update();
-                uiScreen.createRespawnText();
-                createdButtons = true;
-            }
-            chooseDirection();
-        }
+        checkForChoosingRespawn();
+
         if (boardLasersVisible) {
             laserSound.play(0.25f, 1.0f, 1.0f);
             clearLayer(boardLaserLayer);
@@ -188,6 +173,7 @@ public class GameScreen implements Screen {
         }
         //Start timer if there is only one left picking cards for the next round
         handleKeyboardInput();
+
         if (game.onePlayerLeftToPick() && !timerStarted) {
             timerStarted = true;
             startTimer();
@@ -241,6 +227,27 @@ public class GameScreen implements Screen {
         if (currentPhaseNr != game.getRound().getPhaseNr()) {
             hasUpdated = false;
             currentPhaseNr = game.getRound().getPhaseNr();
+        }
+    }
+
+    //TODO: @Erlend add comments
+    private void checkForChoosingRespawn() {
+        if (game.isChoosingRespawn()) {
+            if (game.getRound().getPhaseNr() == 0) {
+                uiScreen.removeCards();
+            }
+            if (game.getPlayer().isDead()) {
+                game.getPlayer().setIsDead(false);
+                createdButtons = false;
+            }
+            if (!createdButtons) {
+                choosePosition();
+                uiScreen.removeGameLog();
+                uiScreen.update();
+                uiScreen.createRespawnText();
+                createdButtons = true;
+            }
+            chooseDirection();
         }
     }
 
@@ -361,10 +368,10 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * TODO: @Johanna add comments
+     * Returns the type of laser cell that needs to be used to draw the laser coming from the laser source
      *
-     * @param laserSource
-     * @return
+     * @param laserSource the laser source piece of the laser
+     * @return the type of laser call that should be drawn from the source
      */
     private TiledMapTileLayer.Cell getLaserCell(LaserSourcePiece laserSource) {
         Direction laserDirection = laserSource.getLaserDir();
