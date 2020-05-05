@@ -23,6 +23,8 @@ public class MainMenuScreen implements Screen {
     private RoboRallyGame game;
     private float width;
     private float height;
+    private int yPadding;
+    private int xPadding;
 
     private Stage stage;
 
@@ -33,32 +35,65 @@ public class MainMenuScreen implements Screen {
         sound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/reitanna__thunk.wav"));
     }
 
+    /**
+     * TODO write docs
+     *
+     * @param filename
+     * @return
+     */
+    public Image createImage (final String filename) {
+        Sprite picture = new Sprite(new Texture("menu/" + filename + ".png"));
+        Image image = new Image(new SpriteDrawable(picture));
+        return image;
+    }
+
+    /**
+     * TODO write docs
+     *
+     * @param filename
+     * @return
+     */
+    public ImageButton createImageButton (final String filename) {
+        Sprite picture = new Sprite(new Texture("menu/navbuttons/" + filename + ".png"));
+        ImageButton button = new ImageButton(new SpriteDrawable(picture));
+        return button;
+    }
+
     @Override
     public void show() {
         stage = new Stage();
 
-        // picture = all actors on stage
         // Background
-        Sprite picture = new Sprite(new Texture("menu/MainMenuBackground.png"));
-        Image background = new Image(new SpriteDrawable(picture));
+        Image background = createImage("MainMenuBackground");
         background.setSize(width, height);
         background.setPosition(0, 0);
         stage.addActor(background);
 
+//        Sprite picture = new Sprite(new Texture("menu/MainMenuBackground.png"));
+//        Image background = new Image(new SpriteDrawable(picture));
+//        background.setSize(width, height);
+//        background.setPosition(0, 0);
+//        stage.addActor(background);
+
         // Logo
-        int yPadding = 50;
-        picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
-        Image logo = new Image(new SpriteDrawable(picture));
+        yPadding = 50;
+        Image logo = createImage("RoboRally_logo");
         logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
+//        int yPadding = 50;
+//        picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
+//        Image logo = new Image(new SpriteDrawable(picture));
+//        logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
+//        logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
+//        stage.addActor(logo);
+
         // Play button
         yPadding = 440;
-        int xPadding = 500;
-        picture = new Sprite(new Texture("menu/navbuttons/PlayButton.png"));
-        ImageButton playButton = new ImageButton(new SpriteDrawable(picture));
-        playButton.setPosition((width - picture.getWidth()) / 2, height - (picture.getHeight() + yPadding));
+        xPadding = 500;
+        ImageButton playButton = createImageButton("PlayButton");
+        playButton.setPosition((width - playButton.getWidth()) / 2, height - (playButton.getHeight() + yPadding));
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -68,11 +103,20 @@ public class MainMenuScreen implements Screen {
         });
         stage.addActor(playButton);
 
+//        playButton.setPosition((width - picture.getWidth()) / 2, height - (picture.getHeight() + yPadding));
+//        playButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                sound.play();
+//                game.setScreen(new PlayerSelectionScreen(game));
+//            }
+//        });
+//        stage.addActor(playButton);
+
         // Test button
         yPadding = 100;
         xPadding = 100;
-        picture = new Sprite(new Texture("menu/navbuttons/TestButton.png"));
-        ImageButton testButton = new ImageButton(new SpriteDrawable(picture));
+        ImageButton testButton = createImageButton("TestButton");
         testButton.setPosition(xPadding, yPadding);
         testButton.addListener(new ClickListener() {
             @Override
@@ -83,9 +127,18 @@ public class MainMenuScreen implements Screen {
         });
         stage.addActor(testButton);
 
+//        testButton.setPosition(xPadding, yPadding);
+//        testButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                sound.play();
+//                game.setScreen(new TestMapSelectionScreen(game));
+//            }
+//        });
+//        stage.addActor(testButton);
+
         // Exit button
-        picture = new Sprite(new Texture("menu/navbuttons/ExitButton.png"));
-        ImageButton exitButton = new ImageButton(new SpriteDrawable(picture));
+        ImageButton exitButton = createImageButton("ExitButton");
         exitButton.setPosition((width - xPadding) - exitButton.getWidth(), yPadding);
         exitButton.addListener(new ClickListener() {
             @Override
@@ -95,6 +148,16 @@ public class MainMenuScreen implements Screen {
             }
         });
         stage.addActor(exitButton);
+
+//        exitButton.setPosition((width - xPadding) - exitButton.getWidth(), yPadding);
+//        exitButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                sound.play();
+//                Gdx.app.exit();
+//            }
+//        });
+//        stage.addActor(exitButton);
 
         Gdx.input.setInputProcessor(stage);
 

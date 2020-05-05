@@ -98,7 +98,12 @@ public class MapSelectionScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
-
+    /**
+     * TODO write doc
+     *
+     * @param mapName
+     * @return
+     */
     public ImageButton createMapButton(final String mapName){
         Sprite picture = new Sprite(new Texture("menu/mapButtons/" + mapName + ".png"));
         ImageButton stageButton = new ImageButton(new SpriteDrawable(picture));
