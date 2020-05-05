@@ -157,80 +157,28 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * TODO: @Erlend this metod is way too big and needs to be split into smaller methods
      * Update all changes to board
-     * <p>
      * If there are moves to execute, they are executed with a delay.
      * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
         checkForChoosingRespawn();
-
-        if (boardLasersVisible) {
-            laserSound.play(0.25f, 1.0f, 1.0f);
-            clearLayer(boardLaserLayer);
-            boardLasersVisible = false;
-        }
-        //Start timer if there is only one left picking cards for the next round
+        playLaserSound();
         handleKeyboardInput();
-
-        if (game.onePlayerLeftToPick() && !timerStarted) {
-            timerStarted = true;
-            startTimer();
-        }
-        if (timerStarted) {
-            //Stop timer when everybody has locked in cards
-            if (!game.onePlayerLeftToPick()) {
-                stopTimer();
-                uiScreen.executeLockInButton();
-            } else if (seconds != prevSeconds) {
-                uiScreen.drawTimer(seconds + 1);
-                prevSeconds--;
-            }
-        }
-        if (!movesToExecute() && !game.moreLaserToShoot() && !hasUpdated) {
-            updateRespawnImages();
-            hasUpdated = true;
-        }
-        //only handle keyboard input if there are no moves to execute
-        if (!movesToExecute() && !game.moreLaserToShoot() && !game.isChoosingRespawn()) {
-            uiScreen.update();
-            if (game.isPhaseDone() && game.isAutoStartNextPhaseOn()) {
-                game.setPhaseDone(false);
-                if (game.getRound().getPhaseNr() > 4) {
-                    game.getRound().finishRound();
-                    if (!game.isChoosingRespawn()) {
-                        uiScreen.newRound();
-                    }
-                } else {
-                    game.getRound().nextPhase();
-                    uiScreen.updateGameLog();
-                }
-            }
-            game.handleKeyBoardInput();
-            handleEnterInput();
-        }
-        //only execute moves if there are any, the the current one hasn't been executed yet
-        if (movesToExecute() && currentMoveIsExecuted) {
-            currentMoveIsExecuted = false;
-            executeMove();
-            delayForSeconds(500); //add delay
-        }
-        if (!movesToExecute() && !game.moreLaserToShoot()) {
-            checkForEndGame();
-        }
-        if (!movesToExecute() && game.moreLaserToShoot()) {
-            shootRobotLasers();
-            showBoardLasers();
-            delayForSeconds(150);
-        }
-        if (currentPhaseNr != game.getRound().getPhaseNr()) {
-            hasUpdated = false;
-            currentPhaseNr = game.getRound().getPhaseNr();
-        }
+        timerChecker();
+        checkForRespawnUpdate();
+        checkIfNextPhaseCanStart();
+        executeMovesWithDelay();
+        executeLasersWithDelay();
+        updatePhaseNr();
     }
 
-    //TODO: @Erlend add comments
+    /**
+     * If player 1 is dead and is respawning then remove the gamelog or cards in the UI and write the respawn text.
+     * The player should then be able to choose the direction to respawn in.
+     * If the spawnpoint is occupied then they should be able to choose an adjacent position to respawn in as well.
+     *
+     */
     private void checkForChoosingRespawn() {
         if (game.isChoosingRespawn()) {
             if (game.getRound().getPhaseNr() == 0) {
@@ -248,6 +196,93 @@ public class GameScreen implements Screen {
                 createdButtons = true;
             }
             chooseDirection();
+        }
+    }
+
+    /**
+     * If lasers are shown on the board then play lasersounds as well
+     */
+    private void playLaserSound(){
+        if (boardLasersVisible) {
+            laserSound.play(0.25f, 1.0f, 1.0f);
+            clearLayer(boardLaserLayer);
+            boardLasersVisible = false;
+        }
+    }
+
+    /**
+     * Methods that checks if timer should be started, stopped, or if it should keep going (if started).
+     */
+    private void timerChecker(){
+        // Start timer if there is only one left picking cards
+        if (game.onePlayerLeftToPick() && !timerStarted) {
+            timerStarted = true;
+            startTimer();
+        }
+        if (timerStarted) {
+            //Stop timer when everybody has locked in cards
+            if (!game.onePlayerLeftToPick()) {
+                stopTimer();
+                uiScreen.executeLockInButton();
+            }
+            //else draw the timer again
+            else if (seconds != prevSeconds) {
+                uiScreen.drawTimer(seconds + 1);
+                prevSeconds--;
+            }
+        }
+
+    }
+
+    /**
+     * Checks if the spawnpoints for the players are updated and will then update the respawn images.
+     */
+    private void checkForRespawnUpdate(){
+        if (!movesToExecute() && !game.moreLaserToShoot() && !hasUpdated) {
+            updateRespawnImages();
+            hasUpdated = true;
+        }
+    }
+
+    /**
+     * If there are no more moves to execute and lasers to shoot then check if the game has ended.
+     * If player 1 is not choosing a respawn position/direction then update the UI elements.
+     * If autostart is toggled on then start the next phase immediately or start the next round if the current phase is nr 5.
+     * If autostart is toggled off then you can press ENTER to go the next phase (or possibly new round).
+     * Other keyboard inputs that affects game logic (like WASD, UPARROW, LEFTARROW etc.) are only accepted when there is
+     * no moves or lasers to execute on the gamescreen.
+     */
+    private void checkIfNextPhaseCanStart(){
+        if (!movesToExecute() && !game.moreLaserToShoot()) {
+            checkForEndGame();
+            if (!game.isChoosingRespawn()) {
+                uiScreen.update();
+                if (game.isPhaseDone() && game.isAutoStartNextPhaseOn()) {
+                    game.setPhaseDone(false);
+                    if (game.getRound().getPhaseNr() > 4) {
+                        game.getRound().finishRound();
+                        if (!game.isChoosingRespawn()) {
+                            uiScreen.newRound();
+                        }
+                    } else {
+                        game.getRound().nextPhase();
+                        uiScreen.updateGameLog();
+                    }
+                }
+                game.handleKeyBoardInput();
+                handleEnterInput();
+            }
+        }
+    }
+
+    /**
+     * Updates a phaseNr variable which is different to the phaseNr variable in Game.java
+     * This is mostly to make sure the respawn images are only drawn once.
+     */
+    private void updatePhaseNr(){
+        if (currentPhaseNr != game.getRound().getPhaseNr()) {
+            hasUpdated = false;
+            currentPhaseNr = game.getRound().getPhaseNr();
         }
     }
 
@@ -306,6 +341,31 @@ public class GameScreen implements Screen {
             } else {
             Gdx.app.exit();
             }
+        }
+    }
+
+    /**
+     * Execute the all the moves in a phase with a delay of 500 milliseconds
+     */
+    private void executeMovesWithDelay(){
+        if (movesToExecute() && currentMoveIsExecuted) {
+            currentMoveIsExecuted = false;
+            executeMove();
+            delayForSeconds(500); //add delay
+        }
+
+    }
+
+    /**
+     * Execute all lasers (both boardlasers and player lasers)
+     * Player lasers move across the map until they hit a wall, player, or reach the end of the map
+     * The player lasers move with a delay of 150 milliseconds.
+     */
+    private void executeLasersWithDelay(){
+        if (!movesToExecute() && game.moreLaserToShoot()) {
+            shootRobotLasers();
+            showBoardLasers();
+            delayForSeconds(150);
         }
     }
 
@@ -551,7 +611,8 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * If player 1 is respawning and their spawnpoint is occupied then create buttons for each valid adjacent spawnpoint.
+     * If player 1 is respawning and their spawnpoint is occupied then highlight each valid adjacent spawnpoint and
+     * make a button for each.
      * @param pos the actual spawnpoint of player 1 that is occupied
      */
     private void createRespawnButton(Position pos) {
