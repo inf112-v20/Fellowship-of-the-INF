@@ -22,11 +22,7 @@ public class GameDeck {
     Getters
      */
 
-    public ArrayList<ProgramCard> getDiscardDeck(){
-        return this.discardDeck;
-    }
-
-    public ArrayList<ProgramCard> getDrawDeck() { return this.drawDeck;}
+    public ArrayList<ProgramCard> getDiscardDeck(){ return this.discardDeck; }
 
     /**
      * Draw a new hand based on the damage you have taken. Will also handle if you are running out of cards.

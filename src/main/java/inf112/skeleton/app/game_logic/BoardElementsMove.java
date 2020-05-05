@@ -6,19 +6,20 @@ import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.grid_objects.*;
 import inf112.skeleton.app.player.Player;
 
-
+/*
+Class for methods that handles board elements that moves or rotates players such as cogs, conveyorbelts etc.
+These got quite big and complicated so we moved them from the phase class to here and made the methods static so we
+don't have to create an instance of the class.
+ */
 
 public class BoardElementsMove {
-
-    public static void pusherPushesPlayer(PusherPiece pusherPiece, Player player, MovesToExecuteSimultaneously moves) { //TODO: @Erlend remove?
-        player.tryToGo(pusherPiece.getDir(), moves);
-    }
 
     /**
      * Rotates a player standing on a cog 90* in the direction of the cog.
      *
-     * @param player The player that is currently standing on the BoardPiece.
-     * @param moves list to update with rotate move
+     * @param player The player that is currently standing on the CogPiece.
+     * @param moves list of moves to update with the new rotation move from the cog.
+     * @param cogPiece the CogPiece the player is standing on.
      */
     public static void rotateCog(Player player, MovesToExecuteSimultaneously moves, CogPiece cogPiece) {
         if (cogPiece.isRotateClockwise()) {
@@ -38,6 +39,7 @@ public class BoardElementsMove {
      * @param player          The player that is currently standing on the BoardPiece.
      * @param game            the current game
      * @param onlyExpressBelt true if only expressbelt are moving at this point in the phase
+     * @param moves           the list of moves to update with the new move from the conveyorbelt
      */
     public static void moveConveyorBelt(Player player, Game game, boolean onlyExpressBelt, MovesToExecuteSimultaneously moves) {
 
@@ -71,11 +73,12 @@ public class BoardElementsMove {
     /**
      * Checks if there a player standing in front of the conveyorbelt
      *
-     * @param player          the player that is going to get moved
-     * @param game            the current game
-     * @param onlyExpressBelt true if only expressbelt are moving at this point in the phase
+     * @param player            the player that is going to get moved
+     * @param game              the current game
+     * @param onlyExpressBelt   true if only expressbelt are moving at this point in the phase
+     * @param conveyorBeltPiece the ConveyorBeltPiece that the player is standing on
      * @return true if there is player in front (in the direction of the conveyorbelt), and that player is standing
-     * on a conveyorbelt that is not facing towards the first conveyorbelt, false otherwise
+     * on a conveyorbelt that is not facing towards the first conveyorbelt, false otherwise.
      */
     private static boolean isPlayerInFront(Player player, Game game, boolean onlyExpressBelt, ConveyorBeltPiece conveyorBeltPiece) {
         LogicGrid logicGrid = game.getLogicGrid();

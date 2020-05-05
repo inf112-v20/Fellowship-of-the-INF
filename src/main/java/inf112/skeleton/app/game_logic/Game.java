@@ -330,7 +330,12 @@ public class Game {
         }
         return (lockedInPlayers == playerList.length-1);
     }
- //TODO: @Erlend comment
+
+    /**
+     * Finds the map name for the map that is currently played
+     * Removes the filepath and .tmx from the string that is given
+     * @param mapName string of filepath name of the map
+     */
     private void findMapName(String mapName){
         for(int i = mapName.length()-1; i >= 0; i--){
             char c = mapName.charAt(i);
@@ -346,7 +351,6 @@ public class Game {
      * Game is over if a player has won or player 1 is permanently dead.
      */
     public void checkForGameCompletion() {
-        System.out.println("Checking for game completion");
         victoriousPlayer = playerHasWon();
         if (playerHasWon() != null) { //if a player has won
             victoriousPlayer = playerHasWon();

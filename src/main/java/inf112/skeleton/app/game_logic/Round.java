@@ -49,7 +49,6 @@ public class Round {
      * Gives every player in the game a new hand of cards with respect to their damage
      * A players locked cards will carry over from last round and be automatically put
      * in that players list of selected cards (from right to left).
-     * Computer players pick the first five cards they are given.
      */
     public void startRound() {
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
@@ -65,8 +64,6 @@ public class Round {
                 player.getSelectedCards()[number + j] = (player.getLockedCards().get(j));
             }
         }
-        System.out.println(game.getPlayer().toString() + " playerhand: " + game.getPlayer().getPlayerHandDeck());
-
         lockInCardsForComputers(true);
     }
 
@@ -82,9 +79,9 @@ public class Round {
     }
 
     /**
-     * When the round is done, check if any players are scheduled for a repair, and that there are any players in power
-     * down mode.
-     * If there are any robots in power down mode, and they still have lives left, then take them out of power down mode.
+     * When the round is done, check if there are any players in power down mode.
+     * If there are any, and they still have lives left, then take them out of power down mode.
+     * Respawn any players that died during the round.
      */
     public void finishRound() {
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
@@ -131,16 +128,17 @@ public class Round {
     }
 
     /**
-     * TODO: @Erlend add comments
+     * Respawn any robots that died during the phase in the order they died in (i.e. the first robot to die is the
+     * first robot to respawn). If player 1 died, any player that died before him is respawned first and any player that
+     * died after player 1 must wait to respawn until player 1 has confirmed the respawn position and direction.
+     * Then another call to this method is made from the GameScreen class to respawn the remaining players.
      */
     public void respawnPlayers(){
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for(int i = 0; i < game.getDeadPlayers().size(); i++){
             Player deadPlayer = game.getDeadPlayers().get(i);
-            System.out.println("Respawning " + deadPlayer.toString());
             if(deadPlayer.getPlayerNumber()==1){
                 game.executeMoves(moves);
-                System.out.println("Player 1 choose respawn pos and  dir");
                 deadPlayer.checkForRespawn(moves);
                 game.getDeadPlayers().remove(deadPlayer);
                 game.setChoosingRespawn(true);

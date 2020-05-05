@@ -39,6 +39,9 @@ public class UIScreen {
     private Label respawnText;
 
 
+    /*
+    Class for creating an UI screen for player 1
+     */
     public UIScreen(final float width, Game game) {
         this.width = width;
         this.game = game;
@@ -216,7 +219,7 @@ public class UIScreen {
     }
 
     /**
-     * Creates all 3 life tokens.
+     * Creates all life tokens.
      */
     public void createLifeTokens() {
         Texture texture = new Texture(Gdx.files.internal("ui/lifetoken.png"));
@@ -231,7 +234,7 @@ public class UIScreen {
     }
 
     /**
-     * Creates all 3 checkpoint tokens
+     * Creates all checkpoint tokens
      */
     public void createCheckPointTokens() {
         Texture texture = new Texture(Gdx.files.internal("ui/checkpointtoken.png"));
@@ -245,7 +248,7 @@ public class UIScreen {
     }
 
     /**
-     * Creates all 10 damagetokens
+     * Creates all damagetokens
      */
     public void createDamageTokens() {
         Texture texture = new Texture(Gdx.files.internal("ui/damagetoken.png"));
@@ -449,6 +452,10 @@ public class UIScreen {
         if(seconds>= 0) timerLabel = drawText(String.valueOf(seconds), 30, width*0.9f, height*0.9f, Color.BLACK);
     }
 
+    /**
+     * When player 1 is respawning and choosing position/direction it creates an instructional message to the player so
+     * they understand what to do.
+     */
     public void createRespawnText(){
         String dirText = "";
         if(game.getPlayer().getRespawnPositions().size() > 1){
@@ -458,12 +465,19 @@ public class UIScreen {
         respawnText = drawText(text, 10, width*0.5f, height*0.5f, Color.BLACK);
     }
 
+    /**
+     * Remove cards (playerhand cards in the start of the round when picking cards) from the UI.
+     * This is for creating the respawntext and making it look nice.
+     */
     public void removeCards(){
        for(Stack cardButton : cardButton.getCardButtons()){
            cardButton.remove();
        }
     }
 
+    /**
+     * Remove the instructional respawn text from the UI and add the playerhand cards back to the UI.
+     */
     public void addCards(){
         respawnText.remove();
         for(Stack cardButton : cardButton.getCardButtons()){

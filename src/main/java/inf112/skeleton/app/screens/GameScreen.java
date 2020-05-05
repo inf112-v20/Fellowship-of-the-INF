@@ -106,9 +106,7 @@ public class GameScreen implements Screen {
         clearLayer(boardLaserLayer); //lasers should only be shown when active
         this.respawnButtons = new ArrayList<>();
         this.respawnImages = new ArrayList<>();
-        for (Player player : game.getRespawnOrder()) {
-            createRespawnImage(player);
-        }
+        for (Player player : game.getRespawnOrder()) { createRespawnImage(player); }
 
         laserSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bubaproducer__laser-shot-silenced.wav"));
     }
@@ -403,6 +401,12 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Handles ENTER keyboard input.
+     * Starts the next phase if the current phase is done.
+     * Starts the next round if the current phasenr is 5.
+     * You can also use ENTER to lock in when you have chosen 5 cards at round start.
+     */
     private void handleEnterInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (game.getRound().getPhaseNr() > 4) {
@@ -489,6 +493,8 @@ public class GameScreen implements Screen {
 
     /**
      * Starts a timer counting down from 60 seconds
+     * Picks random cards for remaining open slots in the register
+     * for the last player picking cards if they let the timer run out
      */
     private void startTimer() {
         timer = new Timer();
@@ -530,13 +536,17 @@ public class GameScreen implements Screen {
         }
     }
 
-    /**
+    /** //TODO @Johanna Remove? -Erlend
      * Only used for testing.
      */
     public void blinkBoardLasers() {
         showBoardLasers();
     }
 
+    /**
+     * If player 1 is respawning and their spawnpoint is occupied then create buttons for each valid adjacent spawnpoint.
+     * @param pos the actual spawnpoint of player 1 that is occupied
+     */
     private void createRespawnButton(Position pos) {
         respawnPos = null;
         Texture texture = new Texture("white.png");
@@ -554,6 +564,11 @@ public class GameScreen implements Screen {
     }
 
 
+    /**
+     * Clicklistener for the respawnbuttons.
+     * If left-clicked then move player 1's image to the clicked cell.
+     * @param respawnButton the button to make a listener for
+     */
     private void respawnButtonPressed(final ImageButton respawnButton) {
         respawnButton.addListener(new ClickListener() {
             final ImageButton tempButton = respawnButton;
@@ -568,6 +583,10 @@ public class GameScreen implements Screen {
 
     }
 
+    /**
+     * Moves player 1's image to the position of the button (the cell)
+     * @param button the button that is left-clicked
+     */
     private void executeRespawnButton(ImageButton button) {
         int posX = (int) button.getX() / TILE_WIDTH_DPI;
         int posY = (int) button.getY() / TILE_WIDTH_DPI;
@@ -581,6 +600,12 @@ public class GameScreen implements Screen {
         chooseDirection();
     }
 
+    /**
+     * Method for when player 1 respawns and chooses which direction to respawn in.
+     * If R is pressed then the respawn direction is confirmed and cant be changed.
+     * If there are more dead players then they are respawned afterwards and then the next round starts.
+     * If respawns buttons were made for this respawn then those are removed.
+     */
     private void chooseDirection() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         Player player = game.getPlayer();
@@ -600,7 +625,6 @@ public class GameScreen implements Screen {
             game.setChoosingRespawn(false);
             game.getPlayer().setPos(respawnPos);
             game.getLogicGrid().movePlayerToNewPosition(playerPiece, player.getDeadPosition(), respawnPos);
-            System.out.println("Player 1 has respawned at " + respawnPos + " in dir " + player.getPlayerPiece().getDir());
             for (ImageButton buttons : respawnButtons) {
                 buttons.remove();
             }
@@ -617,8 +641,10 @@ public class GameScreen implements Screen {
 
     }
 
+    /**
+     * Method for player 1 to choose which position to respawn in if the spawnpoint is occupied.
+     */
     private void choosePosition() {
-
         Player player = game.getPlayer();
         if (player.getRespawnPositions().size() == 1) {
             respawnPos = player.getRespawnPositions().get(0);
@@ -631,6 +657,11 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Creates the respawnimage for a player in the game
+     * The respawnimage is just a small picture of the robot in the lower left corner of their current spawnpoint.
+     * @param player the player to create a respawnimage for
+     */
     private void createRespawnImage(Player player) {
         TextureRegion textureRegion = player.getPlayerPiece().getPlayerCell().getTile().getTextureRegion();
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(textureRegion);
@@ -644,6 +675,16 @@ public class GameScreen implements Screen {
         respawnImages.add(image);
     }
 
+    /**
+     * Finds the position of where to place the respawnimage.
+     * If more than 1 player has the same respawn position then they should stack nicely on top of each other
+     * on the left side of the cell.
+     * If more than 5 players has the same respawn position then they start stacking at the right side of the cell too.
+     *
+     * @param player the player to find the respawnimage position for
+     * @param posCounter HashMap with string of position as key, and number of people that has their respawnimage at that position as value.
+     * @return the position to place the respawnimage for a given player
+     */
     private Position findPosition(Player player, HashMap posCounter) {
         Position respawnPosition = player.getSpawnPoint();
         int posX = respawnPosition.getX() * TILE_WIDTH_DPI;
@@ -663,6 +704,9 @@ public class GameScreen implements Screen {
         return new Position(posX, posY);
     }
 
+    /**
+     * Updates the respawn image after every phase
+     */
     private void updateRespawnImages() {
         HashMap<String, Integer> posCounter = new HashMap<>();
         for (int i = 0; i < game.getRespawnOrder().size(); i++) {
