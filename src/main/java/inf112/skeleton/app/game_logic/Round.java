@@ -1,5 +1,6 @@
 package inf112.skeleton.app.game_logic;
 
+import inf112.skeleton.app.grid_objects.FlagPiece;
 import inf112.skeleton.app.grid_objects.RepairPiece;
 import inf112.skeleton.app.player.AIPlayer;
 import inf112.skeleton.app.player.Player;
@@ -81,8 +82,9 @@ public class Round {
     }
 
     /**
-     * When the round is done, check if there are any players in power down mode.
-     * If there are any, and they still have lives left, then take them out of power down mode.
+     * When the round is done, check if any players are scheduled for a repair, and that there are any players in power
+     * down mode.
+     * If there are any robots in power down mode, and they still have lives left, then take them out of power down mode.
      */
     public void finishRound() {
         for (int i = 0; i < game.getListOfPlayers().length; i++) {
@@ -100,14 +102,16 @@ public class Round {
     }
 
     /**
-     * Checks if a player is standing on a single-wrench repair field. If so, discard 1 damage token.
+     * Checks if a player is standing on a single-wrench repair field or a flag field
+     * at the end of a round. If so, discard 1 damage token.
      *
      * @param player player (robot) being checked.
      */
     public void checkForRepair(Player player) {
         if (player.isDead()) return;
-        // Checks if player is standing on a repair field
-        if (game.getLogicGrid().getPieceType(player.getPos(), RepairPiece.class) != null) {
+        // Checks if player is standing on a field which qualifies for a repair.
+        if ((game.getLogicGrid().getPieceType(player.getPos(), RepairPiece.class) != null) ||
+                (game.getLogicGrid().getPieceType(player.getPos(), FlagPiece.class) != null)) {
             player.repairDamage(1);
         }
     }
