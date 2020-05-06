@@ -2,11 +2,11 @@
 ## Setup  
 * Run Main
 * Press the Play button on the menu screen
-* Press the Stage1 button
+* Press the 2 player button
+* Select the second map
 
 
 ### Comment
-* Run this test after 
 * The player has 3 lives
 * You loose lives by taking too much damage, falling into pits, or walking off the map
 * If you run out of lives during the test, you need to close the window, then do the setup again.
@@ -16,6 +16,7 @@
 * Use arrow keys to steer the player1 robot into an abbys tile, or outside of map
 * The player should respawn back at their respawn tile
 * One of the lives, the large green circles on the UI, should have gone dark
+* The player should have taken 2 damage, two triangles should have lit up on the UI
 
 
 ## Checkpoint test
@@ -29,6 +30,8 @@
 
 
 ## Respawn test 2
+* Finish the round bu pressing the enter key after every phase
+  * You should have a new set of cards and be back in the setup phase of the game to run this test
 * Use arrow keys to once again loose a life by walking into pit or off the map
 * You should now respawn at the flag
 
