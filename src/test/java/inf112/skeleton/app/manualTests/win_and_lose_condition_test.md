@@ -28,3 +28,5 @@
 4. After respawning, repeat steps 1-3 until all lives are depleted and the game over screen shows up.
 5. Choose one of the options to either return to the main menu, exit the application, or to keep watching the AI robots.<br>
    There is no point to keep watching the AI as they are dealt no cards on the test maps.
+6. Alternatively you can push all the robots off the map first to trigger the game over dialog box which should not
+   show the option for keep watching.
