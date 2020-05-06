@@ -76,7 +76,6 @@ public class Game {
     /*
     Getters
      */
-
     public LogicGrid getLogicGrid() {
         return this.logicGrid;
     }
@@ -103,6 +102,12 @@ public class Game {
 
     public ArrayList<Player> getDeadPlayers(){return this.deadPlayers;}
 
+    public ArrayList<Player> getRespawnOrder(){
+        return this.respawnOrder;
+    }
+
+    public String getMapName(){ return this.mapName;}
+
     public boolean isPhaseDone(){return this.phaseDone;}
 
     public boolean isAutoStartNextPhaseOn(){return this.autoStartNextPhase;}
@@ -111,11 +116,7 @@ public class Game {
         return this.choosingRespawn;
     }
 
-    public ArrayList<Player> getRespawnOrder(){
-        return this.respawnOrder;
-    }
-
-    public String getMapName(){ return this.mapName;}
+    public boolean isGameOver() { return gameOver; }
 
     /**
      * This method is called by GameScreen so that it can show the moves that have been executed in backend.
@@ -144,8 +145,6 @@ public class Game {
 
     public void setGameOver(boolean gameIsOver) { this.gameOver = gameIsOver; }
 
-    public boolean isGameOver() { return gameOver; }
-
 
     /**
      * The computer players are initiated and added to the playerList and position in the logicGrid
@@ -160,15 +159,47 @@ public class Game {
     }
 
     /**
-     * Handles keyboard input for manually moving Player 1 and player 2 around
+     * Handles keyboard input for manually moving Player 1 and player 2 around, and executes the moves
      */
     public void handleKeyBoardInput() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();//initiate moves to be done
         Player player2 = player1;
         if (numberOfPlayers > 1) player2 = playerList[1];
-
         PlayerPiece player1Piece = player1.getPlayerPiece();
+        handlePlayer1KeyboardInput(moves, player1Piece);
+        handlePlayer2KeyboardInput(moves, player2);
+        executeKeyboardMoves(moves);
+        checkForGameCompletion();
+    }
+
+    /**
+     *Handles the keyboard input for player 1
+     * @param moves list of moves to update
+     * @param player2 player who can be moves by keyboard input
+     */
+    private void handlePlayer2KeyboardInput(MovesToExecuteSimultaneously moves, Player player2) {
         PlayerPiece player2Piece = player2.getPlayerPiece();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            player2.setKeyInput(true);
+            player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            player2.setKeyInput(true);
+            player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            player2Piece.turnLeft(moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            player2Piece.turnRight(moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            player2Piece.turnAround(moves);
+        }
+    }
+
+    /**
+     * Handles the keyboard input for player 2
+     * @param moves list of moves to update
+     * @param player1Piece player piece of player 1 that can be moves with keyboard input
+     */
+    public void handlePlayer1KeyboardInput(MovesToExecuteSimultaneously moves, PlayerPiece player1Piece) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.setKeyInput(true);
             player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
@@ -205,40 +236,23 @@ public class Game {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
             }
         }
-        //second player moves get handled
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            player2.setKeyInput(true);
-            player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            player2.setKeyInput(true);
-            player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            player2Piece.turnLeft(moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            player2Piece.turnRight(moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-            player2Piece.turnAround(moves);
-        }
-        //execution of moves
+    }
+
+    /**
+     * Executeds the backend and frontend moves without delay.
+     * @param moves list of moves that have been generated from keyboard input
+     */
+    private void executeKeyboardMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //execute moves if there are any
         for (Move move : moves) {
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
         }
         moves.clear();
-        //check for game completion
-        checkForGameCompletion();
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
-            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-                round.lockInCardsForComputers(false);
-            }
-            else{
-                round.lockInCardsForComputers(true);
-            }
-        }
-
     }
 
+    /**
+     * Handles keyboard input that does not affect the game logic.
+     */
     public void handleNonGameLogicKeyBoardInput(){
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)){
             autoStartNextPhase = !autoStartNextPhase;
@@ -247,6 +261,14 @@ public class Game {
             }
             else {
                 System.out.println("Turning autostart of phases off");
+            }
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
+            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+                round.lockInCardsForComputers(false);
+            }
+            else{
+                round.lockInCardsForComputers(true);
             }
         }
     }
