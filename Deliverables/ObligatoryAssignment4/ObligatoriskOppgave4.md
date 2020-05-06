@@ -59,6 +59,75 @@ Overall we are satisfied with the results of the project. We have all become bet
 Due to being unable to meet and play multiplayer over LAN, our team decided to instead make an AI to play against. The remaining MVP's for the game, in addition to some "nice to haves".
 ---
 
+### Have multiplayer against computer players which can have different levels of difficulty
+**Usecase**: The user of the game wants to able to play against other players to make the game competitive.
+
+**Acceptance criteria**
+* The human player should be able to see how other players are doing in the game and what they are doing
+   * They should be able to see which card other players are playing for a phase.
+   * They should be able other players stats (current lives, damage, flags visited, spawnpoint). 
+* You should be able to choose the level of difficulty before the game starts (all computer players are set to the same difficulty).
+* Have at least 3 or more difficulties to choose between.
+* The hardest difficulty should be close to "perfect", i.e., always choosing the best cards.
+* Computer players should be able to evaluate their current situation and can choose to powerdown if they think they should do so.
+
+**Tasks to complete**
+
+* Implement 4 difficulties: easy, medium, hard, expert.
+* Implement a dropdown list where you can choose the difficulty in the playerselection screen.
+* Implement different methods for selecting cards for AI players.
+* Implement a method that figures out how good a card is for a given phase.
+* Implement a method that figures out how good 5 selected cards are for a round.
+* Implement a method that find the best card/cards based on how good they are. 
+* Implement a way to find out how far away the current goal/flag is.
+* Implement a way to find out what position and direction a player would end up at the end of the phase after using a card.
+* Implement a method that evaluates if they should powerdown or not based on how much damage they have taken. 
+* Implement a scoreboard to keep track of other players stats (already implemented in previous iteration)
+* Implement a gamelog that shows the cards played for a phase (already implemented in previous iteration)
+* Implement a visual icon in the gamescreen for each player's spawnpoint that updates when the spawnpoint updates. 
+
+---
+
+### Update respawning to match the rules of RoboRally
+**Usecase**: The user wants to play RoboRally with the proper ruleset.
+
+**Acceptance criteria**
+* Players should respawn at the end of the round if they died during it if they have more lives left.
+* If several players died during a round then they should respawn in the order they died in.
+* A player should be able to choose which direction they respawn in.
+* A player should be able to choose an adjacent position (orthogonal or diagonal) if their spawnpoint is occupied by another player.
+   * That position must be a valid position, i.e., it isn't occupied and it isn't an abyss or outside of the map.
+* AI players should have some small differences in how they choose which direction/position they respawn in depending on their difficulty.
+
+**Tasks to complete**
+* Create a list of dead players that keep track of the order they died in.
+* Add an instructional text for the human player when they are respawning to make them understand what to do.
+* Visually show which direction you are respawning in before you have actually respawned.
+* Show which position are available to respawn in (highligth them). 
+* Implement a way for the human player to choose the direction to respawn in (keyboard input).
+* Implement a way for the human player to choose a position to respawn in (buttons on gamescreen).
+* Implement a method that figures out which direction/position is the best to respawn in for AI players for a given difficulty. 
+
+---
+
+### Countdown timer when there is only one player left choosing cards
+**Usecase**: The user wants a timer for the last player choosing cards so they don't have to wait forever and put pressure on players that use a long time on choosing cards. 
+
+**Acceptance criteria**
+* The timer should only start when there is only one player left picking cards (this made more sense when we thought we were implementing LAN play as well. Since we dropped that and have AI players instead, which use less than a second to pick their cards, the timer just starts immediately when a new round starts. The ruleset says the timer should be 30s, but to account for this we upped it to 60s).
+* The timer should stop if the last player locks in before that timer has run out.
+* If the timer runs out then the open slots in the last player's register should be filled with random cards from the playerhand and be locked in automatically. The first phase should then start. 
+* The timer should also stop when it runs out.
+* The timer should be visible in the UI.
+
+**Tasks to complete**
+* Implement a list of players that are locked in and ready.
+* Implement a way to draw a timer in the UI that updates each second and can be removed when not used.
+* Implement a method that picks random cards from the playerhand and places them in open slots in the register.
+* Implement a check for the last player if they have locked in after the timer has started. 
+
+---
+
 ### Have pushers on the board
 **Usecase**: The user of the game wants to be able to have pushers on the board, as they are part of the board elements in a roborally game.
 
@@ -149,11 +218,11 @@ tokens in accordance to the rules of Roborally.
 
 ### How to use the game
 * You can select cards by left clicking them, and move them back by right clicking them. Once you have selected five cards, you can start a round by pressing the lock in button.
-* For the next phase to execute, press ENTER.
+* For the next phase to execute, press ENTER, or to let the phases run automatically you can press P to toggle autorun on/off (default is off).
 * You can move robot 1 around using UP, DOWN, LEFT RIGHT, SPACEBAR. LEFT and RIGHT rotate the robot to the left and right, while SPACEBAR rotates the robot 180*.  UP and DOWN move the robot forward and backward.
 * You can move robot 2 around by using W, S, A, D, Z. They function in the same way as UP, DOWN, LEFT, RIGHT, SPACEBAR respectively.
-* If robot 1 is on a conveyorbelt (not express) you can move it 1 cell in the direction of the conveyorbelt by pressing BACKSPACE.
-   * Will not handle collision from the conveyorbelt move. 
+* If robot 1 is on a conveyorbelt you can move it 1 cell in the direction of the conveyorbelt by pressing BACKSPACE.
+* You can press L to make player 1 shoot a laser and activate all the board lasers.
 * You can hold down TAB to see stats of all the players in the game.
 * You can press ESC to quickly resize the game to a small window. 
 * Pressing the buttons 1-6 changes some values of the player:
@@ -165,9 +234,8 @@ tokens in accordance to the rules of Roborally.
    * 6: Remove 1 flag 
 
 * Things to note:
-  * You lose lives if you go off the board or if you walk into an abyss
+  * You lose lives if you go off the board or if you walk into an abyss or if you have 10 or more damage. 
   * You have 3 lives before you die
-  * If you die you need to restart the program to play again
 
 ### How to run automatic tests
 * Go to the tests package, sideclick on the java package and select /Run 'All Tests'/
