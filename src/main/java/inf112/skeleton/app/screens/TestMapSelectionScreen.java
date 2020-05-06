@@ -34,7 +34,7 @@ public class TestMapSelectionScreen implements Screen {
 
     public TestMapSelectionScreen(RoboRallyGame roboRallyGame) {
         this.roborallyGame = roboRallyGame;
-        this.width = Gdx.graphics.getWidth(); // width and height from Main.java
+        this.width = Gdx.graphics.getWidth(); // width and height from gdx
         this.height = Gdx.graphics.getHeight();
         generateMapNameList();
     }
@@ -73,24 +73,21 @@ public class TestMapSelectionScreen implements Screen {
         stage = new Stage();
 
         // Background
-        Sprite picture = new Sprite(new Texture("menu/StageSelectBackground.png"));
-        Image background = new Image(new SpriteDrawable(picture));
+        Image background = createImage("StageSelectBackground");
         background.setSize(width, height);
         background.setPosition(0, 0);
         stage.addActor(background);
 
         // Logo
         int yPadding = 50;
-        picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
-        Image logo = new Image(new SpriteDrawable(picture));
+        Image logo = createImage("RoboRally_logo");
         logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
 
         yPadding = 50;
-        picture = new Sprite(new Texture("menu/navbuttons/chooseTextMap.png"));
-        Image chooseText = new Image(new SpriteDrawable(picture));
+        Image chooseText = createImage("navbuttons/chooseTextMap");
         float textScale = 0.4f;
         chooseText.setSize(chooseText.getWidth() * textScale, chooseText.getHeight() * textScale);
         chooseText.setPosition(logo.getX(), logo.getY() - (chooseText.getHeight() + yPadding));
@@ -98,7 +95,7 @@ public class TestMapSelectionScreen implements Screen {
 
         // Back button
         int xPadding = 80;
-        picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
+        Sprite picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
         backButton.setPosition((width - xPadding) - backButton.getWidth(), 100);
         backButton.addListener(new ClickListener() {
@@ -148,6 +145,17 @@ public class TestMapSelectionScreen implements Screen {
         stage.addActor(dropDownMenu);
 
         Gdx.input.setInputProcessor(stage);
+    }
+
+    /**
+     * Creates a sprite that can be used as an actor on the MainMenuScreen stage, in this case an image.
+     *
+     * @param filename name of the image file
+     * @return the image to be set as an actor
+     */
+    public Image createImage (final String filename) {
+        Sprite picture = new Sprite(new Texture("menu/" + filename + ".png"));
+        return new Image(new SpriteDrawable(picture));
     }
 
     @Override

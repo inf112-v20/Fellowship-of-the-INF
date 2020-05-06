@@ -38,25 +38,21 @@ public class MapSelectionScreen implements Screen {
     public void show() {
         stage = new Stage();
 
-        // picture = all actors on stage
         // Background
-        Sprite picture = new Sprite(new Texture("menu/StageSelectBackground.png"));
-        Image background = new Image(new SpriteDrawable(picture));
+        Image background = createImage("StageSelectBackground");
         background.setSize(width, height);
         background.setPosition(0, 0);
         stage.addActor(background);
 
         // Logo
         yPadding = 50;
-        picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
-        Image logo = new Image(new SpriteDrawable(picture));
+        Image logo = createImage("RoboRally_logo");
         logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
         //Text that says choose map
-        picture = new Sprite(new Texture("menu/ChooseMap.png"));
-        Image chooseMap = new Image(new SpriteDrawable(picture));
+        Image chooseMap = createImage("ChooseMap");
         chooseMap.setPosition((width - chooseMap.getWidth()) / 2, logo.getY()-yPadding-chooseMap.getHeight()/2);
         stage.addActor(chooseMap);
 
@@ -84,7 +80,7 @@ public class MapSelectionScreen implements Screen {
         stage6Button.setPosition(stage5Button.getX() + stage6Button.getWidth() * MAP_SCALE + xPadding, yPadding);
 
         // Back button
-        picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
+        Sprite picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
         ImageButton backButton = new ImageButton(new SpriteDrawable(picture));
         backButton.setPosition((width - xPadding) - backButton.getWidth(), yPadding);
         backButton.addListener(new ClickListener() {
@@ -118,6 +114,17 @@ public class MapSelectionScreen implements Screen {
         });
         stage.addActor(stageButton);
         return stageButton;
+    }
+
+    /**
+     * Creates a sprite that can be used as an actor on the MainMenuScreen stage, in this case an image.
+     *
+     * @param filename name of the image file
+     * @return the image to be set as an actor
+     */
+    public Image createImage (final String filename) {
+        Sprite picture = new Sprite(new Texture("menu/" + filename + ".png"));
+        return new Image(new SpriteDrawable(picture));
     }
 
     @Override

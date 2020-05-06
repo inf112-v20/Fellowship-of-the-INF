@@ -29,33 +29,9 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(RoboRallyGame game) {
         this.game = game;
-        this.width = Gdx.graphics.getWidth(); // width and height from tmx maps
+        this.width = Gdx.graphics.getWidth(); // width and height from gdx
         this.height = Gdx.graphics.getHeight();
         sound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/reitanna__thunk.wav"));
-    }
-
-    /**
-     * Creates a sprite that can be used as an actor on the MainMenuScreen stage, in this case an image.
-     *
-     * @param filename name of the image file
-     * @return the image to be set as an actor
-     */
-    public Image createImage (final String filename) {
-        Sprite picture = new Sprite(new Texture("menu/" + filename + ".png"));
-        Image image = new Image(new SpriteDrawable(picture));
-        return image;
-    }
-
-    /**
-     * Creates a sprite that can be used as an actor on the MainMenuScreen stage, in this case an imagebutton.
-     *
-     * @param filename name of the image file
-     * @return the imagebutton to bet set as an actor
-     */
-    public ImageButton createImageButton (final String filename) {
-        Sprite picture = new Sprite(new Texture("menu/navbuttons/" + filename + ".png"));
-        ImageButton button = new ImageButton(new SpriteDrawable(picture));
-        return button;
     }
 
     @Override
@@ -117,6 +93,28 @@ public class MainMenuScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
 
+    }
+
+    /**
+     * Creates a sprite that can be used as an actor on the MainMenuScreen stage, in this case an image.
+     *
+     * @param filename name of the image file
+     * @return the image to be set as an actor
+     */
+    public Image createImage (final String filename) {
+        Sprite picture = new Sprite(new Texture("menu/" + filename + ".png"));
+        return new Image(new SpriteDrawable(picture));
+    }
+
+    /**
+     * Creates a sprite that can be used as an actor on the MainMenuScreen stage, in this case an imagebutton.
+     *
+     * @param filename name of the image file
+     * @return the imagebutton to bet set as an actor
+     */
+    public ImageButton createImageButton (final String filename) {
+        Sprite picture = new Sprite(new Texture("menu/navbuttons/" + filename + ".png"));
+        return new ImageButton(new SpriteDrawable(picture));
     }
 
     @Override

@@ -38,32 +38,28 @@ public class PlayerSelectionScreen implements Screen {
     public void show() {
         stage = new Stage();
 
-        // picture = all actors on stage
         // Background
-        Sprite picture = new Sprite(new Texture("menu/StageSelectBackground.png"));
-        Image background = new Image(new SpriteDrawable(picture));
+        Image background = createImage("StageSelectBackground");
         background.setSize(width, height);
         background.setPosition(0, 0);
         stage.addActor(background);
 
         // Logo
         int yPadding = 50;
-        picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
-        Image logo = new Image(new SpriteDrawable(picture));
+        Image logo = createImage("RoboRally_logo");
         logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
 
         //Text that says choose amount of players
         int xPadding = 80;
-        picture = new Sprite(new Texture("menu/ChoosePlayers.png"));
-        Image choosePlayers = new Image(new SpriteDrawable(picture));
+        Image choosePlayers = createImage("ChoosePlayers");
         choosePlayers.setPosition(width/2 - choosePlayers.getWidth()/2,  logo.getY()-yPadding-choosePlayers.getHeight());
         stage.addActor(choosePlayers);
 
         // Reference for size of player buttons, they are all the same
         yPadding = 400;
-        picture = new Sprite(new Texture("menu/playerbuttons/1Players.png"));
+        Sprite picture = new Sprite(new Texture("menu/playerbuttons/1Players.png"));
         ImageButton playerButtonSize = new ImageButton(new SpriteDrawable(picture));
 
         // Constructing all buttons and saving them as ImageButton objects for reference.
@@ -127,6 +123,17 @@ public class PlayerSelectionScreen implements Screen {
         });
         stage.addActor(playerButton);
         return playerButton;
+    }
+
+    /**
+     * Creates a sprite that can be used as an actor on the MainMenuScreen stage, in this case an image.
+     *
+     * @param filename name of the image file
+     * @return the image to be set as an actor
+     */
+    public Image createImage (final String filename) {
+        Sprite picture = new Sprite(new Texture("menu/" + filename + ".png"));
+        return new Image(new SpriteDrawable(picture));
     }
 
     @Override
