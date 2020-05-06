@@ -18,8 +18,6 @@ public class MapSelectionScreen implements Screen {
     private RoboRallyGame game;
     private float width;
     private float height;
-    private int xPadding;
-    private int yPadding;
     private float MAP_SCALE = 0.25f;
 
     private int playerCount;
@@ -45,7 +43,7 @@ public class MapSelectionScreen implements Screen {
         stage.addActor(background);
 
         // Logo
-        yPadding = 50;
+        int yPadding = 50;
         Image logo = createImage("RoboRally_logo");
         logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
@@ -53,10 +51,10 @@ public class MapSelectionScreen implements Screen {
 
         //Text that says choose map
         Image chooseMap = createImage("ChooseMap");
-        chooseMap.setPosition((width - chooseMap.getWidth()) / 2, logo.getY()-yPadding-chooseMap.getHeight()/2);
+        chooseMap.setPosition((width - chooseMap.getWidth()) / 2, logo.getY()- yPadding -chooseMap.getHeight()/2);
         stage.addActor(chooseMap);
 
-        xPadding = 100;
+        int xPadding = 100;
         yPadding = 400;
 
         ImageButton stage1Button = createMapButton("Spin");

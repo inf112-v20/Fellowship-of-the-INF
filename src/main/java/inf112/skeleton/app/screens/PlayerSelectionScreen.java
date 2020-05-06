@@ -62,14 +62,14 @@ public class PlayerSelectionScreen implements Screen {
         Sprite picture = new Sprite(new Texture("menu/playerbuttons/1Players.png"));
         ImageButton playerButtonSize = new ImageButton(new SpriteDrawable(picture));
 
-        // Constructing all buttons and saving them as ImageButton objects for reference.
+        // Constructing all buttons, first argument is which player button is made
         ImageButton player2Button = createPlayerButton(2,xPadding, yPadding);
-        ImageButton player3Button = createPlayerButton(3, 2 * xPadding + playerButtonSize.getWidth(), yPadding);
-        ImageButton player4Button = createPlayerButton(4,3 * xPadding + playerButtonSize.getWidth() + playerButtonSize.getWidth(), yPadding);
-        ImageButton player5Button = createPlayerButton(5,width - xPadding - playerButtonSize.getWidth(), yPadding);
-        ImageButton player6Button = createPlayerButton(6,xPadding, yPadding/4);
-        ImageButton player7Button = createPlayerButton(7,2 * xPadding + playerButtonSize.getWidth(), yPadding/4);
-        ImageButton player8Button = createPlayerButton(8,3 * xPadding + playerButtonSize.getWidth() + playerButtonSize.getWidth(), yPadding/4);
+        createPlayerButton(3, 2 * xPadding + playerButtonSize.getWidth(), yPadding);
+        createPlayerButton(4,3 * xPadding + playerButtonSize.getWidth() + playerButtonSize.getWidth(), yPadding);
+        createPlayerButton(5,width - xPadding - playerButtonSize.getWidth(), yPadding);
+        createPlayerButton(6,xPadding, yPadding/4);
+        createPlayerButton(7,2 * xPadding + playerButtonSize.getWidth(), yPadding/4);
+        createPlayerButton(8,3 * xPadding + playerButtonSize.getWidth() + playerButtonSize.getWidth(), yPadding/4);
 
         //Back button
         picture = new Sprite(new Texture("menu/navbuttons/BackButton.png"));
