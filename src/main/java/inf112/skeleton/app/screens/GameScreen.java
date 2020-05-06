@@ -171,6 +171,7 @@ public class GameScreen implements Screen {
         executeMovesWithDelay();
         executeLasersWithDelay();
         updatePhaseNr();
+
     }
 
     /**
@@ -254,7 +255,6 @@ public class GameScreen implements Screen {
      */
     private void checkIfNextPhaseCanStart(){
         if (!movesToExecute() && !game.moreLaserToShoot()) {
-            checkForEndGame();
             if (!game.isChoosingRespawn()) {
                 uiScreen.update();
                 if (game.isPhaseDone() && game.isAutoStartNextPhaseOn()) {
@@ -272,6 +272,7 @@ public class GameScreen implements Screen {
                 game.handleKeyBoardInput();
                 handleEnterInput();
             }
+            checkForEndGame();
         }
     }
 
@@ -337,6 +338,10 @@ public class GameScreen implements Screen {
                 roborallyGame.setScreen(new MainMenuScreen(roborallyGame));
             } else if(gameOverDialog == 2) {
                 keepWatching = true;
+                if(game.getRound().getPhaseNr() == 0) {
+                    uiScreen.executePowerDownButton();
+                }
+
                 game.setAutoStartNextPhase(true);
             } else {
             Gdx.app.exit();

@@ -380,7 +380,7 @@ public class UIScreen {
      * but do not move during this round.
      * It can still shoot lasers and take damage again.
      */
-    private void executePowerDownButton() {
+    public void executePowerDownButton() {
         if(game.getRound().getPhaseNr() != 0 ){return;}
         Color c = powerDownButton.getColor();
         powerDownButton.setColor(c.r, c.g, c.b, 0.5f);

@@ -22,16 +22,16 @@ import java.util.*;
  * When calculating how far a position is from the goal it knows exactly how many moves it takes to reach the goal from there,
  * even factoring in holes and walls. It will always choose the most optimal route (or cards rather).
  *
- * AI's at every difficulty will avoid picking cards that are useless (if it is possible), i.e. cards that will either kill them
- * or cards that won't change the direction or position of the robot.
+ * AI's at every difficulty will avoid picking cards that will kill them (as long as it is possible)
  * AI's at every difficulty will evaluate powerdown at round start if they have 5 or more damage. The percentage chance
  * to powerdown is directly tied to the amount of current damage, i.e. 5 damage = 50% to powerdown, 6 = 60% and so on.
+ * At hard and expert difficulty they will also account for locked cards if they have any, and will pick the best cards
+ * with regards to the locked cards.
  *
  * When checking how good a card is, it checks what position and direction the player will end up on at the end of the
  * phase (after conveyorbelts, pushers, cogs etc. are activated) by using that card.
  * It will not check if it will be pushed by other players or not.
  * The card is given a score by how good that position and direction is relative to the next goal flag position.
- * No AI will factor in the locked cards if there is any.
  *
  * The AI differ in how they choose respawn direction and position as well.
  */
@@ -47,10 +47,12 @@ public class AIPlayer extends Player {
     private ArrayList<ArrayList<List<Object>>> flagPositionScores;
     private ArrayList<ProgramCard> availableCardsLeft;
     private int cardsToPick;
+    private int roundStartGoalFlag;
     private ArrayList<ProgramCard> chosenCards;
     public enum Difficulty{EASY, MEDIUM, HARD, EXPERT, TESTING}
     private Difficulty difficulty;
     private Game game;
+
 
 
     public AIPlayer(int playerNumber, Game game, Difficulty difficulty) {
@@ -198,7 +200,7 @@ public class AIPlayer extends Player {
                 continue;
             }
             checkedCards.add(card);
-            if (isCardUseless(card, newRobotPos, newRobotDir, newRobotDamage, phaseNr)) {
+            if (isCardGoingToKill(card, newRobotPos, newRobotDir, newRobotDamage, phaseNr)) {
                 cardAndScore.put(card, 100);
                 continue;
             }
@@ -260,18 +262,18 @@ public class AIPlayer extends Player {
      * Is used for picking cards at hard and expert difficulty.
      */
     private void pickOptimal(){
-        int goalFlag = updateGoalFlag(nextGoalFlag);
-        int score = getScore(newRobotPos, newRobotDir, goalFlag);
+        roundStartGoalFlag = updateGoalFlag(nextGoalFlag);
+        int score = getScore(newRobotPos, newRobotDir, roundStartGoalFlag);
         int damage = getDamage();
         int movesToFlag = 0;
         ArrayList<ArrayList<List<Object>>> path = new ArrayList<>();
         ArrayList<ProgramCard> chosenCards = new ArrayList<>();
-        int[] totalScore = {goalFlag, movesToFlag, score};
+        int[] totalScore = {roundStartGoalFlag, movesToFlag, score};
         List<Object> startNode = Arrays.asList(newRobotPos, newRobotDir, totalScore, chosenCards, playerHandDeck, damage);
         ArrayList<List<Object>> startFrontier = new ArrayList<>();
         startFrontier.add(startNode);
         path.add(startFrontier);
-        int[] bestFinalTotalScore = {goalFlag, 100, 100};
+        int[] bestFinalTotalScore = {roundStartGoalFlag, 100, 100};
 
           for (int i = 0; i < path.size() ; i++) {
              ArrayList<List<Object>> frontier = path.get(i);
@@ -295,9 +297,8 @@ public class AIPlayer extends Player {
                      }
                      checkedCards.add(card);
                      newFrontier.add(createNode(currentPos, currentDir, card, currentTotalScore,
-                             currentChosenCards, currentAvailableCards, goalFlag, currentDamage));
+                             currentChosenCards, currentAvailableCards, currentDamage));
                  }
-
                  for (List<Object> objects : newFrontier) {
                      ArrayList<ProgramCard> cardsInFrontier = (ArrayList) objects.get(3);
                      int[] nodeTotalScore = (int[]) objects.get(2);
@@ -305,9 +306,15 @@ public class AIPlayer extends Player {
                      if (nodeScore < bestNodeScore) {
                          bestNodeScore = score;
                      }
-                     if (cardsInFrontier.size() == cardsToPick && isCurrentBetter(bestFinalTotalScore, nodeTotalScore)) {
-                         bestFinalTotalScore = nodeTotalScore;
-                         chosenCards = cardsInFrontier;
+                     if (cardsInFrontier.size() == cardsToPick) {
+                         if(cardsToPick < 5){
+                             nodeTotalScore = getTotalScoreWithLockedCards(objects);
+                         }
+                         if(isCurrentBetter(bestFinalTotalScore, nodeTotalScore)){
+                             bestFinalTotalScore = nodeTotalScore;
+                             chosenCards = cardsInFrontier;
+                             System.out.println(toString() + " best cards are " + cardsInFrontier + " which has a score of: " + Arrays.toString(nodeTotalScore));
+                         }
                      }
                  }
                  path.add(newFrontier);
@@ -324,12 +331,10 @@ public class AIPlayer extends Player {
      * @param totalScore the total score from the previous node
      * @param cardsChosen the ProramCards chosen from the previous node
      * @param cardsLeft the available ProgramCards left from the previous node
-     * @param roundStartGoalFlag the goal flag number at round start
      * @return the new node created with updated position, direction, total score, and lists of cards from using the card
      */
     private List<Object> createNode(Position pos, Direction dir, ProgramCard card, int[] totalScore,
-                                    ArrayList<ProgramCard> cardsChosen, ArrayList<ProgramCard> cardsLeft,
-                                    int roundStartGoalFlag, int damage){
+                                    ArrayList<ProgramCard> cardsChosen, ArrayList<ProgramCard> cardsLeft, int damage){
         int phaseNr = cardsChosen.size() + 1;
         List<Object> finalPosAndDir = getPosFromCardMove(card, pos, dir, phaseNr);
         Position finalPos = (Position) finalPosAndDir.get(0);
@@ -343,19 +348,17 @@ public class AIPlayer extends Player {
         int goalFlag = totalScore[0];
         int moves = totalScore[1];
         Position goalPos = logicGrid.getFlagPositions().get(goalFlag);
+        if (isCardGoingToKill(card, pos, dir, damage, phaseNr) || totalScore[2] == 100) {
+            score = 100;
+        }
         if(goalFlag == roundStartGoalFlag){
             moves = nodeChosenCards.size();
         }
-
-        if (finalPos.equals(goalPos)) {
+        if (finalPos.equals(goalPos) && score != 100) {
             goalFlag = updateGoalFlag(goalFlag + 1);
             score = getScore(finalPos, finalDir, goalFlag);
             moves = nodeChosenCards.size();
         }
-        if (isCardUseless(card, pos, dir, damage, phaseNr)) {
-            score = 100;
-        }
-
         int[] newTotalScore = {goalFlag, moves , score};
         return Arrays.asList(finalPos, finalDir, newTotalScore, nodeChosenCards, nodeAvailableCards, newDamage);
     }
@@ -378,6 +381,31 @@ public class AIPlayer extends Player {
 
 
     /**
+     * Gets the final total score for a set of cards when the AI has locked cards.
+     * @param nodeObjects the parameters of a node, i.e. :(pos, dir, score, selected cards, available cards, damage)
+     * @return the new total score from computing in the locked cards
+     */
+    private int[] getTotalScoreWithLockedCards(List<Object> nodeObjects){
+        Position pos = (Position) nodeObjects.get(0);
+        Direction dir = (Direction) nodeObjects.get(1);
+        int[] totalScore = (int[]) nodeObjects.get(2);
+        ArrayList<ProgramCard> selectedCards = (ArrayList) nodeObjects.get(3);
+        ArrayList<ProgramCard> availableCards = (ArrayList) nodeObjects.get(4);
+        int damage = (int) nodeObjects.get(5);
+        ArrayList<ProgramCard> lockedCards = getLockedCards();
+        for(ProgramCard lockedCard : lockedCards){
+            List<Object> newNode = createNode(pos, dir, lockedCard, totalScore, selectedCards, availableCards, damage);
+            pos = (Position) newNode.get(0);
+            dir = (Direction) newNode.get(1);
+            totalScore = (int[]) newNode.get(2);
+            selectedCards = (ArrayList) newNode.get(3);
+            availableCards = (ArrayList) newNode.get(4);
+            damage = (int) newNode.get(5);
+        }
+        return totalScore;
+    }
+
+    /**
      * Checks if a CardType is already in a list of ProgramCards.
      * @param checkedCards the list of ProgramCards to check
      * @param card the ProgramCard with a CardType to check
@@ -391,7 +419,7 @@ public class AIPlayer extends Player {
     }
 
     /**
-     * Chechs if a ProgramCard is already in a list of ProgramCards.
+     * Checks if a ProgramCard is already in a list of ProgramCards.
      * @param checkedCards the list of ProgramCards to check
      * @param card the ProgramCard to check
      * @return true if it is already in the list, false otherwise
@@ -405,7 +433,7 @@ public class AIPlayer extends Player {
 
     /**
      * Checks if card will be useless to pick in a phase.
-     * A card is useless if it will result in death or make no change in position and direction.
+     * A card is useless if it will result in death
      * @param card the ProgramCard to check
      * @param pos the current position
      * @param dir the current direction
@@ -413,16 +441,13 @@ public class AIPlayer extends Player {
      * @param phaseNr the phasenr of the phase we are checking for the card to be useless in
      * @return true if the card is useless, false otherwise.
      */
-    private boolean isCardUseless(ProgramCard card, Position pos, Direction dir, int damage, int phaseNr){
+    private boolean isCardGoingToKill(ProgramCard card, Position pos, Direction dir, int damage, int phaseNr){
         List<Object> finalPosAndDir = getPosFromCardMove(card, pos, dir, phaseNr);
         Position newPos = (Position) finalPosAndDir.get(0);
-        Direction newDir = (Direction) finalPosAndDir.get(1);
-        if(pos.equals(newPos) && dir.equals(newDir)){ return true;}
-        if(damage + getLaserDamage(newPos) >= 10){
-            System.out.println( card.toString() + " is useless at " + pos + ", new pos: " + newPos + " damage: " + damage + " laser damage: " + getLaserDamage(newPos));
-            return true;}
+        if(damage + getLaserDamage(newPos) >= 10){ return true;}
         return logicGrid.isDeadMove(newPos);
     }
+
 
     /**
      * Updates the current goal flag number.
@@ -451,7 +476,6 @@ public class AIPlayer extends Player {
         return null;
     }
 
-
     /**
      * Checks if a position is closer to current goal than an other position
      *
@@ -475,7 +499,6 @@ public class AIPlayer extends Player {
     private int getDistanceAway(Position pos1, Position pos2) {
         return (Math.abs(pos1.getX() - pos2.getX()) + Math.abs(pos1.getY() - pos2.getY()));
     }
-
 
     /**
      * Find the final position and direction at the end of the phase (after conveyorbelts, pushers, and cogs move)
@@ -623,7 +646,10 @@ public class AIPlayer extends Player {
      * The percentage chance to powerdown increases with more damage (e.g 7 damage = 70% chance to powerdown).
      */
     private void evaluatePowerDown(){
-        if (getDamage() < 5 || logicGrid.positionIsFree(getPos(), 8) || logicGrid.positionIsFree(getPos(), 9))return;
+        Position finalPos = (Position) findFinalPosAndDir(getPos(), getPlayerPiece().getDir(), 1, false).get(0);
+        if(logicGrid.getPieceType(getPos(), LaserPiece.class) != null) return;
+        if(logicGrid.getPieceType(finalPos, LaserPiece.class) != null) return;
+        if (getDamage() < 5 ) return;
         int random = (int) (Math.random()*10);
         if(random < getDamage()){
             doPowerDown();

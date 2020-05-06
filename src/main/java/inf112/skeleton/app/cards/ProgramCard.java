@@ -44,10 +44,7 @@ public class ProgramCard implements IProgramCard {
 
     @Override
     public String toString() {
-        return "ProgramCard{" +
-                "priority=" + priority +
-                ", cardType=" + cardType +
-                '}';
+        return "ProgramCard{" + cardType + ", " + priority + "} ";
     }
 
 
