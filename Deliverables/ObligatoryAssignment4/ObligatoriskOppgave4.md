@@ -118,6 +118,21 @@ tokens in accordance to the rules of Roborally.
 * Discard damage tokens according to ruleset.
 * Update UI (damage tokens).
 
+### Win/Lose condition
+**Usecase**: The user of the game would like to know when the game has ended in order to know when to exit the application or start anew.
+
+**Acceptance criteria**
+* When all robots are dead, a popoup should tell the player this is the case.
+* When the human controlled robot is dead, a popup should tell the player this is the case.
+* When any player has won, a popup should tell the player this is the case
+* On all the above, the player should be able to exit the application or start again from the main menu.
+
+**Tasks to complete**
+* Check when all players are dead.
+* Check if the human player (player 1) is dead.
+* Check if any player has visited all the flags.
+* Create dialog box in accordance to which of the conditions has been fulfilled.
+
 ---
 
 ### Other known bugs
