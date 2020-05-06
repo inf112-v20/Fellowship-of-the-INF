@@ -99,10 +99,11 @@ public class MapSelectionScreen implements Screen {
     }
 
     /**
-     * TODO write doc
+     * Creates a sprite that can be used as an actor on the MainMenuScreen stage, in this case an imagebutton.
+     * The buttons made functions as "Choose map" buttons.
      *
-     * @param mapName
-     * @return
+     * @param mapName name of the file containing image of selected map
+     * @return the imagebutton generated from the image file
      */
     public ImageButton createMapButton(final String mapName){
         Sprite picture = new Sprite(new Texture("menu/mapButtons/" + mapName + ".png"));

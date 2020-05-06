@@ -35,10 +35,10 @@ public class MainMenuScreen implements Screen {
     }
 
     /**
-     * TODO write docs
+     * Creates a sprite that can be used as an actor on the MainMenuScreen stage, in this case an image.
      *
-     * @param filename
-     * @return
+     * @param filename name of the image file
+     * @return the image to be set as an actor
      */
     public Image createImage (final String filename) {
         Sprite picture = new Sprite(new Texture("menu/" + filename + ".png"));
@@ -47,10 +47,10 @@ public class MainMenuScreen implements Screen {
     }
 
     /**
-     * TODO write docs
+     * Creates a sprite that can be used as an actor on the MainMenuScreen stage, in this case an imagebutton.
      *
-     * @param filename
-     * @return
+     * @param filename name of the image file
+     * @return the imagebutton to bet set as an actor
      */
     public ImageButton createImageButton (final String filename) {
         Sprite picture = new Sprite(new Texture("menu/navbuttons/" + filename + ".png"));
