@@ -187,6 +187,8 @@ tokens in accordance to the rules of Roborally.
 * Discard damage tokens according to ruleset.
 * Update UI (damage tokens).
 
+---
+
 ### Win/Lose condition
 **Usecase**: The user of the game would like to know when the game has ended in order to know when to exit the application or start anew.
 
@@ -201,6 +203,21 @@ tokens in accordance to the rules of Roborally.
 * Check if the human player (player 1) is dead.
 * Check if any player has visited all the flags.
 * Create dialog box in accordance to which of the conditions has been fulfilled.
+
+---
+
+### Choose number of players
+**Usecase**: The user of the game would like to choose how many players should be in the game in order to maximize the fun of the user.
+
+**Acceptance criteria**
+* After hitting play on the menu screen, another screen with different numbered buttons should appear.
+* Clicking one of these buttons should make it so that the game only spawns in as many players as the button indicated.
+* All maps should support 2 to 8 players.
+
+**Tasks to complete**
+* Make new sprites for all the buttons needed.
+* Place down buttons on the new screen.
+* Give the buttons a function, including sending amount of players to the map selection screen.
 
 ---
 
