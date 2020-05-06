@@ -68,25 +68,12 @@ public class MainMenuScreen implements Screen {
         background.setPosition(0, 0);
         stage.addActor(background);
 
-//        Sprite picture = new Sprite(new Texture("menu/MainMenuBackground.png"));
-//        Image background = new Image(new SpriteDrawable(picture));
-//        background.setSize(width, height);
-//        background.setPosition(0, 0);
-//        stage.addActor(background);
-
         // Logo
         yPadding = 50;
         Image logo = createImage("RoboRally_logo");
         logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
         stage.addActor(logo);
-
-//        int yPadding = 50;
-//        picture = new Sprite(new Texture("menu/RoboRally_logo.png"));
-//        Image logo = new Image(new SpriteDrawable(picture));
-//        logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
-//        logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
-//        stage.addActor(logo);
 
         // Play button
         yPadding = 440;
@@ -102,16 +89,6 @@ public class MainMenuScreen implements Screen {
         });
         stage.addActor(playButton);
 
-//        playButton.setPosition((width - picture.getWidth()) / 2, height - (picture.getHeight() + yPadding));
-//        playButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                sound.play();
-//                game.setScreen(new PlayerSelectionScreen(game));
-//            }
-//        });
-//        stage.addActor(playButton);
-
         // Test button
         yPadding = 100;
         xPadding = 100;
@@ -126,16 +103,6 @@ public class MainMenuScreen implements Screen {
         });
         stage.addActor(testButton);
 
-//        testButton.setPosition(xPadding, yPadding);
-//        testButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                sound.play();
-//                game.setScreen(new TestMapSelectionScreen(game));
-//            }
-//        });
-//        stage.addActor(testButton);
-
         // Exit button
         ImageButton exitButton = createImageButton("ExitButton");
         exitButton.setPosition((width - xPadding) - exitButton.getWidth(), yPadding);
@@ -147,16 +114,6 @@ public class MainMenuScreen implements Screen {
             }
         });
         stage.addActor(exitButton);
-
-//        exitButton.setPosition((width - xPadding) - exitButton.getWidth(), yPadding);
-//        exitButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                sound.play();
-//                Gdx.app.exit();
-//            }
-//        });
-//        stage.addActor(exitButton);
 
         Gdx.input.setInputProcessor(stage);
 
