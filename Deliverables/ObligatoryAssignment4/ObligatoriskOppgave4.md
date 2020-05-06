@@ -45,14 +45,14 @@ Overall we are satisfied with the results of the project. We have all become bet
   * At the end of each meeting we all agree on the time of the next meeting (usually at 14.00 on Mondays and Thursdays).
 * Testing should be done either before or immediately after implementation, not toward the end of an iteration.
   * In order for this to be possible we had to remove our very impracticle system of commenting out/in lines of code to run certian tests. We created a practical UI where the appropriate test map could be selected, and made it simple for developers to add a test map to the list. With this new system in place, manual testing was easy to do before or immediately after implementation.
-  ![alt text](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/TestMapSelectionScreen_Screenshot.png "Screen shot")
+  ![alt text](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/TestMapSelectionScreen_Screenshot.png "Screen shot")
   
 
 ### Communication and group dynamics
 
 
 ### Meeting logs
-[Meeting logs can be found in a seperate MD file called MeetingLogsIteration4.md] (https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/MeetingLogsIteration4.md)
+[Meeting logs can be found in a seperate MD file called MeetingLogsIteration4.md] (https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/MeetingLogsIteration4.md)
 
 ## Part 2: Requirements
 ### Requirements for Fourth Iteration
