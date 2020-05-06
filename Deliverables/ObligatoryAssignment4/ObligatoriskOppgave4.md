@@ -48,9 +48,6 @@ Overall we are satisfied with the results of the project. We have all become bet
   ![alt text](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/TestMapSelectionScreen_Screenshot.png "Screen shot")
   
 
-### Communication and group dynamics
-
-
 ### Meeting logs
 [Meeting logs can be found in a seperate MD file called MeetingLogsIteration4.md] (https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/MeetingLogsIteration4.md)
 
@@ -229,6 +226,8 @@ tokens in accordance to the rules of Roborally.
 ## Part 3: Code
 
 ### UML
+![altText](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/UML/SimplifiedUML.png "UML")
+You can find more UML's in the UML folder in ObligatoryAssigment4.
 
 ### How to run the program
 * Ensure maven install and build is complete. Then, run Main. A Menu Screen will pop up. Press the play button to start the game, and then the Stage 1 button from the stage selection screen.
