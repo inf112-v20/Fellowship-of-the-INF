@@ -143,7 +143,7 @@ public class BoardPieceGenerator {
                 return new LaserSourcePiece(pos, id, Direction.NORTH, false);
             case (46):
                 return new LaserSourcePiece(pos, id, Direction.EAST, false);
-            case (88):
+            case (87):
                 return new LaserSourcePiece(pos, id, Direction.SOUTH, true);
             case (93):
                 return new LaserSourcePiece(pos, id, Direction.WEST, true);
