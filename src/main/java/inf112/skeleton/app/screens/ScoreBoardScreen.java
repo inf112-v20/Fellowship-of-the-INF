@@ -24,6 +24,11 @@ public class ScoreBoardScreen {
     private Label.LabelStyle oddRowStyle;
     private Texture whiteTexture = new Texture(Gdx.files.internal("white.png"));
 
+    /*
+    Class for creating a scoreboard that shows each players stats (i.e. nr of lives, damage, flags taken).
+    The playerimage shows if the player is dead or not.
+    Press TAB to bring the scoreboard up when a game is running.
+     */
     public ScoreBoardScreen(Game game) {
         this.game = game;
         this.stage = new Stage();
@@ -55,6 +60,9 @@ public class ScoreBoardScreen {
         return stage;
     }
 
+    /**
+     * Updates the scoreboard when there is a change in a players stats (lives, damage, flags).
+     */
     public void update() {
         table.clear();
         table.setWidth(3000);
@@ -144,6 +152,11 @@ public class ScoreBoardScreen {
         stage.addActor(table);
     }
 
+    /**
+     * Creates an Image from a given texture
+     * @param texture the texture to create an image with
+     * @return an Image with the texture given
+     */
     public Image createImage(Texture texture) {
         TextureRegion textureRegion = new TextureRegion(texture);
         TextureRegionDrawable textureRegionDrawable = new TextureRegionDrawable(textureRegion);

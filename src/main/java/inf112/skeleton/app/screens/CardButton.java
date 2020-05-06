@@ -36,6 +36,9 @@ public class CardButton {
 
     private Wav.Sound cardSound;
 
+    /*
+    Class for the UI part of the programcards which handles buttonclicks on them
+     */
     public CardButton(Player player, float width, float height, Stage stage, ImageButton lockInButton) {
         this.player = player;
         this.width = width;
@@ -193,7 +196,7 @@ public class CardButton {
 
     /**
      * Creates a right mousebutton clicklistener for a cardbutton
-     * Tries remove the card from the selected cards
+     * Tries to remove the card from the selected cards
      */
     public void buttonRightPressed(Stack cardButton) {
         final Stack tempButton = cardButton;

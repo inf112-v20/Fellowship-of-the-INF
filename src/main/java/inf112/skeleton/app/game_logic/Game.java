@@ -76,7 +76,6 @@ public class Game {
     /*
     Getters
      */
-
     public LogicGrid getLogicGrid() {
         return this.logicGrid;
     }
@@ -91,18 +90,6 @@ public class Game {
 
     public Player getVictoriousPlayer() {return victoriousPlayer;}
 
-    public void setVictoriousPlayer(Player victoriousPlayer) {
-        this.victoriousPlayer = victoriousPlayer;
-    }
-
-    public void setGameOver(boolean gameIsOver) {
-        this.gameOver = gameIsOver;
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
     public Round getRound() {
         return this.round;
     }
@@ -115,6 +102,12 @@ public class Game {
 
     public ArrayList<Player> getDeadPlayers(){return this.deadPlayers;}
 
+    public ArrayList<Player> getRespawnOrder(){
+        return this.respawnOrder;
+    }
+
+    public String getMapName(){ return this.mapName;}
+
     public boolean isPhaseDone(){return this.phaseDone;}
 
     public boolean isAutoStartNextPhaseOn(){return this.autoStartNextPhase;}
@@ -123,11 +116,7 @@ public class Game {
         return this.choosingRespawn;
     }
 
-    public ArrayList<Player> getRespawnOrder(){
-        return this.respawnOrder;
-    }
-
-    public String getMapName(){ return this.mapName;}
+    public boolean isGameOver() { return gameOver; }
 
     /**
      * This method is called by GameScreen so that it can show the moves that have been executed in backend.
@@ -154,6 +143,8 @@ public class Game {
 
     public void setAutoStartNextPhase(boolean bool){ this.autoStartNextPhase = bool;}
 
+    public void setGameOver(boolean gameIsOver) { this.gameOver = gameIsOver; }
+
 
     /**
      * The computer players are initiated and added to the playerList and position in the logicGrid
@@ -168,15 +159,47 @@ public class Game {
     }
 
     /**
-     * Handles keyboard input for manually moving Player 1 and player 2 around
+     * Handles keyboard input for manually moving Player 1 and player 2 around, and executes the moves
      */
     public void handleKeyBoardInput() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();//initiate moves to be done
         Player player2 = player1;
         if (numberOfPlayers > 1) player2 = playerList[1];
-
         PlayerPiece player1Piece = player1.getPlayerPiece();
+        handlePlayer1KeyboardInput(moves, player1Piece);
+        handlePlayer2KeyboardInput(moves, player2);
+        executeKeyboardMoves(moves);
+        checkForGameCompletion();
+    }
+
+    /**
+     *Handles the keyboard input for player 1
+     * @param moves list of moves to update
+     * @param player2 player who can be moves by keyboard input
+     */
+    private void handlePlayer2KeyboardInput(MovesToExecuteSimultaneously moves, Player player2) {
         PlayerPiece player2Piece = player2.getPlayerPiece();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            player2.setKeyInput(true);
+            player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            player2.setKeyInput(true);
+            player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            player2Piece.turnLeft(moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            player2Piece.turnRight(moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            player2Piece.turnAround(moves);
+        }
+    }
+
+    /**
+     * Handles the keyboard input for player 2
+     * @param moves list of moves to update
+     * @param player1Piece player piece of player 1 that can be moves with keyboard input
+     */
+    public void handlePlayer1KeyboardInput(MovesToExecuteSimultaneously moves, PlayerPiece player1Piece) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.setKeyInput(true);
             player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
@@ -213,38 +236,23 @@ public class Game {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
             }
         }
-        //second player moves get handled
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            player2.setKeyInput(true);
-            player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            player2.setKeyInput(true);
-            player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            player2Piece.turnLeft(moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            player2Piece.turnRight(moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-            player2Piece.turnAround(moves);
-        }
-        //execution of moves
+    }
+
+    /**
+     * Executeds the backend and frontend moves without delay.
+     * @param moves list of moves that have been generated from keyboard input
+     */
+    private void executeKeyboardMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //execute moves if there are any
         for (Move move : moves) {
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
         }
         moves.clear();
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
-            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-                round.lockInCardsForComputers(false);
-            }
-            else{
-                round.lockInCardsForComputers(true);
-            }
-        }
-
     }
 
+    /**
+     * Handles keyboard input that does not affect the game logic.
+     */
     public void handleNonGameLogicKeyBoardInput(){
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)){
             autoStartNextPhase = !autoStartNextPhase;
@@ -253,6 +261,14 @@ public class Game {
             }
             else {
                 System.out.println("Turning autostart of phases off");
+            }
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
+            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+                round.lockInCardsForComputers(false);
+            }
+            else{
+                round.lockInCardsForComputers(true);
             }
         }
     }
@@ -337,6 +353,11 @@ public class Game {
         return (lockedInPlayers == playerList.length-1);
     }
 
+    /**
+     * Finds the map name for the map that is currently played
+     * Removes the filepath and .tmx from the string that is given
+     * @param mapName string of filepath name of the map
+     */
     private void findMapName(String mapName){
         for(int i = mapName.length()-1; i >= 0; i--){
             char c = mapName.charAt(i);
@@ -347,4 +368,42 @@ public class Game {
         }
     }
 
+    /**
+     * Checks if the game is over.
+     * Game is over if a player has won or player 1 is permanently dead.
+     */
+    public void checkForGameCompletion() {
+        victoriousPlayer = playerHasWon();
+        if (playerHasWon() != null) { //if a player has won
+            victoriousPlayer = playerHasWon();
+        } else if (checkForGameOver()) {//if all players are dead
+            setGameOver(true);
+            System.out.println("Setting game over");
+        }
+    }
+
+    /**
+     * Method for checking if a player has won the game
+     *
+     * @return the player which has won, if no player has won, returns null
+     */
+    public Player playerHasWon() {
+        for (Player player : getListOfPlayers()) {
+            if (player.getCheckpointsVisited() == logicGrid.getFlagPositions().size())
+                return player;
+        }
+        return null;
+    }
+
+    /**
+     * Method for checking if every player is permanently dead, aka the game is over
+     *
+     * @return true if game is over, else returns false
+     */
+    public boolean checkForGameOver() {
+        for (Player player : getListOfPlayers()) {
+            if (!player.isPermanentlyDead()) return false;
+        }
+        return true;
+    }
 }

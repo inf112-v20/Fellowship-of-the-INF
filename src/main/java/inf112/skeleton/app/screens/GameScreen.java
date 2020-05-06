@@ -106,9 +106,7 @@ public class GameScreen implements Screen {
         clearLayer(boardLaserLayer); //lasers should only be shown when active
         this.respawnButtons = new ArrayList<>();
         this.respawnImages = new ArrayList<>();
-        for (Player player : game.getRespawnOrder()) {
-            createRespawnImage(player);
-        }
+        for (Player player : game.getRespawnOrder()) { createRespawnImage(player); }
 
         laserSound = (Wav.Sound) Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bubaproducer__laser-shot-silenced.wav"));
     }
@@ -159,13 +157,30 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * TODO: @Erlend @Johanna this metod is way to big and needs to be split into smaller methods
      * Update all changes to board
-     * <p>
      * If there are moves to execute, they are executed with a delay.
      * This is so that when many moves are executed, the user can differentiate between them.
      */
     public void update() {
+        checkForChoosingRespawn();
+        playLaserSound();
+        handleKeyboardInput();
+        timerChecker();
+        checkForRespawnUpdate();
+        checkIfNextPhaseCanStart();
+        executeMovesWithDelay();
+        executeLasersWithDelay();
+        updatePhaseNr();
+
+    }
+
+    /**
+     * If player 1 is dead and is respawning then remove the gamelog or cards in the UI and write the respawn text.
+     * The player should then be able to choose the direction to respawn in.
+     * If the spawnpoint is occupied then they should be able to choose an adjacent position to respawn in as well.
+     *
+     */
+    private void checkForChoosingRespawn() {
         if (game.isChoosingRespawn()) {
             if (game.getRound().getPhaseNr() == 0) {
                 uiScreen.removeCards();
@@ -183,13 +198,24 @@ public class GameScreen implements Screen {
             }
             chooseDirection();
         }
+    }
+
+    /**
+     * If lasers are shown on the board then play lasersounds as well
+     */
+    private void playLaserSound(){
         if (boardLasersVisible) {
             laserSound.play(0.25f, 1.0f, 1.0f);
             clearLayer(boardLaserLayer);
             boardLasersVisible = false;
         }
-        //Start timer if there is only one left picking cards for the next round
-        handleKeyboardInput();
+    }
+
+    /**
+     * Methods that checks if timer should be started, stopped, or if it should keep going (if started).
+     */
+    private void timerChecker(){
+        // Start timer if there is only one left picking cards
         if (game.onePlayerLeftToPick() && !timerStarted) {
             timerStarted = true;
             startTimer();
@@ -199,48 +225,62 @@ public class GameScreen implements Screen {
             if (!game.onePlayerLeftToPick()) {
                 stopTimer();
                 uiScreen.executeLockInButton();
-            } else if (seconds != prevSeconds) {
+            }
+            //else draw the timer again
+            else if (seconds != prevSeconds) {
                 uiScreen.drawTimer(seconds + 1);
                 prevSeconds--;
             }
         }
+
+    }
+
+    /**
+     * Checks if the spawnpoints for the players are updated and will then update the respawn images.
+     */
+    private void checkForRespawnUpdate(){
         if (!movesToExecute() && !game.moreLaserToShoot() && !hasUpdated) {
             updateRespawnImages();
             hasUpdated = true;
         }
-        //only handle keyboard input if there are no moves to execute
-        if (!movesToExecute() && !game.moreLaserToShoot() && !game.isChoosingRespawn()) {
-            uiScreen.update();
-            if (game.isPhaseDone() && game.isAutoStartNextPhaseOn()) {
-                game.setPhaseDone(false);
-                if (game.getRound().getPhaseNr() > 4) {
-                    game.getRound().finishRound();
-                    if (!game.isChoosingRespawn()) {
-                        uiScreen.newRound();
-                    }
-                } else {
-                    game.getRound().nextPhase();
-                    uiScreen.updateGameLog();
-                }
-            }
-            game.handleKeyBoardInput();
-            handleEnterInput();
-        }
-        //only execute moves if there are any, the the current one hasn't been executed yet
-        if (movesToExecute() && currentMoveIsExecuted) {
-            currentMoveIsExecuted = false;
-            executeMove();
-            delayForSeconds(500); //add delay
-        }
+    }
+
+    /**
+     * If there are no more moves to execute and lasers to shoot then check if the game has ended.
+     * If player 1 is not choosing a respawn position/direction then update the UI elements.
+     * If autostart is toggled on then start the next phase immediately or start the next round if the current phase is nr 5.
+     * If autostart is toggled off then you can press ENTER to go the next phase (or possibly new round).
+     * Other keyboard inputs that affects game logic (like WASD, UPARROW, LEFTARROW etc.) are only accepted when there is
+     * no moves or lasers to execute on the gamescreen.
+     */
+    private void checkIfNextPhaseCanStart(){
         if (!movesToExecute() && !game.moreLaserToShoot()) {
+            if (!game.isChoosingRespawn()) {
+                uiScreen.update();
+                if (game.isPhaseDone() && game.isAutoStartNextPhaseOn()) {
+                    game.setPhaseDone(false);
+                    if (game.getRound().getPhaseNr() > 4) {
+                        game.getRound().finishRound();
+                        if (!game.isChoosingRespawn()) {
+                            uiScreen.newRound();
+                        }
+                    } else {
+                        game.getRound().nextPhase();
+                        uiScreen.updateGameLog();
+                    }
+                }
+                game.handleKeyBoardInput();
+                handleEnterInput();
+            }
             checkForEndGame();
-            checkIfPlayer1Died();
         }
-        if (!movesToExecute() && game.moreLaserToShoot()) {
-            shootRobotLasers();
-            showBoardLasers();
-            delayForSeconds(150);
-        }
+    }
+
+    /**
+     * Updates a phaseNr variable which is different to the phaseNr variable in Game.java
+     * This is mostly to make sure the respawn images are only drawn once.
+     */
+    private void updatePhaseNr(){
         if (currentPhaseNr != game.getRound().getPhaseNr()) {
             hasUpdated = false;
             currentPhaseNr = game.getRound().getPhaseNr();
@@ -248,7 +288,8 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Checks if the game is over, and if so shows the appropriate message to the user
+     * Checks if the game is over (all players are dead or there is a winner),
+     * and if so shows the appropriate message to the user
      */
     public void checkForEndGame() {
         Player victoriousPlayer = game.getVictoriousPlayer();
@@ -270,9 +311,16 @@ public class GameScreen implements Screen {
             if (gameOverDialog == 1) {
                 roborallyGame.setScreen(new MainMenuScreen(roborallyGame));
             } else Gdx.app.exit();
+        } else {
+            checkIfPlayer1Died();
         }
     }
 
+    /**
+     * This method is only called if there isn't a winner and all players aren't dead.
+     * If player 1 is dead, but there are still some AI's alive, then the user has the option of continuing to watch
+     * the game.
+     */
     public void checkIfPlayer1Died() {
         Object[] options = {"Exit", "Main Menu", "Keep Watching"};
         String message = "Error, game needs to be restarted";
@@ -290,10 +338,39 @@ public class GameScreen implements Screen {
                 roborallyGame.setScreen(new MainMenuScreen(roborallyGame));
             } else if(gameOverDialog == 2) {
                 keepWatching = true;
+                if(game.getRound().getPhaseNr() == 0) {
+                    uiScreen.executePowerDownButton();
+                }
+
                 game.setAutoStartNextPhase(true);
             } else {
             Gdx.app.exit();
             }
+        }
+    }
+
+    /**
+     * Execute the all the moves in a phase with a delay of 500 milliseconds
+     */
+    private void executeMovesWithDelay(){
+        if (movesToExecute() && currentMoveIsExecuted) {
+            currentMoveIsExecuted = false;
+            executeMove();
+            delayForSeconds(500); //add delay
+        }
+
+    }
+
+    /**
+     * Execute all lasers (both boardlasers and player lasers)
+     * Player lasers move across the map until they hit a wall, player, or reach the end of the map
+     * The player lasers move with a delay of 150 milliseconds.
+     */
+    private void executeLasersWithDelay(){
+        if (!movesToExecute() && game.moreLaserToShoot()) {
+            shootRobotLasers();
+            showBoardLasers();
+            delayForSeconds(150);
         }
     }
 
@@ -356,10 +433,10 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * TODO: @Johanna add comments
+     * Returns the type of laser cell that needs to be used to draw the laser coming from the laser source
      *
-     * @param laserSource
-     * @return
+     * @param laserSource the laser source piece of the laser
+     * @return the type of laser call that should be drawn from the source
      */
     private TiledMapTileLayer.Cell getLaserCell(LaserSourcePiece laserSource) {
         Direction laserDirection = laserSource.getLaserDir();
@@ -396,6 +473,12 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Handles ENTER keyboard input.
+     * Starts the next phase if the current phase is done.
+     * Starts the next round if the current phasenr is 5.
+     * You can also use ENTER to lock in when you have chosen 5 cards at round start.
+     */
     private void handleEnterInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (game.getRound().getPhaseNr() > 4) {
@@ -482,6 +565,8 @@ public class GameScreen implements Screen {
 
     /**
      * Starts a timer counting down from 60 seconds
+     * Picks random cards for remaining open slots in the register
+     * for the last player picking cards if they let the timer run out
      */
     private void startTimer() {
         timer = new Timer();
@@ -524,12 +609,17 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Only used for testing.
+     * Makes the board lasers show for a millisecond. Only used for testing.
      */
     public void blinkBoardLasers() {
         showBoardLasers();
     }
 
+    /**
+     * If player 1 is respawning and their spawnpoint is occupied then highlight each valid adjacent spawnpoint and
+     * make a button for each.
+     * @param pos the actual spawnpoint of player 1 that is occupied
+     */
     private void createRespawnButton(Position pos) {
         respawnPos = null;
         Texture texture = new Texture("white.png");
@@ -547,6 +637,11 @@ public class GameScreen implements Screen {
     }
 
 
+    /**
+     * Clicklistener for the respawnbuttons.
+     * If left-clicked then move player 1's image to the clicked cell.
+     * @param respawnButton the button to make a listener for
+     */
     private void respawnButtonPressed(final ImageButton respawnButton) {
         respawnButton.addListener(new ClickListener() {
             final ImageButton tempButton = respawnButton;
@@ -561,6 +656,10 @@ public class GameScreen implements Screen {
 
     }
 
+    /**
+     * Moves player 1's image to the position of the button (the cell)
+     * @param button the button that is left-clicked
+     */
     private void executeRespawnButton(ImageButton button) {
         int posX = (int) button.getX() / TILE_WIDTH_DPI;
         int posY = (int) button.getY() / TILE_WIDTH_DPI;
@@ -574,6 +673,12 @@ public class GameScreen implements Screen {
         chooseDirection();
     }
 
+    /**
+     * Method for when player 1 respawns and chooses which direction to respawn in.
+     * If R is pressed then the respawn direction is confirmed and cant be changed.
+     * If there are more dead players then they are respawned afterwards and then the next round starts.
+     * If respawns buttons were made for this respawn then those are removed.
+     */
     private void chooseDirection() {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         Player player = game.getPlayer();
@@ -593,7 +698,6 @@ public class GameScreen implements Screen {
             game.setChoosingRespawn(false);
             game.getPlayer().setPos(respawnPos);
             game.getLogicGrid().movePlayerToNewPosition(playerPiece, player.getDeadPosition(), respawnPos);
-            System.out.println("Player 1 has respawned at " + respawnPos + " in dir " + player.getPlayerPiece().getDir());
             for (ImageButton buttons : respawnButtons) {
                 buttons.remove();
             }
@@ -610,8 +714,10 @@ public class GameScreen implements Screen {
 
     }
 
+    /**
+     * Method for player 1 to choose which position to respawn in if the spawnpoint is occupied.
+     */
     private void choosePosition() {
-
         Player player = game.getPlayer();
         if (player.getRespawnPositions().size() == 1) {
             respawnPos = player.getRespawnPositions().get(0);
@@ -624,6 +730,11 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Creates the respawnimage for a player in the game
+     * The respawnimage is just a small picture of the robot in the lower left corner of their current spawnpoint.
+     * @param player the player to create a respawnimage for
+     */
     private void createRespawnImage(Player player) {
         TextureRegion textureRegion = player.getPlayerPiece().getPlayerCell().getTile().getTextureRegion();
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(textureRegion);
@@ -637,6 +748,16 @@ public class GameScreen implements Screen {
         respawnImages.add(image);
     }
 
+    /**
+     * Finds the position of where to place the respawnimage.
+     * If more than 1 player has the same respawn position then they should stack nicely on top of each other
+     * on the left side of the cell.
+     * If more than 5 players has the same respawn position then they start stacking at the right side of the cell too.
+     *
+     * @param player the player to find the respawnimage position for
+     * @param posCounter HashMap with string of position as key, and number of people that has their respawnimage at that position as value.
+     * @return the position to place the respawnimage for a given player
+     */
     private Position findPosition(Player player, HashMap posCounter) {
         Position respawnPosition = player.getSpawnPoint();
         int posX = respawnPosition.getX() * TILE_WIDTH_DPI;
@@ -656,6 +777,9 @@ public class GameScreen implements Screen {
         return new Position(posX, posY);
     }
 
+    /**
+     * Updates the respawn image after every phase
+     */
     private void updateRespawnImages() {
         HashMap<String, Integer> posCounter = new HashMap<>();
         for (int i = 0; i < game.getRespawnOrder().size(); i++) {

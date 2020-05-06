@@ -1,6 +1,5 @@
 package inf112.skeleton.app.player;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import inf112.skeleton.app.game_logic.Game;
 import inf112.skeleton.app.game_logic.Move;
@@ -18,7 +17,6 @@ import java.util.*;
  */
 public class Player {
     private LogicGrid logicGrid;
-    private ArrayList<BoardPiece>[][] pieceGrid;
     private PlayerPiece playerPiece;
     private ArrayList<ProgramCard> playerHandDeck;
     private ProgramCard[] selectedCards = new ProgramCard[5];
@@ -28,7 +26,6 @@ public class Player {
     private ArrayList<Position> respawnPositions = new ArrayList<>();
 
     private Position spawnPoint;
-    private BoardPiece currentBoardPiece;
     private Direction latestMoveDirection;
     private boolean conveyorBeltMove = false;
     private boolean hasBeenMovedThisPhase = false;
@@ -46,7 +43,6 @@ public class Player {
     private boolean isPushed = false;
     private Position lastPosAlive;
     private Position deadPosition;
-    private int movesLeft = 1;
     private boolean keyInput = false;
     private Player pusherStarter = null;
 
@@ -54,7 +50,6 @@ public class Player {
         this.playerNumber = playerNumber;
         this.game = game;
         this.logicGrid = game.getLogicGrid();
-        this.pieceGrid = logicGrid.getGrid();
         this.playerHandDeck = game.getGameDeck().drawHand(new ArrayList<ProgramCard>(), getDamage());
 
         //Find the spawn point of the player, and set spawnPoint position to the first spawn
@@ -67,7 +62,6 @@ public class Player {
     /*
     Getters
      */
-
     public Position getPos() { return this.playerPiece.getPos(); }
 
     public TiledMapTileLayer.Cell getPlayerCell() { return this.playerPiece.getCurrentCell(); }
@@ -126,10 +120,6 @@ public class Player {
 
     public ArrayList<ProgramCard> getLockedCards() {
         return this.lockedCards;
-    }
-
-    public BoardPiece getCurrentBoardPiece() {
-        return this.currentBoardPiece;
     }
 
     public Direction latestMoveDirection() {
@@ -252,7 +242,6 @@ public class Player {
         if (!isDead()) {
             //if the move results in pushing robots, add the resulting moves to the moves list
             addMovesForPushedRobots(this.getPlayerPiece(), newDirection, moves);
-            setCurrentBoardPiece(newPosition.getX(), newPosition.getY()); //update currentBoardPiece
             setPos(newPosition);
             move.updateMove();
             moves.add(move);
@@ -273,22 +262,17 @@ public class Player {
      */
     public void checkForRespawnAfterKeyBoardInput(MovesToExecuteSimultaneously moves) {
         if(!this.isPushed && keyInput) {
-            movesLeft--;
-            if (movesLeft == 0) {
-                for (int i = 0; i < playersPushed.size(); i++) {
-                    System.out.println(playersPushed);
-                    Player pushedPlayer = playersPushed.get(i);
-                    pushedPlayer.isPushed = false;
-                    if (pushedPlayer.isDead() && game.getRound().getPhaseNr() == 0) {
-                        pushedPlayer.checkForRespawn(moves);
-                        pushedPlayer.playersPushed.clear();
-                    }
+            for (int i = 0; i < playersPushed.size(); i++) {
+                Player pushedPlayer = playersPushed.get(i);
+                pushedPlayer.isPushed = false;
+                if (pushedPlayer.isDead() && game.getRound().getPhaseNr() == 0) {
+                    pushedPlayer.checkForRespawn(moves);
+                    pushedPlayer.playersPushed.clear();
                 }
-                playersPushed.clear();
-                if (isDead && game.getRound().getPhaseNr() == 0) {
-                    checkForRespawn(moves);
-                }
-                movesLeft = 1;
+            }
+            playersPushed.clear();
+            if (isDead && game.getRound().getPhaseNr() == 0) {
+                checkForRespawn(moves);
             }
             pusherStarter = null;
         }
@@ -312,6 +296,8 @@ public class Player {
             }
             playertoPush.isPushed = true;
             if(!isPushed){
+                //Determine who intiated the push
+                //Every pushed robot from this push has a pointer to the iniater
                 setPusherStarter(this);
             }
             Player pusherStarter = getPusherStarter();
@@ -350,18 +336,20 @@ public class Player {
     }
 
     /**
-     *Put the player back to it's respawn position, update boardPiece and moves
+     * Respawn player, letting them choose the direction to respawn in.
+     * If the spawnpoint is occupied then let them choose an adjecent valid position as well.
+     * How AI players choose direction and positions is dependent on their difficulty.
+     * When respawning every player automatically starts with 2 damage.
      * @param moves list to update
      */
     public void respawnPlayer(MovesToExecuteSimultaneously moves) {
+        damage = 2;
         game.performMoves(moves);
         Move respawnMove = new Move(this);
-        System.out.println("Finding spawn positions for " + toString());
         respawnPositions = logicGrid.getValidSpawnPointPosition(spawnPoint);
         if(this instanceof AIPlayer) {
             AIPlayer aiPlayer = (AIPlayer) this;
             Position newPos = aiPlayer.chooseRespawnPos(respawnPositions);
-            System.out.println("Respawning " + toString() + " at " + newPos);
             playerPiece.setPos(newPos);
             Direction newDir = aiPlayer.chooseRespawnDir(newPos);
             getPlayerPiece().setDir(newDir);
@@ -379,35 +367,6 @@ public class Player {
         isDead = false;
         playerPiece.showAlivePlayer();
 
-    }
-
-
-
-    /**
-     * Updates currentBoardPiece based on what type of tile the player is standing on.
-     *
-     * @param newX, newY new position for Player
-     */
-    public void setCurrentBoardPiece(int newX, int newY) {
-        BoardPiece currPiece;
-        for (int i = 0; i < pieceGrid[newX][newY].size(); i++) {
-            currPiece = pieceGrid[newX][newY].get(i);
-            if (currPiece instanceof ExpressBeltPiece) {
-                currentBoardPiece = currPiece;
-            } else if (currPiece instanceof ConveyorBeltPiece) {
-                currentBoardPiece = currPiece;
-            } else if (currPiece instanceof CogPiece) {
-                currentBoardPiece = currPiece;
-            } else if (currPiece instanceof PusherPiece) {
-                currentBoardPiece = currPiece;
-            } else if (currPiece instanceof AbyssPiece) {
-                currentBoardPiece = currPiece;
-            } else if (currPiece instanceof FlagPiece) {
-                currentBoardPiece = currPiece;
-            } else if (currPiece instanceof FloorPiece) {
-                currentBoardPiece = currPiece;
-            }
-        }
     }
 
     /**
@@ -446,7 +405,6 @@ public class Player {
      */
     public void executeCardAction(ProgramCard programCard, MovesToExecuteSimultaneously moves) {
         keyInput = false;
-        movesLeft = programCard.getMovement();
         switch (programCard.getCommand()) {
             case MOVE1:
                 tryToGo(getPlayerPiece().getDir(), moves);
@@ -478,21 +436,14 @@ public class Player {
     }
 
 
-
+    /*
+    Adds the selected cards from an AI player to the list of selected cards.
+    This is needed for when they have locked cards.
+     */
     public void addCardsToSelectedCards(ArrayList<ProgramCard> cards){
         for (int i = 0; i < cards.size() ; i++) {
             selectedCards[i] = cards.get(i);
         }
-
-        //TODO Remove. Temporary fix to stop nullpointers
-        for (ProgramCard selectedCard : selectedCards) {
-            if (selectedCard == null) {
-                System.out.println("Couldn't find enough cards for AI Player using their preferred card choosing method\n" +
-                        "Picking random cards to fill their slots instead");
-                pickRandomCards();
-            }
-        }
-
     }
 
 
@@ -500,8 +451,8 @@ public class Player {
     /**
      * Damages a player a given amount
      * A player loses a life if its damage is 10 or higher
-     * Starts locking a players selected cards (from right to left)
-     * when a players current damage is 5 or higher.
+     * Starts locking a players selected cards (from right to left) when a players current damage is 5 or higher.
+     * Creates a recursive call if the damage taken is more than 1.
      *
      * @param amountOfDamage the number of damage the player takes
      */
@@ -521,7 +472,6 @@ public class Player {
         if(damage >= 5){
             ProgramCard cardToLock = selectedCards[9-damage];
             lockedCards.add(cardToLock);
-            //System.out.println("Locking card " + cardToLock);
             playerHandDeck.remove(cardToLock);
         }
         takeDamage(amountOfDamage-1);
@@ -538,10 +488,9 @@ public class Player {
     }
 
     /**
-     * Heals a player a given amount.
-     * Will unlock a players selected cards (from left to right)
-     * if the player already have locked cards.
-     *
+     * Repairs damage for a player for a given amount.
+     * Will unlock a players selected cards (from left to right) if the player already have locked cards.
+     * Creates a recursive call if the amount of repairs is more than 1.
      * @param amountOfRepairs the number of damage to remove from the player
      */
     public void repairDamage(int amountOfRepairs) {
@@ -558,7 +507,9 @@ public class Player {
     }
 
     /**
-     * Remove a life from the life counter, and turn the player cell into a dead player cell
+     * Remove a life from the life counter, and move the player out of the map
+     * If the player has 0 lives left then they are permanently dead and out of the game.
+     * Their playerhand cards are added back to the discard deck if they are permanently dead.
      */
     public void loseLife() {
         lives--;
@@ -569,7 +520,6 @@ public class Player {
         playerHandDeck.addAll(lockedCards);
         lockedCards.clear();
         if (lives == 0) {
-            System.out.println(toString() + " is dead and out of the game");
             MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
             Move permaDeadMove = new Move(playerPiece, lastPosAlive, deadPosition, playerPiece.getDir(), playerPiece.getDir());
             moves.add(permaDeadMove);
@@ -580,7 +530,6 @@ public class Player {
             return;
         }
         game.getDeadPlayers().add(this);
-        damage = 2;
     }
 
     /**
@@ -591,40 +540,34 @@ public class Player {
         this.spawnPoint = new Position(spawns.get(playerNumber - 1).getX(), spawns.get(playerNumber - 1).getY());
     }
 
-    /**
-     * Method for testing.
-     */
-    public void gainLife() { lives++; }
+    public void removeSelectedCards() { Arrays.fill(selectedCards, null); }
 
     public void visitedCheckpoint() { checkpointsVisited++; }
 
+
     /**
-     * Method for testing.
+     * Methods for testing.
      */
+    public void gainLife() { lives++; }
+
     public void removeCheckpoint() { checkpointsVisited--; }
 
-    public void removeSelectedCards() { Arrays.fill(selectedCards, null); }
 
 
     /**
      * Shoot laser in the direction which the robot is pointing.
-     * Lasers stops at walls and players, and will damage any player hit
+     * Lasers stops at walls and players, and will damage any player hit by the laser.
      */
     public void shootLaser() {
         Direction laserDir = playerPiece.getDir();
         Position laserPos = getPos();
         for (int i = 0; i < logicGrid.getHeight(); i++) {
-            //System.out.println(player.toString() + " laser is at " + laserPos);
             if (!logicGrid.isInBounds(laserPos)) {
                 return;
             }
             if (!logicGrid.positionIsFree(laserPos, 12) && !laserPos.equals(getPos())) {
-                if (game.getPlayerAt(laserPos) == null) {
-                    System.out.println("Error: " + toString() + " Couldn't shoot player");
-                    return;
-                }
+                if (game.getPlayerAt(laserPos) == null) { return; }
                 game.getPlayerAt(laserPos).takeDamage(1);
-                //System.out.println(player.toString() + " hit " + game.getPlayerAt(laserPos).toString());
                 laserPath.add(laserPos);
                 return;
             }
@@ -642,7 +585,8 @@ public class Player {
     }
 
     /**
-     * Picks random cards for the remaining open slots in the register
+     * Picks random cards for the remaining open slots in the register.
+     * Is used when the timer runs out for the last player picking cards and they haven't selected 5 cards.
      */
     public void pickRandomCards(){
         ArrayList<Integer> randomNumbers = new ArrayList<>();
@@ -653,8 +597,6 @@ public class Player {
         }
         Collections.shuffle(randomNumbers);
         int missingCards = cardsMissing();
-        //System.out.println(toString() + " damage: " + damage + " cards missing: " + missingCards + " random numbers size: "
-          //      + randomNumbers.size() + " player hand deck size: " + playerHandDeck.size());
         for (int i = 0; i < missingCards; i++) {
             int randomNumber = randomNumbers.get(i);
             ProgramCard card = playerHandDeck.get(randomNumber);
@@ -672,7 +614,7 @@ public class Player {
      * Checks if a card is available in hand
      *
      * @param card the card to check
-     * @return true if that type of card is available in hand, false otherwise
+     * @return true if that card is available in hand, false otherwise
      */
     public boolean isCardAvailable(ProgramCard card) {
         for (ProgramCard selectedCard : getSelectedCards()) {
@@ -686,6 +628,10 @@ public class Player {
         return true;
     }
 
+    /**
+     * Checks how many cards are missing in the list of selected cards.
+     * @return 5 minus the amount of already selected cards.
+     */
     private int cardsMissing(){
         int counter = 0;
         for (ProgramCard selectedCard : selectedCards) {

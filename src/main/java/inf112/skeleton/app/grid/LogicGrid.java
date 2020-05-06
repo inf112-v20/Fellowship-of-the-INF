@@ -42,18 +42,18 @@ public class LogicGrid {
     private TiledMapTileLayer playerLayer;
 
     //The indexes of the layers
-    private int floorLayerIndex;
+    private int floorLayerIndex; //0
     private int repairLayerIndex; //1
     private int opCardLayerIndex; //2
-    private int abyssLayerIndex;
+    private int abyssLayerIndex; //3
     private int conveyorBeltLayerIndex; //4
     private int expressBeltLayerIndex; //5
-    private int cogLayerIndex;
-    private int pusherLayerIndex;
+    private int cogLayerIndex;  //6
+    private int pusherLayerIndex; //7
     private int laserLayerIndex; //8
     private int laserSourceLayerIndex; //9
-    private int wallLayerIndex;
-    private int flagLayerIndex;
+    private int wallLayerIndex; //10
+    private int flagLayerIndex; //11
     private int playerLayerIndex; //12
 
     //private BoardPiece[] [][] grid;
@@ -106,6 +106,9 @@ public class LogicGrid {
 
         readTiledMapToPieceGrid();
         removeUnusedFlags();
+
+        // createScoresForPositions is only needed for expert difficulty AI players and is a quite time complex method
+        // so we only call it if we actually need it.(testing difficulty creates an expert player).
         if(difficulty.equals(Difficulty.EXPERT) || difficulty.equals(Difficulty.TESTING)) {
             createScoresForPositions();
         }
@@ -266,15 +269,6 @@ public class LogicGrid {
     }
 
     /**
-     * @param pos position you are getting a list of piece from
-     * @return list of piece in the position you are checking
-     */
-    public ArrayList<BoardPiece> getAllPieces(Position pos) {
-        return grid[pos.getX()][pos.getY()];
-    }
-
-
-    /**
      * Remember to check that this method does not return null
      *
      * @param pos  position of piece
@@ -431,19 +425,17 @@ public class LogicGrid {
 
 
     /**
-     * Finds a valid spawn point.
-     * <p>
-     * If spawn point is not valid, the positions N, S, E, W are checked, and if these are not valid,
-     * then the positions N, S, E, W of them are checked.
-     *
-     * @param spawnPoint check if it is valid
-     * @return valid spawn point
+     * Finds a list of available spawnpoint.
+     * If the actual spawnpoint is not occupied just return a list with only the spawnpoint.
+     * If it is occupied, check the 8 adjacent positions and return those that are valid and not occupied.
+     * @param spawnPoint the actual spawnpoint position of a player
+     * @return the list of available spawnpoints
      */
     public ArrayList<Position> getValidSpawnPointPosition(Position spawnPoint) {
-        //if spawnPoint is valid, return spawnPoint
         ArrayList<Position> availablePositions = new ArrayList<>();
+
+        //if spawnPoint is valid, return spawnPoint
         if (positionIsFree(spawnPoint, playerLayerIndex)) {
-            //System.out.println("Actual spawnpoint is available at " + spawnPoint);
             availablePositions.add(spawnPoint);
             return availablePositions;
         }
@@ -454,12 +446,10 @@ public class LogicGrid {
             Position pos2 = pos.getPositionIn(dir.getRightTurnDirection());
             if (positionIsFree(pos, playerLayerIndex)
                     && spawnIsSafe(pos)) {
-                //System.out.println("Spawnpoint1 is available at " + pos);
                 availablePositions.add(pos);
             }
             if (positionIsFree(pos2, playerLayerIndex)
                     && spawnIsSafe(pos2)) {
-                //System.out.println("Spawnpoint2 is available at " + pos2);
                 availablePositions.add(pos2);
             }
         }
@@ -467,7 +457,7 @@ public class LogicGrid {
     }
 
     /**
-     * Checks if it is save for a player to spawn in a position
+     * Checks if it is safe for a player to spawn in a position
      *
      * @param spawnPoint position to be checked
      * @return true if the player doesn't die by spawning there
@@ -477,7 +467,6 @@ public class LogicGrid {
         ArrayList<BoardPiece> boardPieceList = grid[spawnPoint.getX()][spawnPoint.getY()];
         for (BoardPiece piece : boardPieceList) {
             if (piece instanceof AbyssPiece) return false;
-            //you can add more things to check for here
         }
         return true;
     }
@@ -530,6 +519,7 @@ public class LogicGrid {
      * Creates a list of scores for every position (not abysses) for every flag in the game.
      * The score is how many moves it takes to reach the flag from that position,
      * which takes walls and holes into consideration.
+     * This method is only used for expert difficult AI players.
      */
     private void createScoresForPositions(){
 
@@ -600,6 +590,9 @@ public class LogicGrid {
         return false;
     }
 
+    /**
+     * Some maps have fewer than 4 flags so we shorten the list of flags if it has less than 4 flags.
+     */
     private void removeUnusedFlags(){
         for(int i = 0; i < flagPositions.size();i++){
             if(flagPositions.get(i) == null){

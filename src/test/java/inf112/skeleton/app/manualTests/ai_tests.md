@@ -12,21 +12,9 @@
     * 2 Rotate Left
     * 2 U Turn
 * Each AI player's goal flag corresponds to their player number (which is the flag in front of them)
-
-* The difficulties differ in how the AI players chooses their cards from the player hand deck for the next round:
-    * Easy chooses random cards
-    * Medium is greedy and will choose the best card for each phase
-    * Hard chooses the cards that will get them to the position that has the least distance to the next goal flag
-    (the distance is an estimate)
-    * Expert chooses the cards that will get them to the position that has the least distance to the next goal flag
-    (the distance is the actual distance)
-* When checking how good a card is, it checks what position and direction the player will end up on at the end of the 
-phase (after conveyorbelts, cogs etc. are activated) by using that car. It will not check if it will be pushed or not.
-The card is given a score by how good that position and direction is relative to the next goal flag position. 
-Players at every difficulty will avoid picking cards that will kill them (e.g. walking into pits) unless they don't have
-any other option.
 * Player 2 difficulty is medium, player 3 is hard, and player 4 is expert (easy difficulty is ignored since that is 
 just randomly chosen cards, which is hard to test).
+* Read the description in the top of AIPlayer.java to understand how the different difficulties work. 
 
 
 ### How to test:

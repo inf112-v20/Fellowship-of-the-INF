@@ -11,7 +11,6 @@ public class ProgramCard implements IProgramCard {
     private int priority;
     private CardType cardType;
     private Texture texture;
-    private boolean moveCard = true;
     private int movement = 0;
 
     public ProgramCard(int priority, CardType cardType) {
@@ -19,10 +18,10 @@ public class ProgramCard implements IProgramCard {
         this.priority = priority;
         createImage();
     }
+
     /*
     Getters
      */
-
     @Override
     public int getPriority() {
         return priority;
@@ -38,10 +37,6 @@ public class ProgramCard implements IProgramCard {
         return texture;
     }
 
-    public boolean isMoveCard() {
-        return moveCard;
-    }
-
     public int getMovement() {
         return movement;
     }
@@ -49,19 +44,8 @@ public class ProgramCard implements IProgramCard {
 
     @Override
     public String toString() {
-        //TODO Remember to change this back
-        return cardType + ": " + priority + " ";
-
-        /*
-        return "ProgramCard{" +
-                "priority=" + priority +
-                ", cardType=" + cardType +
-                '}';
-
-         */
+        return "ProgramCard{" + cardType + ", " + priority + "} ";
     }
-
-
 
 
     private void createImage() {
@@ -84,15 +68,12 @@ public class ProgramCard implements IProgramCard {
                 break;
             case ROTATERIGHT:
                 texture = new Texture(Gdx.files.internal("ui/cards/cardrturn.png"));
-                moveCard = false;
                 break;
             case ROTATELEFT:
                 texture = new Texture(Gdx.files.internal("ui/cards/cardlturn.png"));
-                moveCard = false;
                 break;
             case UTURN:
                 texture = new Texture(Gdx.files.internal("ui/cards/carduturn.png"));
-                moveCard = false;
                 break;
             default:
                 break;
