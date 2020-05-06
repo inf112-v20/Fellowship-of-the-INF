@@ -49,7 +49,7 @@ Overall we are satisfied with the results of the project. We have all become bet
   
 
 ### Meeting logs
-[Meeting logs can be found in a seperate MD file called MeetingLogsIteration4.md] (https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/MeetingLogsIteration4.md)
+[Meeting logs can be found in a seperate MD file called MeetingLogsIteration4.md](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/MeetingLogsIteration4.md)
 
 ## Part 2: Requirements
 ### Requirements for Fourth Iteration
@@ -215,6 +215,45 @@ tokens in accordance to the rules of Roborally.
 * Make new sprites for all the buttons needed.
 * Place down buttons on the new screen.
 * Give the buttons a function, including sending amount of players to the map selection screen.
+
+---
+
+### Power Down
+**Usecase**: The players can choose to power down for the round, they cannot chose cards, but repair all damage
+
+**Acceptance criteria**
+* During the setup of a round can a player decide to do power down instead of using cards
+* If a player is in power down, it is healed for all it’s damage, but do not take any moves
+* If a player is in powerdown, it should be registered as ready to start a round, but not be called upon to use cards
+* UI: The players in power down should also be shown in the UI for the rounds and phases
+
+
+**Tasks to complete**
+* Implement a variable that is true when the player is in powerdown
+* Make sure that the players in power down do not get called when the game retrieves cards for the rounds and phases
+* Make a button for power down on UI
+* Make the UI for the phases also show the players in power down
+
+---
+
+### Music/Sound effects
+**Usecase**: The should be given more feedback through sound effects, and some polish through background music
+
+**Acceptance criteria**
+* The music should be fitting for the game, and play both duriing menues and the game it self
+* The music should loop untill the game is done
+* When the user presses a button in the menues they get feedback through sound
+* When the player clicks on a card they get feedback through a sound effect
+* When right clicking on a card, there is a different sound to differentiate between right and left clicking
+* When lasers shoot, play a laser sound
+
+
+**Tasks to complete**
+* Find royalty free music and sound that fit the game
+* Implement a looping background music
+* Implement sound effects for selecting and deselecting cards
+* Implement sound effects for using buttons in menues
+* Implement sound effects for lasers
 
 ---
 
