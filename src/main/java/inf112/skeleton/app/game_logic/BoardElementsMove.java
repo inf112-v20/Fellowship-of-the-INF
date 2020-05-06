@@ -45,7 +45,7 @@ public class BoardElementsMove {
 
         LogicGrid logicGrid = game.getLogicGrid();
         ConveyorBeltPiece conveyorBeltPiece = logicGrid.getPieceType(player.getPos(),  ConveyorBeltPiece.class);
-        if(!logicGrid.positionIsFree(player.getPos(), 5)){
+        if(!logicGrid.positionIsFree(player.getPos(), logicGrid.EXPRESS_BELT_LAYER_INDEX)){
             conveyorBeltPiece = logicGrid.getPieceType(player.getPos(), ExpressBeltPiece.class);
         }
         Direction conveyorBeltDirection = conveyorBeltPiece.getDir();
@@ -86,11 +86,10 @@ public class BoardElementsMove {
         if (!logicGrid.isInBounds(newPos)) {
             return false;
         }
-        // 4 = conveyorbeltindex, 5 = expressbeltindex
         if (game.getPlayerAt(newPos) != null &&
-                (!logicGrid.positionIsFree(newPos, 4) || !logicGrid.positionIsFree(newPos, 5))) {
+                (!logicGrid.positionIsFree(newPos, logicGrid.CONVEYOR_BELT_LAYER_INDEX) || !logicGrid.positionIsFree(newPos, logicGrid.EXPRESS_BELT_LAYER_INDEX))) {
             ConveyorBeltPiece conveyorBeltPieceInFront = logicGrid.getPieceType(newPos, ConveyorBeltPiece.class);
-            if(!logicGrid.positionIsFree(newPos, 5)){
+            if(!logicGrid.positionIsFree(newPos, logicGrid.EXPRESS_BELT_LAYER_INDEX)){
                 conveyorBeltPieceInFront = logicGrid.getPieceType(newPos, ExpressBeltPiece.class);
             }
             if (onlyExpressBelt && conveyorBeltPiece instanceof ExpressBeltPiece && !(conveyorBeltPieceInFront instanceof ExpressBeltPiece)) {
@@ -112,7 +111,7 @@ public class BoardElementsMove {
     private static boolean isPlayerGoingToCrash(Player player, Game game, boolean onlyExpressBelt) {
         LogicGrid logicGrid = game.getLogicGrid();
         ConveyorBeltPiece conveyorBeltPiece = logicGrid.getPieceType(player.getPos(),  ConveyorBeltPiece.class);
-        if(!logicGrid.positionIsFree(player.getPos(), 5)){
+        if(!logicGrid.positionIsFree(player.getPos(), logicGrid.EXPRESS_BELT_LAYER_INDEX)){
             conveyorBeltPiece = logicGrid.getPieceType(player.getPos(), ExpressBeltPiece.class);
         }
         Position newPos = player.getPos().getPositionIn(conveyorBeltPiece.getDir());
@@ -122,13 +121,13 @@ public class BoardElementsMove {
             Position orthoPos = newPos.getPositionIn(dir);
             if (!logicGrid.isInBounds(orthoPos) || orthoPos.equals(player.getPos())) { continue; }
             if (game.getPlayerAt(orthoPos) != null &&
-                    (!logicGrid.positionIsFree(orthoPos, 4) || !logicGrid.positionIsFree(orthoPos, 5))) {
+                    (!logicGrid.positionIsFree(orthoPos, logicGrid.CONVEYOR_BELT_LAYER_INDEX) || !logicGrid.positionIsFree(orthoPos, logicGrid.EXPRESS_BELT_LAYER_INDEX))) {
                 if (!game.getPlayerAt(orthoPos).hasBeenMovedThisPhase()) {
-                    if (onlyExpressBelt && conveyorBeltPiece instanceof ExpressBeltPiece && !logicGrid.positionIsFree(orthoPos, 4)) {
+                    if (onlyExpressBelt && conveyorBeltPiece instanceof ExpressBeltPiece && !logicGrid.positionIsFree(orthoPos, logicGrid.CONVEYOR_BELT_LAYER_INDEX)) {
                         return false;
                     }
                     ConveyorBeltPiece piece = logicGrid.getPieceType(orthoPos, ConveyorBeltPiece.class);
-                    if (!logicGrid.positionIsFree(orthoPos, 5)) {
+                    if (!logicGrid.positionIsFree(orthoPos, logicGrid.EXPRESS_BELT_LAYER_INDEX)) {
                         piece = logicGrid.getPieceType(orthoPos, ExpressBeltPiece.class);
                     }
                     Position orthoPosDir = orthoPos.getPositionIn(piece.getDir());

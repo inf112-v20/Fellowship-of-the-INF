@@ -55,7 +55,6 @@ public class GameScreen implements Screen {
     private boolean currentMoveIsExecuted;
     private ScoreBoardScreen scoreBoardScreen;
     private TiledMapTileLayer playerLayer;
-    private int playerLayerIndex;
     private TiledMapTileLayer robotLasersLayer;
     private TiledMapTileLayer boardLaserLayer;
     private TiledMapTileLayer.Cell horizontalLaser;
@@ -124,7 +123,6 @@ public class GameScreen implements Screen {
 
     private void initializeCellsAndLayers(TiledMap map) {
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
-        playerLayerIndex = map.getLayers().getIndex("Player");
         robotLasersLayer = (TiledMapTileLayer) map.getLayers().get("Robot Lasers");
         boardLaserLayer = (TiledMapTileLayer) map.getLayers().get("Lasers");
         horizontalLaser = new TiledMapTileLayer.Cell().setTile(map.getTileSets().getTile(39));
@@ -171,7 +169,6 @@ public class GameScreen implements Screen {
         executeMovesWithDelay();
         executeLasersWithDelay();
         updatePhaseNr();
-
     }
 
     /**
@@ -232,7 +229,6 @@ public class GameScreen implements Screen {
                 prevSeconds--;
             }
         }
-
     }
 
     /**
@@ -548,11 +544,12 @@ public class GameScreen implements Screen {
         Position newPos = move.getNewPos();
         Direction newDir = move.getNewDir();
         Position lastPosAlive = playerPieceToUpdate.getPlayer().getLastPosAlive();
-        if (!game.getLogicGrid().isInBounds(oldPos) && game.getLogicGrid().positionIsFree(lastPosAlive, playerLayerIndex)
+        LogicGrid logicGrid = game.getLogicGrid();
+        if (!logicGrid.isInBounds(oldPos) && logicGrid.positionIsFree(lastPosAlive, logicGrid.PLAYER_LAYER_INDEX)
                 && !game.isChoosingRespawn()) {
             playerLayer.setCell(lastPosAlive.getX(), lastPosAlive.getY(), null);
         }
-        if (game.getLogicGrid().positionIsFree(oldPos, playerLayerIndex)) { //check that you are not erasing another player
+        if (logicGrid.positionIsFree(oldPos, logicGrid.PLAYER_LAYER_INDEX)) { //check that you are not erasing another player
             playerLayer.setCell(oldPos.getX(), oldPos.getY(), null); //set the old cell position to null
         }
         if (oldPos.equals(playerPieceToUpdate.getPos())) {

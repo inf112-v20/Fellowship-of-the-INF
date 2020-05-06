@@ -565,7 +565,7 @@ public class Player {
             if (!logicGrid.isInBounds(laserPos)) {
                 return;
             }
-            if (!logicGrid.positionIsFree(laserPos, 12) && !laserPos.equals(getPos())) {
+            if (!logicGrid.positionIsFree(laserPos, logicGrid.PLAYER_LAYER_INDEX) && !laserPos.equals(getPos())) {
                 if (game.getPlayerAt(laserPos) == null) { return; }
                 game.getPlayerAt(laserPos).takeDamage(1);
                 laserPath.add(laserPos);

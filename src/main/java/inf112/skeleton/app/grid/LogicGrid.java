@@ -42,19 +42,19 @@ public class LogicGrid {
     private TiledMapTileLayer playerLayer;
 
     //The indexes of the layers
-    private int floorLayerIndex; //0
-    private int repairLayerIndex; //1
-    private int opCardLayerIndex; //2
-    private int abyssLayerIndex; //3
-    private int conveyorBeltLayerIndex; //4
-    private int expressBeltLayerIndex; //5
-    private int cogLayerIndex;  //6
-    private int pusherLayerIndex; //7
-    private int laserLayerIndex; //8
-    private int laserSourceLayerIndex; //9
-    private int wallLayerIndex; //10
-    private int flagLayerIndex; //11
-    private int playerLayerIndex; //12
+    public final int FLOOR_LAYER_INDEX; //0
+    public final int REPAIR_LAYER_INDEX; //1
+    public final int OP_CARD_LAYER_INDEX; //2
+    public final int ABYSS_LAYER_INDEX; //3
+    public final int CONVEYOR_BELT_LAYER_INDEX; //4
+    public final int EXPRESS_BELT_LAYER_INDEX; //5
+    public final int COG_LAYER_INDEX;  //6
+    public final int PUSHER_LAYER_INDEX; //7
+    public final int LASER_LAYER_INDEX; //8
+    public final int LASER_SOURCE_LAYER_INDEX; //9
+    public final int WALL_LAYER_INDEX; //10
+    public final int FLAG_LAYER_INDEX; //11
+    public final int PLAYER_LAYER_INDEX; //12
 
     //private BoardPiece[] [][] grid;
     private ArrayList<BoardPiece>[][] grid;
@@ -90,19 +90,19 @@ public class LogicGrid {
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
 
         //extract index of each layer
-        floorLayerIndex = map.getLayers().getIndex("Floor");
-        repairLayerIndex = map.getLayers().getIndex("Repair");
-        opCardLayerIndex = map.getLayers().getIndex("OpCard");
-        abyssLayerIndex = map.getLayers().getIndex("Abyss");
-        conveyorBeltLayerIndex = map.getLayers().getIndex("Conveyor belt");
-        expressBeltLayerIndex = map.getLayers().getIndex("Express belt");
-        cogLayerIndex = map.getLayers().getIndex("Cog");
-        pusherLayerIndex = map.getLayers().getIndex("Pusher");
-        laserLayerIndex = map.getLayers().getIndex("Lasers");
-        laserSourceLayerIndex = map.getLayers().getIndex("Laser Source");
-        wallLayerIndex = map.getLayers().getIndex("Wall");
-        flagLayerIndex = map.getLayers().getIndex("Flag");
-        playerLayerIndex = map.getLayers().getIndex("Player");
+        FLOOR_LAYER_INDEX = map.getLayers().getIndex("Floor");
+        REPAIR_LAYER_INDEX = map.getLayers().getIndex("Repair");
+        OP_CARD_LAYER_INDEX = map.getLayers().getIndex("OpCard");
+        ABYSS_LAYER_INDEX = map.getLayers().getIndex("Abyss");
+        CONVEYOR_BELT_LAYER_INDEX = map.getLayers().getIndex("Conveyor belt");
+        EXPRESS_BELT_LAYER_INDEX = map.getLayers().getIndex("Express belt");
+        COG_LAYER_INDEX = map.getLayers().getIndex("Cog");
+        PUSHER_LAYER_INDEX = map.getLayers().getIndex("Pusher");
+        LASER_LAYER_INDEX = map.getLayers().getIndex("Lasers");
+        LASER_SOURCE_LAYER_INDEX = map.getLayers().getIndex("Laser Source");
+        WALL_LAYER_INDEX = map.getLayers().getIndex("Wall");
+        FLAG_LAYER_INDEX = map.getLayers().getIndex("Flag");
+        PLAYER_LAYER_INDEX = map.getLayers().getIndex("Player");
 
         readTiledMapToPieceGrid();
         removeUnusedFlags();
@@ -162,19 +162,19 @@ public class LogicGrid {
                 grid[x][y] = new ArrayList<>();
                 //create new boardpieceGenerator for appropriate coordinate
                 boardPieceGenerator = new BoardPieceGenerator(x, y);
-                setPieceInGrid(floorLayer, floorLayerIndex, x, y);
-                setPieceInGrid(repairLayer, repairLayerIndex, x, y);
-                setPieceInGrid(opCardLayer, opCardLayerIndex, x, y);
-                setPieceInGrid(abyssLayer, abyssLayerIndex, x, y);
-                setPieceInGrid(conveyorBeltLayer, conveyorBeltLayerIndex, x, y);
-                setPieceInGrid(expressBeltLayer, expressBeltLayerIndex, x, y);
-                setPieceInGrid(cogLayer, cogLayerIndex, x, y);
-                setPieceInGrid(pusherLayer, pusherLayerIndex, x, y);
-                setPieceInGrid(laserLayer, laserLayerIndex, x, y);
-                setPieceInGrid(laserSourceLayer, laserSourceLayerIndex, x, y);
-                setPieceInGrid(wallLayer, wallLayerIndex, x, y);
-                setPieceInGrid(flagLayer, flagLayerIndex, x, y);
-                setPieceInGrid(playerLayer, playerLayerIndex, x, y);
+                setPieceInGrid(floorLayer, FLOOR_LAYER_INDEX, x, y);
+                setPieceInGrid(repairLayer, REPAIR_LAYER_INDEX, x, y);
+                setPieceInGrid(opCardLayer, OP_CARD_LAYER_INDEX, x, y);
+                setPieceInGrid(abyssLayer, ABYSS_LAYER_INDEX, x, y);
+                setPieceInGrid(conveyorBeltLayer, CONVEYOR_BELT_LAYER_INDEX, x, y);
+                setPieceInGrid(expressBeltLayer, EXPRESS_BELT_LAYER_INDEX, x, y);
+                setPieceInGrid(cogLayer, COG_LAYER_INDEX, x, y);
+                setPieceInGrid(pusherLayer, PUSHER_LAYER_INDEX, x, y);
+                setPieceInGrid(laserLayer, LASER_LAYER_INDEX, x, y);
+                setPieceInGrid(laserSourceLayer, LASER_SOURCE_LAYER_INDEX, x, y);
+                setPieceInGrid(wallLayer, WALL_LAYER_INDEX, x, y);
+                setPieceInGrid(flagLayer, FLAG_LAYER_INDEX, x, y);
+                setPieceInGrid(playerLayer, PLAYER_LAYER_INDEX, x, y);
             }
         }
     }
@@ -220,10 +220,10 @@ public class LogicGrid {
      * @param playerPiece playerPiece to place
      */
     public void placeNewPlayerPieceOnMap(PlayerPiece playerPiece) {
-        if (positionIsFree(playerPiece.getPos(), playerLayerIndex)) {
+        if (positionIsFree(playerPiece.getPos(), PLAYER_LAYER_INDEX)) {
             int x = playerPiece.getPos().getX();
             int y = playerPiece.getPos().getY();
-            grid[x][y].set(playerLayerIndex, playerPiece);
+            grid[x][y].set(PLAYER_LAYER_INDEX, playerPiece);
         }
     }
 
@@ -236,19 +236,19 @@ public class LogicGrid {
     public void movePlayerToNewPosition(PlayerPiece playerPiece, Position oldPosition, Position newPosition) {
 
         if (!isInBounds(newPosition)) {
-            grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
+            grid[oldPosition.getX()][oldPosition.getY()].set(PLAYER_LAYER_INDEX, new NullPiece(oldPosition, 0));
             return;
         }
         if (!isInBounds(oldPosition)) {
-            grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
+            grid[newPosition.getX()][newPosition.getY()].set(PLAYER_LAYER_INDEX, playerPiece);
             return;
         }
         //check if position is free in logic grid
-        if (positionIsFree(newPosition, playerLayerIndex)) {
+        if (positionIsFree(newPosition, PLAYER_LAYER_INDEX)) {
             //set old position to NullPiece
-            grid[oldPosition.getX()][oldPosition.getY()].set(playerLayerIndex, new NullPiece(oldPosition, 0));
+            grid[oldPosition.getX()][oldPosition.getY()].set(PLAYER_LAYER_INDEX, new NullPiece(oldPosition, 0));
             //add piece to new position
-            grid[newPosition.getX()][newPosition.getY()].set(playerLayerIndex, playerPiece);
+            grid[newPosition.getX()][newPosition.getY()].set(PLAYER_LAYER_INDEX, playerPiece);
         }
     }
 
@@ -321,8 +321,8 @@ public class LogicGrid {
      */
     private void addToListOfSpawnPos(BoardPiece piece, int x, int y) {
         //If it is a spawnPoint tile, add it to a list of start positions
-        int MIN_SPAWNPOINT_NUMBER = 121;
-        int MAX_SPAWNPOINT_NUMBER = 132;
+        final int MIN_SPAWNPOINT_NUMBER = 121;
+        final int MAX_SPAWNPOINT_NUMBER = 132;
         int id = piece.getId();
         if (id >= MIN_SPAWNPOINT_NUMBER && id <= MAX_SPAWNPOINT_NUMBER) {
             spawnPointPositions.set(((SpawnPointPiece) piece).getSpawnNumber() - 1, new Position(x, y));
@@ -435,7 +435,7 @@ public class LogicGrid {
         ArrayList<Position> availablePositions = new ArrayList<>();
 
         //if spawnPoint is valid, return spawnPoint
-        if (positionIsFree(spawnPoint, playerLayerIndex)) {
+        if (positionIsFree(spawnPoint, PLAYER_LAYER_INDEX)) {
             availablePositions.add(spawnPoint);
             return availablePositions;
         }
@@ -444,11 +444,11 @@ public class LogicGrid {
         for (Direction dir : Direction.values()) {
             Position pos = spawnPoint.getPositionIn(dir);
             Position pos2 = pos.getPositionIn(dir.getRightTurnDirection());
-            if (positionIsFree(pos, playerLayerIndex)
+            if (positionIsFree(pos, PLAYER_LAYER_INDEX)
                     && spawnIsSafe(pos)) {
                 availablePositions.add(pos);
             }
-            if (positionIsFree(pos2, playerLayerIndex)
+            if (positionIsFree(pos2, PLAYER_LAYER_INDEX)
                     && spawnIsSafe(pos2)) {
                 availablePositions.add(pos2);
             }
@@ -486,7 +486,7 @@ public class LogicGrid {
     public boolean blocksLaser(Position checkPosition, Direction dir) {
         Position previousPosition = checkPosition.getPositionIn(dir.getOppositeDirection());
         if (isInBounds(checkPosition)) {
-            return (!positionIsFree(checkPosition, playerLayerIndex) ||
+            return (!positionIsFree(checkPosition, PLAYER_LAYER_INDEX) ||
                     !canLeavePosition(previousPosition, dir) ||
                     !canEnterNewPosition(checkPosition, dir));
         }
@@ -505,7 +505,7 @@ public class LogicGrid {
         Position currentPosition = laserSourcePiece.getPos();
         laserPositions.add(currentPosition);
         //if there is a player standing on the lasersource piece, the path does not need to be generated
-        if (!positionIsFree(currentPosition, playerLayerIndex)) return laserPositions;
+        if (!positionIsFree(currentPosition, PLAYER_LAYER_INDEX)) return laserPositions;
         currentPosition = currentPosition.getPositionIn(directionOflaser);
         while (!blocksLaser(currentPosition, directionOflaser)) {
             laserPositions.add(currentPosition);

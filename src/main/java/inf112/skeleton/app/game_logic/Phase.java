@@ -130,15 +130,14 @@ public class Phase {
         for (Player player : listOfPlayers) {
             if(player.isDead()){continue;}
             Position oldSpawnPoint = player.getSpawnPoint();
-            if (!logicGrid.positionIsFree(player.getPos(), 11)) {
+            if (!logicGrid.positionIsFree(player.getPos(), logicGrid.FLAG_LAYER_INDEX)) {
                 FlagPiece flag = logicGrid.getPieceType(player.getPos(), FlagPiece.class);
                 player.setSpawnPoint(player.getPos());
                 if (player.getCheckpointsVisited() + 1 == flag.getFlagNumber()) {
                     player.visitedCheckpoint();
                 }
             }
-            else if(!logicGrid.positionIsFree(player.getPos(), 1) ||
-                    !logicGrid.positionIsFree(player.getPos(), 2)){
+            else if(!logicGrid.positionIsFree(player.getPos(), logicGrid.REPAIR_LAYER_INDEX)){
                 player.setSpawnPoint(player.getPos());
             }
             if(!oldSpawnPoint.equals(player.getSpawnPoint())){
@@ -164,8 +163,8 @@ public class Phase {
             LaserPiece laser;
             if (logicGrid.getPieceType(player.getPos(), LaserPiece.class) != null) {
                 laser = logicGrid.getPieceType(player.getPos(), LaserPiece.class);
-                if (!logicGrid.positionIsFree(player.getPos(), 8)
-                        && logicGrid.positionIsFree(player.getPos(), 9)) {
+                if (!logicGrid.positionIsFree(player.getPos(), logicGrid.LASER_LAYER_INDEX)
+                        && logicGrid.positionIsFree(player.getPos(), logicGrid.LASER_SOURCE_LAYER_INDEX)) {
                     if (isPlayerBlocking(player.getPos(), laser.getDir())) {
                         continue;
                     }
@@ -195,10 +194,10 @@ public class Phase {
             if (!logicGrid.isInBounds(laserPos)) {
                 break;
             }
-            if (!logicGrid.positionIsFree(laserPos, 12)) {
+            if (!logicGrid.positionIsFree(laserPos, logicGrid.PLAYER_LAYER_INDEX)) {
                 playerBetween = true;
             }
-            if (!logicGrid.positionIsFree(laserPos, 9)) {
+            if (!logicGrid.positionIsFree(laserPos, logicGrid.LASER_SOURCE_LAYER_INDEX)) {
                 if (logicGrid.getPieceType(laserPos, LaserSourcePiece.class) != null) {
                     LaserSourcePiece laserSource = logicGrid.getPieceType(laserPos, LaserSourcePiece.class);
                     if (laserSource.getDir().equals(laserDir)) {
@@ -220,8 +219,8 @@ public class Phase {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
             if(player.isDead() || !logicGrid.isInBounds(player.getPos())){continue;}
-            boolean playerIsOnConveyorBelt = !logicGrid.positionIsFree(player.getPos(), 4);
-            boolean playerIsOnExpressBelt =  !logicGrid.positionIsFree(player.getPos(), 5);
+            boolean playerIsOnConveyorBelt = !logicGrid.positionIsFree(player.getPos(), logicGrid.CONVEYOR_BELT_LAYER_INDEX);
+            boolean playerIsOnExpressBelt =  !logicGrid.positionIsFree(player.getPos(), logicGrid.EXPRESS_BELT_LAYER_INDEX);
             if (playerIsOnConveyorBelt || playerIsOnExpressBelt ) {
                 if ((moveOnlyExpressBelts && !playerIsOnExpressBelt || player.hasBeenMovedThisPhase())) {
                     continue;
@@ -243,7 +242,7 @@ public class Phase {
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();
         for (Player player : listOfPlayers) {
             if(player.isDead()){continue;}
-            boolean playerIsOnCog = !logicGrid.positionIsFree(player.getPos(), 6);
+            boolean playerIsOnCog = !logicGrid.positionIsFree(player.getPos(), logicGrid.COG_LAYER_INDEX);
             if (playerIsOnCog) {
                 CogPiece cogPiece = game.getLogicGrid().getPieceType(player.getPos(), CogPiece.class);
                 BoardElementsMove.rotateCog(player, moves, cogPiece);

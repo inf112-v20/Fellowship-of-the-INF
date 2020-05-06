@@ -53,8 +53,6 @@ public class AIPlayer extends Player {
     private Difficulty difficulty;
     private Game game;
 
-
-
     public AIPlayer(int playerNumber, Game game, Difficulty difficulty) {
         super(playerNumber, game);
         this.game = game;
@@ -63,7 +61,6 @@ public class AIPlayer extends Player {
         this.difficulty = difficulty;
         this.playerHandDeck = getPlayerHandDeck();
         checkIfTestMap();
-
     }
 
     /**
@@ -91,7 +88,6 @@ public class AIPlayer extends Player {
             setLockedIn(true);
             return;
         }
-
         switch (difficulty){
             case EASY: pickRandom(); break;
             case MEDIUM: pickGreedy(); break;
@@ -100,7 +96,6 @@ public class AIPlayer extends Player {
                 pickOptimal(); break;
         }
         setLockedIn(true);
-
     }
 
     /**
@@ -210,7 +205,6 @@ public class AIPlayer extends Player {
             int cardScore = getScore(finalPos, finalDir, nextGoalFlag);
             cardAndScore.put(card, cardScore);
         }
-
         Object[] a = cardAndScore.entrySet().toArray();
         Arrays.sort(a, new Comparator() {
             public int compare(Object o1, Object o2) {
@@ -218,9 +212,7 @@ public class AIPlayer extends Player {
                         .compareTo(((Map.Entry<ProgramCard, Integer>) o2).getValue());
             }
         });
-
         return a;
-
     }
 
     /**
@@ -363,22 +355,9 @@ public class AIPlayer extends Player {
         return Arrays.asList(finalPos, finalDir, newTotalScore, nodeChosenCards, nodeAvailableCards, newDamage);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     /*
     All methods below are just simple helper methods.
      */
-
 
     /**
      * Gets the final total score for a set of cards when the AI has locked cards.
@@ -515,7 +494,7 @@ public class AIPlayer extends Player {
         }
         Position finalPos = pos;
         Direction finalDir = dir;
-        if (!logicGrid.positionIsFree(pos, 5)) {
+        if (!logicGrid.positionIsFree(pos, logicGrid.EXPRESS_BELT_LAYER_INDEX)) {
             ExpressBeltPiece expressBelt = logicGrid.getPieceType(pos, ExpressBeltPiece.class);
             if (expressBelt.isTurn()) {
                 if (expressBelt.isTurnRight()) {
@@ -525,7 +504,7 @@ public class AIPlayer extends Player {
                 }
             }
             finalPos = finalPos.getPositionIn(expressBelt.getDir());
-            if (!logicGrid.positionIsFree(finalPos, 5) && !expressBeltMove) {
+            if (!logicGrid.positionIsFree(finalPos, logicGrid.EXPRESS_BELT_LAYER_INDEX) && !expressBeltMove) {
                 findFinalPosAndDir(finalPos, finalDir, phaseNr, true);
             }
         }
@@ -533,7 +512,7 @@ public class AIPlayer extends Player {
         if (!logicGrid.isInBounds(finalPos)) {
             return Arrays.asList(finalPos, finalDir);
         }
-        if (!logicGrid.positionIsFree(finalPos, 4) && !expressBeltMove) {
+        if (!logicGrid.positionIsFree(finalPos, logicGrid.CONVEYOR_BELT_LAYER_INDEX) && !expressBeltMove) {
             ConveyorBeltPiece conveyorBelt = logicGrid.getPieceType(finalPos, ConveyorBeltPiece.class);
             if (conveyorBelt.isTurn()) {
                 if (conveyorBelt.isTurnRight()) {
@@ -548,7 +527,7 @@ public class AIPlayer extends Player {
         if (!logicGrid.isInBounds(finalPos)) {
             return Arrays.asList(finalPos, finalDir);
         }
-        if(!logicGrid.positionIsFree(finalPos, 7)){
+        if(!logicGrid.positionIsFree(finalPos, logicGrid.PUSHER_LAYER_INDEX)){
             PusherPiece pusherPiece = logicGrid.getPieceType(finalPos, PusherPiece.class);
             if(pusherPiece.isActiveWhenOddPhase() && phaseNr % 2 != 0){
                 finalPos = finalPos.getPositionIn(pusherPiece.getPushingDir());
@@ -561,7 +540,7 @@ public class AIPlayer extends Player {
         if (!logicGrid.isInBounds(finalPos)) {
             return Arrays.asList(finalPos, finalDir);
         }
-        if (!logicGrid.positionIsFree(finalPos, 6)) {
+        if (!logicGrid.positionIsFree(finalPos, logicGrid.COG_LAYER_INDEX)) {
             CogPiece cog = logicGrid.getPieceType(finalPos, CogPiece.class);
             if (cog.isRotateClockwise()) {
                 finalDir = finalDir.getRightTurnDirection();
@@ -629,7 +608,7 @@ public class AIPlayer extends Player {
      */
     private int getLaserDamage(Position pos){
         if(!logicGrid.isInBounds(pos))return  0;
-        if(!logicGrid.positionIsFree(pos,3)) return 0;
+        if(!logicGrid.positionIsFree(pos,logicGrid.ABYSS_LAYER_INDEX)) return 0;
         int damage = 0;
         if (logicGrid.getPieceType(pos, LaserPiece.class) != null){
             damage++;
