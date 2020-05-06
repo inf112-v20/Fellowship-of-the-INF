@@ -150,3 +150,15 @@ __For next time:__
  __On the meeting:__
  * The goal is for the program to be done by the presentation on Monday
  * The documentation to be done for Thursday at the latest, to be sure that we do not have something breaking mere hours before the deadline
+
+## 04.05.2020
+__Attendance:__ Everyone
+
+__On the meeting:__
+* Johanna heled presentation
+* We are as good as finished with the program
+ * Most things that can be done would take too long
+ 
+__For next time:__ 
+* Try to look over all code and documentation, make sure that everything is ready for hand in
+* Be ready by Thursday so we may ask group leaders for some last questions we might have, otherwise be done by then
