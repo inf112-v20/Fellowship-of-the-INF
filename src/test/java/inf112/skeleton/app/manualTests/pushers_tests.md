@@ -1,7 +1,7 @@
 # Manual tests for the pushers
 ### Setups
 
-#### Setup nr. 1 TODO: map 1
+#### Setup nr. 1
 * Run Main.
 * Press the Test button in the menu screen.
 * Select the map "pushers_test_map_1" from the dropdown menu

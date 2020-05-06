@@ -603,8 +603,8 @@ public class GameScreen implements Screen {
         }
     }
 
-    /** //TODO @Johanna Remove? -Erlend
-     * Only used for testing.
+    /**
+     * Makes the board lasers show for a millisecond. Only used for testing.
      */
     public void blinkBoardLasers() {
         showBoardLasers();
