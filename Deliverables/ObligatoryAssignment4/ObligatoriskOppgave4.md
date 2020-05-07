@@ -268,8 +268,8 @@ tokens in accordance to the rules of Roborally.
 ---
 
 ### Other known bugs
-* When you press enter instead of clicking lock in to start a round, the cards executed in a phase arent shown properly in the GUI.
-
+* When two robots are next to eachother, and one of them is moved by a conveyor belt or pusher, then a duplicate of the moved robot is sometimes drawn. It has no effect on the game functionality, and does not prevent the user from continuing to play the game.
+* The positioning of buttons and pictures on the Menu, PlayerSelection and MapSelection screens is slightly off when run on a Mac. Again, it does not prevent the user from playing the game, however those screens simply do not look nice when run on a Mac.
 
 
 ## Part 3: Code
