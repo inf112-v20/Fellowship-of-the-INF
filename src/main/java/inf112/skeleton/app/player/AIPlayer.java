@@ -305,7 +305,6 @@ public class AIPlayer extends Player {
                          if(isCurrentBetter(bestFinalTotalScore, nodeTotalScore)){
                              bestFinalTotalScore = nodeTotalScore;
                              chosenCards = cardsInFrontier;
-                             System.out.println(toString() + " best cards are " + cardsInFrontier + " which has a score of: " + Arrays.toString(nodeTotalScore));
                          }
                      }
                  }
