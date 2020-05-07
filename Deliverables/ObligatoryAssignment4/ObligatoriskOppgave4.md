@@ -5,13 +5,12 @@
 We decided to continue the role delegation from earlier itterations as we felt the different roles where working, and did not feel the need to change anything.
 
 ### Project methodology
-We have mainly followed the XP-methodology throughout the project, and it has worked quite well for us. Points from the methodology that were especially useful were:
-* Iterations
-* Pair-programming
-* Continuous code review
-* Reflections on previous iteration
-
-The most useful aspect was definitely the use of iterations, which helped us to plan the project, distribute work, ensure a level of quality and urge us to reflect upon previous work.
+We have mainly followed the XP-methodology throughout the project, and it has worked quite well for us. Points from the methodology that we have stuck to are:
+* **Iterations** - *At the beginning of each iteration we agree on which points of the MVP we will complete in this iteration.* This has definately been one of the most useful methods in XP. It helped us plan the project, distribute work, ensure a level of quality and urge us to reflect upon previous work. This iteration we took the time to reflect on the previous ones, which helped us lay our a more thought through plan. If we were to continue on this project, reflecting on the work so far would be the natural place to start before planning.
+* **Work delegation** - *Work delegation will happen mainly at meetings, and if someone gets done with their job quickly they can pick an undelegated card from the TODO column in the project board.* Through use of the project board and effective communication at meetings we have had no instances of multilple team members working on the same problem. The constant update from members when that have finished implementing something was especially helpful. With respect to work delegation, this final iteration has taught us to let team members who have completed their tasks help others complete theirs. Some tasks seem big, but are actually quite simple, while other tasks seem simple, but actually require a lot of work. A flexible team is an efficient team.
+* **Branches** - *We only push to the main branch when we complete an iteration, and implementations that have been reviewed by the team at a meeting are merged into the development branch. While working on an implementation, each person works on their own branch.* Again, the original idea, with slight relaxation on the review aspect, has been very useful in this iteration too. The main reason why a review of the entire team becomes less and less neccasary is that the members have become more experiences and themselves understand if an implementation meets the criteria. Furthermore we have started testing either before or immediately after implementation, so review by the rest of the team is not as critical after successful testing.
+* **Pair programming** - *We will use pair programming to improve code quality and to build the skills of team members.* Again, this became a bit difficult due to the university closing, however discussion of code during meetings has helped share understanding of the code base. Our team has been very good at being available on Discord, so questions about a team member's code are answered quickly. Fortunately, as the project has progressed the skills of team members has improved, and there is less need for pair programming for the sake of skill sharing. If we were able to physically work together we would have hoped to have done more pair programming in this iteration, for the sake of code quality.
+* **Communication is key** - While good communication is the most important aspect for our project, more communication does not mean better comminiation. See the next reflection fo an elaboration.
 
 
 ### Reflection on our communcation
