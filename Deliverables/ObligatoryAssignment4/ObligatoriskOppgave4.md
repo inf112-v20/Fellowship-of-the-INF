@@ -2,15 +2,15 @@
 
 ## Part 1: Team and Project
 ### Roles
-We decided to continue the role delegation from earlier itterations as we felt the different roles where working, and did not feel the need to change anything.
+We decided to continue the role delegation from earlier iterations as we felt the different roles where working, and did not feel the need to change anything.
 
 ### Project methodology
 We have mainly followed the XP-methodology throughout the project, and it has worked quite well for us. Points from the methodology that we have stuck to are:
 * **Iterations** - *At the beginning of each iteration we agree on which points of the MVP we will complete in this iteration.* This has definately been one of the most useful methods in XP. It helped us plan the project, distribute work, ensure a level of quality and urge us to reflect upon previous work. This iteration we took the time to reflect on the previous ones, which helped us lay our a more thought through plan. If we were to continue on this project, reflecting on the work so far would be the natural place to start before planning.
-* **Work delegation** - *Work delegation will happen mainly at meetings, and if someone gets done with their job quickly they can pick an undelegated card from the TODO column in the project board.* Through use of the project board and effective communication at meetings we have had no instances of multilple team members working on the same problem. The constant update from members when that have finished implementing something was especially helpful. With respect to work delegation, this final iteration has taught us to let team members who have completed their tasks help others complete theirs. Some tasks seem big, but are actually quite simple, while other tasks seem simple, but actually require a lot of work. A flexible team is an efficient team.
-* **Branches** - *We only push to the main branch when we complete an iteration, and implementations that have been reviewed by the team at a meeting are merged into the development branch. While working on an implementation, each person works on their own branch.* Again, the original idea, with slight relaxation on the review aspect, has been very useful in this iteration too. The main reason why a review of the entire team becomes less and less neccasary is that the members have become more experiences and themselves understand if an implementation meets the criteria. Furthermore we have started testing either before or immediately after implementation, so review by the rest of the team is not as critical after successful testing.
-* **Pair programming** - *We will use pair programming to improve code quality and to build the skills of team members.* Again, this became a bit difficult due to the university closing, however discussion of code during meetings has helped share understanding of the code base. Our team has been very good at being available on Discord, so questions about a team member's code are answered quickly. Fortunately, as the project has progressed the skills of team members has improved, and there is less need for pair programming for the sake of skill sharing. If we were able to physically work together we would have hoped to have done more pair programming in this iteration, for the sake of code quality.
-* **Communication is key** - While good communication is the most important aspect for our project, more communication does not mean better comminiation. See the next reflection fo an elaboration.
+* **Work delegation** - *Work delegation will happen mainly at meetings, and if someone gets done with their job quickly they can pick an undelegated card from the TODO column in the project board.* Through use of the project board and effective communication at meetings we have had no instances of multiple team members working on the same problem. The constant update from members when that have finished implementing something was especially helpful. With respect to work delegation, this final iteration has taught us to let team members who have completed their tasks help others complete theirs. Some tasks seem big, but are actually quite simple, while other tasks seem simple, but actually require a lot of work. A flexible team is an efficient team.
+* **Branches** - *We only push to the master branch when we complete an iteration, and implementations that have been reviewed by the team at a meeting are merged into the development branch. While working on an implementation, each person works on their own branch.* Again, the original idea, with slight relaxation on the review aspect, has been very useful in this iteration too. The main reason why a review of the entire team becomes less and less necessary is that the members have become more experienced and themselves understand if an implementation meets the criteria. Furthermore we have started testing either before or immediately after implementation, so review by the rest of the team is not as critical after successful testing.
+* **Pair programming** - *We will use pair programming to improve code quality and to build the skills of team members.* Again, this became a bit difficult due to the university closing. However, discussion of code during meetings has helped share understanding of the code base. Our team has been very good at being available on Discord, so questions about a team member's code are answered quickly. Fortunately, as the project has progressed the skills of team members have improved, and there is less need for pair programming for the sake of skill sharing. If we were able to physically work together we would have hoped to have done more pair programming in this iteration, for the sake of code quality.
+* **Communication is key** - While good communication is the most important aspect for our project, more communication does not mean better communication. See the next reflection for an elaboration.
 
 
 ### Reflection on our communcation
@@ -32,18 +32,18 @@ Overall we are satisfied with the results of the project. We have all become bet
 
 
 ### Problems we've had
-* The current situation in the world has made it challenging working together as a team, when we have been unable to see each other in person at all during this itteration. This has led to what may be less than ideal comunication, compared to what we would have been able to do otherwise. Despite this, we feel that we have been able to do the best in a bad situation, using the tools that using discord has provided us, by being able to, among other things, share a live feed of our own screen to the rest of the group, to show our code, and explain what we have been doing.
-* In the code it self, we have been experiencing bloating in certain classes, the player.java class among them. It works at the moment, but idealy it would have been devided up into at least two classes, where one of them would take care of rules, while the other would handle player information and behavior.
+* The current situation in the world has made it challenging working together as a team, when we have been unable to see each other in person at all during this iteration. This has led to what may be less than ideal communication, compared to what we would have been able to do otherwise. We have tried to make digital communication as good as possible. We've the tools that using discord has provided us, such as sharing a live feed of our own screen to the rest of the group, to show our code, and explain what we have been doing.
+* In the code we have been experiencing bloating in certain classes, the Player class among them. It works at the moment, but ideally it would have been divided up into at least two classes, where one of them would take care of rules, while the other would handle player information and behavior.
 
 ### How we tackled the points of improvement
 * Actually reflect upon the previous iteration before planning the next one.
   * We discussed this in the first meeting of iteration 4 and reached a few key points:
-     * It is more difficult to work with the code base now, as it is so large. Therefore clean and well-documented code is even more important now.
+     * It is more difficult to work with the code base now, as it is so large. Therefore clean and well-documented code is even more important than before.
      * Testing should be done continuously throughout an iteration. To make this possible, manual tests can't be dependent on commenting in/out lines of code.
      * Communication has become more difficult now that the university is closed. Being reachable on Discord and being present at meetings is important.
 * Plan meetings better, so that everyone is available at the agreed upon time.
   * At the end of each meeting we all agree on the time of the next meeting (usually at 14.00 on Mondays and Thursdays).
-* Testing should be done either before or immediately after implementation, not toward the end of an iteration.
+* Testing should be done either before or immediately after implementation, not towards the end of an iteration.
   * In order for this to be possible we had to remove our very impracticle system of commenting out/in lines of code to run certian tests. We created a practical UI where the appropriate test map could be selected, and made it simple for developers to add a test map to the list. With this new system in place, manual testing was easy to do before or immediately after implementation.
   ![alt text](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/TestMapSelectionScreen_Screenshot.png "Screen shot")
   
@@ -55,10 +55,10 @@ Overall we are satisfied with the results of the project. We have all become bet
 ![alt text](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/projectBoardIteration4.png)
 
 ### Group comunication and dynamics compared to the beginning
-As mentioned earlier, we felt the effects of the lockdown of the university, and many of the changes to the group's communication and workflow has been due to this event. Luckily for us had we already been mostly working alone, having 2 meetings a week where work was handed out to individuals or pairs, and the work being done between these meetings. It was not hard to move this to a remote work flow which worked much the same way. The largest difference being the meetings moving online, rather than face to face. This created some issues due to internet connection, and trying to figure out how to propperly convey information and explain concepts to each other.
+As mentioned earlier, we felt the effects of the lockdown of the university, and many of the changes to the group's communication and workflow has been due to this event. Luckily for us had we already been mostly working alone, having 2 meetings a week where work was handed out to individuals or pairs, and the work being done between these meetings. Remote individual work was not much different from our usual work process, as we mostly coded in our own time anyway. The largest difference has been the meetings moving online, rather than face to face. This created some issues due to internet connection, and trying to figure out how to propperly convey information and explain concepts to each other.
 
 What we did end up experiencing as time went by was a decrease in time spent in the actual meetings, at the same time as we felt we got more things done during them, going from above 2 hours per meeting, to 
-consistently reaching about 1 hour per meeting. This might be due to us being less able to branch out into different conversations during a meeting. Anything that did not need to include everyone would be handled outside of the meeting between the two parts. We also had Johanna, the group leader, have a plan before each meeting, driving it forward. During the meeting would Lena be taking notes in a google document to have an accurate log from the meeting, which group members could check afterwards to check what was said. These logs can now be founf in the linked .md file above.
+consistently reaching about 1 hour per meeting. This might be due to us being less able to branch out into different conversations during a meeting. Anything that did not need to include everyone would be handled outside of the meeting between the two parts. We also had Johanna, the team leader, have a plan before each meeting, driving it forward. During the meeting Lena would be taking notes in a google document to have an accurate log from the meeting, which group members could check afterwards to check what was said. These logs can now be found in the linked .md file above.
 
 ## Part 2: Requirements
 ### Requirements for Fourth Iteration
@@ -268,8 +268,8 @@ tokens in accordance to the rules of Roborally.
 ---
 
 ### Other known bugs
-* When two robots are next to eachother, and one of them is moved by a conveyor belt or pusher, then a duplicate of the moved robot is sometimes drawn. It has no effect on the game functionality, and does not prevent the user from continuing to play the game.
-* The positioning of buttons and pictures on the Menu, PlayerSelection and MapSelection screens is slightly off when run on a Mac. Again, it does not prevent the user from playing the game, however those screens simply do not look nice when run on a Mac.
+* When two robots are next to eachother, and one of them is moved by a conveyor belt or pusher, then a duplicate of the moved robot is sometimes drawn. It has no effect on the game's functionality, and does not prevent the user from continuing the game.
+* The positioning of buttons and pictures on the Menu, PlayerSelection and MapSelection screens is slightly off when run on a Mac. Again, it does not prevent the user from playing the game. Those screens simply do not look nice when run on a Mac.
 
 
 ## Part 3: Code
@@ -279,11 +279,13 @@ tokens in accordance to the rules of Roborally.
 You can find more UML's in the UML folder in ObligatoryAssigment4.
 
 ### How to run the program
-* Ensure maven install and build is complete. Then, run Main. A Menu Screen will pop up. Press the play button to start the game, and then the Stage 1 button from the stage selection screen.
+* Ensure maven install and build is complete. Then, run Main. A Menu Screen will pop up. Press the play button, select the dificulty level of the game, and thereafter the number of players in the game. The map selection screen will show, and selecting a map will start the game. NOTE: it can take a second for the game screen to open.
 
 ### How to use the game
 * You can select cards by left clicking them, and move them back by right clicking them. Once you have selected five cards, you can start a round by pressing the lock in button.
 * For the next phase to execute, press ENTER, or to let the phases run automatically you can press P to toggle autorun on/off (default is off).
+
+**Non-gameplay related keyboard input (cheating)**
 * You can move robot 1 around using UP, DOWN, LEFT RIGHT, SPACEBAR. LEFT and RIGHT rotate the robot to the left and right, while SPACEBAR rotates the robot 180*.  UP and DOWN move the robot forward and backward.
 * You can move robot 2 around by using W, S, A, D, Z. They function in the same way as UP, DOWN, LEFT, RIGHT, SPACEBAR respectively.
 * If robot 1 is on a conveyorbelt you can move it 1 cell in the direction of the conveyorbelt by pressing BACKSPACE.
