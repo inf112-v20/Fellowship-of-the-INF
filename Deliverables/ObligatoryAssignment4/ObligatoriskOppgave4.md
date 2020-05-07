@@ -64,6 +64,7 @@ consistently reaching about 1 hour per meeting. This might be due to us being le
 ## Part 2: Requirements
 ### Requirements for Fourth Iteration
 Due to being unable to meet and play multiplayer over LAN, our team decided to instead make an AI to play against. The remaining MVP's for the game, in addition to some "nice to haves".
+
 ---
 
 ### Have multiplayer against computer players which can have different levels of difficulty
