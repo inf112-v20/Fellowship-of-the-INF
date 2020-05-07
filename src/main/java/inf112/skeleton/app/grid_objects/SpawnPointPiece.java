@@ -7,6 +7,7 @@ import inf112.skeleton.app.grid.Position;
  */
 public class SpawnPointPiece extends BoardPiece {
     final int spawnNumber;
+
     public SpawnPointPiece(Position pos, int id, int spawnNumber) {
         super(pos, id);
         this.spawnNumber = spawnNumber;

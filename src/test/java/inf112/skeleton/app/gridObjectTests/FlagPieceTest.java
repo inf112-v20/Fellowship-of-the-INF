@@ -12,7 +12,7 @@ public class FlagPieceTest {
 
     @Before
     public void initializeFlagPiece() {
-this.flagPiece = new FlagPiece(new Position(0, 0), 1, 1);
+        this.flagPiece = new FlagPiece(new Position(0, 0), 1, 1);
     }
 
     @Test

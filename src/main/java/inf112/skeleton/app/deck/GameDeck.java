@@ -7,32 +7,33 @@ import inf112.skeleton.app.cards.ProgramCard;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * The deck of programcards used to draw from and put in hands players.
+ */
 public class GameDeck {
-    private ArrayList<ProgramCard> drawDeck = new ArrayList<>();;
-    private ArrayList<ProgramCard> discardDeck = new ArrayList<>();;
-    private final int maxNumberOfCardsOnHand = 9;
-
-    private final int nrOfMove1 = 18;
-    private final int nrOfMove2 = 12;
-    private final int nrOfMove3 = 6;
-    private final int nrOfBackup = 6;
-    private final int nrOfRotateRight = 18;
-    private final int nrOfRotateLeft = 18;
-    private final int nrOfUturn = 6;
+    private ArrayList<ProgramCard> drawDeck = new ArrayList<>();
+    private ArrayList<ProgramCard> discardDeck = new ArrayList<>();
 
     public GameDeck() {
         generateDeck(drawDeck);
     }
 
+    /*
+    Getters
+     */
+
+    public ArrayList<ProgramCard> getDiscardDeck(){ return this.discardDeck; }
+
     /**
      * Draw a new hand based on the damage you have taken. Will also handle if you are running out of cards.
      * Number of cards are calculated by subtracting the number of damage you have taken from the maximum number of cards
      *
-     * @param playerHand The cards the player has had on their hand
+     * @param playerHand  The cards the player has had on their hand
      * @param damageValue The amount of damage the player has taken
      * @return A new deck of cards to the play
      */
     public ArrayList<ProgramCard> drawHand(ArrayList<ProgramCard> playerHand, int damageValue) {
+        int maxNumberOfCardsOnHand = 9;
         int numberOfCards = maxNumberOfCardsOnHand - damageValue;
         moveAll(discardDeck, playerHand);
         if (canDrawFullHand(numberOfCards)) {
@@ -40,7 +41,7 @@ public class GameDeck {
         } else {
             //First draw the remaining cards from the draw deck, then reset discard and draw pile
             int remainingInDraw = drawDeck.size();
-            drawNumberOfCardsFromPile(playerHand, remainingInDraw - 1);
+            drawNumberOfCardsFromPile(playerHand, remainingInDraw);
             resetDrawAndDiscard();
             drawNumberOfCardsFromPile(playerHand, numberOfCards - remainingInDraw);
         }
@@ -49,7 +50,7 @@ public class GameDeck {
 
     //Check to see if you can draw a hand without the drawDeck running out of cards
     private boolean canDrawFullHand(int numberOfCards) {
-        return numberOfCards <= drawDeck.size() - 1;
+        return numberOfCards <= drawDeck.size();
     }
 
     private void resetDrawAndDiscard() {
@@ -64,9 +65,9 @@ public class GameDeck {
         }
     }
 
-    private void moveAll(ArrayList<ProgramCard> toDeck, ArrayList<ProgramCard> fromDeck){
+    public void moveAll(ArrayList<ProgramCard> toDeck, ArrayList<ProgramCard> fromDeck) {
         int deckSize = fromDeck.size();
-        for(int i=0; i<deckSize; i++) {
+        for (int i = 0; i < deckSize; i++) {
             toDeck.add(fromDeck.get(0));
             fromDeck.remove(0);
         }
@@ -78,6 +79,7 @@ public class GameDeck {
 
     /**
      * Add the cards used in a programCard deck. Should only be used when making a new deck
+     *
      * @param deck deck to be added to
      */
     private void generateDeck(ArrayList<ProgramCard> deck) {
@@ -93,7 +95,8 @@ public class GameDeck {
 
     private void addMove1(ArrayList<ProgramCard> deck) {
         int priority = 490;
-        for (int i=0; i<nrOfMove1; i++) {
+        int nrOfMove1 = 18;
+        for (int i = 0; i < nrOfMove1; i++) {
             deck.add(new ProgramCard(priority, CardType.MOVE1));
             priority += 10;
         }
@@ -101,7 +104,8 @@ public class GameDeck {
 
     private void addMove2(ArrayList<ProgramCard> deck) {
         int priority = 670;
-        for (int i=0; i<nrOfMove2; i++) {
+        int nrOfMove2 = 12;
+        for (int i = 0; i < nrOfMove2; i++) {
             deck.add(new ProgramCard(priority, CardType.MOVE2));
             priority += 10;
         }
@@ -109,7 +113,8 @@ public class GameDeck {
 
     private void addMove3(ArrayList<ProgramCard> deck) {
         int priority = 790;
-        for (int i=0; i<nrOfMove3; i++) {
+        int nrOfMove3 = 6;
+        for (int i = 0; i < nrOfMove3; i++) {
             deck.add(new ProgramCard(priority, CardType.MOVE3));
             priority += 10;
         }
@@ -117,7 +122,8 @@ public class GameDeck {
 
     private void addBackup(ArrayList<ProgramCard> deck) {
         int priority = 430;
-        for (int i=0; i<nrOfBackup; i++) {
+        int nrOfBackup = 6;
+        for (int i = 0; i < nrOfBackup; i++) {
             deck.add(new ProgramCard(priority, CardType.BACKUP));
             priority += 10;
         }
@@ -125,6 +131,7 @@ public class GameDeck {
 
     private void addRotateRight(ArrayList<ProgramCard> deck) {
         int priority = 80;
+        int nrOfRotateRight = 18;
         for (int i = 0; i < nrOfRotateRight; i++) {
             deck.add(new ProgramCard(priority, CardType.ROTATERIGHT));
             priority += 20;
@@ -133,6 +140,7 @@ public class GameDeck {
 
     private void addRotateLeft(ArrayList<ProgramCard> deck) {
         int priority = 70;
+        int nrOfRotateLeft = 18;
         for (int i = 0; i < nrOfRotateLeft; i++) {
             deck.add(new ProgramCard(priority, CardType.ROTATELEFT));
             priority += 20;
@@ -141,6 +149,7 @@ public class GameDeck {
 
     private void addUturn(ArrayList<ProgramCard> deck) {
         int priority = 10;
+        int nrOfUturn = 6;
         for (int i = 0; i < nrOfUturn; i++) {
             deck.add(new ProgramCard(priority, CardType.UTURN));
             priority += 10;

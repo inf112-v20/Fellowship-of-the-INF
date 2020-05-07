@@ -2,6 +2,8 @@ package inf112.skeleton.app.grid_objects;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import inf112.skeleton.app.game_logic.Move;
+import inf112.skeleton.app.game_logic.MovesToExecuteSimultaneously;
 import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
 import inf112.skeleton.app.player.Player;
@@ -23,32 +25,68 @@ public class PlayerPiece extends DirectionedPiece {
         initiatePlayerPieceCells();
     }
 
+    /*
+    Getters
+     */
+    public TiledMapTileLayer.Cell getCurrentCell() {
+        return this.currentCell;
+    }
+
+    public TiledMapTileLayer.Cell getPlayerCell() {
+        return this.playerCell;
+    }
+
+    public Player getPlayer() {
+        return this.player;
+    }
+
+
+    @Override
+    public String toString() {
+        return "PlayerPiece{" +
+                "playerNumber=" + playerNumber +
+                '}';
+    }
+
     public void initiatePlayerPieceCells() {
         playerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 0)));
         deadPlayerCell = new TiledMapTileLayer.Cell().setTile(new StaticTiledMapTile(TextureMaker.getPlayerTextureRegion(playerNumber, 1)));
         currentCell = playerCell; //appearance starts as normal player
     }
 
-    public TiledMapTileLayer.Cell getCurrentCell() {
-        return currentCell;
+    public void turnAround(MovesToExecuteSimultaneously moves) {
+            Move move = new Move(this);
+            turnPieceInOppositeDirection();
+            move.updateMove();
+            moves.add(move);
     }
 
-    public TiledMapTileLayer.Cell getPlayerCell() {
-        return playerCell;
+    /**
+     * Turn the player to the left
+     * @param moves list to update
+     */
+    public void turnLeft(MovesToExecuteSimultaneously moves) {
+            Move move = new Move(this);
+            rotatePieceLeft();
+            move.updateMove();
+            moves.add(move);
+        }
+
+    /**
+     * Turns the player to the right
+     * @param moves list to update
+     */
+    public void turnRight(MovesToExecuteSimultaneously moves) {
+            Move move = new Move(this);
+            rotatePieceRight();
+            move.updateMove();
+            moves.add(move);
     }
 
-    public void turnAround() {
-        turnPieceInOppositeDirection();
-    }
-
-    public void turnLeft() {
-        rotatePieceLeft();
-    }
-
-    public void turnRight() {
-        rotatePieceRight();
-    }
-
+    /**
+     * Turns the sprite of the robot in the new direction.
+     * @param newDir the new direction the player should face
+     */
     public void turnCellInDirection(Direction newDir) {
         switch (newDir) {
             case NORTH:
@@ -71,20 +109,8 @@ public class PlayerPiece extends DirectionedPiece {
         currentCell = deadPlayerCell;
     }
 
-    @Override
-    public String toString() {
-        return "PlayerPiece{" +
-                "playerNumber=" + playerNumber +
-                '}';
-    }
-
     public void showAlivePlayer() {
         currentCell = playerCell;
     }
 
-    public int getPlayerNumber() {return playerNumber;}
-
-    public Player getPlayer() {
-        return player;
-    }
 }

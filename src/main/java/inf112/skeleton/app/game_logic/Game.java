@@ -6,92 +6,217 @@ import com.badlogic.gdx.Input;
 import inf112.skeleton.app.deck.GameDeck;
 import inf112.skeleton.app.grid.LogicGrid;
 import inf112.skeleton.app.grid.Position;
+import inf112.skeleton.app.grid_objects.ConveyorBeltPiece;
+import inf112.skeleton.app.grid_objects.ExpressBeltPiece;
+import inf112.skeleton.app.grid_objects.PlayerPiece;
+import inf112.skeleton.app.player.AIPlayer;
+import inf112.skeleton.app.player.AIPlayer.Difficulty;
+
 import inf112.skeleton.app.player.Player;
 import inf112.skeleton.app.screens.GameScreen;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
 public class Game {
     private LogicGrid logicGrid;
-    private final int NUMBER_OF_PLAYERS = 4;
     private GameDeck gameDeck;
     private Player player1;
-    private Player[] playerList = new Player[NUMBER_OF_PLAYERS];;
+    private Player victoriousPlayer;
+    private Player[] playerList;
+    private int numberOfPlayers;
     private int roundNumber = 0;
     private Round round;
-    private Queue<MovesToExecuteSimultaneously> moves = new LinkedList<>();
+    private Queue<MovesToExecuteSimultaneously> frontendMoves;
     private GameScreen gameScreen;
+    private Player playerRemaining;
+    private ArrayList<Player> deadPlayers;
+    private boolean phaseDone = false;
+    private boolean autoStartNextPhase = false;
+    private boolean choosingRespawn;
+    private Difficulty difficulty;
+    private ArrayList<Player> respawnOrder = new ArrayList<>();
+    private String mapName;
+    private boolean gameOver = false;
 
-
-    public Game(LogicGrid logicGrid, GameScreen gameScreen) {
+    /**
+     * The Game object acts like the main control center of the backend side of the game, and also as the bridge between
+     * backend and frontend.
+     * When robots execute actions in the backend, a list of MovesToExecuteSimultaneously objects is generated.
+     * This is then sent to Game, which executed it backend-wise. This is done in the method executeMoves(), which moves
+     * robots to their new position in the logic grid, and adds the executed MovesToExecuteSimultaneously object to
+     * the queue called frontendMoved.
+     * When render() is called in GameScreen, the class calls getMoves() in Game so that it recieves the queue of moves
+     * that need to be shown, and then shows the moves and clears the moves that have been shown from frontendMoves.
+     *
+     * @param logicGrid the grid containing information about the board in the game
+     * @param gameScreen screen showing the game
+     * @param numberOfPlayers number of players in the game
+     * @param difficulty the level of intelligence the AI players have
+     */
+    public Game(LogicGrid logicGrid, GameScreen gameScreen, int numberOfPlayers, Difficulty difficulty, String mapName) {
+        this.numberOfPlayers = numberOfPlayers;
+        this.difficulty = difficulty;
         this.logicGrid = logicGrid;
         this.gameScreen = gameScreen;
         this.gameDeck = new GameDeck(); //make sure this is initialized before players
         this.player1 = new Player(1, this);
+        this.playerList = new Player[numberOfPlayers];
+        this.deadPlayers = new ArrayList<>();
+        findMapName(mapName);
         playerList[0] = player1;
+        respawnOrder.add(player1);
         logicGrid.placeNewPlayerPieceOnMap(player1.getPlayerPiece()); //place the new player piece on logic grid
         initiateComputerPlayers();
-    }
+        this.frontendMoves = new LinkedList<>();
 
-    public void initiateComputerPlayers() {
-        for (int playerNumber = 2; playerNumber <= NUMBER_OF_PLAYERS; playerNumber++) {
-            Player playerToBeInitiated = new Player(playerNumber, this);
-            playerList[playerNumber - 1] = playerToBeInitiated;
-            logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
-        }
     }
-
-    /**
-     * Perform moves for robots
-     *
-     * @param moves All moves to execute
+    /*
+    Getters
      */
-    public void performMoves(MovesToExecuteSimultaneously moves) {
-        for (Move move : moves) {
-            Position oldPos = move.getOldPos();
-            Position newPos = move.getNewPos();
-            if (!oldPos.equals(newPos)) //if the positions are not the same, then move the player on the board
-                logicGrid.movePlayerToNewPosition(oldPos, newPos);
-        }
-    }
-
     public LogicGrid getLogicGrid() {
-        return logicGrid;
+        return this.logicGrid;
     }
 
-    public void setLogicGrid(LogicGrid logicGrid) {
-        this.logicGrid = logicGrid;
+    public GameDeck getGameDeck() {
+        return this.gameDeck;
     }
-
-    public GameDeck getGameDeck() { return gameDeck; }
 
     public Player getPlayer() {
-        return player1;
+        return this.player1;
+    }
+
+    public Player getVictoriousPlayer() {return victoriousPlayer;}
+
+    public Round getRound() {
+        return this.round;
+    }
+
+    public Player[] getListOfPlayers() {
+        return this.playerList;
+    }
+
+    public Player getPlayerRemaining(){ return this.playerRemaining; }
+
+    public ArrayList<Player> getDeadPlayers(){return this.deadPlayers;}
+
+    public ArrayList<Player> getRespawnOrder(){
+        return this.respawnOrder;
+    }
+
+    public String getMapName(){ return this.mapName;}
+
+    public boolean isPhaseDone(){return this.phaseDone;}
+
+    public boolean isAutoStartNextPhaseOn(){return this.autoStartNextPhase;}
+
+    public boolean isChoosingRespawn(){
+        return this.choosingRespawn;
+    }
+
+    public boolean isGameOver() { return gameOver; }
+
+    /**
+     * This method is called by GameScreen so that it can show the moves that have been executed in backend.
+     * @return a queue of the frontend moves that need to be shown
+     */
+    public Queue<MovesToExecuteSimultaneously> getFrontendMoves() {
+        return this.frontendMoves;
+    }
+
+    /*
+    Setters
+     */
+    public void setLogicGrid(LogicGrid logicGrid) {
+        this.logicGrid = logicGrid;
     }
 
     public void setPlayer(Player player) {
         this.player1 = player;
     }
 
-    public Round getRound(){return round;}
+    public void setPhaseDone(boolean bool){ this.phaseDone = bool; }
+
+    public void setChoosingRespawn(boolean bool){ this.choosingRespawn = bool; }
+
+    public void setAutoStartNextPhase(boolean bool){ this.autoStartNextPhase = bool;}
+
+    public void setGameOver(boolean gameIsOver) { this.gameOver = gameIsOver; }
+
 
     /**
-     * Handles keyboard input for manually moving Player 1 around.
+     * The computer players are initiated and added to the playerList and position in the logicGrid
+     */
+    public void initiateComputerPlayers() {
+        for (int playerNumber = 2; playerNumber <= numberOfPlayers; playerNumber++) {
+            Player playerToBeInitiated = new AIPlayer(playerNumber, this, difficulty);
+            respawnOrder.add(playerToBeInitiated);
+            playerList[playerNumber - 1] = playerToBeInitiated;
+            logicGrid.placeNewPlayerPieceOnMap(playerToBeInitiated.getPlayerPiece());
+        }
+    }
+
+    /**
+     * Handles keyboard input for manually moving Player 1 and player 2 around, and executes the moves
      */
     public void handleKeyBoardInput() {
-        Move rotateMove = new Move(player1); //initiate possible rotateMove to be done
         MovesToExecuteSimultaneously moves = new MovesToExecuteSimultaneously();//initiate moves to be done
+        Player player2 = player1;
+        if (numberOfPlayers > 1) player2 = playerList[1];
+        PlayerPiece player1Piece = player1.getPlayerPiece();
+        handlePlayer1KeyboardInput(moves, player1Piece);
+        handlePlayer2KeyboardInput(moves, player2);
+        executeKeyboardMoves(moves);
+        checkForGameCompletion();
+    }
+
+    /**
+     *Handles the keyboard input for player 1
+     * @param moves list of moves to update
+     * @param player2 player who can be moves by keyboard input
+     */
+    private void handlePlayer2KeyboardInput(MovesToExecuteSimultaneously moves, Player player2) {
+        PlayerPiece player2Piece = player2.getPlayerPiece();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            player2.setKeyInput(true);
+            player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            player2.setKeyInput(true);
+            player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            player2Piece.turnLeft(moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            player2Piece.turnRight(moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            player2Piece.turnAround(moves);
+        }
+    }
+
+    /**
+     * Handles the keyboard input for player 2
+     * @param moves list of moves to update
+     * @param player1Piece player piece of player 1 that can be moves with keyboard input
+     */
+    public void handlePlayer1KeyboardInput(MovesToExecuteSimultaneously moves, PlayerPiece player1Piece) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            player1.setKeyInput(true);
             player1.tryToGo(player1.getPlayerPiece().getDir(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            player1.setKeyInput(true);
             player1.tryToGo(player1.getPlayerPiece().getDir().getOppositeDirection(), moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            player1.turnPlayerLeft();
+            player1Piece.turnLeft(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            player1.turnPlayerRight();
+            player1Piece.turnRight(moves);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            player1.turnPlayerAround();
+            player1Piece.turnAround(moves);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            player1.shootLaser();
+            gameScreen.shootRobotLasers();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.B)) { //only used for testing board lasers
+            gameScreen.blinkBoardLasers();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             player1.takeDamage(1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
@@ -105,36 +230,19 @@ public class Game {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
             player1.removeCheckpoint();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
-            if(player1.isOnConveyorBelt()) {
+            boolean playerIsOnConveyorBeltPiece = logicGrid.positionHasPieceType(player1Piece.getPos(), ConveyorBeltPiece.class);
+            boolean playerIsOnExpressBeltPiece = logicGrid.positionHasPieceType(player1Piece.getPos(), ExpressBeltPiece.class);
+            if (playerIsOnConveyorBeltPiece || playerIsOnExpressBeltPiece) {
                 BoardElementsMove.moveConveyorBelt(player1, this, false, moves);
             }
         }
-        rotateMove.updateMove(player1); //complete rotateMove object
-        moves.add(rotateMove);
-        //first player moves get executed
-        performMoves(moves); //execute moves if there are any
-        for (Move move : moves) {
-            gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
-        }
-        moves.clear();
+    }
 
-        //second player moves get handled
-        Player player2 = playerList[1];
-        Move move2 = new Move(player2);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            player2.tryToGo(player2.getPlayerPiece().getDir(), moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            player2.tryToGo(player2.getPlayerPiece().getDir().getOppositeDirection(), moves);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            player2.turnPlayerLeft();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            player2.turnPlayerRight();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-            player2.turnPlayerAround();
-        }
-        move2.updateMove(player2); //complete move object
-        moves.add(move2);
-        //execution of player 2 moves
+    /**
+     * Executeds the backend and frontend moves without delay.
+     * @param moves list of moves that have been generated from keyboard input
+     */
+    private void executeKeyboardMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //execute moves if there are any
         for (Move move : moves) {
             gameScreen.redrawPlayer(move); //redraw player if it needs to be redrawn
@@ -142,30 +250,52 @@ public class Game {
         moves.clear();
     }
 
-
-    public Player[] getListOfPlayers() {
-        return playerList;
+    /**
+     * Handles keyboard input that does not affect the game logic.
+     */
+    public void handleNonGameLogicKeyBoardInput(){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)){
+            autoStartNextPhase = !autoStartNextPhase;
+            if(autoStartNextPhase){
+                System.out.println("Turning autostart of phases on");
+            }
+            else {
+                System.out.println("Turning autostart of phases off");
+            }
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)){
+            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+                round.lockInCardsForComputers(false);
+            }
+            else{
+                round.lockInCardsForComputers(true);
+            }
+        }
     }
 
-
+    /**
+     * Creates a new round, increments the round number and start the new round.
+     */
     public void executeRound() {
         // If there are moves to execute, then don't start new round
         this.round = new Round(this);
-        if (!moves.isEmpty())
-            return;
-        //let computer players pick the first five cards as their selected
-        for (int playerNumber = 2; playerNumber <= 4; playerNumber++) {
-            playerList[playerNumber - 1].pickFirstFiveCards();
-        }
         roundNumber++;
         round.setRoundNumber(roundNumber);
-        //check all players have hand
         round.startRound();
-        round.finishRound();
     }
 
-    public Queue<MovesToExecuteSimultaneously> getMoves() {
-        return moves;
+    /**
+     * Perform moves for robots
+     *
+     * @param moves All moves to execute
+     */
+    public void performMoves(MovesToExecuteSimultaneously moves) {
+        for (Move move : moves) {
+            Position oldPos = move.getOldPos();
+            Position newPos = move.getNewPos();
+            if (!oldPos.equals(newPos)) //if the positions are not the same, then move the player on the board
+                logicGrid.movePlayerToNewPosition(move.getPlayerPiece(), oldPos, newPos);
+        }
     }
 
     /**
@@ -175,20 +305,105 @@ public class Game {
      */
     public void executeMoves(MovesToExecuteSimultaneously moves) {
         performMoves(moves); //backend execution
-        this.moves.add(moves);//add to list of things to do in frontend
+        this.frontendMoves.add(moves);//add to list of things to do in frontend
     }
 
     /**
      * Gets a player at a given position
+     *
      * @param pos the position of a player
      * @return the player at that position
      */
-    public Player getPlayerAt(Position pos){
+    public Player getPlayerAt(Position pos) {
         for (Player player : playerList) {
-            if(player.getPos().equals(pos)){
+            if (player.getPos().equals(pos)) {
                 return player;
             }
         }
         return null; //no player in position
+    }
+
+    /**
+     * Checks if all robots are done shooting their laser.
+     * @return true if robots are done shooting, false otherwise.
+     */
+    public boolean moreLaserToShoot() {
+        for (Player player : playerList) {
+            if (!player.getOldLaserPos().equals(new Position(-1, -1))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if there is only one player that hasn't locked in cards for the next round
+     * @return true if there is only one player left picking cards, false otherwise.
+     */
+    public boolean onePlayerLeftToPick(){
+        int lockedInPlayers = 0;
+        for (Player player : playerList) {
+            if (player.hasLockedIn()) {
+                lockedInPlayers++;
+            }
+            else{
+                playerRemaining = player;
+            }
+        }
+        return (lockedInPlayers == playerList.length-1);
+    }
+
+    /**
+     * Finds the map name for the map that is currently played
+     * Removes the filepath and .tmx from the string that is given
+     * @param mapName string of filepath name of the map
+     */
+    private void findMapName(String mapName){
+        for(int i = mapName.length()-1; i >= 0; i--){
+            char c = mapName.charAt(i);
+            if(c == '/'){
+                this.mapName = mapName.substring(i+1, mapName.length()-4);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Checks if the game is over.
+     * Game is over if a player has won or player 1 is permanently dead.
+     */
+    public void checkForGameCompletion() {
+        victoriousPlayer = playerHasWon();
+        if (playerHasWon() != null) { //if a player has won
+            victoriousPlayer = playerHasWon();
+        } else if (checkForGameOver()) {//if all players are dead
+            setGameOver(true);
+            System.out.println("Setting game over");
+        }
+    }
+
+    /**
+     * Method for checking if a player has won the game
+     *
+     * @return the player which has won, if no player has won, returns null
+     */
+    public Player playerHasWon() {
+        for (Player player : getListOfPlayers()) {
+            if (player.getCheckpointsVisited() == logicGrid.getFlagPositions().size())
+                return player;
+        }
+        return null;
+    }
+
+    /**
+     * Method for checking if every player is permanently dead, aka the game is over
+     *
+     * @return true if game is over, else returns false
+     */
+    public boolean checkForGameOver() {
+        for (Player player : getListOfPlayers()) {
+            if (!player.isPermanentlyDead()) return false;
+        }
+        return true;
     }
 }

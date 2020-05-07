@@ -13,7 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.game_logic.Game;
 import inf112.skeleton.app.player.Player;
 
-
+/**
+ * TODO: doc
+ */
 public class ScoreBoardScreen {
     private Stage stage;
     private Table table;
@@ -22,11 +24,16 @@ public class ScoreBoardScreen {
     private Label.LabelStyle oddRowStyle;
     private Texture whiteTexture = new Texture(Gdx.files.internal("white.png"));
 
+    /*
+    Class for creating a scoreboard that shows each players stats (i.e. nr of lives, damage, flags taken).
+    The playerimage shows if the player is dead or not.
+    Press TAB to bring the scoreboard up when a game is running.
+     */
     public ScoreBoardScreen(Game game) {
         this.game = game;
         this.stage = new Stage();
         this.table = new Table();
-        Texture texture = new Texture(Gdx.files.internal("background.png"));
+        Texture texture = new Texture(Gdx.files.internal("ui/background.png"));
         TextureRegion textureRegion = new TextureRegion(texture);
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(textureRegion);
         Image image = new Image(myTexRegionDrawable);
@@ -49,16 +56,23 @@ public class ScoreBoardScreen {
         update();
     }
 
-    public void update(){
+    public Stage getStage() {
+        return stage;
+    }
+
+    /**
+     * Updates the scoreboard when there is a change in a players stats (lives, damage, flags).
+     */
+    public void update() {
         table.clear();
         table.setWidth(3000);
         table.setHeight(3000);
-        table.setPosition(4000,500);
+        table.setPosition(4000, 500);
 
         TextureRegion whiteTR = new TextureRegion(whiteTexture);
-        TextureRegionDrawable whiteTRD =  new TextureRegionDrawable(whiteTR);
+        TextureRegionDrawable whiteTRD = new TextureRegionDrawable(whiteTR);
 
-        String headLabelText  = "Name";
+        String headLabelText = "Name";
         Label headLabel = new Label(headLabelText, oddRowStyle);
         headLabel.setFontScale(10);
         headLabel.setAlignment(1);
@@ -67,9 +81,9 @@ public class ScoreBoardScreen {
         table.add(headFiller).fill();
         table.add(headLabel).left().fill();
 
-        Image lifeImage = createImage(new Texture((Gdx.files.internal("lifetoken.png"))));
-        Image damageImage = createImage(new Texture((Gdx.files.internal("damagetokentab.png"))));
-        Image checkpointImage = createImage(new Texture((Gdx.files.internal("checkpointtoken.png"))));
+        Image lifeImage = createImage(new Texture((Gdx.files.internal("ui/lifetoken.png"))));
+        Image damageImage = createImage(new Texture((Gdx.files.internal("ui/damagetokentab.png"))));
+        Image checkpointImage = createImage(new Texture((Gdx.files.internal("ui/checkpointtoken.png"))));
         Image backgroundColor1 = new Image(whiteTRD);
         Image backgroundColor2 = new Image(whiteTRD);
         Image backgroundColor3 = new Image(whiteTRD);
@@ -90,7 +104,7 @@ public class ScoreBoardScreen {
         table.add(checkpointStack).fill();
         table.row();
 
-        for (int i = 0; i < game.getListOfPlayers().length ; i++) {
+        for (int i = 0; i < game.getListOfPlayers().length; i++) {
             Player player = game.getListOfPlayers()[i];
             String playerText = "Player " + player.getPlayerNumber();
             String lifeText = "" + player.getLives();
@@ -101,18 +115,17 @@ public class ScoreBoardScreen {
             Label damageLabel;
             Label checkpointLabel;
             Image backgroundColor = new Image(whiteTRD);
-            if(i%2 == 0){
+            if (i % 2 == 0) {
                 playerLabel = new Label(playerText, evenRowStyle);
                 lifeLabel = new Label(lifeText, evenRowStyle);
                 damageLabel = new Label(damageText, evenRowStyle);
                 checkpointLabel = new Label(checkpointText, evenRowStyle);
                 backgroundColor.setColor(Color.BLACK);
-            }
-            else{
+            } else {
                 playerLabel = new Label(playerText, oddRowStyle);
                 lifeLabel = new Label(lifeText, oddRowStyle);
                 damageLabel = new Label(damageText, oddRowStyle);
-                checkpointLabel = new Label(checkpointText, oddRowStyle );
+                checkpointLabel = new Label(checkpointText, oddRowStyle);
                 backgroundColor.setColor(Color.DARK_GRAY);
             }
             playerLabel.setFontScale(10);
@@ -139,13 +152,15 @@ public class ScoreBoardScreen {
         stage.addActor(table);
     }
 
-    public Image createImage(Texture texture){
+    /**
+     * Creates an Image from a given texture
+     * @param texture the texture to create an image with
+     * @return an Image with the texture given
+     */
+    public Image createImage(Texture texture) {
         TextureRegion textureRegion = new TextureRegion(texture);
         TextureRegionDrawable textureRegionDrawable = new TextureRegionDrawable(textureRegion);
         return new Image(textureRegionDrawable);
     }
 
-    public Stage getStage(){
-        return stage;
-    }
 }

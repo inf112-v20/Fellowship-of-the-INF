@@ -1,5 +1,8 @@
 package inf112.skeleton.app.grid;
 
+/**
+ * Coordinates representing where various objects in the game are placed in LogicGrid.
+ */
 public class Position {
 
     private int x;
@@ -10,26 +13,27 @@ public class Position {
         this.y = y;
     }
 
-    public int getY() {
-        return y;
-    }
+    /*
+    Getters
+     */
 
-    public void setY(int y) {
-        this.y = y;
-    }
+    public int getY() { return this.y; }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
+    /*
+    Setters
+    */
+    public void setY(int y) { this.y = y; }
+
+    public void setX(int x) { this.x = x; }
 
     @Override
     public String toString() {
         return "Pos(" + x +
-                ", "+ y +
+                ", " + y +
                 ')';
     }
 
@@ -44,6 +48,7 @@ public class Position {
 
     /**
      * Returns a new Position object positioned in the direction dir from this position
+     *
      * @param dir direction from this position that the current position lies.
      * @return new Posiiton object
      */
@@ -66,4 +71,5 @@ public class Position {
         }
         return new Position(newX, newY);
     }
+
 }

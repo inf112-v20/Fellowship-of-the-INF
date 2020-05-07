@@ -4,13 +4,14 @@ import inf112.skeleton.app.grid.Direction;
 import inf112.skeleton.app.grid.Position;
 
 public abstract class DirectionedPiece extends BoardPiece {
-    
+
     Direction dir;
 
     /**
      * A board piece with direction
+     *
      * @param pos position of piece on map
-     * @param id tmx id
+     * @param id  tmx id
      * @param dir direction piece is facing
      */
     public DirectionedPiece(Position pos, int id, Direction dir) {
