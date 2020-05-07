@@ -22,8 +22,6 @@ public class MainMenuScreen implements Screen {
     private RoboRallyGame game;
     private float width;
     private float height;
-    private int yPadding;
-    private int xPadding;
 
     private Stage stage;
 
@@ -45,7 +43,7 @@ public class MainMenuScreen implements Screen {
         stage.addActor(background);
 
         // Logo
-        yPadding = 50;
+        int yPadding = 50;
         Image logo = createImage("RoboRally_logo");
         logo.setSize(logo.getWidth() * 1.5f, logo.getHeight() * 2);
         logo.setPosition((width - logo.getWidth()) / 2, height - (logo.getHeight() + yPadding));
@@ -53,7 +51,7 @@ public class MainMenuScreen implements Screen {
 
         // Play button
         yPadding = 440;
-        xPadding = 500;
+        int xPadding = 500;
         ImageButton playButton = createImageButton("PlayButton");
         playButton.setPosition((width - playButton.getWidth()) / 2, height - (playButton.getHeight() + yPadding));
         playButton.addListener(new ClickListener() {
@@ -126,22 +124,23 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void resize(int i, int i1) {
+        //not used
 
     }
 
     @Override
     public void pause() {
-
+        //not used
     }
 
     @Override
     public void resume() {
-
+        //not used
     }
 
     @Override
     public void hide() {
-
+        //not used
     }
 
     @Override

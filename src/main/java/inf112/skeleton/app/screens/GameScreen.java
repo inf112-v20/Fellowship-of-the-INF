@@ -504,22 +504,22 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-
+        //not used
     }
 
     @Override
     public void resume() {
-
+        //not used
     }
 
     @Override
     public void hide() {
-
+        //not used
     }
 
     @Override
     public void dispose() {
-
+        //not used
     }
 
     /**

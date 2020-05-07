@@ -146,22 +146,22 @@ public class PlayerSelectionScreen implements Screen {
 
     @Override
     public void resize(int i, int i1) {
-
+        //not used
     }
 
     @Override
     public void pause() {
-
+        //not used
     }
 
     @Override
     public void resume() {
-
+        //not used
     }
 
     @Override
     public void hide() {
-
+        //not used
     }
 
     @Override
