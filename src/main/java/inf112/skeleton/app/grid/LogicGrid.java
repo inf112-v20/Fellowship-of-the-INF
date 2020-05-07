@@ -194,14 +194,14 @@ public class LogicGrid {
             int id = layer.getCell(x, y).getTile().getId();
             //if cell in layer is not empty, generate the corresponding BoardPiece and add to grid
             BoardPiece piece = boardPieceGenerator.generate(id);
-            if (layer == flagLayer) {
+            if (layer.equals(flagLayer)) {
                 //flagPositions.add(null);
                 addToListOfFlagsPos(piece, x, y);
-            } else if (layer == laserSourceLayer && piece instanceof LaserSourcePiece) {
+            } else if (layer.equals(laserSourceLayer) && piece instanceof LaserSourcePiece) {
                 laserSourceList.add((LaserSourcePiece) piece);
-            } else if (layer == pusherLayer && piece instanceof PusherPiece) {
+            } else if (layer.equals(pusherLayer) && piece instanceof PusherPiece) {
                 pushersList.add((PusherPiece) piece);
-            } else if (layer == floorLayer) {
+            } else if (layer.equals(floorLayer)) {
                 addToListOfSpawnPos(piece, x, y);
             }
 
