@@ -1,4 +1,4 @@
-#Manual test of Win condition and lose condition
+# Manual test of Win condition and lose condition
 ### Setup:
 1. Run main()
 2. Click the "Play" button. You should now be on the choose amount of players screen. <br>
