@@ -6,10 +6,11 @@ We decided to continue the role delegation from earlier itterations as we felt t
 
 ### Project methodology
 We have mainly followed the XP-methodology throughout the project, and it has worked quite well for us. Points from the methodology that were especially useful were:
-•	Iterations
-•	Pair-programming
-•	Continuous code review
-•	Reflections on previous iteration
+* Iterations
+* Pair-programming
+* Continuous code review
+* Reflections on previous iteration
+
 The most useful aspect was definitely the use of iterations, which helped us to plan the project, distribute work, ensure a level of quality and urge us to reflect upon previous work.
 
 
@@ -50,6 +51,15 @@ Overall we are satisfied with the results of the project. We have all become bet
 
 ### Meeting logs
 [Meeting logs can be found in a seperate MD file called MeetingLogsIteration4.md](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/MeetingLogsIteration4.md)
+
+### Project board screenshot
+![alt text](https://github.com/inf112-v20/Fellowship-of-the-INF/blob/master/Deliverables/ObligatoryAssignment4/projectBoardIteration4.png)
+
+### Group comunication and dynamics compared to the beginning
+As mentioned earlier, we felt the effects of the lockdown of the university, and many of the changes to the group's communication and workflow has been due to this event. Luckily for us had we already been mostly working alone, having 2 meetings a week where work was handed out to individuals or pairs, and the work being done between these meetings. It was not hard to move this to a remote work flow which worked much the same way. The largest difference being the meetings moving online, rather than face to face. This created some issues due to internet connection, and trying to figure out how to propperly convey information and explain concepts to each other.
+
+What we did end up experiencing as time went by was a decrease in time spent in the actual meetings, at the same time as we felt we got more things done during them, going from above 2 hours per meeting, to 
+consistently reaching about 1 hour per meeting. This might be due to us being less able to branch out into different conversations during a meeting. Anything that did not need to include everyone would be handled outside of the meeting between the two parts. We also had Johanna, the group leader, have a plan before each meeting, driving it forward. During the meeting would Lena be taking notes in a google document to have an accurate log from the meeting, which group members could check afterwards to check what was said. These logs can now be founf in the linked .md file above.
 
 ## Part 2: Requirements
 ### Requirements for Fourth Iteration
