@@ -59,7 +59,7 @@ __On the meeting:__
 __For next time:__
 * Lena: Make the laser shooters easier to see, refactoring and iron out bugs, sound affects
 * Johanna: Make tests
-* Erlend: 
+* Erlend:  Implement proper respawning. Players can choose the direction they respawn in (and position if their spawn point is occupied)
 * Martin: Implement Win condition and Lose condition, so that a game can actually finish.
 * Henrik: Repair tiles
 
@@ -109,7 +109,7 @@ __On the meeting:__
 __For next time:__
 * Lena: Start writing Markdown documentation
 * Johanna: merge my stageScelection screen with Martin’s
-* Erlend: 
+* Erlend: More bug fixing
 * Martin: Make it possible to choose back to main menu or exit game on win/lose
 * Henrik:
 
@@ -125,6 +125,7 @@ __For next time:__
 * Johanna: Make demo presentation
 * Martin: Make it possible to choose back to main menu on a win or loss
 * Henrik: Bugs and checking code
+* Erlend: Even more bug fixing.  Small refactor of conveyorbelts and how they work, and refactor how damage is taken/repaired
 * Lena: Copy the Meeting logs from google document to .md
 
 ## 27.04.2020
@@ -138,6 +139,7 @@ __On the meeting:__
 
 __For next time:__ 
 * Lena: Keep writing markdown, make tests for power down
+* Erlend: Fix AI to not crash when there are no good cards left and testing.
 * Everyone:
  * Check that you have commented your code
  * Check that your tests from previous iterations still work
