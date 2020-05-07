@@ -1,4 +1,4 @@
-# Meeting logs for the Fourth Itteration
+# Meeting logs for the Fourth Iteration
 
 ## 30.03.2020
 __Attendance:__ Everyone
