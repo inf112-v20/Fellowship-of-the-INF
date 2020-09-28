@@ -4,6 +4,9 @@
 
 Simple skeleton with libgdx. 
 
+## How to run the game
+Ensure maven install and build is complete. Then, run Main. A Menu Screen will pop up. Press the play button, select the dificulty level of the game, and thereafter the number of players in the game. The map selection screen will show, and selecting a map will start the game. NOTE: it can take a second for the game screen to open.
+
 
 ## Known bugs
 Currently throws "WARNING: An illegal reflective access operation has occurred", 
